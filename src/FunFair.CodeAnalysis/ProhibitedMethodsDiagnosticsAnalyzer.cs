@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
@@ -81,7 +80,8 @@ namespace FunFair.CodeAnalysis
                                                                                  continue;
                                                                              }
 
-                                                                             if (invocation.Name.ToString() == nameof(DateTime.Now))
+                                                                             // note cannot use the names as it references itself
+                                                                             if (invocation.Name.ToString() == @"Now")
                                                                              {
                                                                                  analysisContext.ReportDiagnostic(Diagnostic.Create(Rule, invocation.GetLocation()));
                                                                              }
