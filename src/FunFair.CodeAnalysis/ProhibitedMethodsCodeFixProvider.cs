@@ -17,8 +17,6 @@ namespace FunFair.CodeAnalysis
     [Shared]
     public sealed class ProhibitedMethodsCodeFixProvider : CodeFixProvider
     {
-        private const string TITLE = "Call DateTime.UtcNow rather than DateTime.Now";
-
         /// <inheritdoc />
         public override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(ProhibitedMethodsDiagnosticsAnalyzer.DiagnosticId);
 
@@ -34,9 +32,10 @@ namespace FunFair.CodeAnalysis
             Diagnostic diagnostic = context.Diagnostics.First();
             TextSpan diagnosticSpan = diagnostic.Location.SourceSpan;
 
-            return Task.Run(action: () => context.RegisterCodeFix(
-                                        CodeAction.Create(TITLE, createChangedDocument: c => this.ReplaceWithUtcNowAsync(context.Document, diagnosticSpan), TITLE),
-                                        diagnostic));
+            return Task.Run(action: () => context.RegisterCodeFix(CodeAction.Create(ProhibitedMethodsDiagnosticsAnalyzer.Message,
+                                                                                    createChangedDocument: c => this.ReplaceWithUtcNowAsync(context.Document, diagnosticSpan),
+                                                                                    ProhibitedMethodsDiagnosticsAnalyzer.Message),
+                                                                  diagnostic));
         }
 
         private async Task<Document> ReplaceWithUtcNowAsync(Document document, TextSpan span)

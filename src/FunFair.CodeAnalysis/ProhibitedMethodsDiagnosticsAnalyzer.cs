@@ -16,13 +16,15 @@ namespace FunFair.CodeAnalysis
     public sealed class ProhibitedMethodsDiagnosticsAnalyzer : DiagnosticAnalyzer
     {
         internal const string DiagnosticId = "FFS0001";
+        internal const string Message = "Call IDateTimeSource.UtcNow() rather than DateTime.Now";
+
         private const string CATEGORY = "Illegal Method Calls";
 
-        private static readonly LocalizableString Description = new LiteralString(value: @"Call DateTime.UtcNow rather than DateTime.Now");
+        private static readonly LocalizableString Description = new LiteralString(Message);
 
-        private static readonly LocalizableString MessageFormat = new LiteralString(value: @"Call DateTime.UtcNow rather than DateTime.Now");
+        private static readonly LocalizableString MessageFormat = new LiteralString(Message);
 
-        private static readonly LocalizableString Title = new LiteralString(value: @"Avoid use of DateTime");
+        private static readonly LocalizableString Title = new LiteralString(value: @"Avoid use of DateTime methods");
 
         private static readonly DiagnosticDescriptor Rule =
             new DiagnosticDescriptor(DiagnosticId, Title, MessageFormat, CATEGORY, DiagnosticSeverity.Error, isEnabledByDefault: true, Description);
