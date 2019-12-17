@@ -7,7 +7,7 @@
         <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
         <IncludeOpenAPIAnalyzers>true</IncludeOpenAPIAnalyzers>
         <Features>strict;flow-analysis</Features>
-        <PackAsTool>true</PackAsTool>
+        <PackAsTool>false</PackAsTool>
         <IsPackable>true</IsPackable>
         <Nullable>disable</Nullable>
     </PropertyGroup>
