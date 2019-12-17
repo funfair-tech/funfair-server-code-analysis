@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-using DisableDateTimeNow;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -18,12 +17,11 @@ namespace FunFair.CodeAnalysis
         internal const string DiagnosticId = "FFS0001";
         private const string CATEGORY = "Illegal Method Calls";
 
-        private static readonly LocalizableString Description = new LocalizableResourceString(nameof(Resources.AnalyzerDescription), Resources.ResourceManager, typeof(Resources));
+        private static readonly LocalizableString Description = new LiteralString(value: @"Call DateTime.UtcNow rather than DateTime.Now");
 
-        private static readonly LocalizableString MessageFormat =
-            new LocalizableResourceString(nameof(Resources.AnalyzerMessageFormat), Resources.ResourceManager, typeof(Resources));
+        private static readonly LocalizableString MessageFormat = new LiteralString(value: @"Call DateTime.UtcNow rather than DateTime.Now");
 
-        private static readonly LocalizableString Title = new LocalizableResourceString(nameof(Resources.AnalyzerTitle), Resources.ResourceManager, typeof(Resources));
+        private static readonly LocalizableString Title = new LiteralString(value: @"Avoid use of DateTime");
 
         private static readonly DiagnosticDescriptor Rule =
             new DiagnosticDescriptor(DiagnosticId, Title, MessageFormat, CATEGORY, DiagnosticSeverity.Error, isEnabledByDefault: true, Description);

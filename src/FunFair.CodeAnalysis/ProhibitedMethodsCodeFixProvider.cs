@@ -11,25 +11,25 @@ using Microsoft.CodeAnalysis.Text;
 namespace FunFair.CodeAnalysis
 {
     /// <summary>
-    /// Prohibited methods code fix provider.
+    ///     Prohibited methods code fix provider.
     /// </summary>
     [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(ProhibitedMethodsCodeFixProvider))]
     [Shared]
-    public class ProhibitedMethodsCodeFixProvider : CodeFixProvider
+    public sealed class ProhibitedMethodsCodeFixProvider : CodeFixProvider
     {
         private const string TITLE = "Call DateTime.UtcNow rather than DateTime.Now";
 
         /// <inheritdoc />
-        public sealed override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(ProhibitedMethodsDiagnosticsAnalyzer.DiagnosticId);
+        public override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(ProhibitedMethodsDiagnosticsAnalyzer.DiagnosticId);
 
         /// <inheritdoc />
-        public sealed override FixAllProvider GetFixAllProvider()
+        public override FixAllProvider GetFixAllProvider()
         {
             return WellKnownFixAllProviders.BatchFixer;
         }
 
         /// <inheritdoc />
-        public sealed override Task RegisterCodeFixesAsync(CodeFixContext context)
+        public override Task RegisterCodeFixesAsync(CodeFixContext context)
         {
             Diagnostic diagnostic = context.Diagnostics.First();
             TextSpan diagnosticSpan = diagnostic.Location.SourceSpan;
