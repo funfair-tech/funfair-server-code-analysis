@@ -5,6 +5,7 @@
         <DisableImplicitNuGetFallbackFolder>true</DisableImplicitNuGetFallbackFolder>
         <WarningsAsErrors />
         <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+        <IncludeOpenAPIAnalyzers>true</IncludeOpenAPIAnalyzers>
         <Features>strict;flow-analysis</Features>
         <PackAsTool>true</PackAsTool>
         <IsPackable>true</IsPackable>
