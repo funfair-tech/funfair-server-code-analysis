@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
@@ -73,7 +74,8 @@ namespace FunFair.CodeAnalysis
                                                                                  continue;
                                                                              }
 
-                                                                             if (!typeInfo.ConstructedFrom.MetadataName.Equals(dateTimeType.MetadataName))
+                                                                             if (!StringComparer.InvariantCultureIgnoreCase.Equals(typeInfo.ConstructedFrom.MetadataName,
+                                                                                                                                   dateTimeType.MetadataName))
                                                                              {
                                                                                  continue;
                                                                              }
