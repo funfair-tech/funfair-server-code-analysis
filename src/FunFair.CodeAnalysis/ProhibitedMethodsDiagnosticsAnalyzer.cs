@@ -1,0 +1,93 @@
+using System;
+using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Linq;
+using DisableDateTimeNow;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.Diagnostics;
+
+namespace FunFair.CodeAnalysis
+{
+    /// <summary>
+    ///     Looks for prohibited methods.
+    /// </summary>
+    [DiagnosticAnalyzer(LanguageNames.CSharp)]
+    public sealed class ProhibitedMethodsDiagnosticsAnalyzer : DiagnosticAnalyzer
+    {
+        internal const string DiagnosticId = "FFS0001";
+        private const string CATEGORY = "Illegal Method Calls";
+
+        private static readonly LocalizableString Description = new LocalizableResourceString(nameof(Resources.AnalyzerDescription), Resources.ResourceManager, typeof(Resources));
+
+        private static readonly LocalizableString MessageFormat =
+            new LocalizableResourceString(nameof(Resources.AnalyzerMessageFormat), Resources.ResourceManager, typeof(Resources));
+
+        private static readonly LocalizableString Title = new LocalizableResourceString(nameof(Resources.AnalyzerTitle), Resources.ResourceManager, typeof(Resources));
+
+        private static readonly DiagnosticDescriptor Rule =
+            new DiagnosticDescriptor(DiagnosticId, Title, MessageFormat, CATEGORY, DiagnosticSeverity.Error, isEnabledByDefault: true, Description);
+
+        /// <inheritdoc />
+        public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);
+
+        /// <inheritdoc />
+        public override void Initialize(AnalysisContext context)
+        {
+            context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
+            context.EnableConcurrentExecution();
+
+            context.RegisterCompilationStartAction(PerformCheck);
+        }
+
+        private static void PerformCheck(CompilationStartAnalysisContext compilationStartContext)
+        {
+            INamedTypeSymbol dateTimeType = compilationStartContext.Compilation.GetTypeByMetadataName(fullyQualifiedMetadataName: "System.DateTime");
+            compilationStartContext.RegisterSyntaxNodeAction(action: analysisContext =>
+                                                                     {
+                                                                         IEnumerable<MemberAccessExpressionSyntax> invocations = analysisContext.Node.DescendantNodes()
+                                                                                                                                                .OfType<
+                                                                                                                                                    MemberAccessExpressionSyntax
+                                                                                                                                                >();
+
+                                                                         foreach (MemberAccessExpressionSyntax invocation in invocations)
+                                                                         {
+                                                                             ExpressionSyntax e;
+
+                                                                             if (invocation.Expression is MemberAccessExpressionSyntax syntax)
+                                                                             {
+                                                                                 e = syntax;
+                                                                             }
+                                                                             else if (invocation.Expression is IdentifierNameSyntax expression)
+                                                                             {
+                                                                                 e = expression;
+                                                                             }
+                                                                             else
+                                                                             {
+                                                                                 continue;
+                                                                             }
+
+                                                                             INamedTypeSymbol typeInfo = analysisContext.SemanticModel.GetTypeInfo(e)
+                                                                                                                        .Type as INamedTypeSymbol;
+
+                                                                             if (typeInfo?.ConstructedFrom == null)
+                                                                             {
+                                                                                 continue;
+                                                                             }
+
+                                                                             if (typeInfo.ConstructedFrom.MetadataName != dateTimeType.MetadataName)
+                                                                             {
+                                                                                 continue;
+                                                                             }
+
+                                                                             if (invocation.Name.ToString() == nameof(DateTime.Now))
+                                                                             {
+                                                                                 analysisContext.ReportDiagnostic(Diagnostic.Create(Rule, invocation.GetLocation()));
+                                                                             }
+                                                                         }
+                                                                     },
+                                                             SyntaxKind.MethodDeclaration);
+        }
+    }
+}
