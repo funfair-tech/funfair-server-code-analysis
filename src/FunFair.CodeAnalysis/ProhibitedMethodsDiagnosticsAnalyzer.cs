@@ -73,7 +73,7 @@ namespace FunFair.CodeAnalysis
                                                                                  continue;
                                                                              }
 
-                                                                             if (typeInfo.ConstructedFrom.MetadataName != dateTimeType.MetadataName)
+                                                                             if (!typeInfo.ConstructedFrom.MetadataName.Equals(dateTimeType.MetadataName))
                                                                              {
                                                                                  continue;
                                                                              }
