@@ -1,5 +1,5 @@
-# funfair-server-template
-Template repository for C# / server code
+# funfair-server-codeanalyis
+Static Code analysis Repo for C# projects
 
 ### Changelog
 
