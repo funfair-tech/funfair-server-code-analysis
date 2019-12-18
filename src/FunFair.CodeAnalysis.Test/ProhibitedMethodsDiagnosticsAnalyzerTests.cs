@@ -6,7 +6,7 @@ using Xunit;
 
 namespace FunFair.CodeAnalysis.Tests
 {
-    public class ProhibitedMethodsDiagnosticsAnalyzerTests : CodeFixVerifier
+    public sealed class ProhibitedMethodsDiagnosticsAnalyzerTests : CodeFixVerifier
     {
         // protected override CodeFixProvider GetCSharpCodeFixProvider()
         // {
