@@ -51,6 +51,38 @@ namespace FunFair.CodeAnalysis.Tests
             this.VerifyCSharpDiagnostic(test, expected);
         }
 
+        [Fact]
+        public void DateTimeOffsetNowIsBanned()
+        {
+            const string test = @"
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+    using System.Threading.Tasks;
+    using System.Diagnostics;
+
+    namespace ConsoleApplication1
+    {
+        class TypeName
+        {
+            void Test()
+            {
+                var when = DateTimeOffset.Now;
+            }
+        }
+    }";
+            DiagnosticResult expected = new DiagnosticResult
+                                        {
+                                            Id = "FFS0002",
+                                            Message = @"Call IDateTimeSource.UtcNow() rather than DateTimeOffset.Now",
+                                            Severity = DiagnosticSeverity.Error,
+                                            Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 15, column: 28)}
+                                        };
+
+            this.VerifyCSharpDiagnostic(test, expected);
+        }
+
         //No diagnostics expected to show up
         [Fact]
         public void NoErrorsReported()

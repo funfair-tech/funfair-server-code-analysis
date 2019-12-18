@@ -15,22 +15,26 @@ namespace FunFair.CodeAnalysis
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public sealed class ProhibitedMethodsDiagnosticsAnalyzer : DiagnosticAnalyzer
     {
-        internal const string DiagnosticId = "FFS0001";
-        internal const string Message = "Call IDateTimeSource.UtcNow() rather than DateTime.Now";
-
         private const string CATEGORY = "Illegal Method Calls";
 
-        private static readonly LocalizableString Description = new LiteralString(Message);
+        private static readonly DiagnosticDescriptor RuleDontUseDateTimeNow = CreateRule(code: @"FFS0001",
+                                                                                         title: @"Avoid use of DateTime methods",
+                                                                                         message: "Call IDateTimeSource.UtcNow() rather than DateTime.Now");
 
-        private static readonly LocalizableString MessageFormat = new LiteralString(Message);
-
-        private static readonly LocalizableString Title = new LiteralString(value: @"Avoid use of DateTime methods");
-
-        private static readonly DiagnosticDescriptor Rule =
-            new DiagnosticDescriptor(DiagnosticId, Title, MessageFormat, CATEGORY, DiagnosticSeverity.Error, isEnabledByDefault: true, Description);
+        private static readonly DiagnosticDescriptor RuleDontUseDateTimeOffsetNow = CreateRule(code: @"FFS0002",
+                                                                                               title: @"Avoid use of DateTimeOffset methods",
+                                                                                               message: "Call IDateTimeSource.UtcNow() rather than DateTimeOffset.Now");
 
         /// <inheritdoc />
-        public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);
+        public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(RuleDontUseDateTimeNow, RuleDontUseDateTimeOffsetNow);
+
+        private static DiagnosticDescriptor CreateRule(string code, string title, string message)
+        {
+            LiteralString translatableTitle = new LiteralString(title);
+            LiteralString translatableMessage = new LiteralString(message);
+
+            return new DiagnosticDescriptor(code, translatableTitle, translatableMessage, CATEGORY, DiagnosticSeverity.Error, isEnabledByDefault: true, translatableMessage);
+        }
 
         /// <inheritdoc />
         public override void Initialize(AnalysisContext context)
@@ -44,6 +48,8 @@ namespace FunFair.CodeAnalysis
         private static void PerformCheck(CompilationStartAnalysisContext compilationStartContext)
         {
             INamedTypeSymbol dateTimeType = compilationStartContext.Compilation.GetTypeByMetadataName(fullyQualifiedMetadataName: "System.DateTime");
+            INamedTypeSymbol dateTimeOffsetType = compilationStartContext.Compilation.GetTypeByMetadataName(fullyQualifiedMetadataName: "System.DateTimeOffset");
+
             compilationStartContext.RegisterSyntaxNodeAction(action: analysisContext =>
                                                                      {
                                                                          IEnumerable<MemberAccessExpressionSyntax> invocations = analysisContext.Node.DescendantNodes()
@@ -76,16 +82,24 @@ namespace FunFair.CodeAnalysis
                                                                                  continue;
                                                                              }
 
-                                                                             if (!StringComparer.OrdinalIgnoreCase.Equals(typeInfo.ConstructedFrom.MetadataName,
-                                                                                                                          dateTimeType.MetadataName))
+                                                                             if (StringComparer.OrdinalIgnoreCase.Equals(typeInfo.ConstructedFrom.MetadataName,
+                                                                                                                         dateTimeType.MetadataName))
                                                                              {
-                                                                                 continue;
+                                                                                 if (invocation.Name.ToString() == @"Now")
+                                                                                 {
+                                                                                     analysisContext.ReportDiagnostic(
+                                                                                         Diagnostic.Create(RuleDontUseDateTimeNow, invocation.GetLocation()));
+                                                                                 }
                                                                              }
 
-                                                                             // note cannot use the names as it references itself
-                                                                             if (invocation.Name.ToString() == @"Now")
+                                                                             if (StringComparer.OrdinalIgnoreCase.Equals(typeInfo.ConstructedFrom.MetadataName,
+                                                                                                                         dateTimeOffsetType.MetadataName))
                                                                              {
-                                                                                 analysisContext.ReportDiagnostic(Diagnostic.Create(Rule, invocation.GetLocation()));
+                                                                                 if (invocation.Name.ToString() == @"Now")
+                                                                                 {
+                                                                                     analysisContext.ReportDiagnostic(
+                                                                                         Diagnostic.Create(RuleDontUseDateTimeOffsetNow, invocation.GetLocation()));
+                                                                                 }
                                                                              }
                                                                          }
                                                                      },
