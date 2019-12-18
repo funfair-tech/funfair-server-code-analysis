@@ -18,11 +18,6 @@ namespace FunFair.CodeAnalysis.Tests
         {
             const string test = @"
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
-    using System.Diagnostics;
 
     namespace ConsoleApplication1
     {
@@ -39,7 +34,7 @@ namespace FunFair.CodeAnalysis.Tests
                                             Id = "FFS0001",
                                             Message = @"Call IDateTimeSource.UtcNow() rather than DateTime.Now",
                                             Severity = DiagnosticSeverity.Error,
-                                            Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 15, column: 28)}
+                                            Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 10, column: 28)}
                                         };
 
             this.VerifyCSharpDiagnostic(test, expected);
@@ -50,11 +45,6 @@ namespace FunFair.CodeAnalysis.Tests
         {
             const string test = @"
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
-    using System.Diagnostics;
 
     namespace ConsoleApplication1
     {
@@ -68,10 +58,91 @@ namespace FunFair.CodeAnalysis.Tests
     }";
             DiagnosticResult expected = new DiagnosticResult
                                         {
-                                            Id = "FFS0002",
+                                            Id = "FFS0004",
                                             Message = @"Call IDateTimeSource.UtcNow() rather than DateTimeOffset.Now",
                                             Severity = DiagnosticSeverity.Error,
-                                            Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 15, column: 28)}
+                                            Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 10, column: 28)}
+                                        };
+
+            this.VerifyCSharpDiagnostic(test, expected);
+        }
+
+        [Fact]
+        public void DateTimeOffsetUtcNowIsBanned()
+        {
+            const string test = @"
+    using System;
+
+    namespace ConsoleApplication1
+    {
+        class TypeName
+        {
+            void Test()
+            {
+                var when = DateTimeOffset.UtcNow;
+            }
+        }
+    }";
+            DiagnosticResult expected = new DiagnosticResult
+                                        {
+                                            Id = "FFS0005",
+                                            Message = @"Call IDateTimeSource.UtcNow() rather than DateTimeOffset.UtcNow",
+                                            Severity = DiagnosticSeverity.Error,
+                                            Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 10, column: 28)}
+                                        };
+
+            this.VerifyCSharpDiagnostic(test, expected);
+        }
+
+        [Fact]
+        public void DateTimeTodayIsBanned()
+        {
+            const string test = @"
+    using System;
+
+    namespace ConsoleApplication1
+    {
+        class TypeName
+        {
+            void Test()
+            {
+                var when = DateTime.Today;
+            }
+        }
+    }";
+            DiagnosticResult expected = new DiagnosticResult
+                                        {
+                                            Id = "FFS0003",
+                                            Message = @"Call IDateTimeSource.UtcNow().Date rather than DateTime.Today",
+                                            Severity = DiagnosticSeverity.Error,
+                                            Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 10, column: 28)}
+                                        };
+
+            this.VerifyCSharpDiagnostic(test, expected);
+        }
+
+        [Fact]
+        public void DateTimeUtcNowIsBanned()
+        {
+            const string test = @"
+    using System;
+
+    namespace ConsoleApplication1
+    {
+        class TypeName
+        {
+            void Test()
+            {
+                var when = DateTime.UtcNow;
+            }
+        }
+    }";
+            DiagnosticResult expected = new DiagnosticResult
+                                        {
+                                            Id = "FFS0002",
+                                            Message = @"Call IDateTimeSource.UtcNow() rather than DateTime.UtcNow",
+                                            Severity = DiagnosticSeverity.Error,
+                                            Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 10, column: 28)}
                                         };
 
             this.VerifyCSharpDiagnostic(test, expected);
