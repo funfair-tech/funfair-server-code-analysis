@@ -24,7 +24,7 @@ namespace FunFair.CodeAnalysis
 
         protected override bool AreEqual(object other)
         {
-            return other is LiteralString otherResourceString && StringComparer.InvariantCultureIgnoreCase.Equals(this._value, otherResourceString._value);
+            return other is LiteralString otherResourceString && StringComparer.OrdinalIgnoreCase.Equals(this._value, otherResourceString._value);
         }
     }
 }

@@ -76,8 +76,8 @@ namespace FunFair.CodeAnalysis
                                                                                  continue;
                                                                              }
 
-                                                                             if (!StringComparer.InvariantCultureIgnoreCase.Equals(typeInfo.ConstructedFrom.MetadataName,
-                                                                                                                                   dateTimeType.MetadataName))
+                                                                             if (!StringComparer.OrdinalIgnoreCase.Equals(typeInfo.ConstructedFrom.MetadataName,
+                                                                                                                          dateTimeType.MetadataName))
                                                                              {
                                                                                  continue;
                                                                              }
