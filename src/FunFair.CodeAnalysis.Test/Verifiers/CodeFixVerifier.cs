@@ -43,13 +43,7 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
         /// <param name="allowNewCompilerDiagnostics">A bool controlling whether or not the test will fail if the CodeFix introduces other warnings after being applied</param>
         protected void VerifyCSharpFix(string oldSource, string newSource, int? codeFixIndex = null, bool allowNewCompilerDiagnostics = false)
         {
-            this.VerifyFix(LanguageNames.CSharp,
-                           this.GetCSharpDiagnosticAnalyzer(),
-                           this.GetCSharpCodeFixProvider(),
-                           oldSource,
-                           newSource,
-                           codeFixIndex,
-                           allowNewCompilerDiagnostics);
+            VerifyFix(LanguageNames.CSharp, this.GetCSharpDiagnosticAnalyzer(), this.GetCSharpCodeFixProvider(), oldSource, newSource, codeFixIndex, allowNewCompilerDiagnostics);
         }
 
         /// <summary>
@@ -61,13 +55,13 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
         /// <param name="allowNewCompilerDiagnostics">A bool controlling whether or not the test will fail if the CodeFix introduces other warnings after being applied</param>
         protected void VerifyBasicFix(string oldSource, string newSource, int? codeFixIndex = null, bool allowNewCompilerDiagnostics = false)
         {
-            this.VerifyFix(LanguageNames.VisualBasic,
-                           this.GetBasicDiagnosticAnalyzer(),
-                           this.GetBasicCodeFixProvider(),
-                           oldSource,
-                           newSource,
-                           codeFixIndex,
-                           allowNewCompilerDiagnostics);
+            VerifyFix(LanguageNames.VisualBasic,
+                      this.GetBasicDiagnosticAnalyzer(),
+                      this.GetBasicCodeFixProvider(),
+                      oldSource,
+                      newSource,
+                      codeFixIndex,
+                      allowNewCompilerDiagnostics);
         }
 
         /// <summary>
@@ -83,13 +77,13 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
         /// <param name="newSource">A class in the form of a string after the CodeFix was applied to it</param>
         /// <param name="codeFixIndex">Index determining which codefix to apply if there are multiple</param>
         /// <param name="allowNewCompilerDiagnostics">A bool controlling whether or not the test will fail if the CodeFix introduces other warnings after being applied</param>
-        private void VerifyFix(string language,
-                               DiagnosticAnalyzer analyzer,
-                               CodeFixProvider codeFixProvider,
-                               string oldSource,
-                               string newSource,
-                               int? codeFixIndex,
-                               bool allowNewCompilerDiagnostics)
+        private static void VerifyFix(string language,
+                                      DiagnosticAnalyzer analyzer,
+                                      CodeFixProvider codeFixProvider,
+                                      string oldSource,
+                                      string newSource,
+                                      int? codeFixIndex,
+                                      bool allowNewCompilerDiagnostics)
         {
             Document document = CreateDocument(oldSource, language);
             Diagnostic[] analyzerDiagnostics = GetSortedDiagnosticsFromDocuments(analyzer, new[] {document});

@@ -110,7 +110,7 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
         /// <param name="expected"> DiagnosticResults that should appear after the analyzer is run on the source</param>
         protected void VerifyCSharpDiagnostic(string source, params DiagnosticResult[] expected)
         {
-            this.VerifyDiagnostics(new[] {source}, LanguageNames.CSharp, this.GetCSharpDiagnosticAnalyzer(), expected);
+            VerifyDiagnostics(new[] {source}, LanguageNames.CSharp, this.GetCSharpDiagnosticAnalyzer(), expected);
         }
 
         /// <summary>
@@ -121,7 +121,7 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
         /// <param name="expected">DiagnosticResults that should appear after the analyzer is run on the source</param>
         protected void VerifyBasicDiagnostic(string source, params DiagnosticResult[] expected)
         {
-            this.VerifyDiagnostics(new[] {source}, LanguageNames.VisualBasic, this.GetBasicDiagnosticAnalyzer(), expected);
+            VerifyDiagnostics(new[] {source}, LanguageNames.VisualBasic, this.GetBasicDiagnosticAnalyzer(), expected);
         }
 
         /// <summary>
@@ -132,7 +132,7 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
         /// <param name="expected">DiagnosticResults that should appear after the analyzer is run on the sources</param>
         protected void VerifyCSharpDiagnostic(string[] sources, params DiagnosticResult[] expected)
         {
-            this.VerifyDiagnostics(sources, LanguageNames.CSharp, this.GetCSharpDiagnosticAnalyzer(), expected);
+            VerifyDiagnostics(sources, LanguageNames.CSharp, this.GetCSharpDiagnosticAnalyzer(), expected);
         }
 
         /// <summary>
@@ -143,7 +143,7 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
         /// <param name="expected">DiagnosticResults that should appear after the analyzer is run on the sources</param>
         protected void VerifyBasicDiagnostic(string[] sources, params DiagnosticResult[] expected)
         {
-            this.VerifyDiagnostics(sources, LanguageNames.VisualBasic, this.GetBasicDiagnosticAnalyzer(), expected);
+            VerifyDiagnostics(sources, LanguageNames.VisualBasic, this.GetBasicDiagnosticAnalyzer(), expected);
         }
 
         /// <summary>
@@ -154,7 +154,7 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
         /// <param name="language">The language of the classes represented by the source strings</param>
         /// <param name="analyzer">The analyzer to be run on the source code</param>
         /// <param name="expected">DiagnosticResults that should appear after the analyzer is run on the sources</param>
-        private void VerifyDiagnostics(string[] sources, string language, DiagnosticAnalyzer analyzer, params DiagnosticResult[] expected)
+        private static void VerifyDiagnostics(string[] sources, string language, DiagnosticAnalyzer analyzer, params DiagnosticResult[] expected)
         {
             Diagnostic[] diagnostics = GetSortedDiagnostics(sources, language, analyzer);
             VerifyDiagnosticResults(diagnostics, analyzer, expected);
@@ -173,7 +173,7 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
         /// <param name="expectedResults">Diagnostic Results that should have appeared in the code</param>
         private static void VerifyDiagnosticResults(IEnumerable<Diagnostic> actualResults, DiagnosticAnalyzer analyzer, params DiagnosticResult[] expectedResults)
         {
-            int expectedCount = expectedResults.Count();
+            int expectedCount = expectedResults.Length;
             int actualCount = actualResults.Count();
 
             if (expectedCount != actualCount)

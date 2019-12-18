@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.CodeAnalysis;
 
 namespace FunFair.CodeAnalysis.Tests.Helpers
@@ -6,6 +7,7 @@ namespace FunFair.CodeAnalysis.Tests.Helpers
     /// <summary>
     ///     Location where the diagnostic appears, as determined by path, line number, and column number.
     /// </summary>
+    [SuppressMessage(category: "Microsoft.Performance", checkId: "CA1815:OverrideEqualsAndOperatorEqualsOnValueTypes", Justification = "Test code")]
     public struct DiagnosticResultLocation
     {
         public DiagnosticResultLocation(string path, int line, int column)
@@ -35,6 +37,7 @@ namespace FunFair.CodeAnalysis.Tests.Helpers
     /// <summary>
     ///     Struct that stores information about a Diagnostic appearing in a source
     /// </summary>
+    [SuppressMessage(category: "Microsoft.Performance", checkId: "CA1815:OverrideEqualsAndOperatorEqualsOnValueTypes", Justification = "Test code")]
     public struct DiagnosticResult
     {
         private DiagnosticResultLocation[] locations;
@@ -45,7 +48,7 @@ namespace FunFair.CodeAnalysis.Tests.Helpers
             {
                 if (this.locations == null)
                 {
-                    this.locations = new DiagnosticResultLocation[] { };
+                    this.locations = Array.Empty<DiagnosticResultLocation>();
                 }
 
                 return this.locations;
