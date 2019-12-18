@@ -34,7 +34,6 @@
     <ItemGroup>
         <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="2.9.8" PrivateAssets="all"/>
         <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="2.10" PrivateAssets="all"/>
-        <PackageReference Update="NETStandard.Library" Version="1.6.1" PrivateAssets="all"/>
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="AsyncFixer" Version="1.1.6" PrivateAssets="All"/>
