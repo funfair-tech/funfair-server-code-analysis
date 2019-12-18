@@ -7,7 +7,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{6BDAE5C1
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FunFair.CodeAnalysis", "FunFair.CodeAnalysis\FunFair.CodeAnalysis.csproj", "{5062F0EF-59CB-4D4F-8237-A8BBD3210290}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FunFair.CodeAnalysis.Tests", "FunFair.CodeAnalysis.Test\FunFair.CodeAnalysis.Tests.csproj", "{2395F045-1603-4CB3-A0F7-BD3FCFC0006D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FunFair.CodeAnalysis.Tests", "FunFair.CodeAnalysis.Tests\FunFair.CodeAnalysis.Tests.csproj", "{2395F045-1603-4CB3-A0F7-BD3FCFC0006D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
