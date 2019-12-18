@@ -8,17 +8,11 @@ namespace FunFair.CodeAnalysis.Tests
 {
     public sealed class ProhibitedMethodsDiagnosticsAnalyzerTests : CodeFixVerifier
     {
-        // protected override CodeFixProvider GetCSharpCodeFixProvider()
-        // {
-        //     return new ProhibitedMethodsCodeFixProvider();
-        // }
-
         protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer()
         {
             return new ProhibitedMethodsDiagnosticsAnalyzer();
         }
 
-        //Diagnostic and CodeFix both triggered and checked for
         [Fact]
         public void DateTimeNowIsBanned()
         {
@@ -83,7 +77,6 @@ namespace FunFair.CodeAnalysis.Tests
             this.VerifyCSharpDiagnostic(test, expected);
         }
 
-        //No diagnostics expected to show up
         [Fact]
         public void NoErrorsReported()
         {
