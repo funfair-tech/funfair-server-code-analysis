@@ -9,7 +9,7 @@
         <Features>strict;flow-analysis</Features>
         <PackAsTool>false</PackAsTool>
         <IsPackable>true</IsPackable>
-        <Nullable>disable</Nullable>
+        <Nullable>enable</Nullable>
         <IncludeBuildOutput>false</IncludeBuildOutput>
         <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
         <PackageTags>FunFair CodeAnalysis, analyzers</PackageTags>

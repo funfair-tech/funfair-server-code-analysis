@@ -7,6 +7,7 @@ using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.Formatting;
 using Xunit;
+using Xunit.Sdk;
 
 namespace FunFair.CodeAnalysis.Tests.Verifiers
 {
@@ -20,7 +21,7 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
         ///     Returns the codefix being tested (C#) - to be implemented in non-abstract class
         /// </summary>
         /// <returns>The CodeFixProvider to be used for CSharp code</returns>
-        protected virtual CodeFixProvider GetCSharpCodeFixProvider()
+        protected virtual CodeFixProvider? GetCSharpCodeFixProvider()
         {
             return null;
         }
@@ -29,7 +30,7 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
         ///     Returns the codefix being tested (VB) - to be implemented in non-abstract class
         /// </summary>
         /// <returns>The CodeFixProvider to be used for VisualBasic code</returns>
-        protected virtual CodeFixProvider GetBasicCodeFixProvider()
+        protected virtual CodeFixProvider? GetBasicCodeFixProvider()
         {
             return null;
         }
@@ -43,25 +44,21 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
         /// <param name="allowNewCompilerDiagnostics">A bool controlling whether or not the test will fail if the CodeFix introduces other warnings after being applied</param>
         protected void VerifyCSharpFix(string oldSource, string newSource, int? codeFixIndex = null, bool allowNewCompilerDiagnostics = false)
         {
-            VerifyFix(LanguageNames.CSharp, this.GetCSharpDiagnosticAnalyzer(), this.GetCSharpCodeFixProvider(), oldSource, newSource, codeFixIndex, allowNewCompilerDiagnostics);
-        }
+            DiagnosticAnalyzer? analyzer = this.GetCSharpDiagnosticAnalyzer();
 
-        /// <summary>
-        ///     Called to test a VB codefix when applied on the inputted string as a source
-        /// </summary>
-        /// <param name="oldSource">A class in the form of a string before the CodeFix was applied to it</param>
-        /// <param name="newSource">A class in the form of a string after the CodeFix was applied to it</param>
-        /// <param name="codeFixIndex">Index determining which codefix to apply if there are multiple</param>
-        /// <param name="allowNewCompilerDiagnostics">A bool controlling whether or not the test will fail if the CodeFix introduces other warnings after being applied</param>
-        protected void VerifyBasicFix(string oldSource, string newSource, int? codeFixIndex = null, bool allowNewCompilerDiagnostics = false)
-        {
-            VerifyFix(LanguageNames.VisualBasic,
-                      this.GetBasicDiagnosticAnalyzer(),
-                      this.GetBasicCodeFixProvider(),
-                      oldSource,
-                      newSource,
-                      codeFixIndex,
-                      allowNewCompilerDiagnostics);
+            if (analyzer == null)
+            {
+                throw new NotNullException();
+            }
+
+            CodeFixProvider? codeFixProvider = this.GetCSharpCodeFixProvider();
+
+            if (codeFixProvider == null)
+            {
+                throw new NotNullException();
+            }
+
+            VerifyFix(LanguageNames.CSharp, analyzer, codeFixProvider, oldSource, newSource, codeFixIndex, allowNewCompilerDiagnostics);
         }
 
         /// <summary>
@@ -124,11 +121,18 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
                                                                         document.Project.Solution.Workspace));
                     newCompilerDiagnostics = GetNewDiagnostics(compilerDiagnostics, GetCompilerDiagnostics(document));
 
+                    SyntaxNode? sr = document.GetSyntaxRootAsync()
+                                             .Result;
+
+                    if (sr == null)
+                    {
+                        throw new NotNullException();
+                    }
+
                     Assert.True(condition: false,
                                 string.Format(format: "Fix introduced new compiler diagnostics:\r\n{0}\r\n\r\nNew document:\r\n{1}\r\n",
                                               string.Join(separator: "\r\n", newCompilerDiagnostics.Select(selector: d => d.ToString())),
-                                              document.GetSyntaxRootAsync()
-                                                      .Result.ToFullString()));
+                                              sr.ToFullString()));
                 }
 
                 //check if there are analyzer diagnostics left after the code fix

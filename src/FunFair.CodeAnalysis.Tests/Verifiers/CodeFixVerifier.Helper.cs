@@ -6,6 +6,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeActions;
 using Microsoft.CodeAnalysis.Formatting;
 using Microsoft.CodeAnalysis.Simplification;
+using Xunit.Sdk;
 
 namespace FunFair.CodeAnalysis.Tests.Verifiers
 {
@@ -30,7 +31,14 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
                                           .Single()
                                           .ChangedSolution;
 
-            return solution.GetDocument(document.Id);
+            Document? doc = solution.GetDocument(document.Id);
+
+            if (doc == null)
+            {
+                throw new NotNullException();
+            }
+
+            return doc;
         }
 
         /// <summary>
@@ -74,8 +82,15 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
         /// <returns>The compiler diagnostics that were found in the code</returns>
         private static IEnumerable<Diagnostic> GetCompilerDiagnostics(Document document)
         {
-            return document.GetSemanticModelAsync()
-                           .Result.GetDiagnostics();
+            SemanticModel? d = document.GetSemanticModelAsync()
+                                       .Result;
+
+            if (d == null)
+            {
+                throw new NotNullException();
+            }
+
+            return d.GetDiagnostics();
         }
 
         /// <summary>
@@ -87,9 +102,20 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
         {
             Document simplifiedDoc = Simplifier.ReduceAsync(document, Simplifier.Annotation)
                                                .Result;
-            SyntaxNode root = simplifiedDoc.GetSyntaxRootAsync()
-                                           .Result;
+            SyntaxNode? root = simplifiedDoc.GetSyntaxRootAsync()
+                                            .Result;
+
+            if (root == null)
+            {
+                throw new NotNullException();
+            }
+
             root = Formatter.Format(root, Formatter.Annotation, simplifiedDoc.Project.Solution.Workspace);
+
+            if (root == null)
+            {
+                throw new NotNullException();
+            }
 
             return root.GetText()
                        .ToString();

@@ -7,6 +7,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.Text;
+using Xunit.Sdk;
 
 namespace FunFair.CodeAnalysis.Tests.Verifiers
 {
@@ -76,10 +77,10 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
                         for (int i = 0; i < documents.Length; i++)
                         {
                             Document document = documents[i];
-                            SyntaxTree tree = document.GetSyntaxTreeAsync()
-                                                      .Result;
+                            SyntaxTree? tree = document.GetSyntaxTreeAsync()
+                                                       .Result;
 
-                            if (tree == diag.Location.SourceTree)
+                            if (tree != null && tree == diag.Location.SourceTree)
                             {
                                 diagnostics.Add(diag);
                             }
@@ -175,7 +176,14 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
                 count++;
             }
 
-            return solution.GetProject(projectId);
+            Project? project = solution.GetProject(projectId);
+
+            if (project == null)
+            {
+                throw new NotNullException();
+            }
+
+            return project;
         }
 
         #endregion
