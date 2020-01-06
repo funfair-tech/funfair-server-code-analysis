@@ -151,7 +151,7 @@ namespace FunFair.CodeAnalysis.Tests
         [Fact]
         public void NoErrorsReported()
         {
-            string test = @"";
+            const string test = @"";
 
             this.VerifyCSharpDiagnostic(test);
         }

@@ -40,21 +40,21 @@ namespace FunFair.CodeAnalysis.Tests.Helpers
     [SuppressMessage(category: "Microsoft.Performance", checkId: "CA1815:OverrideEqualsAndOperatorEqualsOnValueTypes", Justification = "Test code")]
     public struct DiagnosticResult
     {
-        private DiagnosticResultLocation[] locations;
+        private DiagnosticResultLocation[] _locations;
 
         public DiagnosticResultLocation[] Locations
         {
             get
             {
-                if (this.locations == null)
+                if (this._locations == null)
                 {
-                    this.locations = Array.Empty<DiagnosticResultLocation>();
+                    this._locations = Array.Empty<DiagnosticResultLocation>();
                 }
 
-                return this.locations;
+                return this._locations;
             }
 
-            set => this.locations = value;
+            set => this._locations = value;
         }
 
         public DiagnosticSeverity Severity { get; set; }

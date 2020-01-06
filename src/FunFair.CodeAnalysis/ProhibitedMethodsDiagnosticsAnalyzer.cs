@@ -98,8 +98,8 @@ namespace FunFair.CodeAnalysis
                                                                                  continue;
                                                                              }
 
-                                                                             INamedTypeSymbol typeInfo = analysisContext.SemanticModel.GetTypeInfo(e)
-                                                                                                                        .Type as INamedTypeSymbol;
+                                                                             INamedTypeSymbol? typeInfo = analysisContext.SemanticModel.GetTypeInfo(e)
+                                                                                                                         .Type as INamedTypeSymbol;
 
                                                                              if (typeInfo?.ConstructedFrom == null)
                                                                              {

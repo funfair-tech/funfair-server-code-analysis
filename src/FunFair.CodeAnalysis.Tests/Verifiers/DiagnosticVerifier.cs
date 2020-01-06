@@ -8,6 +8,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.Text;
 using Xunit;
+using Xunit.Sdk;
 
 namespace FunFair.CodeAnalysis.Tests.Verifiers
 {
@@ -53,7 +54,7 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
                                         $"Test base does not currently handle diagnostics in metadata locations. Diagnostic in metadata: {diagnostics[i]}\r\n");
 
                             string resultMethodName = diagnostics[i]
-                                                      .Location.SourceTree.FilePath.EndsWith(value: ".cs")
+                                                      .Location.SourceTree.FilePath.EndsWith(value: ".cs", StringComparison.OrdinalIgnoreCase)
                                 ? "GetCSharpResultAt"
                                 : "GetBasicResultAt";
                             LinePosition linePosition = diagnostics[i]
@@ -85,15 +86,7 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
         /// <summary>
         ///     Get the CSharp analyzer being tested - to be implemented in non-abstract class
         /// </summary>
-        protected virtual DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer()
-        {
-            return null;
-        }
-
-        /// <summary>
-        ///     Get the Visual Basic analyzer being tested (C#) - to be implemented in non-abstract class
-        /// </summary>
-        protected virtual DiagnosticAnalyzer GetBasicDiagnosticAnalyzer()
+        protected virtual DiagnosticAnalyzer? GetCSharpDiagnosticAnalyzer()
         {
             return null;
         }
@@ -110,18 +103,14 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
         /// <param name="expected"> DiagnosticResults that should appear after the analyzer is run on the source</param>
         protected void VerifyCSharpDiagnostic(string source, params DiagnosticResult[] expected)
         {
-            VerifyDiagnostics(new[] {source}, LanguageNames.CSharp, this.GetCSharpDiagnosticAnalyzer(), expected);
-        }
+            DiagnosticAnalyzer? diagnostic = this.GetCSharpDiagnosticAnalyzer();
 
-        /// <summary>
-        ///     Called to test a VB DiagnosticAnalyzer when applied on the single inputted string as a source
-        ///     Note: input a DiagnosticResult for each Diagnostic expected
-        /// </summary>
-        /// <param name="source">A class in the form of a string to run the analyzer on</param>
-        /// <param name="expected">DiagnosticResults that should appear after the analyzer is run on the source</param>
-        protected void VerifyBasicDiagnostic(string source, params DiagnosticResult[] expected)
-        {
-            VerifyDiagnostics(new[] {source}, LanguageNames.VisualBasic, this.GetBasicDiagnosticAnalyzer(), expected);
+            if (diagnostic == null)
+            {
+                throw new NotNullException();
+            }
+
+            VerifyDiagnostics(new[] {source}, LanguageNames.CSharp, diagnostic, expected);
         }
 
         /// <summary>
@@ -132,18 +121,14 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
         /// <param name="expected">DiagnosticResults that should appear after the analyzer is run on the sources</param>
         protected void VerifyCSharpDiagnostic(string[] sources, params DiagnosticResult[] expected)
         {
-            VerifyDiagnostics(sources, LanguageNames.CSharp, this.GetCSharpDiagnosticAnalyzer(), expected);
-        }
+            DiagnosticAnalyzer? diagnostic = this.GetCSharpDiagnosticAnalyzer();
 
-        /// <summary>
-        ///     Called to test a VB DiagnosticAnalyzer when applied on the inputted strings as a source
-        ///     Note: input a DiagnosticResult for each Diagnostic expected
-        /// </summary>
-        /// <param name="sources">An array of strings to create source documents from to run the analyzers on</param>
-        /// <param name="expected">DiagnosticResults that should appear after the analyzer is run on the sources</param>
-        protected void VerifyBasicDiagnostic(string[] sources, params DiagnosticResult[] expected)
-        {
-            VerifyDiagnostics(sources, LanguageNames.VisualBasic, this.GetBasicDiagnosticAnalyzer(), expected);
+            if (diagnostic == null)
+            {
+                throw new NotNullException();
+            }
+
+            VerifyDiagnostics(sources, LanguageNames.CSharp, diagnostic, expected);
         }
 
         /// <summary>
