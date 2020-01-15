@@ -14,7 +14,7 @@ namespace FunFair.CodeAnalysis.Tests
         }
 
         [Fact]
-        public void DateTimeNowIsBanned()
+        public void DateTimeNowIsBannedInMethods()
         {
             const string test = @"
     using System;
@@ -26,6 +26,36 @@ namespace FunFair.CodeAnalysis.Tests
             void Test()
             {
                 var when = DateTime.Now;
+            }
+        }
+    }";
+            DiagnosticResult expected = new DiagnosticResult
+                                        {
+                                            Id = "FFS0001",
+                                            Message = @"Call IDateTimeSource.UtcNow() rather than DateTime.Now",
+                                            Severity = DiagnosticSeverity.Error,
+                                            Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 10, column: 28)}
+                                        };
+
+            this.VerifyCSharpDiagnostic(test, expected);
+        }
+
+        [Fact]
+        public void DateTimeNowIsBannedInProperties()
+        {
+            const string test = @"
+    using System;
+
+    namespace ConsoleApplication1
+    {
+        class TypeName
+        {
+            public DateTime Test
+            {
+                get
+                {
+                    return DateTime.Now;
+                }
             }
         }
     }";
