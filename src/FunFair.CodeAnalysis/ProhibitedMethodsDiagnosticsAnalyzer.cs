@@ -128,7 +128,9 @@ namespace FunFair.CodeAnalysis
                 }
             }
 
+            compilationStartContext.RegisterSyntaxNodeAction(LookForBannedMethods, SyntaxKind.ConstructorDeclaration);
             compilationStartContext.RegisterSyntaxNodeAction(LookForBannedMethods, SyntaxKind.MethodDeclaration);
+            compilationStartContext.RegisterSyntaxNodeAction(LookForBannedMethods, SyntaxKind.OperatorDeclaration);
             compilationStartContext.RegisterSyntaxNodeAction(LookForBannedMethods, SyntaxKind.PropertyDeclaration);
         }
 

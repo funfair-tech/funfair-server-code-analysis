@@ -14,6 +14,35 @@ namespace FunFair.CodeAnalysis.Tests
         }
 
         [Fact]
+        public void DateTimeNowIsBannedInConstructors()
+        {
+            const string test = @"
+    using System;
+
+    namespace ConsoleApplication1
+    {
+        public class TypeName
+        {
+            private readonly DateTime _when;
+
+            public TypeName()
+            {
+                _when = DateTime.Now;
+            }
+        }
+    }";
+            DiagnosticResult expected = new DiagnosticResult
+                                        {
+                                            Id = "FFS0001",
+                                            Message = @"Call IDateTimeSource.UtcNow() rather than DateTime.Now",
+                                            Severity = DiagnosticSeverity.Error,
+                                            Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 12, column: 25)}
+                                        };
+
+            this.VerifyCSharpDiagnostic(test, expected);
+        }
+
+        [Fact]
         public void DateTimeNowIsBannedInMethods()
         {
             const string test = @"
@@ -35,6 +64,35 @@ namespace FunFair.CodeAnalysis.Tests
                                             Message = @"Call IDateTimeSource.UtcNow() rather than DateTime.Now",
                                             Severity = DiagnosticSeverity.Error,
                                             Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 10, column: 28)}
+                                        };
+
+            this.VerifyCSharpDiagnostic(test, expected);
+        }
+
+        [Fact]
+        public void DateTimeNowIsBannedInOperators()
+        {
+            const string test = @"
+    using System;
+
+    namespace ConsoleApplication1
+    {
+        public class TypeName
+        {
+            private readonly DateTime _when = DateTime.MinValue;
+
+            public static bool operator ==(TypeName left, TypeName right)
+            {
+                return left == right || left == DateTime.Now;
+            }
+        }
+    }";
+            DiagnosticResult expected = new DiagnosticResult
+                                        {
+                                            Id = "FFS0001",
+                                            Message = @"Call IDateTimeSource.UtcNow() rather than DateTime.Now",
+                                            Severity = DiagnosticSeverity.Error,
+                                            Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 12, column: 49)}
                                         };
 
             this.VerifyCSharpDiagnostic(test, expected);
