@@ -75,7 +75,10 @@ namespace FunFair.CodeAnalysis
                 {
                     INamedTypeSymbol item = compilationStartContext.Compilation.GetTypeByMetadataName(rule.SourceClass);
 
-                    cachedSymbols.Add(rule.SourceClass, item);
+                    if (item != null)
+                    {
+                        cachedSymbols.Add(rule.SourceClass, item);
+                    }
                 }
             }
 
