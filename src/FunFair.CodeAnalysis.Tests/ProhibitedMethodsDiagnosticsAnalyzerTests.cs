@@ -43,6 +43,35 @@ namespace FunFair.CodeAnalysis.Tests
         }
 
         [Fact]
+        public void DateTimeNowIsBannedInConversionOperators()
+        {
+            const string test = @"
+    using System;
+
+    namespace ConsoleApplication1
+    {
+        public class TypeName
+        {
+            private readonly DateTime _when = DateTime.MinValue;
+
+             public static explicit operator DateTime(TypeName left)
+             {
+                 return DateTime.Now;
+             }
+        }
+    }";
+            DiagnosticResult expected = new DiagnosticResult
+                                        {
+                                            Id = "FFS0001",
+                                            Message = @"Call IDateTimeSource.UtcNow() rather than DateTime.Now",
+                                            Severity = DiagnosticSeverity.Error,
+                                            Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 12, column: 25)}
+                                        };
+
+            this.VerifyCSharpDiagnostic(test, expected);
+        }
+
+        [Fact]
         public void DateTimeNowIsBannedInMethods()
         {
             const string test = @"
