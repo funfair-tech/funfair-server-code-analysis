@@ -43,7 +43,12 @@ namespace FunFair.CodeAnalysis
                                       title: @"Avoid use of DateTime methods",
                                       message: "Call IDateTimeSource.UtcNow() rather than DateTimeOffset.UtcNow",
                                       sourceClass: "System.DateTimeOffset",
-                                      bannedMethod: "UtcNow")
+                                      bannedMethod: "UtcNow"),
+            new ProhibitedMethodsSpec(Rules.RuleDontUseArbitrarySql,
+                                      title: @"Avoid use of DateTime methods",
+                                      message: "Only use ISqlServerDatabase.ExecuteArbitrarySqlAsync in integration tests",
+                                      sourceClass: "FunFair.Common.Data.ISqlServerDatabase",
+                                      bannedMethod: "ExecuteArbitrarySqlAsync")
         };
 
         /// <inheritdoc />
