@@ -82,56 +82,54 @@ namespace FunFair.CodeAnalysis
                 }
             }
 
-            compilationStartContext.RegisterSyntaxNodeAction(action: analysisContext =>
-                                                                     {
-                                                                         IEnumerable<MemberAccessExpressionSyntax> invocations = analysisContext.Node.DescendantNodes()
-                                                                                                                                                .OfType<
-                                                                                                                                                    MemberAccessExpressionSyntax
-                                                                                                                                                >();
+            void LookForBannedMethods(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
+            {
+                IEnumerable<MemberAccessExpressionSyntax> invocations = syntaxNodeAnalysisContext.Node.DescendantNodes()
+                                                                                                 .OfType<MemberAccessExpressionSyntax>();
 
-                                                                         foreach (MemberAccessExpressionSyntax invocation in invocations)
-                                                                         {
-                                                                             ExpressionSyntax e;
+                foreach (MemberAccessExpressionSyntax invocation in invocations)
+                {
+                    ExpressionSyntax e;
 
-                                                                             if (invocation.Expression is MemberAccessExpressionSyntax syntax)
-                                                                             {
-                                                                                 e = syntax;
-                                                                             }
-                                                                             else if (invocation.Expression is IdentifierNameSyntax expression)
-                                                                             {
-                                                                                 e = expression;
-                                                                             }
-                                                                             else
-                                                                             {
-                                                                                 continue;
-                                                                             }
+                    if (invocation.Expression is MemberAccessExpressionSyntax syntax)
+                    {
+                        e = syntax;
+                    }
+                    else if (invocation.Expression is IdentifierNameSyntax expression)
+                    {
+                        e = expression;
+                    }
+                    else
+                    {
+                        continue;
+                    }
 
-                                                                             INamedTypeSymbol? typeInfo = analysisContext.SemanticModel.GetTypeInfo(e)
-                                                                                                                         .Type as INamedTypeSymbol;
+                    INamedTypeSymbol? typeInfo = syntaxNodeAnalysisContext.SemanticModel.GetTypeInfo(e)
+                                                                          .Type as INamedTypeSymbol;
 
-                                                                             if (typeInfo?.ConstructedFrom == null)
-                                                                             {
-                                                                                 continue;
-                                                                             }
+                    if (typeInfo?.ConstructedFrom == null)
+                    {
+                        continue;
+                    }
 
-                                                                             foreach (ProhibitedMethodsSpec item in BannedMethods)
-                                                                             {
-                                                                                 if (cachedSymbols.TryGetValue(item.SourceClass, out INamedTypeSymbol metadataType))
-                                                                                 {
-                                                                                     if (StringComparer.OrdinalIgnoreCase.Equals(typeInfo.ConstructedFrom.MetadataName,
-                                                                                                                                 metadataType.MetadataName))
-                                                                                     {
-                                                                                         if (invocation.Name.ToString() == item.BannedMethod)
-                                                                                         {
-                                                                                             analysisContext.ReportDiagnostic(
-                                                                                                 Diagnostic.Create(item.Rule, invocation.GetLocation()));
-                                                                                         }
-                                                                                     }
-                                                                                 }
-                                                                             }
-                                                                         }
-                                                                     },
-                                                             SyntaxKind.MethodDeclaration);
+                    foreach (ProhibitedMethodsSpec item in BannedMethods)
+                    {
+                        if (cachedSymbols.TryGetValue(item.SourceClass, out INamedTypeSymbol metadataType))
+                        {
+                            if (StringComparer.OrdinalIgnoreCase.Equals(typeInfo.ConstructedFrom.MetadataName, metadataType.MetadataName))
+                            {
+                                if (invocation.Name.ToString() == item.BannedMethod)
+                                {
+                                    syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(item.Rule, invocation.GetLocation()));
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            compilationStartContext.RegisterSyntaxNodeAction(LookForBannedMethods, SyntaxKind.MethodDeclaration);
+            compilationStartContext.RegisterSyntaxNodeAction(LookForBannedMethods, SyntaxKind.PropertyDeclaration);
         }
 
         private sealed class ProhibitedMethodsSpec

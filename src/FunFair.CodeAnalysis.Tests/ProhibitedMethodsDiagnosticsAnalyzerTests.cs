@@ -64,7 +64,7 @@ namespace FunFair.CodeAnalysis.Tests
                                             Id = "FFS0001",
                                             Message = @"Call IDateTimeSource.UtcNow() rather than DateTime.Now",
                                             Severity = DiagnosticSeverity.Error,
-                                            Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 10, column: 28)}
+                                            Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 12, column: 28)}
                                         };
 
             this.VerifyCSharpDiagnostic(test, expected);
