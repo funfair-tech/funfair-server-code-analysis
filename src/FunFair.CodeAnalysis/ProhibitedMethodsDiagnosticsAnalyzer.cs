@@ -45,7 +45,7 @@ namespace FunFair.CodeAnalysis
                                       sourceClass: "System.DateTimeOffset",
                                       bannedMethod: "UtcNow"),
             new ProhibitedMethodsSpec(Rules.RuleDontUseArbitrarySql,
-                                      title: @"Avoid use of DateTime methods",
+                                      title: @"Avoid use of inline SQL statements",
                                       message: "Only use ISqlServerDatabase.ExecuteArbitrarySqlAsync in integration tests",
                                       sourceClass: "FunFair.Common.Data.ISqlServerDatabase",
                                       bannedMethod: "ExecuteArbitrarySqlAsync")
