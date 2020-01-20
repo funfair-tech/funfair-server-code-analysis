@@ -49,7 +49,7 @@ namespace FunFair.CodeAnalysis
                                       message: "Only use ISqlServerDatabase.ExecuteArbitrarySqlAsync in integration tests",
                                       sourceClass: "FunFair.Common.Data.ISqlServerDatabase",
                                       bannedMethod: "ExecuteArbitrarySqlAsync"),
-            new ProhibitedMethodsSpec(Rules.RuleDontUseArbitrarySql,
+            new ProhibitedMethodsSpec(Rules.RuleDontUseArbitrarySqlForQueries,
                                       title: @"Avoid use of inline SQL statements",
                                       message: "Only use ISqlServerDatabase.QueryArbitrarySqlAsync in integration tests",
                                       sourceClass: "FunFair.Common.Data.ISqlServerDatabase",

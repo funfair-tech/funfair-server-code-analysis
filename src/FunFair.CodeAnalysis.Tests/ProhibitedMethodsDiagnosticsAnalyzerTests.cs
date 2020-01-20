@@ -271,6 +271,14 @@ namespace FunFair.CodeAnalysis.Tests
             const string test = @"
     using System;
 
+    namespace FunFair.Common.Data
+    {
+         public interface ISqlServerDatabase
+         {
+                Task QueryArbitrarySqlAsync(string sql);
+         }
+    }
+
     namespace ConsoleApplication1
     {
         class TypeName
@@ -283,10 +291,10 @@ namespace FunFair.CodeAnalysis.Tests
     }";
             DiagnosticResult expected = new DiagnosticResult
                                         {
-                                            Id = "FFS0006",
+                                            Id = "FFS0007",
                                             Message = @"Only use ISqlServerDatabase.QueryArbitrarySqlAsync in integration tests",
                                             Severity = DiagnosticSeverity.Error,
-                                            Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 10, column: 17)}
+                                            Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 18, column: 17)}
                                         };
 
             this.VerifyCSharpDiagnostic(test, expected);
@@ -298,13 +306,22 @@ namespace FunFair.CodeAnalysis.Tests
             const string test = @"
     using System;
 
+    namespace FunFair.Common.Data
+    {
+         public interface ISqlServerDatabase
+         {
+                Task QueryArbitrarySqlAsync(string sql);
+         }
+    }
+
     namespace ConsoleApplication1
     {
+
         class TypeName
         {
             void Test(FunFair.Common.Data.ISqlServerDatabase sqlServerDatabase, string sql)
             {
-                sqlServerDatabase.ExecuteArbitrarySqlAsync(sql)
+                sqlServerDatabase.ExecuteArbitrarySqlAsync(sql);
             }
         }
     }";
@@ -313,7 +330,7 @@ namespace FunFair.CodeAnalysis.Tests
                                             Id = "FFS0006",
                                             Message = @"Only use ISqlServerDatabase.ExecuteArbitrarySqlAsync in integration tests",
                                             Severity = DiagnosticSeverity.Error,
-                                            Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 10, column: 17)}
+                                            Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 19, column: 17)}
                                         };
 
             this.VerifyCSharpDiagnostic(test, expected);
