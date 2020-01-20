@@ -7,6 +7,7 @@ Please ADD ALL Changes to the UNRELASED SECTION and not a specific release
 
 ## [Unreleased]
 ### Added
+- Check for FunFair.Common.Data.ISqlServerDatabase::QueryArbitrarySqlAsync
 ### Fixed
 ### Changed
 ### Removed
