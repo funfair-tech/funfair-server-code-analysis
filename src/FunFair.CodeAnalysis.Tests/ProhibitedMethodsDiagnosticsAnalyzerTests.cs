@@ -266,6 +266,60 @@ namespace FunFair.CodeAnalysis.Tests
         }
 
         [Fact]
+        public void QueryArbitrarySqlAsyncIsBanned()
+        {
+            const string test = @"
+    using System;
+
+    namespace ConsoleApplication1
+    {
+        class TypeName
+        {
+            void Test(FunFair.Common.Data.ISqlServerDatabase sqlServerDatabase, string sql)
+            {
+                sqlServerDatabase.QueryArbitrarySqlAsync(sql)
+            }
+        }
+    }";
+            DiagnosticResult expected = new DiagnosticResult
+                                        {
+                                            Id = "FFS0006",
+                                            Message = @"Only use ISqlServerDatabase.QueryArbitrarySqlAsync in integration tests",
+                                            Severity = DiagnosticSeverity.Error,
+                                            Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 10, column: 17)}
+                                        };
+
+            this.VerifyCSharpDiagnostic(test, expected);
+        }
+
+        [Fact]
+        public void ExecuteArbitrarySqlAsyncIsBanned()
+        {
+            const string test = @"
+    using System;
+
+    namespace ConsoleApplication1
+    {
+        class TypeName
+        {
+            void Test(FunFair.Common.Data.ISqlServerDatabase sqlServerDatabase, string sql)
+            {
+                sqlServerDatabase.ExecuteArbitrarySqlAsync(sql)
+            }
+        }
+    }";
+            DiagnosticResult expected = new DiagnosticResult
+                                        {
+                                            Id = "FFS0006",
+                                            Message = @"Only use ISqlServerDatabase.ExecuteArbitrarySqlAsync in integration tests",
+                                            Severity = DiagnosticSeverity.Error,
+                                            Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 10, column: 17)}
+                                        };
+
+            this.VerifyCSharpDiagnostic(test, expected);
+        }
+
+        [Fact]
         public void NoErrorsReported()
         {
             const string test = @"";

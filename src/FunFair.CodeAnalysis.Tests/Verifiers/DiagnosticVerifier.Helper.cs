@@ -21,6 +21,7 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
         private static readonly MetadataReference SystemCoreReference = MetadataReference.CreateFromFile(typeof(Enumerable).Assembly.Location);
         private static readonly MetadataReference CSharpSymbolsReference = MetadataReference.CreateFromFile(typeof(CSharpCompilation).Assembly.Location);
         private static readonly MetadataReference CodeAnalysisReference = MetadataReference.CreateFromFile(typeof(Compilation).Assembly.Location);
+        private static readonly MetadataReference FunFairCommonReference = MetadataReference.CreateFromFile(typeof(FunFair.Common.Data.ISqlServerDatabase).Assembly.Location);
 
         internal static string DefaultFilePathPrefix = "Test";
         internal static string CSharpDefaultFileExt = "cs";
@@ -164,7 +165,8 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
                                                     .AddMetadataReference(projectId, CorlibReference)
                                                     .AddMetadataReference(projectId, SystemCoreReference)
                                                     .AddMetadataReference(projectId, CSharpSymbolsReference)
-                                                    .AddMetadataReference(projectId, CodeAnalysisReference);
+                                                    .AddMetadataReference(projectId, CodeAnalysisReference)
+                                                    .AddMetadataReference(projectId, FunFairCommonReference);
 
             int count = 0;
 
