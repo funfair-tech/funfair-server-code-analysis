@@ -310,7 +310,7 @@ namespace FunFair.CodeAnalysis.Tests
     {
          public interface ISqlServerDatabase
          {
-                Task QueryArbitrarySqlAsync(string sql);
+                Task ExecuteArbitrarySqlAsync(string sql);
          }
     }
 
