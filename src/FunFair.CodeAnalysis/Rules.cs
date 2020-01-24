@@ -9,5 +9,6 @@ namespace FunFair.CodeAnalysis
         public const string RuleDontUseDateTimeOffsetUtcNow = @"FFS0005";
         public const string RuleDontUseArbitrarySql = @"FFS0006";
         public const string RuleDontUseArbitrarySqlForQueries = @"FFS0007";
+        public const string RuleDontDisableWarnings = @"FFS0008";
     }
 }
