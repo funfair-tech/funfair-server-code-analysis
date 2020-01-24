@@ -7,7 +7,6 @@ Please ADD ALL Changes to the UNRELASED SECTION and not a specific release
 
 ## [Unreleased]
 ### Added
-- Prohibition of non white-listed #pragma warning disables
 ### Fixed
 ### Changed
 ### Removed
@@ -16,6 +15,9 @@ Please ADD ALL Changes to the UNRELASED SECTION and not a specific release
 <!-- 
 Releases that have at least been deployed to staging, BUT NOT necessarily released to live.  Changes should be moved from [Unreleased] into here as they are merged into the appropriate release branch
 -->
+## [1.0.4] - 2019-01-24
+- Prohibition of non white-listed #pragma warning disables
+
 ## [1.0.3] - 2019-01-20
 - Check for FunFair.Common.Data.ISqlServerDatabase::QueryArbitrarySqlAsync
 
