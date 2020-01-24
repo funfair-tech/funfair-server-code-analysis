@@ -15,7 +15,7 @@ namespace FunFair.CodeAnalysis
     {
         private const string CATEGORY = "Illegal Pragmas";
 
-        private static readonly string[] AllowedWarnigns =
+        private static readonly string[] AllowedWarnings =
         {
             // Xml Docs
             "1591",
@@ -54,6 +54,12 @@ namespace FunFair.CodeAnalysis
             "8653"
         };
 
+        private static readonly string[] AllowedInTestWarnings =
+        {
+            // Comparison made to same variable; did you mean to compare something else?
+            @"1718"
+        };
+
         private static readonly DiagnosticDescriptor Rule = RuleHelpers.CreateRule(Rules.RuleDontDisableWarnings,
                                                                                    CATEGORY,
                                                                                    title: "Don't disable warnings with #pragma warning disable",
@@ -73,13 +79,20 @@ namespace FunFair.CodeAnalysis
 
         private static void PerformCheck(CompilationStartAnalysisContext compilationStartContext)
         {
+            bool isTestAssembly = compilationStartContext.Compilation.ReferencedAssemblyNames.Any(predicate: name => name.Name == @"Microsoft.NET.Test.Sdk");
+
             void LookForBannedMethods(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
             {
                 if (syntaxNodeAnalysisContext.Node is PragmaWarningDirectiveTriviaSyntax pragmaWarningDirective)
                 {
                     foreach (ExpressionSyntax invocation in pragmaWarningDirective.ErrorCodes)
                     {
-                        if (!AllowedWarnigns.Contains(invocation.ToString()))
+                        if (isTestAssembly && AllowedInTestWarnings.Contains(invocation.ToString()))
+                        {
+                            continue;
+                        }
+
+                        if (!AllowedWarnings.Contains(invocation.ToString()))
                         {
                             syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(Rule, invocation.GetLocation()));
                         }
