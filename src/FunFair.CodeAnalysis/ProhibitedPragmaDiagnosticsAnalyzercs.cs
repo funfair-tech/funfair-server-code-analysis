@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using Microsoft.CodeAnalysis;
@@ -65,6 +67,8 @@ namespace FunFair.CodeAnalysis
                                                                                    title: "Don't disable warnings with #pragma warning disable",
                                                                                    message: "Don't disable warnings using #pragma warning disable");
 
+        private static readonly IReadOnlyList<string> TestAssemblies = new[] {@"Microsoft.NET.Test.Sdk"};
+
         /// <inheritdoc />
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => new[] {Rule}.ToImmutableArray();
 
@@ -77,25 +81,70 @@ namespace FunFair.CodeAnalysis
             context.RegisterCompilationStartAction(PerformCheck);
         }
 
+        private static bool IsBanned(string code)
+        {
+            return !AllowedWarnings.Contains(code);
+        }
+
+        private static bool IsBannedForTestAssemblies(string code)
+        {
+            return AllowedInTestWarnings.Contains(code) || IsBanned(code);
+        }
+
+        private static bool IsTestAssembly(Compilation compilation)
+        {
+            try
+            {
+                if (compilation.ReferencedAssemblyNames == null)
+                {
+                    return false;
+                }
+
+                foreach (AssemblyIdentity assembly in compilation.ReferencedAssemblyNames)
+                {
+                    foreach (string testAssemblyName in TestAssemblies)
+                    {
+                        if (StringComparer.InvariantCultureIgnoreCase.Equals(assembly.Name, testAssemblyName))
+                        {
+                            return true;
+                        }
+                    }
+                }
+
+                return false;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        private static Func<string, bool> DetermineWarningList(Compilation compilation)
+        {
+            if (IsTestAssembly(compilation))
+            {
+                return IsBannedForTestAssemblies;
+            }
+
+            return IsBanned;
+        }
+
         private static void PerformCheck(CompilationStartAnalysisContext compilationStartContext)
         {
-            bool isTestAssembly = compilationStartContext.Compilation.ReferencedAssemblyNames.Any(predicate: name => name.Name == @"Microsoft.NET.Test.Sdk");
+            Func<string, bool> isBanned = DetermineWarningList(compilationStartContext.Compilation);
 
             void LookForBannedMethods(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
             {
-                if (syntaxNodeAnalysisContext.Node is PragmaWarningDirectiveTriviaSyntax pragmaWarningDirective)
+                if (!(syntaxNodeAnalysisContext.Node is PragmaWarningDirectiveTriviaSyntax pragmaWarningDirective))
                 {
-                    foreach (ExpressionSyntax invocation in pragmaWarningDirective.ErrorCodes)
-                    {
-                        if (isTestAssembly && AllowedInTestWarnings.Contains(invocation.ToString()))
-                        {
-                            continue;
-                        }
+                    return;
+                }
 
-                        if (!AllowedWarnings.Contains(invocation.ToString()))
-                        {
-                            syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(Rule, invocation.GetLocation()));
-                        }
+                foreach (ExpressionSyntax invocation in pragmaWarningDirective.ErrorCodes)
+                {
+                    if (isBanned(invocation.ToString()))
+                    {
+                        syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(Rule, invocation.GetLocation()));
                     }
                 }
             }

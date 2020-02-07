@@ -36,6 +36,27 @@ namespace FunFair.CodeAnalysis.Tests
         }
 
         [Fact]
+        public void BannedWarningCannotBeDisabledInMethod()
+        {
+            const string test = @"void DoIt()
+{
+#pragma warning disable CS1234
+    int i = 2;
+}
+";
+
+            DiagnosticResult expected = new DiagnosticResult
+                                        {
+                                            Id = "FFS0008",
+                                            Message = "Don't disable warnings using #pragma warning disable",
+                                            Severity = DiagnosticSeverity.Error,
+                                            Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 3, column: 25)}
+                                        };
+
+            this.VerifyCSharpDiagnostic(test, expected);
+        }
+
+        [Fact]
         public void NoErrorsReported()
         {
             const string test = @"";
