@@ -123,11 +123,9 @@ namespace FunFair.CodeAnalysis
         {
             if (IsTestAssembly(compilation))
             {
-                Console.WriteLine("Test Assembly");
                 return IsBannedForTestAssemblies;
             }
 
-            Console.WriteLine("Normal Assembly");
             return IsBanned;
         }
 
