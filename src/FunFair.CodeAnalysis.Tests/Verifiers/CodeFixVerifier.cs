@@ -42,7 +42,7 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
         /// <param name="newSource">A class in the form of a string after the CodeFix was applied to it</param>
         /// <param name="codeFixIndex">Index determining which codefix to apply if there are multiple</param>
         /// <param name="allowNewCompilerDiagnostics">A bool controlling whether or not the test will fail if the CodeFix introduces other warnings after being applied</param>
-        protected void VerifyCSharpFix(string oldSource, string newSource, int? codeFixIndex = null, bool allowNewCompilerDiagnostics = false)
+        protected System.Threading.Tasks.Task VerifyCSharpFixAsync(string oldSource, string newSource, int? codeFixIndex = null, bool allowNewCompilerDiagnostics = false)
         {
             DiagnosticAnalyzer? analyzer = this.GetCSharpDiagnosticAnalyzer();
 
@@ -58,7 +58,7 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
                 throw new NotNullException();
             }
 
-            VerifyFix(LanguageNames.CSharp, analyzer, codeFixProvider, oldSource, newSource, codeFixIndex, allowNewCompilerDiagnostics);
+            return VerifyFixAsync(LanguageNames.CSharp, analyzer, codeFixProvider, oldSource, newSource, codeFixIndex, allowNewCompilerDiagnostics);
         }
 
         /// <summary>
@@ -74,25 +74,24 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
         /// <param name="newSource">A class in the form of a string after the CodeFix was applied to it</param>
         /// <param name="codeFixIndex">Index determining which codefix to apply if there are multiple</param>
         /// <param name="allowNewCompilerDiagnostics">A bool controlling whether or not the test will fail if the CodeFix introduces other warnings after being applied</param>
-        private static void VerifyFix(string language,
-                                      DiagnosticAnalyzer analyzer,
-                                      CodeFixProvider codeFixProvider,
-                                      string oldSource,
-                                      string newSource,
-                                      int? codeFixIndex,
-                                      bool allowNewCompilerDiagnostics)
+        private static async System.Threading.Tasks.Task VerifyFixAsync(string language,
+                                                                        DiagnosticAnalyzer analyzer,
+                                                                        CodeFixProvider codeFixProvider,
+                                                                        string oldSource,
+                                                                        string newSource,
+                                                                        int? codeFixIndex,
+                                                                        bool allowNewCompilerDiagnostics)
         {
             Document document = CreateDocument(oldSource, language);
-            Diagnostic[] analyzerDiagnostics = GetSortedDiagnosticsFromDocuments(analyzer, new[] {document});
-            IEnumerable<Diagnostic> compilerDiagnostics = GetCompilerDiagnostics(document);
+            Diagnostic[] analyzerDiagnostics = await GetSortedDiagnosticsFromDocumentsAsync(analyzer, new[] {document});
+            Diagnostic[] compilerDiagnostics = await GetCompilerDiagnosticsAsync(document);
             int attempts = analyzerDiagnostics.Length;
 
             for (int i = 0; i < attempts; ++i)
             {
                 List<CodeAction> actions = new List<CodeAction>();
                 CodeFixContext context = new CodeFixContext(document, analyzerDiagnostics[0], registerCodeFix: (a, d) => actions.Add(a), CancellationToken.None);
-                codeFixProvider.RegisterCodeFixesAsync(context)
-                               .Wait();
+                await codeFixProvider.RegisterCodeFixesAsync(context);
 
                 if (!actions.Any())
                 {
@@ -101,28 +100,27 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
 
                 if (codeFixIndex != null)
                 {
-                    document = ApplyFix(document, actions.ElementAt((int) codeFixIndex));
+                    document = await ApplyFixAsync(document, actions.ElementAt((int) codeFixIndex));
 
                     break;
                 }
 
-                document = ApplyFix(document, actions.ElementAt(index: 0));
-                analyzerDiagnostics = GetSortedDiagnosticsFromDocuments(analyzer, new[] {document});
+                document = await ApplyFixAsync(document, actions.ElementAt(index: 0));
+                analyzerDiagnostics = await GetSortedDiagnosticsFromDocumentsAsync(analyzer, new[] {document});
 
-                IEnumerable<Diagnostic> newCompilerDiagnostics = GetNewDiagnostics(compilerDiagnostics, GetCompilerDiagnostics(document));
+                IEnumerable<Diagnostic> newCompilerDiagnostics = GetNewDiagnostics(compilerDiagnostics, await GetCompilerDiagnosticsAsync(document));
 
                 //check if applying the code fix introduced any new compiler diagnostics
                 if (!allowNewCompilerDiagnostics && newCompilerDiagnostics.Any())
                 {
                     // Format and get the compiler diagnostics again so that the locations make sense in the output
-                    document = document.WithSyntaxRoot(Formatter.Format(document.GetSyntaxRootAsync()
-                                                                                .Result,
+                    document = document.WithSyntaxRoot(Formatter.Format(await document.GetSyntaxRootAsync(),
                                                                         Formatter.Annotation,
                                                                         document.Project.Solution.Workspace));
-                    newCompilerDiagnostics = GetNewDiagnostics(compilerDiagnostics, GetCompilerDiagnostics(document));
 
-                    SyntaxNode? sr = document.GetSyntaxRootAsync()
-                                             .Result;
+                    newCompilerDiagnostics = GetNewDiagnostics(compilerDiagnostics, await GetCompilerDiagnosticsAsync(document));
+
+                    SyntaxNode? sr = await document.GetSyntaxRootAsync();
 
                     if (sr == null)
                     {
@@ -143,7 +141,7 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
             }
 
             //after applying all of the code fixes, compare the resulting string to the inputted one
-            string actual = GetStringFromDocument(document);
+            string actual = await GetStringFromDocumentAsync(document);
             Assert.Equal(newSource, actual);
         }
     }

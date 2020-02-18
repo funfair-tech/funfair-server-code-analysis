@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using FunFair.CodeAnalysis.Tests.Helpers;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
@@ -101,7 +102,7 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
         /// </summary>
         /// <param name="source">A class in the form of a string to run the analyzer on</param>
         /// <param name="expected"> DiagnosticResults that should appear after the analyzer is run on the source</param>
-        protected void VerifyCSharpDiagnostic(string source, params DiagnosticResult[] expected)
+        protected Task VerifyCSharpDiagnosticAsync(string source, params DiagnosticResult[] expected)
         {
             DiagnosticAnalyzer? diagnostic = this.GetCSharpDiagnosticAnalyzer();
 
@@ -110,7 +111,7 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
                 throw new NotNullException();
             }
 
-            VerifyDiagnostics(new[] {source}, LanguageNames.CSharp, diagnostic, expected);
+            return VerifyDiagnosticsAsync(new[] {source}, LanguageNames.CSharp, diagnostic, expected);
         }
 
         /// <summary>
@@ -119,7 +120,7 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
         /// </summary>
         /// <param name="sources">An array of strings to create source documents from to run the analyzers on</param>
         /// <param name="expected">DiagnosticResults that should appear after the analyzer is run on the sources</param>
-        protected void VerifyCSharpDiagnostic(string[] sources, params DiagnosticResult[] expected)
+        protected Task VerifyCSharpDiagnosticAsync(string[] sources, params DiagnosticResult[] expected)
         {
             DiagnosticAnalyzer? diagnostic = this.GetCSharpDiagnosticAnalyzer();
 
@@ -128,7 +129,7 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
                 throw new NotNullException();
             }
 
-            VerifyDiagnostics(sources, LanguageNames.CSharp, diagnostic, expected);
+            return VerifyDiagnosticsAsync(sources, LanguageNames.CSharp, diagnostic, expected);
         }
 
         /// <summary>
@@ -139,9 +140,10 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
         /// <param name="language">The language of the classes represented by the source strings</param>
         /// <param name="analyzer">The analyzer to be run on the source code</param>
         /// <param name="expected">DiagnosticResults that should appear after the analyzer is run on the sources</param>
-        private static void VerifyDiagnostics(string[] sources, string language, DiagnosticAnalyzer analyzer, params DiagnosticResult[] expected)
+        private static async Task VerifyDiagnosticsAsync(string[] sources, string language, DiagnosticAnalyzer analyzer, params DiagnosticResult[] expected)
         {
-            Diagnostic[] diagnostics = GetSortedDiagnostics(sources, language, analyzer);
+            Diagnostic[] diagnostics = await GetSortedDiagnosticsAsync(sources, language, analyzer);
+
             VerifyDiagnosticResults(diagnostics, analyzer, expected);
         }
 

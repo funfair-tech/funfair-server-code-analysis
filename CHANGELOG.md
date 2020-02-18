@@ -7,6 +7,7 @@ Please ADD ALL Changes to the UNRELASED SECTION and not a specific release
 
 ## [Unreleased]
 ### Added
+- FF-1848 - Prohibition of XUnit Assert.True/Assert.False without message
 ### Fixed
 ### Changed
 ### Removed
