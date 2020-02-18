@@ -7,7 +7,6 @@ Please ADD ALL Changes to the UNRELASED SECTION and not a specific release
 
 ## [Unreleased]
 ### Added
-- FF-1848 - Prohibition of XUnit Assert.True/Assert.False without message
 ### Fixed
 ### Changed
 ### Removed
@@ -16,6 +15,10 @@ Please ADD ALL Changes to the UNRELASED SECTION and not a specific release
 <!-- 
 Releases that have at least been deployed to staging, BUT NOT necessarily released to live.  Changes should be moved from [Unreleased] into here as they are merged into the appropriate release branch
 -->
+## [1.1.0] - 2019-02-18
+### Added
+- FF-1848 - Prohibition of XUnit Assert.True/Assert.False without message
+
 ## [1.0.5] - 2019-02-07
 - Fixed Prohibition of non white-listed #pragma warning disables where sometimes it didn't actually prohibit
 - Updated code analysis dependencies
