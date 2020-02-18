@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using FunFair.CodeAnalysis.Tests.Helpers;
 using FunFair.CodeAnalysis.Tests.Verifiers;
 using Microsoft.CodeAnalysis;
@@ -14,7 +15,7 @@ namespace FunFair.CodeAnalysis.Tests
         }
 
         [Fact]
-        public void AssertTrueWithoutMessageIsBanned()
+        public Task AssertTrueWithoutMessageIsBannedAsync()
         {
             const string test = @"
     using System;
@@ -52,11 +53,11 @@ namespace FunFair.CodeAnalysis.Tests
                                             Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 25, column: 17)}
                                         };
 
-            this.VerifyCSharpDiagnostic(test, expected);
+            return this.VerifyCSharpDiagnosticAsync(test, expected);
         }
 
         [Fact]
-        public void AssertTrueWithMessageIsAllowed()
+        public Task AssertTrueWithMessageIsAllowedAsync()
         {
             const string test = @"
     using System;
@@ -86,11 +87,11 @@ namespace FunFair.CodeAnalysis.Tests
             }
         }
     }";
-            this.VerifyCSharpDiagnostic(test);
+            return this.VerifyCSharpDiagnosticAsync(test);
         }
 
         [Fact]
-        public void AssertFalseWithoutMessageIsBanned()
+        public Task AssertFalseWithoutMessageIsBannedAsync()
         {
             const string test = @"
     using System;
@@ -128,11 +129,11 @@ namespace FunFair.CodeAnalysis.Tests
                                             Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 25, column: 17)}
                                         };
 
-            this.VerifyCSharpDiagnostic(test, expected);
+            return this.VerifyCSharpDiagnosticAsync(test, expected);
         }
 
         [Fact]
-        public void AssertFalseWithMessageIsAllowed()
+        public Task AssertFalseWithMessageIsAllowedAsync()
         {
             const string test = @"
     using System;
@@ -162,7 +163,8 @@ namespace FunFair.CodeAnalysis.Tests
             }
         }
     }";
-            this.VerifyCSharpDiagnostic(test);
+
+            return this.VerifyCSharpDiagnosticAsync(test);
         }
     }
 }

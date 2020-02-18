@@ -36,9 +36,9 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
         /// <param name="language">The language the source classes are in</param>
         /// <param name="analyzer">The analyzer to be run on the sources</param>
         /// <returns>An IEnumerable of Diagnostics that surfaced in the source code, sorted by Location</returns>
-        private static Diagnostic[] GetSortedDiagnostics(string[] sources, string language, DiagnosticAnalyzer analyzer)
+        private static System.Threading.Tasks.Task<Diagnostic[]> GetSortedDiagnosticsAsync(string[] sources, string language, DiagnosticAnalyzer analyzer)
         {
-            return GetSortedDiagnosticsFromDocuments(analyzer, GetDocuments(sources, language));
+            return GetSortedDiagnosticsFromDocumentsAsync(analyzer, GetDocuments(sources, language));
         }
 
         /// <summary>
@@ -48,7 +48,7 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
         /// <param name="analyzer">The analyzer to run on the documents</param>
         /// <param name="documents">The Documents that the analyzer will be run on</param>
         /// <returns>An IEnumerable of Diagnostics that surfaced in the source code, sorted by Location</returns>
-        protected static Diagnostic[] GetSortedDiagnosticsFromDocuments(DiagnosticAnalyzer analyzer, Document[] documents)
+        protected static async System.Threading.Tasks.Task<Diagnostic[]> GetSortedDiagnosticsFromDocumentsAsync(DiagnosticAnalyzer analyzer, Document[] documents)
         {
             HashSet<Project> projects = new HashSet<Project>();
 
@@ -61,10 +61,8 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
 
             foreach (Project project in projects)
             {
-                CompilationWithAnalyzers compilationWithAnalyzers = project.GetCompilationAsync()
-                                                                           .Result.WithAnalyzers(ImmutableArray.Create(analyzer));
-                ImmutableArray<Diagnostic> diags = compilationWithAnalyzers.GetAnalyzerDiagnosticsAsync()
-                                                                           .Result;
+                CompilationWithAnalyzers compilationWithAnalyzers = (await project.GetCompilationAsync()).WithAnalyzers(ImmutableArray.Create(analyzer));
+                ImmutableArray<Diagnostic> diags = await compilationWithAnalyzers.GetAnalyzerDiagnosticsAsync();
 
                 foreach (Diagnostic diag in diags)
                 {
@@ -77,8 +75,7 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
                         for (int i = 0; i < documents.Length; i++)
                         {
                             Document document = documents[i];
-                            SyntaxTree? tree = document.GetSyntaxTreeAsync()
-                                                       .Result;
+                            SyntaxTree? tree = await document.GetSyntaxTreeAsync();
 
                             if (tree != null && tree == diag.Location.SourceTree)
                             {

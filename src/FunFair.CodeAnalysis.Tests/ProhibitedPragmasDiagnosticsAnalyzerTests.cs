@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using FunFair.CodeAnalysis.Tests.Helpers;
 using FunFair.CodeAnalysis.Tests.Verifiers;
 using Microsoft.CodeAnalysis;
@@ -14,14 +15,15 @@ namespace FunFair.CodeAnalysis.Tests
         }
 
         [Fact]
-        public void AllowedWarningIsNotAnError()
+        public Task AllowedWarningIsNotAnErrorAsync()
         {
             const string test = @"#pragma warning disable 8618";
-            this.VerifyCSharpDiagnostic(test);
+
+            return this.VerifyCSharpDiagnosticAsync(test);
         }
 
         [Fact]
-        public void BannedWarningCannotBeDisabled()
+        public Task BannedWarningCannotBeDisabledAsync()
         {
             const string test = @"#pragma warning disable 1234";
             DiagnosticResult expected = new DiagnosticResult
@@ -32,11 +34,11 @@ namespace FunFair.CodeAnalysis.Tests
                                             Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 12, column: 25)}
                                         };
 
-            this.VerifyCSharpDiagnostic(test, expected);
+            return this.VerifyCSharpDiagnosticAsync(test, expected);
         }
 
         [Fact]
-        public void BannedWarningCannotBeDisabledInMethod()
+        public Task BannedWarningCannotBeDisabledInMethodAsync()
         {
             const string test = @"void DoIt()
 {
@@ -53,19 +55,19 @@ namespace FunFair.CodeAnalysis.Tests
                                             Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 3, column: 25)}
                                         };
 
-            this.VerifyCSharpDiagnostic(test, expected);
+            return this.VerifyCSharpDiagnosticAsync(test, expected);
         }
 
         [Fact]
-        public void NoErrorsReported()
+        public Task NoErrorsReportedAsync()
         {
             const string test = @"";
 
-            this.VerifyCSharpDiagnostic(test);
+            return this.VerifyCSharpDiagnosticAsync(test);
         }
 
         [Fact]
-        public void RestoringBannedWarningIsNotAnError()
+        public Task RestoringBannedWarningIsNotAnErrorAsync()
         {
             const string test = @"#pragma warning restore 1234";
             DiagnosticResult expected = new DiagnosticResult
@@ -75,7 +77,8 @@ namespace FunFair.CodeAnalysis.Tests
                                             Severity = DiagnosticSeverity.Error,
                                             Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 12, column: 25)}
                                         };
-            this.VerifyCSharpDiagnostic(test, expected);
+
+            return this.VerifyCSharpDiagnosticAsync(test, expected);
         }
     }
 }

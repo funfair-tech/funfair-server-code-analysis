@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using FunFair.CodeAnalysis.Tests.Helpers;
 using FunFair.CodeAnalysis.Tests.Verifiers;
 using Microsoft.CodeAnalysis;
@@ -14,7 +15,7 @@ namespace FunFair.CodeAnalysis.Tests
         }
 
         [Fact]
-        public void DateTimeNowIsBannedInConstructors()
+        public Task DateTimeNowIsBannedInConstructorsAsync()
         {
             const string test = @"
     using System;
@@ -39,11 +40,11 @@ namespace FunFair.CodeAnalysis.Tests
                                             Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 12, column: 25)}
                                         };
 
-            this.VerifyCSharpDiagnostic(test, expected);
+            return this.VerifyCSharpDiagnosticAsync(test, expected);
         }
 
         [Fact]
-        public void DateTimeNowIsBannedInConversionOperators()
+        public Task DateTimeNowIsBannedInConversionOperatorsAsync()
         {
             const string test = @"
     using System;
@@ -68,11 +69,11 @@ namespace FunFair.CodeAnalysis.Tests
                                             Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 12, column: 25)}
                                         };
 
-            this.VerifyCSharpDiagnostic(test, expected);
+            return this.VerifyCSharpDiagnosticAsync(test, expected);
         }
 
         [Fact]
-        public void DateTimeNowIsBannedInMethods()
+        public Task DateTimeNowIsBannedInMethodsAsync()
         {
             const string test = @"
     using System;
@@ -95,11 +96,11 @@ namespace FunFair.CodeAnalysis.Tests
                                             Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 10, column: 28)}
                                         };
 
-            this.VerifyCSharpDiagnostic(test, expected);
+            return this.VerifyCSharpDiagnosticAsync(test, expected);
         }
 
         [Fact]
-        public void DateTimeNowIsBannedInOperators()
+        public Task DateTimeNowIsBannedInOperatorsAsync()
         {
             const string test = @"
     using System;
@@ -124,11 +125,11 @@ namespace FunFair.CodeAnalysis.Tests
                                             Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 12, column: 49)}
                                         };
 
-            this.VerifyCSharpDiagnostic(test, expected);
+            return  this.VerifyCSharpDiagnosticAsync(test, expected);
         }
 
         [Fact]
-        public void DateTimeNowIsBannedInProperties()
+        public Task DateTimeNowIsBannedInPropertiesAsync()
         {
             const string test = @"
     using System;
@@ -154,11 +155,11 @@ namespace FunFair.CodeAnalysis.Tests
                                             Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 12, column: 28)}
                                         };
 
-            this.VerifyCSharpDiagnostic(test, expected);
+            return this.VerifyCSharpDiagnosticAsync(test, expected);
         }
 
         [Fact]
-        public void DateTimeOffsetNowIsBanned()
+        public Task DateTimeOffsetNowIsBannedAsync()
         {
             const string test = @"
     using System;
@@ -181,11 +182,11 @@ namespace FunFair.CodeAnalysis.Tests
                                             Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 10, column: 28)}
                                         };
 
-            this.VerifyCSharpDiagnostic(test, expected);
+            return this.VerifyCSharpDiagnosticAsync(test, expected);
         }
 
         [Fact]
-        public void DateTimeOffsetUtcNowIsBanned()
+        public Task DateTimeOffsetUtcNowIsBannedAsync()
         {
             const string test = @"
     using System;
@@ -208,11 +209,11 @@ namespace FunFair.CodeAnalysis.Tests
                                             Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 10, column: 28)}
                                         };
 
-            this.VerifyCSharpDiagnostic(test, expected);
+            return this.VerifyCSharpDiagnosticAsync(test, expected);
         }
 
         [Fact]
-        public void DateTimeTodayIsBanned()
+        public Task DateTimeTodayIsBannedAsync()
         {
             const string test = @"
     using System;
@@ -235,11 +236,11 @@ namespace FunFair.CodeAnalysis.Tests
                                             Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 10, column: 28)}
                                         };
 
-            this.VerifyCSharpDiagnostic(test, expected);
+            return this.VerifyCSharpDiagnosticAsync(test, expected);
         }
 
         [Fact]
-        public void DateTimeUtcNowIsBanned()
+        public Task DateTimeUtcNowIsBannedAsync()
         {
             const string test = @"
     using System;
@@ -262,11 +263,11 @@ namespace FunFair.CodeAnalysis.Tests
                                             Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 10, column: 28)}
                                         };
 
-            this.VerifyCSharpDiagnostic(test, expected);
+            return this.VerifyCSharpDiagnosticAsync(test, expected);
         }
 
         [Fact]
-        public void QueryArbitrarySqlAsyncIsBanned()
+        public Task QueryArbitrarySqlAsyncIsBannedAsync()
         {
             const string test = @"
     using System;
@@ -297,11 +298,11 @@ namespace FunFair.CodeAnalysis.Tests
                                             Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 18, column: 17)}
                                         };
 
-            this.VerifyCSharpDiagnostic(test, expected);
+            return this.VerifyCSharpDiagnosticAsync(test, expected);
         }
 
         [Fact]
-        public void ExecuteArbitrarySqlAsyncIsBanned()
+        public Task ExecuteArbitrarySqlAsyncIsBannedAsync()
         {
             const string test = @"
     using System;
@@ -333,15 +334,15 @@ namespace FunFair.CodeAnalysis.Tests
                                             Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 19, column: 17)}
                                         };
 
-            this.VerifyCSharpDiagnostic(test, expected);
+           return this.VerifyCSharpDiagnosticAsync(test, expected);
         }
 
         [Fact]
-        public void NoErrorsReported()
+        public Task NoErrorsReportedAsync()
         {
             const string test = @"";
 
-            this.VerifyCSharpDiagnostic(test);
+            return this.VerifyCSharpDiagnosticAsync(test);
         }
     }
 }

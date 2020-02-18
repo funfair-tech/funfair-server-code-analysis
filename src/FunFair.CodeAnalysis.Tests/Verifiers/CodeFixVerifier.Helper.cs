@@ -14,7 +14,7 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
     ///     Diagnostic Producer class with extra methods dealing with applying codefixes
     ///     All methods are static
     /// </summary>
-    public abstract partial class CodeFixVerifier : DiagnosticVerifier
+    public abstract partial class CodeFixVerifier
     {
         /// <summary>
         ///     Apply the inputted CodeAction to the inputted document.
@@ -23,10 +23,10 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
         /// <param name="document">The Document to apply the fix on</param>
         /// <param name="codeAction">A CodeAction that will be applied to the Document.</param>
         /// <returns>A Document with the changes from the CodeAction</returns>
-        private static Document ApplyFix(Document document, CodeAction codeAction)
+        private static async System.Threading.Tasks.Task<Document> ApplyFixAsync(Document document, CodeAction codeAction)
         {
-            ImmutableArray<CodeActionOperation> operations = codeAction.GetOperationsAsync(CancellationToken.None)
-                                                                       .Result;
+            ImmutableArray<CodeActionOperation> operations = await codeAction.GetOperationsAsync(CancellationToken.None)
+;
             Solution solution = operations.OfType<ApplyChangesOperation>()
                                           .Single()
                                           .ChangedSolution;
@@ -80,17 +80,16 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
         /// </summary>
         /// <param name="document">The Document to run the compiler diagnostic analyzers on</param>
         /// <returns>The compiler diagnostics that were found in the code</returns>
-        private static IEnumerable<Diagnostic> GetCompilerDiagnostics(Document document)
+        private static async System.Threading.Tasks.Task<Diagnostic[]> GetCompilerDiagnosticsAsync(Document document)
         {
-            SemanticModel? d = document.GetSemanticModelAsync()
-                                       .Result;
+            SemanticModel? d = await document.GetSemanticModelAsync();
 
             if (d == null)
             {
                 throw new NotNullException();
             }
 
-            return d.GetDiagnostics();
+            return d.GetDiagnostics().ToArray();
         }
 
         /// <summary>
@@ -98,12 +97,11 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
         /// </summary>
         /// <param name="document">The Document to be converted to a string</param>
         /// <returns>A string containing the syntax of the Document after formatting</returns>
-        private static string GetStringFromDocument(Document document)
+        private static async System.Threading.Tasks.Task<string> GetStringFromDocumentAsync(Document document)
         {
-            Document simplifiedDoc = Simplifier.ReduceAsync(document, Simplifier.Annotation)
-                                               .Result;
-            SyntaxNode? root = simplifiedDoc.GetSyntaxRootAsync()
-                                            .Result;
+            Document simplifiedDoc = await Simplifier.ReduceAsync(document, Simplifier.Annotation)
+;
+            SyntaxNode? root = await simplifiedDoc.GetSyntaxRootAsync();
 
             if (root == null)
             {
