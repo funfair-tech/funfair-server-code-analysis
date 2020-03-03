@@ -17,40 +17,42 @@ namespace FunFair.CodeAnalysis.Tests
         [Fact]
         public Task AssertTrueWithoutMessageIsBannedAsync()
         {
-            const string test = @"
-    using System;
+            const string test = //System.IO.File.ReadAllText(path: @"D:\my-repo\funfair\funfair-casino-server\src\FunFair.FunServer.Lobby.Logic.Tests\Services\GameRootManagerTests.cs");
+                 @"
+     using System;
+     using Xunit;
 
-    namespace XUnit
-    {
-         public class Assert
+     namespace Xunit
+     {
+          public class Assert
+          {
+                 public static void True(bool condition, string userMessage1)
+                 {
+                 }
+
+                 public static void True(bool condition)
+                 {
+                 }
+          }
+     }
+
+     namespace ConsoleApplication1
+     {
+
+         class TypeName
          {
-                public static void True(bool condition, string userMessage1)
-                {
-                }
-
-                public static void True(bool condition)
-                {
-                }
+             void Test()
+             {
+                 Assert.True(1==1);
+             }
          }
-    }
-
-    namespace ConsoleApplication1
-    {
-
-        class TypeName
-        {
-            void Test()
-            {
-                XUnit.Assert.True(true);
-            }
-        }
-    }";
+     }";
             DiagnosticResult expected = new DiagnosticResult
                                         {
                                             Id = "FFS0009",
                                             Message = @"Only use Assert.True with message parameter",
                                             Severity = DiagnosticSeverity.Error,
-                                            Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 25, column: 17)}
+                                            Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 31, column: 17)}
                                         };
 
             return this.VerifyCSharpDiagnosticAsync(test, expected);
@@ -62,7 +64,8 @@ namespace FunFair.CodeAnalysis.Tests
             const string test = @"
     using System;
 
-    namespace XUnit
+
+    namespace Xunit
     {
          public class Assert
          {
@@ -83,7 +86,7 @@ namespace FunFair.CodeAnalysis.Tests
         {
             void Test()
             {
-                XUnit.Assert.True(true, ""Somevalue"");
+                Xunit.Assert.True(true, ""Somevalue"");
             }
         }
     }";
@@ -96,7 +99,7 @@ namespace FunFair.CodeAnalysis.Tests
             const string test = @"
     using System;
 
-    namespace XUnit
+    namespace Xunit
     {
          public class Assert
          {
@@ -117,7 +120,7 @@ namespace FunFair.CodeAnalysis.Tests
         {
             void Test()
             {
-                XUnit.Assert.False(false);
+                Xunit.Assert.False(false);
             }
         }
     }";
@@ -135,34 +138,34 @@ namespace FunFair.CodeAnalysis.Tests
         [Fact]
         public Task AssertFalseWithMessageIsAllowedAsync()
         {
-            const string test = @"
-    using System;
+            string test =
+            @"
+     using System;
 
-    namespace XUnit
-    {
-         public class Assert
+     namespace Xunit
+     {
+          public class Assert
+          {
+                 public static void False(bool condition, string userMessage)
+                 {
+                 }
+
+                 public static void False(bool condition)
+                 {
+                 }
+          }
+     }
+
+     namespace ConsoleApplication1
+     {
+         class TypeName
          {
-                public static void False(bool condition, string userMessage1)
-                {
-                }
-
-                public static void False(bool condition)
-                {
-                }
+             void Test()
+             {
+                 Xunit.Assert.False(false, ""Somevalue"");
+             }
          }
-    }
-
-    namespace ConsoleApplication1
-    {
-
-        class TypeName
-        {
-            void Test()
-            {
-                XUnit.Assert.False(false, ""Somevalue"");
-            }
-        }
-    }";
+     }";
 
             return this.VerifyCSharpDiagnosticAsync(test);
         }
