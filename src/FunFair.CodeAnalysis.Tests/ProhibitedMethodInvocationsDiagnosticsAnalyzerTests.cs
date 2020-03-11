@@ -58,7 +58,7 @@ namespace FunFair.CodeAnalysis.Tests
                                             Id = "FFS0010",
                                             Message = @"Only use Assert.False with message parameter",
                                             Severity = DiagnosticSeverity.Error,
-                                            Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 25, column: 17)}
+                                            Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 12, column: 17)}
                                         };
 
             MetadataReference reference = MetadataReference.CreateFromFile(typeof(Assert).Assembly.Location);
@@ -99,7 +99,6 @@ namespace FunFair.CodeAnalysis.Tests
 
      namespace ConsoleApplication1
      {
-
          class TypeName
          {
              void Test()

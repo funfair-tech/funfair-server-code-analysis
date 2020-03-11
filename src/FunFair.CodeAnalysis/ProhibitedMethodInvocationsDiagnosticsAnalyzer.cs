@@ -54,7 +54,7 @@ namespace FunFair.CodeAnalysis
         /// <param name="compilationStartContext"></param>
         private static void PerformCheck(CompilationStartAnalysisContext compilationStartContext)
         {
-            Dictionary<string, List<IMethodSymbol>> cachedSymbols = BuildCachedSymbols(compilationStartContext.Compilation);
+            Dictionary<Mapping, List<IMethodSymbol>> cachedSymbols = BuildCachedSymbols(compilationStartContext.Compilation);
 
             void LookForBannedMethods(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
             {
@@ -69,7 +69,14 @@ namespace FunFair.CodeAnalysis
                     IMethodSymbol? memberSymbol = FindInvokedMemberSymbol(invocation, syntaxNodeAnalysisContext);
 
                     // check if there is at least on rule that correspond to invocation method
-                    if (memberSymbol == null || !cachedSymbols.TryGetValue(invokedMethod, out List<IMethodSymbol> allowedMethodSignatures))
+                    if (memberSymbol == null)
+                    {
+                        continue;
+                    }
+
+                    Mapping mapping = new Mapping(className: memberSymbol.ContainingNamespace.Name + "." + memberSymbol.ContainingType.Name, methodName: memberSymbol.Name);
+
+                    if (!cachedSymbols.TryGetValue(mapping, out List<IMethodSymbol> allowedMethodSignatures))
                     {
                         continue;
                     }
@@ -104,13 +111,15 @@ namespace FunFair.CodeAnalysis
             return memberSymbol;
         }
 
-        private static Dictionary<string, List<IMethodSymbol>> BuildCachedSymbols(Compilation compilation)
+        private static Dictionary<Mapping, List<IMethodSymbol>> BuildCachedSymbols(Compilation compilation)
         {
-            Dictionary<string, List<IMethodSymbol>> cachedSymbols = new Dictionary<string, List<IMethodSymbol>>();
+            Dictionary<Mapping, List<IMethodSymbol>> cachedSymbols = new Dictionary<Mapping, List<IMethodSymbol>>();
 
             foreach (ProhibitedMethodsSpec rule in BannedMethods)
             {
-                if (cachedSymbols.ContainsKey(rule.SourceClass))
+                Mapping mapping = new Mapping(className: rule.SourceClass, methodName: rule.BannedMethod);
+
+                if (cachedSymbols.ContainsKey(mapping))
                 {
                     continue;
                 }
@@ -129,7 +138,7 @@ namespace FunFair.CodeAnalysis
 
                 if (methodSignatures.Length > 0)
                 {
-                    cachedSymbols.Add(rule.SourceClass, GetAllowedSignaturesForMethod(methodSignatures, rule.BannedSignatures));
+                    cachedSymbols.Add(mapping, GetAllowedSignaturesForMethod(methodSignatures, rule.BannedSignatures));
                 }
             }
 
@@ -174,6 +183,54 @@ namespace FunFair.CodeAnalysis
         private static bool IsInvocationAllowed(IMethodSymbol invocationArguments, IEnumerable<IMethodSymbol> methodSignatures)
         {
             return methodSignatures.Any(predicate: methodSignature => methodSignature.Parameters.SequenceEqual(invocationArguments.Parameters));
+        }
+
+        private sealed class Mapping : IEquatable<Mapping>
+        {
+            public Mapping(string methodName, string className)
+            {
+                this.MethodName = methodName;
+                this.ClassName = className;
+            }
+
+            public string MethodName { get; }
+
+            public string ClassName { get; }
+
+            public bool Equals(Mapping? other)
+            {
+                if (ReferenceEquals(objA: null, other))
+                {
+                    return false;
+                }
+
+                if (ReferenceEquals(this, other))
+                {
+                    return true;
+                }
+
+                return this.MethodName == other.MethodName && this.ClassName == other.ClassName;
+            }
+
+            public override bool Equals(object? obj)
+            {
+                return ReferenceEquals(this, obj) || obj is Mapping other && this.Equals(other);
+            }
+
+            public override int GetHashCode()
+            {
+                return (this.MethodName.GetHashCode() * 397) ^ this.ClassName.GetHashCode();
+            }
+
+            public static bool operator ==(Mapping? left, Mapping? right)
+            {
+                return Equals(left, right);
+            }
+
+            public static bool operator !=(Mapping? left, Mapping? right)
+            {
+                return !Equals(left, right);
+            }
         }
 
         private sealed class ProhibitedMethodsSpec
