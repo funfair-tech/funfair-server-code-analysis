@@ -104,6 +104,17 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
         /// <param name="expected"> DiagnosticResults that should appear after the analyzer is run on the source</param>
         protected Task VerifyCSharpDiagnosticAsync(string source, params DiagnosticResult[] expected)
         {
+            return this.VerifyCSharpDiagnosticAsync(source, Array.Empty<MetadataReference>(), expected);
+        }
+
+        /// <summary>
+        ///     Called to test a C# DiagnosticAnalyzer when applied on the single inputted string as a source
+        ///     Note: input a DiagnosticResult for each Diagnostic expected
+        /// </summary>
+        /// <param name="source">A class in the form of a string to run the analyzer on</param>
+        /// <param name="expected"> DiagnosticResults that should appear after the analyzer is run on the source</param>
+        protected Task VerifyCSharpDiagnosticAsync(string source, MetadataReference[] references, params DiagnosticResult[] expected)
+        {
             DiagnosticAnalyzer? diagnostic = this.GetCSharpDiagnosticAnalyzer();
 
             if (diagnostic == null)
@@ -111,7 +122,7 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
                 throw new NotNullException();
             }
 
-            return VerifyDiagnosticsAsync(new[] {source}, LanguageNames.CSharp, diagnostic, expected);
+            return VerifyDiagnosticsAsync(new[] {source}, references, LanguageNames.CSharp, diagnostic, expected);
         }
 
         /// <summary>
@@ -122,14 +133,7 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
         /// <param name="expected">DiagnosticResults that should appear after the analyzer is run on the sources</param>
         protected Task VerifyCSharpDiagnosticAsync(string[] sources, params DiagnosticResult[] expected)
         {
-            DiagnosticAnalyzer? diagnostic = this.GetCSharpDiagnosticAnalyzer();
-
-            if (diagnostic == null)
-            {
-                throw new NotNullException();
-            }
-
-            return VerifyDiagnosticsAsync(sources, Array.Empty<MetadataReference>(), LanguageNames.CSharp, diagnostic, expected);
+            return this.VerifyCSharpDiagnosticAsync(sources, Array.Empty<MetadataReference>(), expected);
         }
 
         /// <summary>
