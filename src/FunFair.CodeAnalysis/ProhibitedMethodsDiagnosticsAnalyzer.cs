@@ -13,44 +13,44 @@ namespace FunFair.CodeAnalysis
     /// <summary>
     ///     Looks for prohibited methods.
     /// </summary>
-    [DiagnosticAnalyzer(firstLanguage: LanguageNames.CSharp)]
+    [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public sealed class ProhibitedMethodsDiagnosticsAnalyzer : DiagnosticAnalyzer
     {
         private const string CATEGORY = "Illegal Method Calls";
 
         private static readonly ProhibitedMethodsSpec[] BannedMethods =
         {
-            new ProhibitedMethodsSpec(ruleId: Rules.RuleDontUseDateTimeNow,
+            new ProhibitedMethodsSpec(Rules.RuleDontUseDateTimeNow,
                                       title: @"Avoid use of DateTime methods",
                                       message: "Call IDateTimeSource.UtcNow() rather than DateTime.Now",
                                       sourceClass: "System.DateTime",
                                       bannedMethod: "Now"),
-            new ProhibitedMethodsSpec(ruleId: Rules.RuleDontUseDateTimeUtcNow,
+            new ProhibitedMethodsSpec(Rules.RuleDontUseDateTimeUtcNow,
                                       title: @"Avoid use of DateTime methods",
                                       message: "Call IDateTimeSource.UtcNow() rather than DateTime.UtcNow",
                                       sourceClass: "System.DateTime",
                                       bannedMethod: "UtcNow"),
-            new ProhibitedMethodsSpec(ruleId: Rules.RuleDontUseDateTimeToday,
+            new ProhibitedMethodsSpec(Rules.RuleDontUseDateTimeToday,
                                       title: @"Avoid use of DateTime methods",
                                       message: "Call IDateTimeSource.UtcNow().Date rather than DateTime.Today",
                                       sourceClass: "System.DateTime",
                                       bannedMethod: "Today"),
-            new ProhibitedMethodsSpec(ruleId: Rules.RuleDontUseDateTimeOffsetNow,
+            new ProhibitedMethodsSpec(Rules.RuleDontUseDateTimeOffsetNow,
                                       title: @"Avoid use of DateTime methods",
                                       message: "Call IDateTimeSource.UtcNow() rather than DateTimeOffset.Now",
                                       sourceClass: "System.DateTimeOffset",
                                       bannedMethod: "Now"),
-            new ProhibitedMethodsSpec(ruleId: Rules.RuleDontUseDateTimeOffsetUtcNow,
+            new ProhibitedMethodsSpec(Rules.RuleDontUseDateTimeOffsetUtcNow,
                                       title: @"Avoid use of DateTime methods",
                                       message: "Call IDateTimeSource.UtcNow() rather than DateTimeOffset.UtcNow",
                                       sourceClass: "System.DateTimeOffset",
                                       bannedMethod: "UtcNow"),
-            new ProhibitedMethodsSpec(ruleId: Rules.RuleDontUseArbitrarySql,
+            new ProhibitedMethodsSpec(Rules.RuleDontUseArbitrarySql,
                                       title: @"Avoid use of inline SQL statements",
                                       message: "Only use ISqlServerDatabase.ExecuteArbitrarySqlAsync in integration tests",
                                       sourceClass: "FunFair.Common.Data.ISqlServerDatabase",
                                       bannedMethod: "ExecuteArbitrarySqlAsync"),
-            new ProhibitedMethodsSpec(ruleId: Rules.RuleDontUseArbitrarySqlForQueries,
+            new ProhibitedMethodsSpec(Rules.RuleDontUseArbitrarySqlForQueries,
                                       title: @"Avoid use of inline SQL statements",
                                       message: "Only use ISqlServerDatabase.QueryArbitrarySqlAsync in integration tests",
                                       sourceClass: "FunFair.Common.Data.ISqlServerDatabase",
@@ -65,28 +65,15 @@ namespace FunFair.CodeAnalysis
         /// <inheritdoc />
         public override void Initialize(AnalysisContext context)
         {
-            context.ConfigureGeneratedCodeAnalysis(analysisMode: GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.None);
+            context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.None);
             context.EnableConcurrentExecution();
 
-            context.RegisterCompilationStartAction(action: PerformCheck);
+            context.RegisterCompilationStartAction(PerformCheck);
         }
 
         private static void PerformCheck(CompilationStartAnalysisContext compilationStartContext)
         {
-            Dictionary<string, INamedTypeSymbol> cachedSymbols = new Dictionary<string, INamedTypeSymbol>();
-
-            foreach (ProhibitedMethodsSpec rule in BannedMethods)
-            {
-                if (!cachedSymbols.ContainsKey(key: rule.SourceClass))
-                {
-                    INamedTypeSymbol item = compilationStartContext.Compilation.GetTypeByMetadataName(fullyQualifiedMetadataName: rule.SourceClass);
-
-                    if (item != null)
-                    {
-                        cachedSymbols.Add(key: rule.SourceClass, value: item);
-                    }
-                }
-            }
+            Dictionary<string, INamedTypeSymbol> cachedSymbols = BuildCachedSymbols(compilationStartContext.Compilation);
 
             void LookForBannedMethods(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
             {
@@ -95,50 +82,90 @@ namespace FunFair.CodeAnalysis
 
                 foreach (MemberAccessExpressionSyntax invocation in invocations)
                 {
-                    ExpressionSyntax e;
+                    INamedTypeSymbol? typeInfo = ExtractExpressionSyntax(invocation, syntaxNodeAnalysisContext);
 
-                    if (invocation.Expression is MemberAccessExpressionSyntax syntax)
-                    {
-                        e = syntax;
-                    }
-                    else if (invocation.Expression is IdentifierNameSyntax expression)
-                    {
-                        e = expression;
-                    }
-                    else
+                    if (typeInfo == null)
                     {
                         continue;
                     }
 
-                    INamedTypeSymbol? typeInfo = syntaxNodeAnalysisContext.SemanticModel.GetTypeInfo(expression: e)
-                                                                          .Type as INamedTypeSymbol;
+                    ReportAnyBannedSymbols(cachedSymbols, typeInfo, invocation, syntaxNodeAnalysisContext);
+                }
+            }
 
-                    if (typeInfo?.ConstructedFrom == null)
-                    {
-                        continue;
-                    }
+            compilationStartContext.RegisterSyntaxNodeAction(LookForBannedMethods, SyntaxKind.ConstructorDeclaration);
+            compilationStartContext.RegisterSyntaxNodeAction(LookForBannedMethods, SyntaxKind.ConversionOperatorDeclaration);
+            compilationStartContext.RegisterSyntaxNodeAction(LookForBannedMethods, SyntaxKind.MethodDeclaration);
+            compilationStartContext.RegisterSyntaxNodeAction(LookForBannedMethods, SyntaxKind.OperatorDeclaration);
+            compilationStartContext.RegisterSyntaxNodeAction(LookForBannedMethods, SyntaxKind.PropertyDeclaration);
+        }
 
-                    foreach (ProhibitedMethodsSpec item in BannedMethods)
+        private static void ReportAnyBannedSymbols(Dictionary<string, INamedTypeSymbol> cachedSymbols,
+                                                   INamedTypeSymbol typeInfo,
+                                                   MemberAccessExpressionSyntax invocation,
+                                                   SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
+        {
+            foreach (ProhibitedMethodsSpec item in BannedMethods)
+            {
+                if (cachedSymbols.TryGetValue(item.SourceClass, out INamedTypeSymbol metadataType))
+                {
+                    if (StringComparer.OrdinalIgnoreCase.Equals(typeInfo.ConstructedFrom.MetadataName, metadataType.MetadataName))
                     {
-                        if (cachedSymbols.TryGetValue(key: item.SourceClass, value: out INamedTypeSymbol metadataType))
+                        if (invocation.Name.ToString() == item.BannedMethod)
                         {
-                            if (StringComparer.OrdinalIgnoreCase.Equals(x: typeInfo.ConstructedFrom.MetadataName, y: metadataType.MetadataName))
-                            {
-                                if (invocation.Name.ToString() == item.BannedMethod)
-                                {
-                                    syntaxNodeAnalysisContext.ReportDiagnostic(diagnostic: Diagnostic.Create(descriptor: item.Rule, location: invocation.GetLocation()));
-                                }
-                            }
+                            syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(item.Rule, invocation.GetLocation()));
                         }
                     }
                 }
             }
+        }
 
-            compilationStartContext.RegisterSyntaxNodeAction(action: LookForBannedMethods, SyntaxKind.ConstructorDeclaration);
-            compilationStartContext.RegisterSyntaxNodeAction(action: LookForBannedMethods, SyntaxKind.ConversionOperatorDeclaration);
-            compilationStartContext.RegisterSyntaxNodeAction(action: LookForBannedMethods, SyntaxKind.MethodDeclaration);
-            compilationStartContext.RegisterSyntaxNodeAction(action: LookForBannedMethods, SyntaxKind.OperatorDeclaration);
-            compilationStartContext.RegisterSyntaxNodeAction(action: LookForBannedMethods, SyntaxKind.PropertyDeclaration);
+        private static Dictionary<string, INamedTypeSymbol> BuildCachedSymbols(Compilation compilation)
+        {
+            Dictionary<string, INamedTypeSymbol> cachedSymbols = new Dictionary<string, INamedTypeSymbol>();
+
+            foreach (ProhibitedMethodsSpec rule in BannedMethods)
+            {
+                if (!cachedSymbols.ContainsKey(rule.SourceClass))
+                {
+                    INamedTypeSymbol item = compilation.GetTypeByMetadataName(rule.SourceClass);
+
+                    if (item != null)
+                    {
+                        cachedSymbols.Add(rule.SourceClass, item);
+                    }
+                }
+            }
+
+            return cachedSymbols;
+        }
+
+        private static INamedTypeSymbol? ExtractExpressionSyntax(MemberAccessExpressionSyntax invocation, SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
+        {
+            ExpressionSyntax e;
+
+            if (invocation.Expression is MemberAccessExpressionSyntax syntax)
+            {
+                e = syntax;
+            }
+            else if (invocation.Expression is IdentifierNameSyntax expression)
+            {
+                e = expression;
+            }
+            else
+            {
+                return null;
+            }
+
+            INamedTypeSymbol? typeInfo = syntaxNodeAnalysisContext.SemanticModel.GetTypeInfo(e)
+                                                                  .Type as INamedTypeSymbol;
+
+            if (typeInfo?.ConstructedFrom == null)
+            {
+                return null;
+            }
+
+            return typeInfo;
         }
 
         private sealed class ProhibitedMethodsSpec
@@ -147,7 +174,7 @@ namespace FunFair.CodeAnalysis
             {
                 this.SourceClass = sourceClass;
                 this.BannedMethod = bannedMethod;
-                this.Rule = CreateRule(code: ruleId, title: title, message: message);
+                this.Rule = CreateRule(ruleId, title, message);
             }
 
             public string SourceClass { get; }
@@ -158,16 +185,10 @@ namespace FunFair.CodeAnalysis
 
             private static DiagnosticDescriptor CreateRule(string code, string title, string message)
             {
-                LiteralString translatableTitle = new LiteralString(value: title);
-                LiteralString translatableMessage = new LiteralString(value: message);
+                LiteralString translatableTitle = new LiteralString(title);
+                LiteralString translatableMessage = new LiteralString(message);
 
-                return new DiagnosticDescriptor(id: code,
-                                                title: translatableTitle,
-                                                messageFormat: translatableMessage,
-                                                category: CATEGORY,
-                                                defaultSeverity: DiagnosticSeverity.Error,
-                                                isEnabledByDefault: true,
-                                                description: translatableMessage);
+                return new DiagnosticDescriptor(code, translatableTitle, translatableMessage, CATEGORY, DiagnosticSeverity.Error, isEnabledByDefault: true, translatableMessage);
             }
         }
     }
