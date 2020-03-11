@@ -58,57 +58,50 @@ namespace FunFair.CodeAnalysis
 
             void LookForBannedMethods(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
             {
-                try
+                InvocationExpressionSyntax[] invocations = syntaxNodeAnalysisContext.Node.DescendantNodesAndSelf()
+                                                                                    .OfType<InvocationExpressionSyntax>()
+                                                                                    .ToArray();
+
+                foreach (InvocationExpressionSyntax invocation in invocations)
                 {
-                    InvocationExpressionSyntax[] invocations = syntaxNodeAnalysisContext.Node.DescendantNodesAndSelf()
-                                                                                        .OfType<InvocationExpressionSyntax>()
-                                                                                        .ToArray();
+                    string invokedMethod = invocation.Expression.ToString();
 
-                    try
+                    IMethodSymbol? memberSymbol = FindInvokedMemberSymbol(invocation, syntaxNodeAnalysisContext);
+
+                    // check if there is at least on rule that correspond to invocation method
+                    if (memberSymbol == null || !cachedSymbols.TryGetValue(invokedMethod, out List<IMethodSymbol> allowedMethodSignatures))
                     {
-                        foreach (InvocationExpressionSyntax invocation in invocations)
+                        continue;
+                    }
+
+                    IEnumerable<ProhibitedMethodsSpec> prohibitedMethods = BannedMethods.Where(predicate: rule => rule.QualifiedName == invokedMethod);
+
+                    foreach (ProhibitedMethodsSpec prohibitedMethod in prohibitedMethods)
+                    {
+                        if (!IsInvocationAllowed(memberSymbol, allowedMethodSignatures))
                         {
-                            string invokedMethod = invocation.Expression.ToString();
-
-                            MemberAccessExpressionSyntax? memberAccessExpressionSyntax = invocation.Expression as MemberAccessExpressionSyntax;
-
-                            if (memberAccessExpressionSyntax == null)
-                            {
-                                continue;
-                            }
-
-                            IMethodSymbol? memberSymbol = syntaxNodeAnalysisContext.SemanticModel.GetSymbolInfo(memberAccessExpressionSyntax)
-                                                                                   .Symbol as IMethodSymbol;
-
-                            // check if there is at least on rule that correspond to invocation method
-                            if (memberSymbol == null || !cachedSymbols.TryGetValue(invokedMethod, out List<IMethodSymbol> allowedMethodSignatures))
-                            {
-                                continue;
-                            }
-
-                            IEnumerable<ProhibitedMethodsSpec> prohibitedMethods = BannedMethods.Where(predicate: rule => rule.QualifiedName == invokedMethod);
-
-                            foreach (ProhibitedMethodsSpec prohibitedMethod in prohibitedMethods)
-                            {
-                                if (!IsInvocationAllowed(memberSymbol, allowedMethodSignatures))
-                                {
-                                    syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(prohibitedMethod.Rule, invocation.GetLocation()));
-                                }
-                            }
+                            syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(prohibitedMethod.Rule, invocation.GetLocation()));
                         }
                     }
-                    catch (Exception)
-                    {
-                        throw new Exception(message: "foreach");
-                    }
-                }
-                catch (Exception)
-                {
-                    throw new Exception(syntaxNodeAnalysisContext.Node.ToFullString());
                 }
             }
 
             compilationStartContext.RegisterSyntaxNodeAction(LookForBannedMethods, SyntaxKind.MethodDeclaration);
+        }
+
+        private static IMethodSymbol? FindInvokedMemberSymbol(InvocationExpressionSyntax invocation, SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
+        {
+            MemberAccessExpressionSyntax? memberAccessExpressionSyntax = invocation.Expression as MemberAccessExpressionSyntax;
+
+            if (memberAccessExpressionSyntax == null)
+            {
+                return null;
+            }
+
+            IMethodSymbol? memberSymbol = syntaxNodeAnalysisContext.SemanticModel.GetSymbolInfo(memberAccessExpressionSyntax)
+                                                                   .Symbol as IMethodSymbol;
+
+            return memberSymbol;
         }
 
         private static Dictionary<string, List<IMethodSymbol>> BuildCachedSymbols(Compilation compilation)

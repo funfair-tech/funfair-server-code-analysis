@@ -19,20 +19,7 @@ namespace FunFair.CodeAnalysis.Tests
         {
             const string test = @"
      using System;
-
-     namespace Xunit
-     {
-          public class Assert
-          {
-                 public static void False(bool condition, string userMessage)
-                 {
-                 }
-
-                 public static void False(bool condition)
-                 {
-                 }
-          }
-     }
+     using Xunit;
 
      namespace ConsoleApplication1
      {
@@ -40,7 +27,7 @@ namespace FunFair.CodeAnalysis.Tests
          {
              void Test()
              {
-                 Xunit.Assert.False(false, ""Somevalue"");
+                 Assert.False(false, ""Somevalue"");
              }
          }
      }";
@@ -53,20 +40,7 @@ namespace FunFair.CodeAnalysis.Tests
         {
             const string test = @"
     using System;
-
-    namespace Xunit
-    {
-         public class Assert
-         {
-                public static void False(bool condition, string userMessage1)
-                {
-                }
-
-                public static void False(bool condition)
-                {
-                }
-         }
-    }
+    using Xunit;
 
     namespace ConsoleApplication1
     {
@@ -87,7 +61,9 @@ namespace FunFair.CodeAnalysis.Tests
                                             Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 25, column: 17)}
                                         };
 
-            return this.VerifyCSharpDiagnosticAsync(test, expected);
+            MetadataReference reference = MetadataReference.CreateFromFile(typeof(Assert).Assembly.Location);
+
+            return this.VerifyCSharpDiagnosticAsync(test, new[] {reference}, expected);
         }
 
         [Fact]
@@ -95,21 +71,7 @@ namespace FunFair.CodeAnalysis.Tests
         {
             const string test = @"
     using System;
-
-
-    namespace Xunit
-    {
-         public class Assert
-         {
-                public static void True(bool condition, string userMessage1)
-                {
-                }
-
-                public static void True(bool condition)
-                {
-                }
-         }
-    }
+    using Xunit;
 
     namespace ConsoleApplication1
     {
@@ -118,36 +80,22 @@ namespace FunFair.CodeAnalysis.Tests
         {
             void Test()
             {
-                Xunit.Assert.True(true, ""Somevalue"");
+                Assert.True(true, ""Somevalue"");
             }
         }
     }";
 
-            return this.VerifyCSharpDiagnosticAsync(test);
+            MetadataReference reference = MetadataReference.CreateFromFile(typeof(Assert).Assembly.Location);
+
+            return this.VerifyCSharpDiagnosticAsync(test, new[] {reference});
         }
 
         [Fact]
         public Task AssertTrueWithoutMessageIsBannedAsync()
         {
-            const string test
-                = //System.IO.File.ReadAllText(path: @"D:\my-repo\funfair\funfair-casino-server\src\FunFair.FunServer.Lobby.Logic.Tests\Services\GameRootManagerTests.cs");
-                @"
+            const string test = @"
      using System;
      using Xunit;
-
-     namespace Xunit
-     {
-          public class Assert
-          {
-                 public static void True(bool condition, string userMessage1)
-                 {
-                 }
-
-                 public static void True(bool condition)
-                 {
-                 }
-          }
-     }
 
      namespace ConsoleApplication1
      {
@@ -168,7 +116,9 @@ namespace FunFair.CodeAnalysis.Tests
                                             Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 31, column: 17)}
                                         };
 
-            return this.VerifyCSharpDiagnosticAsync(test, expected);
+            MetadataReference reference = MetadataReference.CreateFromFile(typeof(Assert).Assembly.Location);
+
+            return this.VerifyCSharpDiagnosticAsync(test, new[] {reference}, expected);
         }
     }
 }
