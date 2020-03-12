@@ -54,7 +54,7 @@ namespace FunFair.CodeAnalysis
         /// <param name="compilationStartContext"></param>
         private static void PerformCheck(CompilationStartAnalysisContext compilationStartContext)
         {
-            Dictionary<Mapping, List<IMethodSymbol>> cachedSymbols = BuildCachedSymbols(compilationStartContext.Compilation);
+            IReadOnlyDictionary<Mapping, IReadOnlyList<IMethodSymbol>> cachedSymbols = BuildCachedSymbols(compilationStartContext.Compilation);
 
             void LookForBannedMethods(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
             {
@@ -74,7 +74,7 @@ namespace FunFair.CodeAnalysis
 
                     Mapping mapping = new Mapping(className: memberSymbol.ContainingNamespace.Name + "." + memberSymbol.ContainingType.Name, methodName: memberSymbol.Name);
 
-                    if (!cachedSymbols.TryGetValue(mapping, out List<IMethodSymbol> allowedMethodSignatures))
+                    if (!cachedSymbols.TryGetValue(mapping, out IReadOnlyList<IMethodSymbol> allowedMethodSignatures))
                     {
                         continue;
                     }
@@ -109,9 +109,9 @@ namespace FunFair.CodeAnalysis
             return memberSymbol;
         }
 
-        private static Dictionary<Mapping, List<IMethodSymbol>> BuildCachedSymbols(Compilation compilation)
+        private static IReadOnlyDictionary<Mapping, IReadOnlyList<IMethodSymbol>> BuildCachedSymbols(Compilation compilation)
         {
-            Dictionary<Mapping, List<IMethodSymbol>> cachedSymbols = new Dictionary<Mapping, List<IMethodSymbol>>();
+            Dictionary<Mapping, IReadOnlyList<IMethodSymbol>> cachedSymbols = new Dictionary<Mapping, IReadOnlyList<IMethodSymbol>>();
 
             foreach (ProhibitedMethodsSpec rule in BannedMethods)
             {
@@ -148,8 +148,8 @@ namespace FunFair.CodeAnalysis
         /// </summary>
         /// <param name="methodSignatures">All signatures of one method</param>
         /// <param name="ruleSignatures">All banned signatures</param>
-        /// <returns></returns>
-        private static List<IMethodSymbol> GetAllowedSignaturesForMethod(IEnumerable<IMethodSymbol> methodSignatures, IEnumerable<IEnumerable<string>> ruleSignatures)
+        /// <returns>Collection of allowed signatures.</returns>
+        private static IReadOnlyList<IMethodSymbol> GetAllowedSignaturesForMethod(IEnumerable<IMethodSymbol> methodSignatures, IEnumerable<IEnumerable<string>> ruleSignatures)
         {
             if (methodSignatures == null)
             {
@@ -177,7 +177,7 @@ namespace FunFair.CodeAnalysis
         /// </summary>
         /// <param name="invocationArguments">Arguments used in invocation of method</param>
         /// <param name="methodSignatures">List of all valid signatures for method</param>
-        /// <returns></returns>
+        /// <returns>true, if the method was allowed; otherwise, false.</returns>
         private static bool IsInvocationAllowed(IMethodSymbol invocationArguments, IEnumerable<IMethodSymbol> methodSignatures)
         {
             return methodSignatures.Any(predicate: methodSignature => methodSignature.Parameters.SequenceEqual(invocationArguments.Parameters));
