@@ -64,8 +64,6 @@ namespace FunFair.CodeAnalysis
 
                 foreach (InvocationExpressionSyntax invocation in invocations)
                 {
-                    string invokedMethod = invocation.Expression.ToString();
-
                     IMethodSymbol? memberSymbol = FindInvokedMemberSymbol(invocation, syntaxNodeAnalysisContext);
 
                     // check if there is at least on rule that correspond to invocation method
@@ -81,7 +79,7 @@ namespace FunFair.CodeAnalysis
                         continue;
                     }
 
-                    IEnumerable<ProhibitedMethodsSpec> prohibitedMethods = BannedMethods.Where(predicate: rule => rule.QualifiedName == invokedMethod);
+                    IEnumerable<ProhibitedMethodsSpec> prohibitedMethods = BannedMethods.Where(predicate: rule => rule.QualifiedName == mapping.QualifiedName);
 
                     foreach (ProhibitedMethodsSpec prohibitedMethod in prohibitedMethods)
                     {
@@ -197,6 +195,11 @@ namespace FunFair.CodeAnalysis
 
             public string ClassName { get; }
 
+            /// <summary>
+            ///     Full qualified name of method
+            /// </summary>
+            public string QualifiedName => string.Concat(this.ClassName, str1: ".", this.MethodName);
+
             public bool Equals(Mapping? other)
             {
                 if (ReferenceEquals(objA: null, other))
@@ -257,7 +260,7 @@ namespace FunFair.CodeAnalysis
             /// <summary>
             ///     Full qualified name of method
             /// </summary>
-            public string QualifiedName => $"{this.SourceClass}.{this.BannedMethod}";
+            public string QualifiedName => string.Concat(this.SourceClass, str1: ".", this.BannedMethod);
 
             private static DiagnosticDescriptor CreateRule(string code, string title, string message)
             {
