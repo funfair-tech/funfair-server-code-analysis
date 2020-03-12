@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
@@ -22,13 +23,13 @@ namespace FunFair.CodeAnalysis
             new ProhibitedMethodsSpec(Rules.RuleDontUseAssertTrueWithoutMessage,
                                       title: @"Avoid use of assert method without message",
                                       message: "Only use Assert.True with message parameter",
-                                      sourceClass: "XUnit.Assert",
+                                      sourceClass: "Xunit.Assert",
                                       bannedMethod: "True",
                                       new[] {new[] {"bool"}}),
             new ProhibitedMethodsSpec(Rules.RuleDontUseAssertFalseWithoutMessage,
                                       title: @"Avoid use of assert method without message",
                                       message: "Only use Assert.False with message parameter",
-                                      sourceClass: "XUnit.Assert",
+                                      sourceClass: "Xunit.Assert",
                                       bannedMethod: "False",
                                       new[] {new[] {"bool"}})
         };
@@ -53,47 +54,32 @@ namespace FunFair.CodeAnalysis
         /// <param name="compilationStartContext"></param>
         private static void PerformCheck(CompilationStartAnalysisContext compilationStartContext)
         {
-            Dictionary<string, IEnumerable<IMethodSymbol>> cachedSymbols = new Dictionary<string, IEnumerable<IMethodSymbol>>();
-
-            foreach (ProhibitedMethodsSpec rule in BannedMethods)
-            {
-                if (cachedSymbols.ContainsKey(rule.QualifiedName))
-                {
-                    continue;
-                }
-
-                IMethodSymbol[] methodSignatures = compilationStartContext.Compilation.GetTypeByMetadataName(rule.SourceClass)
-                                                                          .GetMembers()
-                                                                          .Where(predicate: x => x.Name == rule.BannedMethod)
-                                                                          .OfType<IMethodSymbol>()
-                                                                          .ToArray();
-
-                if (methodSignatures.Length > 0)
-                {
-                    cachedSymbols.Add(key: rule.QualifiedName, value: GetAllowedSignaturesForMethod(methodSignatures, rule.BannedSignatures));
-                }
-            }
+            IReadOnlyDictionary<Mapping, IReadOnlyList<IMethodSymbol>> cachedSymbols = BuildCachedSymbols(compilationStartContext.Compilation);
 
             void LookForBannedMethods(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
             {
-                IEnumerable<InvocationExpressionSyntax> invocations = syntaxNodeAnalysisContext.Node.DescendantNodesAndSelf()
-                                                                                               .OfType<InvocationExpressionSyntax>();
+                InvocationExpressionSyntax[] invocations = syntaxNodeAnalysisContext.Node.DescendantNodesAndSelf()
+                                                                                    .OfType<InvocationExpressionSyntax>()
+                                                                                    .ToArray();
 
                 foreach (InvocationExpressionSyntax invocation in invocations)
                 {
-                    string invokedMethod = invocation.Expression.ToString();
-
-                    MemberAccessExpressionSyntax? memberAccessExpr = invocation.Expression as MemberAccessExpressionSyntax;
-                    IMethodSymbol? memberSymbol = syntaxNodeAnalysisContext.SemanticModel.GetSymbolInfo(memberAccessExpr)
-                                                                          .Symbol as IMethodSymbol;
+                    IMethodSymbol? memberSymbol = FindInvokedMemberSymbol(invocation, syntaxNodeAnalysisContext);
 
                     // check if there is at least on rule that correspond to invocation method
-                    if (memberSymbol == null || !cachedSymbols.TryGetValue(invokedMethod, out IEnumerable<IMethodSymbol> allowedMethodSignatures))
+                    if (memberSymbol == null)
                     {
                         continue;
                     }
 
-                    IEnumerable<ProhibitedMethodsSpec> prohibitedMethods = BannedMethods.Where(predicate: rule => rule.QualifiedName == invokedMethod);
+                    Mapping mapping = new Mapping(className: memberSymbol.ContainingNamespace.Name + "." + memberSymbol.ContainingType.Name, methodName: memberSymbol.Name);
+
+                    if (!cachedSymbols.TryGetValue(mapping, out IReadOnlyList<IMethodSymbol> allowedMethodSignatures))
+                    {
+                        continue;
+                    }
+
+                    IEnumerable<ProhibitedMethodsSpec> prohibitedMethods = BannedMethods.Where(predicate: rule => rule.QualifiedName == mapping.QualifiedName);
 
                     foreach (ProhibitedMethodsSpec prohibitedMethod in prohibitedMethods)
                     {
@@ -108,14 +94,73 @@ namespace FunFair.CodeAnalysis
             compilationStartContext.RegisterSyntaxNodeAction(LookForBannedMethods, SyntaxKind.MethodDeclaration);
         }
 
+        private static IMethodSymbol? FindInvokedMemberSymbol(InvocationExpressionSyntax invocation, SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
+        {
+            MemberAccessExpressionSyntax? memberAccessExpressionSyntax = invocation.Expression as MemberAccessExpressionSyntax;
+
+            if (memberAccessExpressionSyntax == null)
+            {
+                return null;
+            }
+
+            IMethodSymbol? memberSymbol = syntaxNodeAnalysisContext.SemanticModel.GetSymbolInfo(memberAccessExpressionSyntax)
+                                                                   .Symbol as IMethodSymbol;
+
+            return memberSymbol;
+        }
+
+        private static IReadOnlyDictionary<Mapping, IReadOnlyList<IMethodSymbol>> BuildCachedSymbols(Compilation compilation)
+        {
+            Dictionary<Mapping, IReadOnlyList<IMethodSymbol>> cachedSymbols = new Dictionary<Mapping, IReadOnlyList<IMethodSymbol>>();
+
+            foreach (ProhibitedMethodsSpec rule in BannedMethods)
+            {
+                Mapping mapping = new Mapping(className: rule.SourceClass, methodName: rule.BannedMethod);
+
+                if (cachedSymbols.ContainsKey(mapping))
+                {
+                    continue;
+                }
+
+                INamedTypeSymbol sourceClassType = compilation.GetTypeByMetadataName(rule.SourceClass);
+
+                if (sourceClassType == null || sourceClassType.GetMembers() == default)
+                {
+                    continue;
+                }
+
+                IMethodSymbol[] methodSignatures = sourceClassType.GetMembers()
+                                                                  .Where(predicate: x => x.Name == rule.BannedMethod)
+                                                                  .OfType<IMethodSymbol>()
+                                                                  .ToArray();
+
+                if (methodSignatures.Length > 0)
+                {
+                    cachedSymbols.Add(mapping, GetAllowedSignaturesForMethod(methodSignatures, rule.BannedSignatures));
+                }
+            }
+
+            return cachedSymbols;
+        }
+
         /// <summary>
         ///     Filter method signatures to get only signatures allowed by rule
         /// </summary>
         /// <param name="methodSignatures">All signatures of one method</param>
         /// <param name="ruleSignatures">All banned signatures</param>
-        /// <returns></returns>
-        private static IEnumerable<IMethodSymbol> GetAllowedSignaturesForMethod(IEnumerable<IMethodSymbol> methodSignatures, IEnumerable<IEnumerable<string>> ruleSignatures)
+        /// <returns>Collection of allowed signatures.</returns>
+        private static IReadOnlyList<IMethodSymbol> GetAllowedSignaturesForMethod(IEnumerable<IMethodSymbol> methodSignatures, IEnumerable<IEnumerable<string>> ruleSignatures)
         {
+            if (methodSignatures == null)
+            {
+                throw new ArgumentException(message: "Unknown method signature");
+            }
+
+            if (ruleSignatures == null)
+            {
+                throw new ArgumentException(message: "Unknown rule signature");
+            }
+
             List<IMethodSymbol> methodSignatureList = methodSignatures.ToList();
 
             foreach (IEnumerable<string> ruleSignature in ruleSignatures)
@@ -132,10 +177,63 @@ namespace FunFair.CodeAnalysis
         /// </summary>
         /// <param name="invocationArguments">Arguments used in invocation of method</param>
         /// <param name="methodSignatures">List of all valid signatures for method</param>
-        /// <returns></returns>
+        /// <returns>true, if the method was allowed; otherwise, false.</returns>
         private static bool IsInvocationAllowed(IMethodSymbol invocationArguments, IEnumerable<IMethodSymbol> methodSignatures)
         {
             return methodSignatures.Any(predicate: methodSignature => methodSignature.Parameters.SequenceEqual(invocationArguments.Parameters));
+        }
+
+        private sealed class Mapping : IEquatable<Mapping>
+        {
+            public Mapping(string methodName, string className)
+            {
+                this.MethodName = methodName;
+                this.ClassName = className;
+            }
+
+            public string MethodName { get; }
+
+            public string ClassName { get; }
+
+            /// <summary>
+            ///     Full qualified name of method
+            /// </summary>
+            public string QualifiedName => string.Concat(this.ClassName, str1: ".", this.MethodName);
+
+            public bool Equals(Mapping? other)
+            {
+                if (ReferenceEquals(objA: null, other))
+                {
+                    return false;
+                }
+
+                if (ReferenceEquals(this, other))
+                {
+                    return true;
+                }
+
+                return this.MethodName == other.MethodName && this.ClassName == other.ClassName;
+            }
+
+            public override bool Equals(object? obj)
+            {
+                return ReferenceEquals(this, obj) || obj is Mapping other && this.Equals(other);
+            }
+
+            public override int GetHashCode()
+            {
+                return (this.MethodName.GetHashCode() * 397) ^ this.ClassName.GetHashCode();
+            }
+
+            public static bool operator ==(Mapping? left, Mapping? right)
+            {
+                return Equals(left, right);
+            }
+
+            public static bool operator !=(Mapping? left, Mapping? right)
+            {
+                return !Equals(left, right);
+            }
         }
 
         private sealed class ProhibitedMethodsSpec
@@ -159,6 +257,11 @@ namespace FunFair.CodeAnalysis
 
             public DiagnosticDescriptor Rule { get; }
 
+            /// <summary>
+            ///     Full qualified name of method
+            /// </summary>
+            public string QualifiedName => string.Concat(this.SourceClass, str1: ".", this.BannedMethod);
+
             private static DiagnosticDescriptor CreateRule(string code, string title, string message)
             {
                 LiteralString translatableTitle = new LiteralString(title);
@@ -166,11 +269,6 @@ namespace FunFair.CodeAnalysis
 
                 return new DiagnosticDescriptor(code, translatableTitle, translatableMessage, CATEGORY, DiagnosticSeverity.Error, isEnabledByDefault: true, translatableMessage);
             }
-
-            /// <summary>
-            ///     Full qualified name of method
-            /// </summary>
-            public string QualifiedName => $"{this.SourceClass}.{this.BannedMethod}";
         }
     }
 }

@@ -40,7 +40,7 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
                 foreach (DiagnosticDescriptor rule in rules)
                 {
                     if (rule != null && rule.Id == diagnostics[i]
-                            .Id)
+                        .Id)
                     {
                         Location location = diagnostics[i]
                             .Location;
@@ -104,6 +104,17 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
         /// <param name="expected"> DiagnosticResults that should appear after the analyzer is run on the source</param>
         protected Task VerifyCSharpDiagnosticAsync(string source, params DiagnosticResult[] expected)
         {
+            return this.VerifyCSharpDiagnosticAsync(source, Array.Empty<MetadataReference>(), expected);
+        }
+
+        /// <summary>
+        ///     Called to test a C# DiagnosticAnalyzer when applied on the single inputted string as a source
+        ///     Note: input a DiagnosticResult for each Diagnostic expected
+        /// </summary>
+        /// <param name="source">A class in the form of a string to run the analyzer on</param>
+        /// <param name="expected"> DiagnosticResults that should appear after the analyzer is run on the source</param>
+        protected Task VerifyCSharpDiagnosticAsync(string source, MetadataReference[] references, params DiagnosticResult[] expected)
+        {
             DiagnosticAnalyzer? diagnostic = this.GetCSharpDiagnosticAnalyzer();
 
             if (diagnostic == null)
@@ -111,7 +122,7 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
                 throw new NotNullException();
             }
 
-            return VerifyDiagnosticsAsync(new[] {source}, LanguageNames.CSharp, diagnostic, expected);
+            return VerifyDiagnosticsAsync(new[] {source}, references, LanguageNames.CSharp, diagnostic, expected);
         }
 
         /// <summary>
@@ -122,6 +133,18 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
         /// <param name="expected">DiagnosticResults that should appear after the analyzer is run on the sources</param>
         protected Task VerifyCSharpDiagnosticAsync(string[] sources, params DiagnosticResult[] expected)
         {
+            return this.VerifyCSharpDiagnosticAsync(sources, Array.Empty<MetadataReference>(), expected);
+        }
+
+        /// <summary>
+        ///     Called to test a C# DiagnosticAnalyzer when applied on the inputted strings as a source
+        ///     Note: input a DiagnosticResult for each Diagnostic expected
+        /// </summary>
+        /// <param name="sources">An array of strings to create source documents from to run the analyzers on</param>
+        /// <param name="references">References.</param>
+        /// <param name="expected">DiagnosticResults that should appear after the analyzer is run on the sources</param>
+        protected Task VerifyCSharpDiagnosticAsync(string[] sources, MetadataReference[] references, params DiagnosticResult[] expected)
+        {
             DiagnosticAnalyzer? diagnostic = this.GetCSharpDiagnosticAnalyzer();
 
             if (diagnostic == null)
@@ -129,7 +152,7 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
                 throw new NotNullException();
             }
 
-            return VerifyDiagnosticsAsync(sources, LanguageNames.CSharp, diagnostic, expected);
+            return VerifyDiagnosticsAsync(sources, references, LanguageNames.CSharp, diagnostic, expected);
         }
 
         /// <summary>
@@ -137,12 +160,17 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
         ///     then verifies each of them.
         /// </summary>
         /// <param name="sources">An array of strings to create source documents from to run the analyzers on</param>
+        /// <param name="references">Metadata References.</param>
         /// <param name="language">The language of the classes represented by the source strings</param>
         /// <param name="analyzer">The analyzer to be run on the source code</param>
         /// <param name="expected">DiagnosticResults that should appear after the analyzer is run on the sources</param>
-        private static async Task VerifyDiagnosticsAsync(string[] sources, string language, DiagnosticAnalyzer analyzer, params DiagnosticResult[] expected)
+        private static async Task VerifyDiagnosticsAsync(string[] sources,
+                                                         MetadataReference[] references,
+                                                         string language,
+                                                         DiagnosticAnalyzer analyzer,
+                                                         params DiagnosticResult[] expected)
         {
-            Diagnostic[] diagnostics = await GetSortedDiagnosticsAsync(sources, language, analyzer);
+            Diagnostic[] diagnostics = await GetSortedDiagnosticsAsync(sources, references, language, analyzer);
 
             VerifyDiagnosticResults(diagnostics, analyzer, expected);
         }
