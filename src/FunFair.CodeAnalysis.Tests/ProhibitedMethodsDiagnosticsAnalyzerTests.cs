@@ -267,41 +267,6 @@ namespace FunFair.CodeAnalysis.Tests
         }
 
         [Fact]
-        public Task QueryArbitrarySqlAsyncIsBannedAsync()
-        {
-            const string test = @"
-    using System;
-
-    namespace FunFair.Common.Data
-    {
-         public interface ISqlServerDatabase
-         {
-                Task QueryArbitrarySqlAsync(string sql);
-         }
-    }
-
-    namespace ConsoleApplication1
-    {
-        class TypeName
-        {
-            void Test(FunFair.Common.Data.ISqlServerDatabase sqlServerDatabase, string sql)
-            {
-                sqlServerDatabase.QueryArbitrarySqlAsync(sql)
-            }
-        }
-    }";
-            DiagnosticResult expected = new DiagnosticResult
-                                        {
-                                            Id = "FFS0007",
-                                            Message = @"Only use ISqlServerDatabase.QueryArbitrarySqlAsync in integration tests",
-                                            Severity = DiagnosticSeverity.Error,
-                                            Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 18, column: 17)}
-                                        };
-
-            return this.VerifyCSharpDiagnosticAsync(test, expected);
-        }
-
-        [Fact]
         public Task ExecuteArbitrarySqlAsyncIsBannedAsync()
         {
             const string test = @"
@@ -343,6 +308,81 @@ namespace FunFair.CodeAnalysis.Tests
             const string test = @"";
 
             return this.VerifyCSharpDiagnosticAsync(test);
+        }
+
+        [Fact]
+        public Task QueryArbitrarySqlAsyncGenericIsBannedAsync()
+        {
+            const string test = @"
+    using System;
+
+    namespace FunFair.Common.Data
+    {
+         public interface ISqlServerDatabase
+         {
+                Task QueryArbitrarySqlAsync<T>(string sql);
+         }
+    }
+
+    namespace ConsoleApplication1
+    {
+        class Test
+        {
+            public int Id { get; set; }
+        }
+
+        class TypeName
+        {
+            void Test(FunFair.Common.Data.ISqlServerDatabase sqlServerDatabase, string sql)
+            {
+                sqlServerDatabase.QueryArbitrarySqlAsync<Test>(sql)
+            }
+        }
+    }";
+            DiagnosticResult expected = new DiagnosticResult
+                                        {
+                                            Id = "FFS0007",
+                                            Message = @"Only use ISqlServerDatabase.QueryArbitrarySqlAsync in integration tests",
+                                            Severity = DiagnosticSeverity.Error,
+                                            Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 18, column: 17)}
+                                        };
+
+            return this.VerifyCSharpDiagnosticAsync(test, expected);
+        }
+
+        [Fact]
+        public Task QueryArbitrarySqlAsyncIsBannedAsync()
+        {
+            const string test = @"
+    using System;
+
+    namespace FunFair.Common.Data
+    {
+         public interface ISqlServerDatabase
+         {
+                Task QueryArbitrarySqlAsync(string sql);
+         }
+    }
+
+    namespace ConsoleApplication1
+    {
+        class TypeName
+        {
+            void Test(FunFair.Common.Data.ISqlServerDatabase sqlServerDatabase, string sql)
+            {
+                sqlServerDatabase.QueryArbitrarySqlAsync(sql)
+            }
+        }
+    }";
+            DiagnosticResult expected = new DiagnosticResult
+                                        {
+                                            Id = "FFS0007",
+                                            Message = @"Only use ISqlServerDatabase.QueryArbitrarySqlAsync in integration tests",
+                                            Severity = DiagnosticSeverity.Error,
+                                            Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 18, column: 17)}
+                                        };
+
+            return this.VerifyCSharpDiagnosticAsync(test, expected);
         }
     }
 }
