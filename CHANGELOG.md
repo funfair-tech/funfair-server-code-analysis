@@ -15,6 +15,9 @@ Please ADD ALL Changes to the UNRELASED SECTION and not a specific release
 <!-- 
 Releases that have at least been deployed to staging, BUT NOT necessarily released to live.  Changes should be moved from [Unreleased] into here as they are merged into the appropriate release branch
 -->
+## [1.2.1] - 2019-03-30
+- Fixed prohibition of ISqlServerDatabase.QueryArbitrarySqlAsync<>
+
 ## [1.2.0] - 2019-03-30
 ### Changed
 - FF-2127 - references dotnet core 3.1.201
