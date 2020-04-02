@@ -111,7 +111,7 @@ namespace FunFair.CodeAnalysis
                 {
                     if (StringComparer.OrdinalIgnoreCase.Equals(typeInfo.ConstructedFrom.MetadataName, metadataType.MetadataName))
                     {
-                        if (invocation.Name.ToString() == item.BannedMethod)
+                        if (invocation.Name.Identifier.ToString() == item.BannedMethod)
                         {
                             syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(item.Rule, invocation.GetLocation()));
                         }
