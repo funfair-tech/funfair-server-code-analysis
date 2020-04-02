@@ -125,7 +125,7 @@ namespace FunFair.CodeAnalysis.Tests
                                             Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 12, column: 49)}
                                         };
 
-            return  this.VerifyCSharpDiagnosticAsync(test, expected);
+            return this.VerifyCSharpDiagnosticAsync(test, expected);
         }
 
         [Fact]
@@ -299,7 +299,7 @@ namespace FunFair.CodeAnalysis.Tests
                                             Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 19, column: 17)}
                                         };
 
-           return this.VerifyCSharpDiagnosticAsync(test, expected);
+            return this.VerifyCSharpDiagnosticAsync(test, expected);
         }
 
         [Fact]
@@ -344,7 +344,7 @@ namespace FunFair.CodeAnalysis.Tests
                                             Id = "FFS0007",
                                             Message = @"Only use ISqlServerDatabase.QueryArbitrarySqlAsync in integration tests",
                                             Severity = DiagnosticSeverity.Error,
-                                            Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 18, column: 17)}
+                                            Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 23, column: 17)}
                                         };
 
             return this.VerifyCSharpDiagnosticAsync(test, expected);
