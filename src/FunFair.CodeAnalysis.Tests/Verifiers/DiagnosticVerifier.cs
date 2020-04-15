@@ -55,7 +55,7 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
                                         $"Test base does not currently handle diagnostics in metadata locations. Diagnostic in metadata: {diagnostics[i]}\r\n");
 
                             string resultMethodName = diagnostics[i]
-                                                      .Location.SourceTree.FilePath.EndsWith(value: ".cs", StringComparison.OrdinalIgnoreCase)
+                                                      .Location.SourceTree!.FilePath.EndsWith(value: ".cs", StringComparison.OrdinalIgnoreCase)
                                 ? "GetCSharpResultAt"
                                 : "GetBasicResultAt";
                             LinePosition linePosition = diagnostics[i]

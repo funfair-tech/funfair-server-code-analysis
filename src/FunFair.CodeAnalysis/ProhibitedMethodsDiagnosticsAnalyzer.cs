@@ -128,7 +128,7 @@ namespace FunFair.CodeAnalysis
             {
                 if (!cachedSymbols.ContainsKey(rule.SourceClass))
                 {
-                    INamedTypeSymbol item = compilation.GetTypeByMetadataName(rule.SourceClass);
+                    INamedTypeSymbol? item = compilation.GetTypeByMetadataName(rule.SourceClass);
 
                     if (item != null)
                     {

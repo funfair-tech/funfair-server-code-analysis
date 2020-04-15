@@ -12,7 +12,7 @@ namespace FunFair.CodeAnalysis
             this._value = value;
         }
 
-        protected override string GetText(IFormatProvider formatProvider)
+        protected override string GetText(IFormatProvider? formatProvider)
         {
             return this._value;
         }
@@ -22,7 +22,7 @@ namespace FunFair.CodeAnalysis
             return this._value.GetHashCode();
         }
 
-        protected override bool AreEqual(object other)
+        protected override bool AreEqual(object? other)
         {
             return other is LiteralString otherResourceString && StringComparer.OrdinalIgnoreCase.Equals(this._value, otherResourceString._value);
         }

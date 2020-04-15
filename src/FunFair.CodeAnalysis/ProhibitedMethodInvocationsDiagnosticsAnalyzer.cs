@@ -122,7 +122,7 @@ namespace FunFair.CodeAnalysis
                     continue;
                 }
 
-                INamedTypeSymbol sourceClassType = compilation.GetTypeByMetadataName(rule.SourceClass);
+                INamedTypeSymbol? sourceClassType = compilation.GetTypeByMetadataName(rule.SourceClass);
 
                 if (sourceClassType == null || sourceClassType.GetMembers() == default)
                 {
