@@ -7,6 +7,7 @@ Please ADD ALL Changes to the UNRELASED SECTION and not a specific release
 
 ## [Unreleased]
 ### Added
+- Checks for structs that are not marked as read-only.
 ### Fixed
 ### Changed
 ### Removed
