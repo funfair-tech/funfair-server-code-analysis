@@ -8,6 +8,7 @@ Please ADD ALL Changes to the UNRELASED SECTION and not a specific release
 ## [Unreleased]
 ### Added
 - Checks for structs that are not marked as read-only.
+- Checks for classes that are not marked as static, sealed or abstract.
 ### Fixed
 ### Changed
 ### Removed
