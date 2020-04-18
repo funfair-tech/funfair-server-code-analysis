@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeActions;
 using Microsoft.CodeAnalysis.CodeFixes;
@@ -42,7 +43,7 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
         /// <param name="newSource">A class in the form of a string after the CodeFix was applied to it</param>
         /// <param name="codeFixIndex">Index determining which codefix to apply if there are multiple</param>
         /// <param name="allowNewCompilerDiagnostics">A bool controlling whether or not the test will fail if the CodeFix introduces other warnings after being applied</param>
-        protected System.Threading.Tasks.Task VerifyCSharpFixAsync(string oldSource, string newSource, int? codeFixIndex = null, bool allowNewCompilerDiagnostics = false)
+        protected Task VerifyCSharpFixAsync(string oldSource, string newSource, int? codeFixIndex = null, bool allowNewCompilerDiagnostics = false)
         {
             DiagnosticAnalyzer? analyzer = this.GetCSharpDiagnosticAnalyzer();
 
@@ -74,13 +75,13 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
         /// <param name="newSource">A class in the form of a string after the CodeFix was applied to it</param>
         /// <param name="codeFixIndex">Index determining which codefix to apply if there are multiple</param>
         /// <param name="allowNewCompilerDiagnostics">A bool controlling whether or not the test will fail if the CodeFix introduces other warnings after being applied</param>
-        private static async System.Threading.Tasks.Task VerifyFixAsync(string language,
-                                                                        DiagnosticAnalyzer analyzer,
-                                                                        CodeFixProvider codeFixProvider,
-                                                                        string oldSource,
-                                                                        string newSource,
-                                                                        int? codeFixIndex,
-                                                                        bool allowNewCompilerDiagnostics)
+        private static async Task VerifyFixAsync(string language,
+                                                 DiagnosticAnalyzer analyzer,
+                                                 CodeFixProvider codeFixProvider,
+                                                 string oldSource,
+                                                 string newSource,
+                                                 int? codeFixIndex,
+                                                 bool allowNewCompilerDiagnostics)
         {
             Document document = CreateDocument(oldSource, language);
             Diagnostic[] analyzerDiagnostics = await GetSortedDiagnosticsFromDocumentsAsync(analyzer, new[] {document});
@@ -114,9 +115,7 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
                 if (!allowNewCompilerDiagnostics && newCompilerDiagnostics.Any())
                 {
                     // Format and get the compiler diagnostics again so that the locations make sense in the output
-                    document = document.WithSyntaxRoot(Formatter.Format(await document.GetSyntaxRootAsync(),
-                                                                        Formatter.Annotation,
-                                                                        document.Project.Solution.Workspace));
+                    document = document.WithSyntaxRoot(Formatter.Format(await document.GetSyntaxRootAsync(), Formatter.Annotation, document.Project.Solution.Workspace));
 
                     newCompilerDiagnostics = GetNewDiagnostics(compilerDiagnostics, await GetCompilerDiagnosticsAsync(document));
 
