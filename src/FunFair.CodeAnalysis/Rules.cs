@@ -12,5 +12,7 @@ namespace FunFair.CodeAnalysis
         public const string RuleDontDisableWarnings = @"FFS0008";
         public const string RuleDontUseAssertTrueWithoutMessage = @"FFS0009";
         public const string RuleDontUseAssertFalseWithoutMessage = @"FFS0010";
+        public const string RuleStructsShouldBeReadOnly = @"FFS0011";
+        public const string RuleClassesShouldBeStaticSealedOrAbstract = @"FFS0012";
     }
 }
