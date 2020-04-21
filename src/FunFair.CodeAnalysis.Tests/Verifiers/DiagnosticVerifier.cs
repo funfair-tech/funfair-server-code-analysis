@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using FunFair.CodeAnalysis.Tests.Helpers;
+using FunFair.Test.Common;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.Text;
@@ -16,7 +17,7 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
     /// <summary>
     ///     Superclass of all Unit Tests for DiagnosticAnalyzers
     /// </summary>
-    public abstract partial class DiagnosticVerifier
+    public abstract partial class DiagnosticVerifier : TestBase
     {
         #region Formatting Diagnostics
 
