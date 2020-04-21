@@ -8,7 +8,7 @@ using Microsoft.CodeAnalysis.Diagnostics;
 namespace FunFair.CodeAnalysis
 {
     /// <summary>
-    ///     Looks for issue with class declarations
+    ///     Looks for issues with class declarations
     /// </summary>
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public sealed class ClassAnalysisDiagnosticsAnalyzer : DiagnosticAnalyzer

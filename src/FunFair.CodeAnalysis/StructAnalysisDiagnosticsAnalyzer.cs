@@ -8,7 +8,7 @@ using Microsoft.CodeAnalysis.Diagnostics;
 namespace FunFair.CodeAnalysis
 {
     /// <summary>
-    ///     Looks for prohibited methods.
+    ///     Looks for problems with structs.
     /// </summary>
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public sealed class StructAnalysisDiagnosticsAnalyzer : DiagnosticAnalyzer

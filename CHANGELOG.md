@@ -7,6 +7,7 @@ Please ADD ALL Changes to the UNRELASED SECTION and not a specific release
 
 ## [Unreleased]
 ### Added
+- Check to make sure unit tests and integraton tests derive from FunFair.Test.Common.TestBase.
 ### Fixed
 ### Changed
 ### Removed
