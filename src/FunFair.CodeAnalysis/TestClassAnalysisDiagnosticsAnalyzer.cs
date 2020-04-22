@@ -52,13 +52,13 @@ namespace FunFair.CodeAnalysis
 
             if (!IsDerivedFromTestBase(syntaxNodeAnalysisContext))
             {
-                syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(Rule, methodDeclarationSyntax.Parent!.GetLocation()));
+                syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(Rule, methodDeclarationSyntax.GetLocation()));
             }
         }
 
         private static bool IsDerivedFromTestBase(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
         {
-            var containingType = syntaxNodeAnalysisContext.ContainingSymbol;
+            ISymbol containingType = syntaxNodeAnalysisContext.ContainingSymbol;
 
             for (INamedTypeSymbol? parent = containingType.ContainingType; parent != null; parent = parent.BaseType)
             {
@@ -73,12 +73,20 @@ namespace FunFair.CodeAnalysis
 
         private static bool IsTestMethod(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, MethodDeclarationSyntax methodDeclarationSyntax)
         {
-            return methodDeclarationSyntax.AttributeLists.SelectMany(collectionSelector: attributeListSyntax => attributeListSyntax.Attributes,
-                                                                     resultSelector: (attributeListSyntax, attribute) =>
-                                                                                         ModelExtensions.GetSymbolInfo(syntaxNodeAnalysisContext.SemanticModel, attribute))
-                                          .SelectMany(collectionSelector: symbolInfo => symbolInfo.CandidateSymbols,
-                                                      resultSelector: (symbolInfo, candidate) => candidate.ContainingType.ToString())
-                                          .Any(IsTestMethodAttribute);
+            foreach (var attribute in methodDeclarationSyntax.AttributeLists.SelectMany(selector: al => al.Attributes))
+            {
+                TypeInfo ti = syntaxNodeAnalysisContext.SemanticModel.GetTypeInfo(attribute);
+
+                if (ti.Type != null)
+                {
+                    if (IsTestMethodAttribute(ti.Type.ToDisplayString()))
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
         }
 
         private static bool IsTestMethodAttribute(string attributeType)

@@ -50,7 +50,7 @@ using Xunit;
                                             Id = "FFS0013",
                                             Message = "Test classes should be derived from TestBase",
                                             Severity = DiagnosticSeverity.Error,
-                                            Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 4, column: 13)}
+                                            Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 6, column: 13)}
                                         };
 
             MetadataReference xunitReference = MetadataReference.CreateFromFile(typeof(FactAttribute).Assembly.Location);
@@ -118,7 +118,7 @@ using Xunit;
                                             Id = "FFS0013",
                                             Message = "Test classes should be derived from TestBase",
                                             Severity = DiagnosticSeverity.Error,
-                                            Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 4, column: 13)}
+                                            Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 6, column: 13)}
                                         };
 
             MetadataReference xunitReference = MetadataReference.CreateFromFile(typeof(FactAttribute).Assembly.Location);
