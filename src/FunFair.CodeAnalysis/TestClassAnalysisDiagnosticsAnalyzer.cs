@@ -1,4 +1,5 @@
-﻿using System.Collections.Immutable;
+﻿using System;
+using System.Collections.Immutable;
 using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -57,9 +58,9 @@ namespace FunFair.CodeAnalysis
 
         private static bool IsDerivedFromTestBase(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
         {
-            var cl = syntaxNodeAnalysisContext.ContainingSymbol;
+            var containingType = syntaxNodeAnalysisContext.ContainingSymbol;
 
-            for (INamedTypeSymbol? parent = cl.ContainingType; parent != null; parent = parent.BaseType)
+            for (INamedTypeSymbol? parent = containingType.ContainingType; parent != null; parent = parent.BaseType)
             {
                 if (parent.ToString() == "FunFair.Test.Common.TestBase")
                 {
@@ -77,12 +78,13 @@ namespace FunFair.CodeAnalysis
                                                                                          ModelExtensions.GetSymbolInfo(syntaxNodeAnalysisContext.SemanticModel, attribute))
                                           .SelectMany(collectionSelector: symbolInfo => symbolInfo.CandidateSymbols,
                                                       resultSelector: (symbolInfo, candidate) => candidate.ContainingType.ToString())
-                                          .Any(predicate: attributeType => IsTestMethodAttribute(attributeType));
+                                          .Any(IsTestMethodAttribute);
         }
 
         private static bool IsTestMethodAttribute(string attributeType)
         {
-            return attributeType == @"Xunit.FactAttribute" || attributeType == @"Xunit.TheoryAttribute";
+            return StringComparer.InvariantCultureIgnoreCase.Equals(attributeType, y: @"Xunit.FactAttribute") ||
+                   StringComparer.InvariantCultureIgnoreCase.Equals(attributeType, y: @"Xunit.TheoryAttribute");
         }
     }
 }
