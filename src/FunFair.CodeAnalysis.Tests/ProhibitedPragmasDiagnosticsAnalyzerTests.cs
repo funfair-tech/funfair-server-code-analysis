@@ -17,7 +17,7 @@ namespace FunFair.CodeAnalysis.Tests
         [Fact]
         public Task AllowedWarningIsNotAnErrorAsync()
         {
-            const string test = @"#pragma warning disable 8618";
+            const string test = @"#pragma warning disable 1591";
 
             return this.VerifyCSharpDiagnosticAsync(test);
         }
