@@ -20,40 +20,7 @@ namespace FunFair.CodeAnalysis
         private static readonly string[] AllowedWarnings =
         {
             // Xml Docs
-            "1591",
-
-            // Nullable Reference types - TODO: FIX THESE
-            "8600",
-
-            // Nullable Reference types - TODO: FIX THESE
-            "8601",
-
-            // Nullable Reference types - TODO: FIX THESE
-            "8602",
-
-            // Nullable Reference types - TODO: FIX THESE
-            "8603",
-
-            // Nullable Reference types - TODO: FIX THESE
-            "8604",
-
-            // Nullable Reference types - TODO: FIX THESE
-            "8618",
-
-            // Nullable Reference types - TODO: FIX THESE
-            "8619",
-
-            // Nullable Reference types - TODO: FIX THESE
-            "8620",
-
-            // Nullable Reference types - TODO: FIX THESE
-            "8622",
-
-            // Nullable Reference types - TODO: FIX THESE
-            "8625",
-
-            // Nullable Reference types - TODO: FIX THESE
-            "8653"
+            "1591"
         };
 
         private static readonly string[] AllowedInTestWarnings =

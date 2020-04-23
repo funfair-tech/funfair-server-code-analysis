@@ -10,6 +10,7 @@ Please ADD ALL Changes to the UNRELASED SECTION and not a specific release
 ### Fixed
 ### Changed
 ### Removed
+- Whitelist for #pragma warning for nullable errors
 ### Deployment Changes
 
 <!-- 
