@@ -100,7 +100,7 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
         /// <returns>A string containing the syntax of the Document after formatting</returns>
         private static async Task<string> GetStringFromDocumentAsync(Document document)
         {
-            Document simplifiedDoc = await Simplifier.ReduceAsync(document, Simplifier.Annotation);
+            Document simplifiedDoc = await Simplifier.ReduceAsync(document: document, annotation: Simplifier.Annotation);
             SyntaxNode? root = await simplifiedDoc.GetSyntaxRootAsync();
 
             if (root == null)
@@ -108,7 +108,7 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
                 throw new NotNullException();
             }
 
-            root = Formatter.Format(root, Formatter.Annotation, simplifiedDoc.Project.Solution.Workspace);
+            root = Formatter.Format(node: root, annotation: Formatter.Annotation, workspace: simplifiedDoc.Project.Solution.Workspace);
 
             if (root == null)
             {

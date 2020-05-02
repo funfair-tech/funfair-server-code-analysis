@@ -20,13 +20,13 @@ namespace FunFair.CodeAnalysis
 
         private static readonly ProhibitedMethodsSpec[] BannedMethods =
         {
-            new ProhibitedMethodsSpec(Rules.RuleDontUseAssertTrueWithoutMessage,
+            new ProhibitedMethodsSpec(ruleId: Rules.RuleDontUseAssertTrueWithoutMessage,
                                       title: @"Avoid use of assert method without message",
                                       message: "Only use Assert.True with message parameter",
                                       sourceClass: "Xunit.Assert",
                                       bannedMethod: "True",
                                       new[] {new[] {"bool"}}),
-            new ProhibitedMethodsSpec(Rules.RuleDontUseAssertFalseWithoutMessage,
+            new ProhibitedMethodsSpec(ruleId: Rules.RuleDontUseAssertFalseWithoutMessage,
                                       title: @"Avoid use of assert method without message",
                                       message: "Only use Assert.False with message parameter",
                                       sourceClass: "Xunit.Assert",
@@ -64,7 +64,7 @@ namespace FunFair.CodeAnalysis
 
                 foreach (InvocationExpressionSyntax invocation in invocations)
                 {
-                    IMethodSymbol? memberSymbol = FindInvokedMemberSymbol(invocation, syntaxNodeAnalysisContext);
+                    IMethodSymbol? memberSymbol = FindInvokedMemberSymbol(invocation: invocation, syntaxNodeAnalysisContext: syntaxNodeAnalysisContext);
 
                     // check if there is at least on rule that correspond to invocation method
                     if (memberSymbol == null)
@@ -74,7 +74,7 @@ namespace FunFair.CodeAnalysis
 
                     Mapping mapping = new Mapping(className: memberSymbol.ContainingNamespace.Name + "." + memberSymbol.ContainingType.Name, methodName: memberSymbol.Name);
 
-                    if (!cachedSymbols.TryGetValue(mapping, out IReadOnlyList<IMethodSymbol> allowedMethodSignatures))
+                    if (!cachedSymbols.TryGetValue(key: mapping, out IReadOnlyList<IMethodSymbol> allowedMethodSignatures))
                     {
                         continue;
                     }
@@ -83,15 +83,15 @@ namespace FunFair.CodeAnalysis
 
                     foreach (ProhibitedMethodsSpec prohibitedMethod in prohibitedMethods)
                     {
-                        if (!IsInvocationAllowed(memberSymbol, allowedMethodSignatures))
+                        if (!IsInvocationAllowed(invocationArguments: memberSymbol, methodSignatures: allowedMethodSignatures))
                         {
-                            syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(prohibitedMethod.Rule, invocation.GetLocation()));
+                            syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(descriptor: prohibitedMethod.Rule, invocation.GetLocation()));
                         }
                     }
                 }
             }
 
-            compilationStartContext.RegisterSyntaxNodeAction(LookForBannedMethods, SyntaxKind.MethodDeclaration);
+            compilationStartContext.RegisterSyntaxNodeAction(action: LookForBannedMethods, SyntaxKind.MethodDeclaration);
         }
 
         private static IMethodSymbol? FindInvokedMemberSymbol(InvocationExpressionSyntax invocation, SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
@@ -136,7 +136,7 @@ namespace FunFair.CodeAnalysis
 
                 if (methodSignatures.Length > 0)
                 {
-                    cachedSymbols.Add(mapping, GetAllowedSignaturesForMethod(methodSignatures, rule.BannedSignatures));
+                    cachedSymbols.Add(key: mapping, GetAllowedSignaturesForMethod(methodSignatures: methodSignatures, ruleSignatures: rule.BannedSignatures));
                 }
             }
 
@@ -198,16 +198,16 @@ namespace FunFair.CodeAnalysis
             /// <summary>
             ///     Full qualified name of method
             /// </summary>
-            public string QualifiedName => string.Concat(this.ClassName, str1: ".", this.MethodName);
+            public string QualifiedName => string.Concat(str0: this.ClassName, str1: ".", str2: this.MethodName);
 
             public bool Equals(Mapping? other)
             {
-                if (ReferenceEquals(objA: null, other))
+                if (ReferenceEquals(objA: null, objB: other))
                 {
                     return false;
                 }
 
-                if (ReferenceEquals(this, other))
+                if (ReferenceEquals(this, objB: other))
                 {
                     return true;
                 }
@@ -217,7 +217,7 @@ namespace FunFair.CodeAnalysis
 
             public override bool Equals(object? obj)
             {
-                return ReferenceEquals(this, obj) || obj is Mapping other && this.Equals(other);
+                return ReferenceEquals(this, objB: obj) || obj is Mapping other && this.Equals(other);
             }
 
             public override int GetHashCode()
@@ -227,12 +227,12 @@ namespace FunFair.CodeAnalysis
 
             public static bool operator ==(Mapping? left, Mapping? right)
             {
-                return Equals(left, right);
+                return Equals(objA: left, objB: right);
             }
 
             public static bool operator !=(Mapping? left, Mapping? right)
             {
-                return !Equals(left, right);
+                return !Equals(objA: left, objB: right);
             }
         }
 
@@ -242,7 +242,7 @@ namespace FunFair.CodeAnalysis
             {
                 this.SourceClass = sourceClass;
                 this.BannedMethod = bannedMethod;
-                this.Rule = CreateRule(ruleId, title, message);
+                this.Rule = CreateRule(code: ruleId, title: title, message: message);
                 this.BannedSignatures = bannedSignatures;
             }
 
@@ -260,14 +260,20 @@ namespace FunFair.CodeAnalysis
             /// <summary>
             ///     Full qualified name of method
             /// </summary>
-            public string QualifiedName => string.Concat(this.SourceClass, str1: ".", this.BannedMethod);
+            public string QualifiedName => string.Concat(str0: this.SourceClass, str1: ".", str2: this.BannedMethod);
 
             private static DiagnosticDescriptor CreateRule(string code, string title, string message)
             {
                 LiteralString translatableTitle = new LiteralString(title);
                 LiteralString translatableMessage = new LiteralString(message);
 
-                return new DiagnosticDescriptor(code, translatableTitle, translatableMessage, CATEGORY, DiagnosticSeverity.Error, isEnabledByDefault: true, translatableMessage);
+                return new DiagnosticDescriptor(id: code,
+                                                title: translatableTitle,
+                                                messageFormat: translatableMessage,
+                                                category: CATEGORY,
+                                                defaultSeverity: DiagnosticSeverity.Error,
+                                                isEnabledByDefault: true,
+                                                description: translatableMessage);
             }
         }
     }

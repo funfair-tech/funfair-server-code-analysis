@@ -16,8 +16,8 @@ namespace FunFair.CodeAnalysis
     {
         private const string CATEGORY = "Classes";
 
-        private static readonly DiagnosticDescriptor Rule = RuleHelpers.CreateRule(Rules.RuleTestClassesShouldBeStaticSealedOrAbstractDerivedFromTestBase,
-                                                                                   CATEGORY,
+        private static readonly DiagnosticDescriptor Rule = RuleHelpers.CreateRule(code: Rules.RuleTestClassesShouldBeStaticSealedOrAbstractDerivedFromTestBase,
+                                                                                   category: CATEGORY,
                                                                                    title: "Test classes should be derived from TestBase",
                                                                                    message: "Test classes should be derived from TestBase");
 
@@ -35,7 +35,7 @@ namespace FunFair.CodeAnalysis
 
         private static void PerformCheck(CompilationStartAnalysisContext compilationStartContext)
         {
-            compilationStartContext.RegisterSyntaxNodeAction(MustDeriveFromTestBase, SyntaxKind.MethodDeclaration);
+            compilationStartContext.RegisterSyntaxNodeAction(action: MustDeriveFromTestBase, SyntaxKind.MethodDeclaration);
         }
 
         private static void MustDeriveFromTestBase(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
@@ -45,14 +45,14 @@ namespace FunFair.CodeAnalysis
                 return;
             }
 
-            if (!IsTestMethod(syntaxNodeAnalysisContext, methodDeclarationSyntax))
+            if (!IsTestMethod(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, methodDeclarationSyntax: methodDeclarationSyntax))
             {
                 return;
             }
 
             if (!IsDerivedFromTestBase(syntaxNodeAnalysisContext))
             {
-                syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(Rule, methodDeclarationSyntax.GetLocation()));
+                syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(descriptor: Rule, methodDeclarationSyntax.GetLocation()));
             }
         }
 
@@ -91,8 +91,8 @@ namespace FunFair.CodeAnalysis
 
         private static bool IsTestMethodAttribute(string attributeType)
         {
-            return StringComparer.InvariantCultureIgnoreCase.Equals(attributeType, y: @"Xunit.FactAttribute") ||
-                   StringComparer.InvariantCultureIgnoreCase.Equals(attributeType, y: @"Xunit.TheoryAttribute");
+            return StringComparer.InvariantCultureIgnoreCase.Equals(x: attributeType, y: @"Xunit.FactAttribute") ||
+                   StringComparer.InvariantCultureIgnoreCase.Equals(x: attributeType, y: @"Xunit.TheoryAttribute");
         }
     }
 }

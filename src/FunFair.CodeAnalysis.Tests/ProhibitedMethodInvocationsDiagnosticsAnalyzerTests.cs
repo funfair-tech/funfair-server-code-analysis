@@ -63,7 +63,7 @@ namespace FunFair.CodeAnalysis.Tests
 
             MetadataReference reference = MetadataReference.CreateFromFile(typeof(Assert).Assembly.Location);
 
-            return this.VerifyCSharpDiagnosticAsync(test, new[] {reference}, expected);
+            return this.VerifyCSharpDiagnosticAsync(source: test, new[] {reference}, expected);
         }
 
         [Fact]
@@ -87,7 +87,7 @@ namespace FunFair.CodeAnalysis.Tests
 
             MetadataReference reference = MetadataReference.CreateFromFile(typeof(Assert).Assembly.Location);
 
-            return this.VerifyCSharpDiagnosticAsync(test, new[] {reference});
+            return this.VerifyCSharpDiagnosticAsync(source: test, new[] {reference});
         }
 
         [Fact]
@@ -117,7 +117,7 @@ namespace FunFair.CodeAnalysis.Tests
 
             MetadataReference reference = MetadataReference.CreateFromFile(typeof(Assert).Assembly.Location);
 
-            return this.VerifyCSharpDiagnosticAsync(test, new[] {reference}, expected);
+            return this.VerifyCSharpDiagnosticAsync(source: test, new[] {reference}, expected);
         }
     }
 }

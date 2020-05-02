@@ -29,7 +29,7 @@ namespace FunFair.CodeAnalysis.Tests
             MetadataReference xunitReference = MetadataReference.CreateFromFile(typeof(FactAttribute).Assembly.Location);
             MetadataReference ffTestReference = MetadataReference.CreateFromFile(typeof(TestBase).Assembly.Location);
 
-            return this.VerifyCSharpDiagnosticAsync(test, new[] {xunitReference, ffTestReference});
+            return this.VerifyCSharpDiagnosticAsync(source: test, new[] {xunitReference, ffTestReference});
         }
 
         [Fact]
@@ -55,7 +55,7 @@ using Xunit;
 
             MetadataReference xunitReference = MetadataReference.CreateFromFile(typeof(FactAttribute).Assembly.Location);
 
-            return this.VerifyCSharpDiagnosticAsync(test, new[] {xunitReference}, expected);
+            return this.VerifyCSharpDiagnosticAsync(source: test, new[] {xunitReference}, expected);
         }
 
         [Fact]
@@ -76,7 +76,7 @@ using Xunit;
             MetadataReference xunitReference = MetadataReference.CreateFromFile(typeof(FactAttribute).Assembly.Location);
             MetadataReference ffTestReference = MetadataReference.CreateFromFile(typeof(TestBase).Assembly.Location);
 
-            return this.VerifyCSharpDiagnosticAsync(test, new[] {xunitReference, ffTestReference});
+            return this.VerifyCSharpDiagnosticAsync(source: test, new[] {xunitReference, ffTestReference});
         }
 
         [Fact]
@@ -96,7 +96,7 @@ using Xunit;
             MetadataReference xunitReference = MetadataReference.CreateFromFile(typeof(FactAttribute).Assembly.Location);
             MetadataReference ffTestReference = MetadataReference.CreateFromFile(typeof(TestBase).Assembly.Location);
 
-            return this.VerifyCSharpDiagnosticAsync(test, new[] {xunitReference, ffTestReference});
+            return this.VerifyCSharpDiagnosticAsync(source: test, new[] {xunitReference, ffTestReference});
         }
 
         [Fact]
@@ -123,7 +123,7 @@ using Xunit;
 
             MetadataReference xunitReference = MetadataReference.CreateFromFile(typeof(FactAttribute).Assembly.Location);
 
-            return this.VerifyCSharpDiagnosticAsync(test, new[] {xunitReference}, expected);
+            return this.VerifyCSharpDiagnosticAsync(source: test, new[] {xunitReference}, expected);
         }
 
         [Fact]
@@ -145,7 +145,7 @@ using Xunit;
             MetadataReference xunitReference = MetadataReference.CreateFromFile(typeof(FactAttribute).Assembly.Location);
             MetadataReference ffTestReference = MetadataReference.CreateFromFile(typeof(TestBase).Assembly.Location);
 
-            return this.VerifyCSharpDiagnosticAsync(test, new[] {xunitReference, ffTestReference});
+            return this.VerifyCSharpDiagnosticAsync(source: test, new[] {xunitReference, ffTestReference});
         }
 
         [Fact]
@@ -166,7 +166,7 @@ using Xunit;
             MetadataReference xunitReference = MetadataReference.CreateFromFile(typeof(FactAttribute).Assembly.Location);
             MetadataReference ffTestReference = MetadataReference.CreateFromFile(typeof(TestBase).Assembly.Location);
 
-            return this.VerifyCSharpDiagnosticAsync(test, new[] {xunitReference, ffTestReference});
+            return this.VerifyCSharpDiagnosticAsync(source: test, new[] {xunitReference, ffTestReference});
         }
     }
 }

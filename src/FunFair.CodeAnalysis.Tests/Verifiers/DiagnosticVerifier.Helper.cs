@@ -40,7 +40,7 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
         /// <returns>An IEnumerable of Diagnostics that surfaced in the source code, sorted by Location</returns>
         private static Task<Diagnostic[]> GetSortedDiagnosticsAsync(string[] sources, MetadataReference[] references, string language, DiagnosticAnalyzer analyzer)
         {
-            return GetSortedDiagnosticsFromDocumentsAsync(analyzer, GetDocuments(sources, references, language));
+            return GetSortedDiagnosticsFromDocumentsAsync(analyzer: analyzer, GetDocuments(sources: sources, references: references, language: language));
         }
 
         /// <summary>
@@ -123,7 +123,7 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
                 throw new ArgumentException(message: "Unsupported Language");
             }
 
-            Project project = CreateProject(sources, references, language);
+            Project project = CreateProject(sources: sources, references: references, language: language);
             Document[] documents = project.Documents.ToArray();
 
             if (sources.Length != documents.Length)
@@ -142,7 +142,7 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
         /// <returns>A Document created from the source string</returns>
         protected static Document CreateDocument(string source, string language = LanguageNames.CSharp)
         {
-            return CreateDocument(source, Array.Empty<MetadataReference>(), language);
+            return CreateDocument(source: source, Array.Empty<MetadataReference>(), language: language);
         }
 
         /// <summary>
@@ -153,7 +153,7 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
         /// <returns>A Document created from the source string</returns>
         protected static Document CreateDocument(string source, MetadataReference[] references, string language = LanguageNames.CSharp)
         {
-            return CreateProject(new[] {source}, references, language)
+            return CreateProject(new[] {source}, references: references, language: language)
                    .Documents.First();
         }
 
@@ -172,15 +172,15 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
 
             ProjectId projectId = ProjectId.CreateNewId(TestProjectName);
 
-            Solution solution = new AdhocWorkspace().CurrentSolution.AddProject(projectId, TestProjectName, TestProjectName, language)
-                                                    .AddMetadataReference(projectId, CorlibReference)
-                                                    .AddMetadataReference(projectId, SystemCoreReference)
-                                                    .AddMetadataReference(projectId, CSharpSymbolsReference)
-                                                    .AddMetadataReference(projectId, CodeAnalysisReference);
+            Solution solution = new AdhocWorkspace().CurrentSolution.AddProject(projectId: projectId, name: TestProjectName, assemblyName: TestProjectName, language: language)
+                                                    .AddMetadataReference(projectId: projectId, metadataReference: CorlibReference)
+                                                    .AddMetadataReference(projectId: projectId, metadataReference: SystemCoreReference)
+                                                    .AddMetadataReference(projectId: projectId, metadataReference: CSharpSymbolsReference)
+                                                    .AddMetadataReference(projectId: projectId, metadataReference: CodeAnalysisReference);
 
             foreach (MetadataReference reference in references)
             {
-                solution = solution.AddMetadataReference(projectId, reference);
+                solution = solution.AddMetadataReference(projectId: projectId, metadataReference: reference);
             }
 
             int count = 0;
@@ -188,8 +188,8 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
             foreach (string source in sources)
             {
                 string newFileName = fileNamePrefix + count + "." + fileExt;
-                DocumentId documentId = DocumentId.CreateNewId(projectId, newFileName);
-                solution = solution.AddDocument(documentId, newFileName, SourceText.From(source));
+                DocumentId documentId = DocumentId.CreateNewId(projectId: projectId, debugName: newFileName);
+                solution = solution.AddDocument(documentId: documentId, name: newFileName, SourceText.From(source));
                 count++;
             }
 
