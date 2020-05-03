@@ -15,8 +15,8 @@ namespace FunFair.CodeAnalysis
     {
         private const string CATEGORY = "Classes";
 
-        private static readonly DiagnosticDescriptor Rule = RuleHelpers.CreateRule(Rules.RuleClassesShouldBeStaticSealedOrAbstract,
-                                                                                   CATEGORY,
+        private static readonly DiagnosticDescriptor Rule = RuleHelpers.CreateRule(code: Rules.RuleClassesShouldBeStaticSealedOrAbstract,
+                                                                                   category: CATEGORY,
                                                                                    title: "Classes should be static, sealed or abstract",
                                                                                    message: "Classes should be static, sealed or abstract");
 
@@ -34,7 +34,7 @@ namespace FunFair.CodeAnalysis
 
         private static void PerformCheck(CompilationStartAnalysisContext compilationStartContext)
         {
-            compilationStartContext.RegisterSyntaxNodeAction(MustBeReadOnly, SyntaxKind.ClassDeclaration);
+            compilationStartContext.RegisterSyntaxNodeAction(action: MustBeReadOnly, SyntaxKind.ClassDeclaration);
         }
 
         private static void MustBeReadOnly(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
@@ -46,7 +46,7 @@ namespace FunFair.CodeAnalysis
 
             if (!classDeclarationSyntax.Modifiers.Any(IsWhiteListedClassModifier))
             {
-                syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(Rule, classDeclarationSyntax.GetLocation()));
+                syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(descriptor: Rule, classDeclarationSyntax.GetLocation()));
             }
         }
 

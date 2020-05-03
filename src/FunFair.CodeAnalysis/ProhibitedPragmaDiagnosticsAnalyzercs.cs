@@ -29,8 +29,8 @@ namespace FunFair.CodeAnalysis
             @"1718"
         };
 
-        private static readonly DiagnosticDescriptor Rule = RuleHelpers.CreateRule(Rules.RuleDontDisableWarnings,
-                                                                                   CATEGORY,
+        private static readonly DiagnosticDescriptor Rule = RuleHelpers.CreateRule(code: Rules.RuleDontDisableWarnings,
+                                                                                   category: CATEGORY,
                                                                                    title: "Don't disable warnings with #pragma warning disable",
                                                                                    message: "Don't disable warnings using #pragma warning disable");
 
@@ -71,7 +71,7 @@ namespace FunFair.CodeAnalysis
                 {
                     foreach (string testAssemblyName in TestAssemblies)
                     {
-                        if (StringComparer.InvariantCultureIgnoreCase.Equals(assembly.Name, testAssemblyName))
+                        if (StringComparer.InvariantCultureIgnoreCase.Equals(x: assembly.Name, y: testAssemblyName))
                         {
                             return true;
                         }
@@ -111,12 +111,12 @@ namespace FunFair.CodeAnalysis
                 {
                     if (isBanned(invocation.ToString()))
                     {
-                        syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(Rule, invocation.GetLocation()));
+                        syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(descriptor: Rule, invocation.GetLocation()));
                     }
                 }
             }
 
-            compilationStartContext.RegisterSyntaxNodeAction(LookForBannedMethods, SyntaxKind.PragmaWarningDirectiveTrivia);
+            compilationStartContext.RegisterSyntaxNodeAction(action: LookForBannedMethods, SyntaxKind.PragmaWarningDirectiveTrivia);
         }
     }
 }

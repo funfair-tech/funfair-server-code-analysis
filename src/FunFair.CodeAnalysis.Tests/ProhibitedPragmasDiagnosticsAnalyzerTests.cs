@@ -34,7 +34,7 @@ namespace FunFair.CodeAnalysis.Tests
                                             Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 12, column: 25)}
                                         };
 
-            return this.VerifyCSharpDiagnosticAsync(test, expected);
+            return this.VerifyCSharpDiagnosticAsync(source: test, expected);
         }
 
         [Fact]
@@ -55,7 +55,7 @@ namespace FunFair.CodeAnalysis.Tests
                                             Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 3, column: 25)}
                                         };
 
-            return this.VerifyCSharpDiagnosticAsync(test, expected);
+            return this.VerifyCSharpDiagnosticAsync(source: test, expected);
         }
 
         [Fact]
@@ -78,7 +78,7 @@ namespace FunFair.CodeAnalysis.Tests
                                             Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 12, column: 25)}
                                         };
 
-            return this.VerifyCSharpDiagnosticAsync(test, expected);
+            return this.VerifyCSharpDiagnosticAsync(source: test, expected);
         }
     }
 }

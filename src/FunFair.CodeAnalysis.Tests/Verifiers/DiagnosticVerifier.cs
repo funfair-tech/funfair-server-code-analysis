@@ -48,15 +48,15 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
 
                         if (location == Location.None)
                         {
-                            builder.AppendFormat(format: "GetGlobalResult({0}.{1})", analyzerType.Name, rule.Id);
+                            builder.AppendFormat(format: "GetGlobalResult({0}.{1})", arg0: analyzerType.Name, arg1: rule.Id);
                         }
                         else
                         {
-                            Assert.True(location.IsInSource,
+                            Assert.True(condition: location.IsInSource,
                                         $"Test base does not currently handle diagnostics in metadata locations. Diagnostic in metadata: {diagnostics[i]}\r\n");
 
                             string resultMethodName = diagnostics[i]
-                                                      .Location.SourceTree!.FilePath.EndsWith(value: ".cs", StringComparison.OrdinalIgnoreCase)
+                                                      .Location.SourceTree!.FilePath.EndsWith(value: ".cs", comparisonType: StringComparison.OrdinalIgnoreCase)
                                 ? "GetCSharpResultAt"
                                 : "GetBasicResultAt";
                             LinePosition linePosition = diagnostics[i]
@@ -105,7 +105,7 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
         /// <param name="expected"> DiagnosticResults that should appear after the analyzer is run on the source</param>
         protected Task VerifyCSharpDiagnosticAsync(string source, params DiagnosticResult[] expected)
         {
-            return this.VerifyCSharpDiagnosticAsync(source, Array.Empty<MetadataReference>(), expected);
+            return this.VerifyCSharpDiagnosticAsync(source: source, Array.Empty<MetadataReference>(), expected: expected);
         }
 
         /// <summary>
@@ -123,7 +123,7 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
                 throw new NotNullException();
             }
 
-            return VerifyDiagnosticsAsync(new[] {source}, references, LanguageNames.CSharp, diagnostic, expected);
+            return VerifyDiagnosticsAsync(new[] {source}, references: references, language: LanguageNames.CSharp, analyzer: diagnostic, expected: expected);
         }
 
         /// <summary>
@@ -134,7 +134,7 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
         /// <param name="expected">DiagnosticResults that should appear after the analyzer is run on the sources</param>
         protected Task VerifyCSharpDiagnosticAsync(string[] sources, params DiagnosticResult[] expected)
         {
-            return this.VerifyCSharpDiagnosticAsync(sources, Array.Empty<MetadataReference>(), expected);
+            return this.VerifyCSharpDiagnosticAsync(sources: sources, Array.Empty<MetadataReference>(), expected: expected);
         }
 
         /// <summary>
@@ -153,7 +153,7 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
                 throw new NotNullException();
             }
 
-            return VerifyDiagnosticsAsync(sources, references, LanguageNames.CSharp, diagnostic, expected);
+            return VerifyDiagnosticsAsync(sources: sources, references: references, language: LanguageNames.CSharp, analyzer: diagnostic, expected: expected);
         }
 
         /// <summary>
@@ -171,9 +171,9 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
                                                          DiagnosticAnalyzer analyzer,
                                                          params DiagnosticResult[] expected)
         {
-            Diagnostic[] diagnostics = await GetSortedDiagnosticsAsync(sources, references, language, analyzer);
+            Diagnostic[] diagnostics = await GetSortedDiagnosticsAsync(sources: sources, references: references, language: language, analyzer: analyzer);
 
-            VerifyDiagnosticResults(diagnostics, analyzer, expected);
+            VerifyDiagnosticResults(actualResults: diagnostics, analyzer: analyzer, expectedResults: expected);
         }
 
         #endregion
@@ -194,13 +194,13 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
 
             if (expectedCount != actualCount)
             {
-                string diagnosticsOutput = actualResults.Any() ? FormatDiagnostics(analyzer, actualResults.ToArray()) : "    NONE.";
+                string diagnosticsOutput = actualResults.Any() ? FormatDiagnostics(analyzer: analyzer, actualResults.ToArray()) : "    NONE.";
 
                 Assert.True(condition: false,
                             string.Format(format: "Mismatch between number of diagnostics returned, expected \"{0}\" actual \"{1}\"\r\n\r\nDiagnostics:\r\n{2}\r\n",
-                                          expectedCount,
-                                          actualCount,
-                                          diagnosticsOutput));
+                                          arg0: expectedCount,
+                                          arg1: actualCount,
+                                          arg2: diagnosticsOutput));
             }
 
             for (int i = 0; i < expectedResults.Length; i++)
@@ -212,12 +212,13 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
                 {
                     if (actual.Location != Location.None)
                     {
-                        Assert.True(condition: false, string.Format(format: "Expected:\nA project diagnostic with No location\nActual:\n{0}", FormatDiagnostics(analyzer, actual)));
+                        Assert.True(condition: false,
+                                    string.Format(format: "Expected:\nA project diagnostic with No location\nActual:\n{0}", FormatDiagnostics(analyzer: analyzer, actual)));
                     }
                 }
                 else
                 {
-                    VerifyDiagnosticLocation(analyzer, actual, actual.Location, expected.Locations.First());
+                    VerifyDiagnosticLocation(analyzer: analyzer, diagnostic: actual, actual: actual.Location, expected.Locations.First());
                     Location[] additionalLocations = actual.AdditionalLocations.ToArray();
 
                     if (additionalLocations.Length != expected.Locations.Length - 1)
@@ -225,13 +226,13 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
                         Assert.True(condition: false,
                                     string.Format(format: "Expected {0} additional locations but got {1} for Diagnostic:\r\n    {2}\r\n",
                                                   expected.Locations.Length - 1,
-                                                  additionalLocations.Length,
-                                                  FormatDiagnostics(analyzer, actual)));
+                                                  arg1: additionalLocations.Length,
+                                                  FormatDiagnostics(analyzer: analyzer, actual)));
                     }
 
                     for (int j = 0; j < additionalLocations.Length; ++j)
                     {
-                        VerifyDiagnosticLocation(analyzer, actual, additionalLocations[j], expected.Locations[j + 1]);
+                        VerifyDiagnosticLocation(analyzer: analyzer, diagnostic: actual, additionalLocations[j], expected.Locations[j + 1]);
                     }
                 }
 
@@ -239,27 +240,27 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
                 {
                     Assert.True(condition: false,
                                 string.Format(format: "Expected diagnostic id to be \"{0}\" was \"{1}\"\r\n\r\nDiagnostic:\r\n    {2}\r\n",
-                                              expected.Id,
-                                              actual.Id,
-                                              FormatDiagnostics(analyzer, actual)));
+                                              arg0: expected.Id,
+                                              arg1: actual.Id,
+                                              FormatDiagnostics(analyzer: analyzer, actual)));
                 }
 
                 if (actual.Severity != expected.Severity)
                 {
                     Assert.True(condition: false,
                                 string.Format(format: "Expected diagnostic severity to be \"{0}\" was \"{1}\"\r\n\r\nDiagnostic:\r\n    {2}\r\n",
-                                              expected.Severity,
-                                              actual.Severity,
-                                              FormatDiagnostics(analyzer, actual)));
+                                              arg0: expected.Severity,
+                                              arg1: actual.Severity,
+                                              FormatDiagnostics(analyzer: analyzer, actual)));
                 }
 
                 if (actual.GetMessage() != expected.Message)
                 {
                     Assert.True(condition: false,
                                 string.Format(format: "Expected diagnostic message to be \"{0}\" was \"{1}\"\r\n\r\nDiagnostic:\r\n    {2}\r\n",
-                                              expected.Message,
+                                              arg0: expected.Message,
                                               actual.GetMessage(),
-                                              FormatDiagnostics(analyzer, actual)));
+                                              FormatDiagnostics(analyzer: analyzer, actual)));
                 }
             }
         }
@@ -277,9 +278,9 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
 
             Assert.True(actualSpan.Path == expected.Path || actualSpan.Path != null && actualSpan.Path.Contains(value: "Test0.") && expected.Path.Contains(value: "Test."),
                         string.Format(format: "Expected diagnostic to be in file \"{0}\" was actually in file \"{1}\"\r\n\r\nDiagnostic:\r\n    {2}\r\n",
-                                      expected.Path,
-                                      actualSpan.Path,
-                                      FormatDiagnostics(analyzer, diagnostic)));
+                                      arg0: expected.Path,
+                                      arg1: actualSpan.Path,
+                                      FormatDiagnostics(analyzer: analyzer, diagnostic)));
 
             LinePosition actualLinePosition = actualSpan.StartLinePosition;
 
@@ -290,9 +291,9 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
                 {
                     Assert.True(condition: false,
                                 string.Format(format: "Expected diagnostic to be on line \"{0}\" was actually on line \"{1}\"\r\n\r\nDiagnostic:\r\n    {2}\r\n",
-                                              expected.Line,
+                                              arg0: expected.Line,
                                               actualLinePosition.Line + 1,
-                                              FormatDiagnostics(analyzer, diagnostic)));
+                                              FormatDiagnostics(analyzer: analyzer, diagnostic)));
                 }
             }
 
@@ -303,9 +304,9 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
                 {
                     Assert.True(condition: false,
                                 string.Format(format: "Expected diagnostic to start at column \"{0}\" was actually at column \"{1}\"\r\n\r\nDiagnostic:\r\n    {2}\r\n",
-                                              expected.Column,
+                                              arg0: expected.Column,
                                               actualLinePosition.Character + 1,
-                                              FormatDiagnostics(analyzer, diagnostic)));
+                                              FormatDiagnostics(analyzer: analyzer, diagnostic)));
                 }
             }
         }

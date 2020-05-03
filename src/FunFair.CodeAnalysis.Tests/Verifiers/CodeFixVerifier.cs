@@ -59,7 +59,13 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
                 throw new NotNullException();
             }
 
-            return VerifyFixAsync(LanguageNames.CSharp, analyzer, codeFixProvider, oldSource, newSource, codeFixIndex, allowNewCompilerDiagnostics);
+            return VerifyFixAsync(language: LanguageNames.CSharp,
+                                  analyzer: analyzer,
+                                  codeFixProvider: codeFixProvider,
+                                  oldSource: oldSource,
+                                  newSource: newSource,
+                                  codeFixIndex: codeFixIndex,
+                                  allowNewCompilerDiagnostics: allowNewCompilerDiagnostics);
         }
 
         /// <summary>
@@ -83,15 +89,18 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
                                                  int? codeFixIndex,
                                                  bool allowNewCompilerDiagnostics)
         {
-            Document document = CreateDocument(oldSource, language);
-            Diagnostic[] analyzerDiagnostics = await GetSortedDiagnosticsFromDocumentsAsync(analyzer, new[] {document});
+            Document document = CreateDocument(source: oldSource, language: language);
+            Diagnostic[] analyzerDiagnostics = await GetSortedDiagnosticsFromDocumentsAsync(analyzer: analyzer, new[] {document});
             Diagnostic[] compilerDiagnostics = await GetCompilerDiagnosticsAsync(document);
             int attempts = analyzerDiagnostics.Length;
 
             for (int i = 0; i < attempts; ++i)
             {
                 List<CodeAction> actions = new List<CodeAction>();
-                CodeFixContext context = new CodeFixContext(document, analyzerDiagnostics[0], registerCodeFix: (a, d) => actions.Add(a), CancellationToken.None);
+                CodeFixContext context = new CodeFixContext(document: document,
+                                                            analyzerDiagnostics[0],
+                                                            registerCodeFix: (a, d) => actions.Add(a),
+                                                            cancellationToken: CancellationToken.None);
                 await codeFixProvider.RegisterCodeFixesAsync(context);
 
                 if (!actions.Any())
@@ -101,23 +110,25 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
 
                 if (codeFixIndex != null)
                 {
-                    document = await ApplyFixAsync(document, actions.ElementAt((int) codeFixIndex));
+                    document = await ApplyFixAsync(document: document, actions.ElementAt((int) codeFixIndex));
 
                     break;
                 }
 
-                document = await ApplyFixAsync(document, actions.ElementAt(index: 0));
-                analyzerDiagnostics = await GetSortedDiagnosticsFromDocumentsAsync(analyzer, new[] {document});
+                document = await ApplyFixAsync(document: document, actions.ElementAt(index: 0));
+                analyzerDiagnostics = await GetSortedDiagnosticsFromDocumentsAsync(analyzer: analyzer, new[] {document});
 
-                IEnumerable<Diagnostic> newCompilerDiagnostics = GetNewDiagnostics(compilerDiagnostics, await GetCompilerDiagnosticsAsync(document));
+                IEnumerable<Diagnostic> newCompilerDiagnostics = GetNewDiagnostics(diagnostics: compilerDiagnostics, await GetCompilerDiagnosticsAsync(document));
 
                 //check if applying the code fix introduced any new compiler diagnostics
                 if (!allowNewCompilerDiagnostics && newCompilerDiagnostics.Any())
                 {
                     // Format and get the compiler diagnostics again so that the locations make sense in the output
-                    document = document.WithSyntaxRoot(Formatter.Format(await document.GetSyntaxRootAsync(), Formatter.Annotation, document.Project.Solution.Workspace));
+                    document = document.WithSyntaxRoot(Formatter.Format(await document.GetSyntaxRootAsync(),
+                                                                        annotation: Formatter.Annotation,
+                                                                        workspace: document.Project.Solution.Workspace));
 
-                    newCompilerDiagnostics = GetNewDiagnostics(compilerDiagnostics, await GetCompilerDiagnosticsAsync(document));
+                    newCompilerDiagnostics = GetNewDiagnostics(diagnostics: compilerDiagnostics, await GetCompilerDiagnosticsAsync(document));
 
                     SyntaxNode? sr = await document.GetSyntaxRootAsync();
 
@@ -141,7 +152,7 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
 
             //after applying all of the code fixes, compare the resulting string to the inputted one
             string actual = await GetStringFromDocumentAsync(document);
-            Assert.Equal(newSource, actual);
+            Assert.Equal(expected: newSource, actual: actual);
         }
     }
 }

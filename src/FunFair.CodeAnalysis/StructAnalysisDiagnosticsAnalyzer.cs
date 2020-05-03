@@ -15,8 +15,8 @@ namespace FunFair.CodeAnalysis
     {
         private const string CATEGORY = "Structs";
 
-        private static readonly DiagnosticDescriptor Rule = RuleHelpers.CreateRule(Rules.RuleStructsShouldBeReadOnly,
-                                                                                   CATEGORY,
+        private static readonly DiagnosticDescriptor Rule = RuleHelpers.CreateRule(code: Rules.RuleStructsShouldBeReadOnly,
+                                                                                   category: CATEGORY,
                                                                                    title: "Structs should be read-only",
                                                                                    message: "Structs should be read-only");
 
@@ -34,7 +34,7 @@ namespace FunFair.CodeAnalysis
 
         private static void PerformCheck(CompilationStartAnalysisContext compilationStartContext)
         {
-            compilationStartContext.RegisterSyntaxNodeAction(MustBeReadOnly, SyntaxKind.StructDeclaration);
+            compilationStartContext.RegisterSyntaxNodeAction(action: MustBeReadOnly, SyntaxKind.StructDeclaration);
         }
 
         private static void MustBeReadOnly(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
@@ -46,7 +46,7 @@ namespace FunFair.CodeAnalysis
 
             if (!structDeclarationSyntax.Modifiers.Any(IsReadOnlyKeyword))
             {
-                syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(Rule, structDeclarationSyntax.GetLocation()));
+                syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(descriptor: Rule, structDeclarationSyntax.GetLocation()));
             }
         }
 
