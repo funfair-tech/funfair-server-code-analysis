@@ -119,5 +119,42 @@ namespace FunFair.CodeAnalysis.Tests
 
             return this.VerifyCSharpDiagnosticAsync(source: test, new[] {reference}, expected);
         }
+
+        [Fact]
+        public Task NSubstituteExtensionsReceivedWithoutExpectedCallCountIsBannedAsync()
+        {
+            const string test = @"
+    using NSubstitute;
+
+    namespace FunFair.FunWallet.Api.Logic.Tests.Services
+    {
+         public interface IDoSomething
+         {
+                void DoIt();
+         }
+    }
+
+    namespace ConsoleApplication1
+    {
+        class TypeName
+        {
+            void Test()
+            {
+                Substitute.For<IDoSomething>.Received().DoIt();
+            }
+        }
+    }";
+            DiagnosticResult expected = new DiagnosticResult
+                                        {
+                                            Id = "FFS0014",
+                                            Message = @"Only use Received with expected call count",
+                                            Severity = DiagnosticSeverity.Error,
+                                            Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 18, column: 28) }
+                                        };
+
+            MetadataReference reference = MetadataReference.CreateFromFile(typeof(Assert).Assembly.Location);
+
+            return this.VerifyCSharpDiagnosticAsync(source: test, new[] { reference }, expected);
+        }
     }
 }

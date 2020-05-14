@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <RuleSet Name="Custom Rulset" Description="Custom Rulset" ToolsVersion="15.0">
     <Rules AnalyzerId="Microsoft.Analyzers.ManagedCodeAnalysis" RuleNamespace="Microsoft.Rules.Managed">
         <Rule Id="CA1001" Action="Hidden"/>
@@ -206,5 +206,6 @@
         <Rule Id="FFS0007" Action="Error"/>
         <!-- Use of non-whitelisted #pragma warning -->
         <Rule Id="FFS0008" Action="Error"/>
+        <Rule Id="FFS0009" Action="Error"/>
     </Rules>
 </RuleSet>

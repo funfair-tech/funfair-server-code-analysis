@@ -31,7 +31,14 @@ namespace FunFair.CodeAnalysis
                                       message: "Only use Assert.False with message parameter",
                                       sourceClass: "Xunit.Assert",
                                       bannedMethod: "False",
-                                      new[] {new[] {"bool"}})
+                                      new[] {new[] {"bool"}}),
+            new ProhibitedMethodsSpec(ruleId: Rules.RuleDontUseSubstituteReceivedWithoutSpecifyingExpectedCallCount,
+                                      title: @"Specify number of times a mocked method should be invoked",
+                                      message: "Only use Received with expected call count",
+                                      sourceClass: "SubstituteExtensions.Received",
+                                      bannedMethod: "True",
+                                      new[]{Array.Empty<string>()})
+
         };
 
         /// <inheritdoc />
