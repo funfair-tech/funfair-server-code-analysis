@@ -1,4 +1,4 @@
-﻿# Changelog
+# Changelog
 All notable changes to this project will be documented in this file.
 
 <!--
@@ -9,11 +9,12 @@ Please ADD ALL Changes to the UNRELASED SECTION and not a specific release
 ### Added
 ### Fixed
 ### Changed
+- FF-1429 - Updated FunFair.Test.Common to 1.7.0.343
 - FF-2386 - Update all the .NET components to .NET Core 3.1.202
 ### Removed
 ### Deployment Changes
 
-<!-- 
+<!--
 Releases that have at least been deployed to staging, BUT NOT necessarily released to live.  Changes should be moved from [Unreleased] into here as they are merged into the appropriate release branch
 -->
 ## [1.4.1] - 2019-04-23
@@ -61,3 +62,4 @@ Releases that have at least been deployed to staging, BUT NOT necessarily releas
 ## [1.0.0] - 2019-12-18
 ### Added
 - Banned DateTime.Now, DateTime.UtcNow, DateTime.Today, DateTimeOffset.Now and DateTimeOffset.UtcNow pointing to use DateTimeSource instead
+
