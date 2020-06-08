@@ -63,7 +63,14 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
 
             foreach (Project project in projects)
             {
-                CompilationWithAnalyzers compilationWithAnalyzers = (await project.GetCompilationAsync()).WithAnalyzers(ImmutableArray.Create(analyzer));
+                Compilation? compilation = await project.GetCompilationAsync();
+
+                if (compilation == null)
+                {
+                    continue;
+                }
+
+                CompilationWithAnalyzers compilationWithAnalyzers = compilation.WithAnalyzers(ImmutableArray.Create(analyzer));
                 ImmutableArray<Diagnostic> diags = await compilationWithAnalyzers.GetAnalyzerDiagnosticsAsync();
 
                 foreach (Diagnostic diag in diags)

@@ -58,7 +58,12 @@ namespace FunFair.CodeAnalysis
 
         private static bool IsDerivedFromTestBase(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
         {
-            ISymbol containingType = syntaxNodeAnalysisContext.ContainingSymbol;
+            ISymbol? containingType = syntaxNodeAnalysisContext.ContainingSymbol;
+
+            if (containingType == null)
+            {
+                return false;
+            }
 
             for (INamedTypeSymbol? parent = containingType.ContainingType; parent != null; parent = parent.BaseType)
             {
