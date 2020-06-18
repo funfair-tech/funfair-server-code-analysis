@@ -9,6 +9,14 @@ Please ADD ALL Changes to the UNRELASED SECTION and not a specific release
 ### Added
 ### Fixed
 ### Changed
+### Removed
+### Deployment Changes
+
+<!--
+Releases that have at least been deployed to staging, BUT NOT necessarily released to live.  Changes should be moved from [Unreleased] into here as they are merged into the appropriate release branch
+-->
+## [1.5.0] - 2019-06-18
+### Changed
 - FF-2488 - Updated packages and global.json to net core 3.1.301
 - FF-1429 - Updated FunFair.Test.Common to 1.7.1.350
 - FF-1429 - Updated xunit.runner.visualstudio to 2.4.2
@@ -18,12 +26,7 @@ Please ADD ALL Changes to the UNRELASED SECTION and not a specific release
 - FF-1429 - Updated AsyncFixer to 1.1.8
 - FF-1429 - Updated FunFair.Test.Common to 1.7.0.343
 - FF-2386 - Update all the .NET components to .NET Core 3.1.202
-### Removed
-### Deployment Changes
 
-<!--
-Releases that have at least been deployed to staging, BUT NOT necessarily released to live.  Changes should be moved from [Unreleased] into here as they are merged into the appropriate release branch
--->
 ## [1.4.1] - 2019-04-23
 ### Removed
 - Whitelist for #pragma warning for nullable errors
