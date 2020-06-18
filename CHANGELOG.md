@@ -9,6 +9,7 @@ Please ADD ALL Changes to the UNRELASED SECTION and not a specific release
 ### Added
 ### Fixed
 ### Changed
+- FF-2488 - Updated packages and global.json to net core 3.1.301
 - FF-1429 - Updated FunFair.Test.Common to 1.7.1.350
 - FF-1429 - Updated xunit.runner.visualstudio to 2.4.2
 - FF-1429 - Updated SonarAnalyzer.CSharp to 8.8.0.18411
