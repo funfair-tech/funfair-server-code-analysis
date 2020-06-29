@@ -3,6 +3,7 @@ using FunFair.CodeAnalysis.Tests.Helpers;
 using FunFair.CodeAnalysis.Tests.Verifiers;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
+using NSubstitute;
 using Xunit;
 
 namespace FunFair.CodeAnalysis.Tests
@@ -124,37 +125,38 @@ namespace FunFair.CodeAnalysis.Tests
         public Task NSubstituteExtensionsReceivedWithoutExpectedCallCountIsBannedAsync()
         {
             const string test = @"
-    using NSubstitute;
+     using System;
+     using NSubstitute;
 
-    namespace FunFair.FunWallet.Api.Logic.Tests.Services
-    {
-         public interface IDoSomething
+     namespace FunFair.FunWallet.Api.Logic.Tests.Services
+     {
+          public interface IDoSomething
+          {
+                 void DoIt();
+          }
+     }
+
+     namespace ConsoleApplication1
+     {
+         class TypeName
          {
-                void DoIt();
+             void Test()
+             {
+                 Substitute.For<IDoSomething>.Received().DoIt();
+             }
          }
-    }
-
-    namespace ConsoleApplication1
-    {
-        class TypeName
-        {
-            void Test()
-            {
-                Substitute.For<IDoSomething>.Received().DoIt();
-            }
-        }
-    }";
+     }";
             DiagnosticResult expected = new DiagnosticResult
                                         {
                                             Id = "FFS0014",
                                             Message = @"Only use Received with expected call count",
                                             Severity = DiagnosticSeverity.Error,
-                                            Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 18, column: 28) }
+                                            Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 19, column: 40) }
                                         };
 
-            MetadataReference reference = MetadataReference.CreateFromFile(typeof(Assert).Assembly.Location);
+            MetadataReference reference = MetadataReference.CreateFromFile(typeof(Substitute).Assembly.Location);
 
-            return this.VerifyCSharpDiagnosticAsync(source: test, new[] { reference }, expected);
+            return this.VerifyCSharpDiagnosticAsync(source: test, new[] {reference}, expected);
         }
     }
 }

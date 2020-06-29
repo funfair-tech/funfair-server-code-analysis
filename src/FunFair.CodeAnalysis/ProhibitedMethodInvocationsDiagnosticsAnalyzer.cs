@@ -35,9 +35,11 @@ namespace FunFair.CodeAnalysis
             new ProhibitedMethodsSpec(ruleId: Rules.RuleDontUseSubstituteReceivedWithoutSpecifyingExpectedCallCount,
                                       title: @"Specify number of times a mocked method should be invoked",
                                       message: "Only use Received with expected call count",
-                                      sourceClass: "SubstituteExtensions.Received",
-                                      bannedMethod: "True",
-                                      new[]{Array.Empty<string>()})
+                                      sourceClass: "NSubstitute.SubstituteExtensions",
+                                      bannedMethod: "Received",
+                                      new[] {Array.Empty<string>()},
+                                      requiredArgsCount: 2)
+                                        
 
         };
 
@@ -90,7 +92,7 @@ namespace FunFair.CodeAnalysis
 
                     foreach (ProhibitedMethodsSpec prohibitedMethod in prohibitedMethods)
                     {
-                        if (!IsInvocationAllowed(invocationArguments: memberSymbol, methodSignatures: allowedMethodSignatures))
+                        if (!IsInvocationAllowed(invocationArguments: memberSymbol, methodSignatures: allowedMethodSignatures, requiredArgsCount: prohibitedMethod.RequiredArgsCount))
                         {
                             syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(descriptor: prohibitedMethod.Rule, invocation.GetLocation()));
                         }
@@ -143,7 +145,7 @@ namespace FunFair.CodeAnalysis
 
                 if (methodSignatures.Length > 0)
                 {
-                    cachedSymbols.Add(key: mapping, GetAllowedSignaturesForMethod(methodSignatures: methodSignatures, ruleSignatures: rule.BannedSignatures));
+                    cachedSymbols.Add(key: mapping, GetAllowedSignaturesForMethod(methodSignatures: methodSignatures, ruleSignatures: rule.BannedSignatures, rule.RequiredArgsCount));
                 }
             }
 
@@ -155,8 +157,9 @@ namespace FunFair.CodeAnalysis
         /// </summary>
         /// <param name="methodSignatures">All signatures of one method</param>
         /// <param name="ruleSignatures">All banned signatures</param>
+        /// <param name="requiredArgsCount">Required args count</param>
         /// <returns>Collection of allowed signatures.</returns>
-        private static IReadOnlyList<IMethodSymbol> GetAllowedSignaturesForMethod(IEnumerable<IMethodSymbol> methodSignatures, IEnumerable<IEnumerable<string>> ruleSignatures)
+        private static IReadOnlyList<IMethodSymbol> GetAllowedSignaturesForMethod(IEnumerable<IMethodSymbol> methodSignatures, IEnumerable<IEnumerable<string>> ruleSignatures, int? requiredArgsCount)
         {
             if (methodSignatures == null)
             {
@@ -176,6 +179,11 @@ namespace FunFair.CodeAnalysis
                                                                                  .SequenceEqual(ruleSignature));
             }
 
+            if (requiredArgsCount != null)
+            {
+                methodSignatureList.RemoveAll(match: methodSymbol => methodSymbol.Parameters.Length != requiredArgsCount);
+            }
+
             return methodSignatureList;
         }
 
@@ -184,10 +192,23 @@ namespace FunFair.CodeAnalysis
         /// </summary>
         /// <param name="invocationArguments">Arguments used in invocation of method</param>
         /// <param name="methodSignatures">List of all valid signatures for method</param>
+        /// <param name="requiredArgsCount">Required args count</param>
         /// <returns>true, if the method was allowed; otherwise, false.</returns>
-        private static bool IsInvocationAllowed(IMethodSymbol invocationArguments, IEnumerable<IMethodSymbol> methodSignatures)
+        private static bool IsInvocationAllowed(IMethodSymbol invocationArguments, IEnumerable<IMethodSymbol> methodSignatures, int? requiredArgsCount)
         {
-            return methodSignatures.Any(predicate: methodSignature => methodSignature.Parameters.SequenceEqual(invocationArguments.Parameters));
+            bool allowedBasedOnArgsType = true;
+            bool allowedBasedOnArgsCount = true;
+
+            if (requiredArgsCount != null)
+            {
+                allowedBasedOnArgsCount = methodSignatures.Any(predicate: methodSignature => methodSignature.Parameters.Length != requiredArgsCount);
+            }
+            else
+            {
+                allowedBasedOnArgsType = methodSignatures.Any(predicate: methodSignature => methodSignature.Parameters.SequenceEqual(invocationArguments.Parameters));
+            }
+
+            return allowedBasedOnArgsCount && allowedBasedOnArgsType;
         }
 
         private sealed class Mapping : IEquatable<Mapping>
@@ -245,12 +266,13 @@ namespace FunFair.CodeAnalysis
 
         private sealed class ProhibitedMethodsSpec
         {
-            public ProhibitedMethodsSpec(string ruleId, string title, string message, string sourceClass, string bannedMethod, IEnumerable<IEnumerable<string>> bannedSignatures)
+            public ProhibitedMethodsSpec(string ruleId, string title, string message, string sourceClass, string bannedMethod, IEnumerable<IEnumerable<string>> bannedSignatures, int? requiredArgsCount = null)
             {
                 this.SourceClass = sourceClass;
                 this.BannedMethod = bannedMethod;
                 this.Rule = CreateRule(code: ruleId, title: title, message: message);
                 this.BannedSignatures = bannedSignatures;
+                this.RequiredArgsCount = requiredArgsCount;
             }
 
             public string SourceClass { get; }
@@ -261,6 +283,8 @@ namespace FunFair.CodeAnalysis
             ///     List of all method signatures that are banned, every signature is given with array of types in exact parameter order
             /// </summary>
             public IEnumerable<IEnumerable<string>> BannedSignatures { get; }
+
+            public int? RequiredArgsCount { get; }
 
             public DiagnosticDescriptor Rule { get; }
 
