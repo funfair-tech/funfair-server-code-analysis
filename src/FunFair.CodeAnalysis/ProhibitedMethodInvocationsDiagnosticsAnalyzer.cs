@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using FunFair.CodeAnalysis.Helpers;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -64,15 +65,15 @@ namespace FunFair.CodeAnalysis
 
                 foreach (InvocationExpressionSyntax invocation in invocations)
                 {
-                    IMethodSymbol? memberSymbol = FindInvokedMemberSymbol(invocation: invocation, syntaxNodeAnalysisContext: syntaxNodeAnalysisContext);
+                    IMethodSymbol? memberSymbol = MethodSymbolHelper.FindInvokedMemberSymbol(invocation: invocation, syntaxNodeAnalysisContext: syntaxNodeAnalysisContext);
 
-                    // check if there is at least on rule that correspond to invocation method
+                    // check if there is at least one rule that correspond to invocation method
                     if (memberSymbol == null)
                     {
                         continue;
                     }
 
-                    Mapping mapping = new Mapping(className: memberSymbol.ContainingNamespace.Name + "." + memberSymbol.ContainingType.Name, methodName: memberSymbol.Name);
+                    Mapping mapping = new Mapping(className: memberSymbol.ContainingNamespace + "." + memberSymbol.ContainingType.Name, methodName: memberSymbol.Name);
 
                     if (!cachedSymbols.TryGetValue(key: mapping, out IReadOnlyList<IMethodSymbol> allowedMethodSignatures))
                     {
@@ -92,21 +93,6 @@ namespace FunFair.CodeAnalysis
             }
 
             compilationStartContext.RegisterSyntaxNodeAction(action: LookForBannedMethods, SyntaxKind.MethodDeclaration);
-        }
-
-        private static IMethodSymbol? FindInvokedMemberSymbol(InvocationExpressionSyntax invocation, SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
-        {
-            MemberAccessExpressionSyntax? memberAccessExpressionSyntax = invocation.Expression as MemberAccessExpressionSyntax;
-
-            if (memberAccessExpressionSyntax == null)
-            {
-                return null;
-            }
-
-            IMethodSymbol? memberSymbol = syntaxNodeAnalysisContext.SemanticModel.GetSymbolInfo(memberAccessExpressionSyntax)
-                                                                   .Symbol as IMethodSymbol;
-
-            return memberSymbol;
         }
 
         private static IReadOnlyDictionary<Mapping, IReadOnlyList<IMethodSymbol>> BuildCachedSymbols(Compilation compilation)
@@ -181,59 +167,6 @@ namespace FunFair.CodeAnalysis
         private static bool IsInvocationAllowed(IMethodSymbol invocationArguments, IEnumerable<IMethodSymbol> methodSignatures)
         {
             return methodSignatures.Any(predicate: methodSignature => methodSignature.Parameters.SequenceEqual(invocationArguments.Parameters));
-        }
-
-        private sealed class Mapping : IEquatable<Mapping>
-        {
-            public Mapping(string methodName, string className)
-            {
-                this.MethodName = methodName;
-                this.ClassName = className;
-            }
-
-            public string MethodName { get; }
-
-            public string ClassName { get; }
-
-            /// <summary>
-            ///     Full qualified name of method
-            /// </summary>
-            public string QualifiedName => string.Concat(str0: this.ClassName, str1: ".", str2: this.MethodName);
-
-            public bool Equals(Mapping? other)
-            {
-                if (ReferenceEquals(objA: null, objB: other))
-                {
-                    return false;
-                }
-
-                if (ReferenceEquals(this, objB: other))
-                {
-                    return true;
-                }
-
-                return this.MethodName == other.MethodName && this.ClassName == other.ClassName;
-            }
-
-            public override bool Equals(object? obj)
-            {
-                return ReferenceEquals(this, objB: obj) || obj is Mapping other && this.Equals(other);
-            }
-
-            public override int GetHashCode()
-            {
-                return (this.MethodName.GetHashCode() * 397) ^ this.ClassName.GetHashCode();
-            }
-
-            public static bool operator ==(Mapping? left, Mapping? right)
-            {
-                return Equals(objA: left, objB: right);
-            }
-
-            public static bool operator !=(Mapping? left, Mapping? right)
-            {
-                return !Equals(objA: left, objB: right);
-            }
         }
 
         private sealed class ProhibitedMethodsSpec
