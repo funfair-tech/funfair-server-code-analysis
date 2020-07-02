@@ -40,11 +40,13 @@ namespace FunFair.CodeAnalysis
         {
             if (!(syntaxNodeAnalysisContext.Node is ClassDeclarationSyntax classDeclarationSyntax))
             {
+                return;
             }
 
             // if (!classDeclarationSyntax.Modifiers.Any(IsWhiteListedClassModifier))
             // {
-            //     syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(descriptor: Rule, classDeclarationSyntax.GetLocation()));
+            syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(descriptor: Rule, classDeclarationSyntax.GetLocation()));
+
             // }
         }
     }
