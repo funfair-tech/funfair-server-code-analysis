@@ -89,7 +89,7 @@ namespace FunFair.CodeAnalysis
                 return;
             }
 
-            if (argumentListSyntax.Arguments.Any(x => x.Expression is IdentifierNameSyntax identifier && identifier.Identifier.Text == exceptionVariable))
+            if (!argumentListSyntax.Arguments.Any(x => x.Expression is IdentifierNameSyntax identifier && identifier.Identifier.Text == exceptionVariable))
             {
                 ReportDiagnostic(exceptionVariable: exceptionVariable, syntaxNodeContext: syntaxNodeContext, objectCreationExpression.GetLocation());
             }

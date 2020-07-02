@@ -59,10 +59,34 @@ public sealed class Test {
     }
 }";
 
+            return this.VerifyCSharpDiagnosticAsync(source: test);
+        }
+
+        [Fact]
+        public Task ThrowingNewExceptionWithoutPassingInnerExceptionShouldBeAnErrorAsync()
+        {
+            const string test = @"
+using System;
+
+public sealed class Test {
+
+    public void DoIt()
+    {
+        try
+        {
+        }
+        catch(Exception failingException)
+        {
+            Console.WriteLine(exception.Message);
+            throw new NotImplementedException(""Not Implemented yet"", new Exception(""Oops""));
+        }
+    }
+}";
+
             DiagnosticResult expected = new DiagnosticResult
                                         {
                                             Id = "FFS0017",
-                                            Message = "Provide 'exception' as a inner exception when throw from the catch clauses",
+                                            Message = "Provide 'failingException' as a inner exception when throw from the catch clauses",
                                             Severity = DiagnosticSeverity.Error,
                                             Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 14, column: 19)}
                                         };
@@ -71,7 +95,7 @@ public sealed class Test {
         }
 
         [Fact]
-        public Task ThrowingNewExceptionWithoutPassingInnerExceptionShouldBeAnErrorAsync()
+        public Task ThrowingNewExceptionWithoutPassingRandomExceptionShouldBeAnErrorAsync()
         {
             const string test = @"
 using System;
