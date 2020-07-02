@@ -42,6 +42,13 @@ namespace FunFair.CodeAnalysis
                                   new[] {new[] {"string", "JsonOptionsSerializer"}},
                                   requiredArgumentCount: 2),
             new ForcedMethodsSpec(ruleId: Rules.RuleDontUseJsonDeserializerWithoutJsonOptions,
+                                  title: @"Avoid use of Serializer without own JsonSerializerOptions parameter",
+                                  message: "Only use JsonSerializer.Deserialize with own JsonSerializerOptions",
+                                  sourceClass: "System.Text.Json.JsonSerializer",
+                                  forcedMethod: "SerializeAsync",
+                                  new[] {new[] {"Stream", "TValue", "JsonOptionsSerializer", "CancellationToken"}},
+                                  requiredArgumentCount: 3),
+            new ForcedMethodsSpec(ruleId: Rules.RuleDontUseJsonDeserializerWithoutJsonOptions,
                                   title: @"Avoid use of deserializer without own JsonSerializerOptions parameter",
                                   message: "Only use JsonSerializer.Deserialize with own JsonSerializerOptions",
                                   sourceClass: "System.Text.Json.JsonSerializer",
@@ -115,7 +122,7 @@ namespace FunFair.CodeAnalysis
         private static bool IsInvocationAllowed(IMethodSymbol invocationArguments, int argumentsInvokedCount, int requiredArgumentsCount)
         {
             bool allowedBasedOnArgumentTypeAndSequence = invocationArguments.Parameters.SequenceEqual(invocationArguments.Parameters);
-            bool allowedBasedOnArgumentCount = argumentsInvokedCount == requiredArgumentsCount;
+            bool allowedBasedOnArgumentCount = argumentsInvokedCount >= requiredArgumentsCount;
 
             return allowedBasedOnArgumentCount && allowedBasedOnArgumentTypeAndSequence;
         }
