@@ -7,19 +7,23 @@ Please ADD ALL Changes to the UNRELASED SECTION and not a specific release
 
 ## [Unreleased]
 ### Added
-- FF-2413 - JsonSerializer serialize and deserialize rules
-- FF-2590 - Explicit checks for ArgumentExceptions that they have the parameter name passed
-- FF-2591 - Re-Throwing Exception as new exception should pass inner exception
 ### Fixed
 ### Changed
-- FF-1429 - Updated SonarAnalyzer.CSharp to 8.9.0.19135
-- FF-1429 - Updated FunFair.Test.Common to 1.8.0.360
 ### Removed
 ### Deployment Changes
 
 <!--
 Releases that have at least been deployed to staging, BUT NOT necessarily released to live.  Changes should be moved from [Unreleased] into here as they are merged into the appropriate release branch
 -->
+## [1.6.0] - 2019-07-01
+### Added
+- FF-2413 - JsonSerializer serialize and deserialize rules
+- FF-2590 - Explicit checks for ArgumentExceptions that they have the parameter name passed
+- FF-2591 - Re-Throwing Exception as new exception should pass inner exception
+### Changed
+- FF-1429 - Updated SonarAnalyzer.CSharp to 8.9.0.19135
+- FF-1429 - Updated FunFair.Test.Common to 1.8.0.360
+
 ## [1.5.0] - 2019-06-18
 ### Changed
 - FF-2488 - Updated packages and global.json to net core 3.1.301
