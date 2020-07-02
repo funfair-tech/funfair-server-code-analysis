@@ -9,6 +9,7 @@ Please ADD ALL Changes to the UNRELASED SECTION and not a specific release
 ### Added
 - FF-2413 - JsonSerializer serialize and deserialize rules
 - FF-2590 - Explicit checks for ArgumentExceptions that they have the parameter name passed
+- FF-2591 - Re-Throwing Exception as new exception should pass inner exception
 ### Fixed
 ### Changed
 - FF-1429 - Updated SonarAnalyzer.CSharp to 8.9.0.19135
