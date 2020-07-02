@@ -68,7 +68,7 @@ namespace FunFair.CodeAnalysis.Tests
             DiagnosticResult expected = new DiagnosticResult
                                         {
                                             Id = "FFS0015",
-                                            Message = @"Only use JsonSerializer.Deserialize with JsonSerializerOptions parameter",
+                                            Message = @"Only use JsonSerializer.Deserialize with own JsonSerializerOptions",
                                             Severity = DiagnosticSeverity.Error,
                                             Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 15, column: 29)}
                                         };
@@ -130,7 +130,7 @@ namespace FunFair.CodeAnalysis.Tests
             DiagnosticResult expected = new DiagnosticResult
                                         {
                                             Id = "FFS0014",
-                                            Message = @"Only use JsonSerializer.Serialize with JsonSerializerOptions parameter",
+                                            Message = @"Only use JsonSerializer.Serialize with own JsonSerializerOptions",
                                             Severity = DiagnosticSeverity.Error,
                                             Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 15, column: 34)}
                                         };
