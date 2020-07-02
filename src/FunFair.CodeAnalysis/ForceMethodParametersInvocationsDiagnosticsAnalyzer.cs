@@ -41,7 +41,6 @@ namespace FunFair.CodeAnalysis
                                   forcedMethod: "Deserialize",
                                   new[] {new[] {"string", "JsonOptionsSerializer"}},
                                   requiredArgumentCount: 2),
-          
             new ForcedMethodsSpec(ruleId: Rules.RuleDontUseJsonDeserializerWithoutJsonOptions,
                                   title: @"Avoid use of deserializer without own JsonSerializerOptions parameter",
                                   message: "Only use JsonSerializer.Deserialize with own JsonSerializerOptions",
@@ -123,7 +122,13 @@ namespace FunFair.CodeAnalysis
 
         private sealed class ForcedMethodsSpec
         {
-            public ForcedMethodsSpec(string ruleId, string title, string message, string sourceClass, string forcedMethod, IEnumerable<IEnumerable<string>> forcedSignatures, int requiredArgumentCount)
+            public ForcedMethodsSpec(string ruleId,
+                                     string title,
+                                     string message,
+                                     string sourceClass,
+                                     string forcedMethod,
+                                     IEnumerable<IEnumerable<string>> forcedSignatures,
+                                     int requiredArgumentCount)
             {
                 this.SourceClass = sourceClass;
                 this.ForcedMethod = forcedMethod;
