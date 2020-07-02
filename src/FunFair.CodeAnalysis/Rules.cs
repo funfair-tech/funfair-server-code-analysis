@@ -15,5 +15,7 @@ namespace FunFair.CodeAnalysis
         public const string RuleStructsShouldBeReadOnly = @"FFS0011";
         public const string RuleClassesShouldBeStaticSealedOrAbstract = @"FFS0012";
         public const string RuleTestClassesShouldBeStaticSealedOrAbstractDerivedFromTestBase = @"FFS0013";
+        public const string RuleDontUseJsonSerializerWithoutJsonOptions = @"FFS0014";
+        public const string RuleDontUseJsonDeserializerWithoutJsonOptions = @"FFS0015";
     }
 }

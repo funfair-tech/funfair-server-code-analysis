@@ -78,7 +78,7 @@ namespace FunFair.CodeAnalysis
 
         private static bool IsTestMethod(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, MethodDeclarationSyntax methodDeclarationSyntax)
         {
-            foreach (var attribute in methodDeclarationSyntax.AttributeLists.SelectMany(selector: al => al.Attributes))
+            foreach (AttributeSyntax attribute in methodDeclarationSyntax.AttributeLists.SelectMany(selector: al => al.Attributes))
             {
                 TypeInfo ti = syntaxNodeAnalysisContext.SemanticModel.GetTypeInfo(attribute);
 
