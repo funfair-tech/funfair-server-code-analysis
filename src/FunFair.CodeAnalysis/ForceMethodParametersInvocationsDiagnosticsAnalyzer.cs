@@ -43,7 +43,7 @@ namespace FunFair.CodeAnalysis
                                   requiredArgumentCount: 2),
             new ForcedMethodsSpec(ruleId: Rules.RuleDontUseJsonDeserializerWithoutJsonOptions,
                                   title: @"Avoid use of Serializer without own JsonSerializerOptions parameter",
-                                  message: "Only use JsonSerializer.Deserialize with own JsonSerializerOptions",
+                                  message: "Only use JsonSerializer.Serialize with own JsonSerializerOptions",
                                   sourceClass: "System.Text.Json.JsonSerializer",
                                   forcedMethod: "SerializeAsync",
                                   new[] {new[] {"Stream", "TValue", "JsonOptionsSerializer", "CancellationToken"}},
