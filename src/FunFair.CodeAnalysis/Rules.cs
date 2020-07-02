@@ -17,5 +17,6 @@ namespace FunFair.CodeAnalysis
         public const string RuleTestClassesShouldBeStaticSealedOrAbstractDerivedFromTestBase = @"FFS0013";
         public const string RuleDontUseJsonSerializerWithoutJsonOptions = @"FFS0014";
         public const string RuleDontUseJsonDeserializerWithoutJsonOptions = @"FFS0015";
+        public const string RuleMustPassParameterNameToArgumentExceptions = @"FFS0016";
     }
 }
