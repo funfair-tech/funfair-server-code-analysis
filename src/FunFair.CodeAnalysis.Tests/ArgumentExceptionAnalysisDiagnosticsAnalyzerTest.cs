@@ -30,10 +30,10 @@ public sealed class Test {
 
             DiagnosticResult expected = new DiagnosticResult
                                         {
-                                            Id = "FFS0012",
-                                            Message = "Classes should be static, sealed or abstract",
+                                            Id = "FFS0016",
+                                            Message = "Argument Exceptions should pass parameter name",
                                             Severity = DiagnosticSeverity.Error,
-                                            Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 12, column: 25)}
+                                            Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 8, column: 17)}
                                         };
 
             return this.VerifyCSharpDiagnosticAsync(source: test, expected);
@@ -55,10 +55,10 @@ public sealed class Test {
 
             DiagnosticResult expected = new DiagnosticResult
                                         {
-                                            Id = "FFS0012",
-                                            Message = "Classes should be static, sealed or abstract",
+                                            Id = "FFS0016",
+                                            Message = "Argument Exceptions should pass parameter name",
                                             Severity = DiagnosticSeverity.Error,
-                                            Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 12, column: 25)}
+                                            Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 8, column: 17)}
                                         };
 
             return this.VerifyCSharpDiagnosticAsync(source: test, expected);
@@ -116,10 +116,10 @@ public sealed class Test {
 
             DiagnosticResult expected = new DiagnosticResult
                                         {
-                                            Id = "FFS0012",
-                                            Message = "Classes should be static, sealed or abstract",
+                                            Id = "FFS0016",
+                                            Message = "Argument Exceptions should pass parameter name",
                                             Severity = DiagnosticSeverity.Error,
-                                            Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 12, column: 25)}
+                                            Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 8, column: 17)}
                                         };
 
             return this.VerifyCSharpDiagnosticAsync(source: test, expected);
@@ -141,10 +141,10 @@ public sealed class Test {
 
             DiagnosticResult expected = new DiagnosticResult
                                         {
-                                            Id = "FFS0012",
-                                            Message = "Classes should be static, sealed or abstract",
+                                            Id = "FFS0016",
+                                            Message = "Argument Exceptions should pass parameter name",
                                             Severity = DiagnosticSeverity.Error,
-                                            Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 12, column: 25)}
+                                            Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 8, column: 17)}
                                         };
 
             return this.VerifyCSharpDiagnosticAsync(source: test, expected);
@@ -202,10 +202,10 @@ public sealed class Test {
 
             DiagnosticResult expected = new DiagnosticResult
                                         {
-                                            Id = "FFS0012",
-                                            Message = "Classes should be static, sealed or abstract",
+                                            Id = "FFS0016",
+                                            Message = "Argument Exceptions should pass parameter name",
                                             Severity = DiagnosticSeverity.Error,
-                                            Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 12, column: 25)}
+                                            Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 8, column: 17)}
                                         };
 
             return this.VerifyCSharpDiagnosticAsync(source: test, expected);
@@ -227,10 +227,10 @@ public sealed class Test {
 
             DiagnosticResult expected = new DiagnosticResult
                                         {
-                                            Id = "FFS0012",
-                                            Message = "Classes should be static, sealed or abstract",
+                                            Id = "FFS0016",
+                                            Message = "Argument Exceptions should pass parameter name",
                                             Severity = DiagnosticSeverity.Error,
-                                            Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 12, column: 25)}
+                                            Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 8, column: 17)}
                                         };
 
             return this.VerifyCSharpDiagnosticAsync(source: test, expected);
