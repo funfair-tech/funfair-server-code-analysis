@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿﻿using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using FunFair.CodeAnalysis.Helpers;
@@ -47,7 +47,14 @@ namespace FunFair.CodeAnalysis
                                   sourceClass: "System.Text.Json.JsonSerializer",
                                   forcedMethod: "DeserializeAsync",
                                   new[] {new[] {"Stream", "JsonOptionsSerializer", "CancellationToken"}},
-                                  requiredArgumentCount: 3)
+                                  requiredArgumentCount: 2),
+            new ForcedMethodsSpec(ruleId: Rules.RuleDontUseSubstituteReceivedWithoutAmountOfCalls,
+                                  title: @"Avoid use of received without call count",
+                                  message: "Only use Received with expected call count",
+                                  sourceClass: "NSubstitute.SubstituteExtensions",
+                                  forcedMethod: "Received",
+                                  new[] {new[] {"int"}},
+                                  requiredArgumentCount: 1)
         };
 
         /// <inheritdoc />
@@ -122,13 +129,7 @@ namespace FunFair.CodeAnalysis
 
         private sealed class ForcedMethodsSpec
         {
-            public ForcedMethodsSpec(string ruleId,
-                                     string title,
-                                     string message,
-                                     string sourceClass,
-                                     string forcedMethod,
-                                     IEnumerable<IEnumerable<string>> forcedSignatures,
-                                     int requiredArgumentCount)
+            public ForcedMethodsSpec(string ruleId, string title, string message, string sourceClass, string forcedMethod, IEnumerable<IEnumerable<string>> forcedSignatures, int requiredArgumentCount)
             {
                 this.SourceClass = sourceClass;
                 this.ForcedMethod = forcedMethod;
