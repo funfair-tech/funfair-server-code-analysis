@@ -19,5 +19,6 @@ namespace FunFair.CodeAnalysis
         public const string RuleDontUseJsonDeserializerWithoutJsonOptions = @"FFS0015";
         public const string RuleMustPassParameterNameToArgumentExceptions = @"FFS0016";
         public const string RuleMustPassInterExceptionToExceptionsThrownInCatchBlock = @"FFS0017";
+        public const string RuleDontUseSubstituteReceivedWithoutAmountOfCalls = @"FFS0018";
     }
 }

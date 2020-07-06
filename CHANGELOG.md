@@ -7,7 +7,9 @@ Please ADD ALL Changes to the UNRELASED SECTION and not a specific release
 
 ## [Unreleased]
 ### Added
+- FF-2351 - Prohibit use of NSubstitute.Received() without a count of items
 ### Fixed
+- FF-2413 - Amount of required arguments for DeserializeAsync
 ### Changed
 ### Removed
 ### Deployment Changes
