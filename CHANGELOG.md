@@ -7,6 +7,7 @@ Please ADD ALL Changes to the UNRELASED SECTION and not a specific release
 
 ## [Unreleased]
 ### Added
+- FF-2617 - ILogger parameters should be called 'logger'
 ### Fixed
 ### Changed
 ### Removed

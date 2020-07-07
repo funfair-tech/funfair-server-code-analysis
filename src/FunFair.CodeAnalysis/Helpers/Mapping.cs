@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace FunFair.CodeAnalysis
+namespace FunFair.CodeAnalysis.Helpers
 {
     /// <summary>
     ///     Mapping class

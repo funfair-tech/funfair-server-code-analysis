@@ -1,4 +1,4 @@
-namespace FunFair.CodeAnalysis
+namespace FunFair.CodeAnalysis.Helpers
 {
     internal static class Rules
     {
@@ -20,5 +20,6 @@ namespace FunFair.CodeAnalysis
         public const string RuleMustPassParameterNameToArgumentExceptions = @"FFS0016";
         public const string RuleMustPassInterExceptionToExceptionsThrownInCatchBlock = @"FFS0017";
         public const string RuleDontUseSubstituteReceivedWithoutAmountOfCalls = @"FFS0018";
+        public const string RuleLoggerParametersShouldBeCalledLogger = @"FFS0019";
     }
 }
