@@ -7,7 +7,6 @@ Please ADD ALL Changes to the UNRELASED SECTION and not a specific release
 
 ## [Unreleased]
 ### Added
-- FF-2617 - ILogger parameters should be called 'logger'
 ### Fixed
 ### Changed
 ### Removed
@@ -16,6 +15,10 @@ Please ADD ALL Changes to the UNRELASED SECTION and not a specific release
 <!--
 Releases that have at least been deployed to staging, BUT NOT necessarily released to live.  Changes should be moved from [Unreleased] into here as they are merged into the appropriate release branch
 -->
+## [1.7.1] - 2019-07-07
+### Added
+- FF-2617 - ILogger parameters should be called 'logger'
+
 ## [1.7.0] - 2019-07-06
 ### Added
 - FF-2351 - Prohibit use of NSubstitute.Received() without a count of items
