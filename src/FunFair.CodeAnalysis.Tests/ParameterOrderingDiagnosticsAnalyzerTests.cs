@@ -128,6 +128,22 @@ namespace FunFair.CodeAnalysis.Tests
         }
 
         [Fact]
+        public Task LoggerExtensionMethodIsValidAsFirstParameterAsync()
+        {
+            const string test = @"
+            using Microsoft.Extensions.Logging;
+
+            public static class Test {
+
+            public static void DoIt(this ILogger logger, string banana)
+            {
+            }
+}";
+
+            return this.VerifyCSharpDiagnosticAsync(source: test, new[] {WellKnownMetadataReferences.GenericLogger});
+        }
+
+        [Fact]
         public Task LoggerParameterShouldBeLastWhenNoCancellationTokenAsync()
         {
             const string test = @"

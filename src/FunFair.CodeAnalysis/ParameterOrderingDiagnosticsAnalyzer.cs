@@ -68,6 +68,12 @@ namespace FunFair.CodeAnalysis
 
                     if (matchingParameter != null)
                     {
+                        if (matchingParameter.Parameter.Modifiers.Any(pm => pm.Kind() == SyntaxKind.ThisKeyword))
+                        {
+                            // Ignore parameters that are extension methods - they have to be the first parameter
+                            continue;
+                        }
+
                         matchedEndings.Add(parameterType);
 
                         int parameterIndex = matchingParameter.Index;
