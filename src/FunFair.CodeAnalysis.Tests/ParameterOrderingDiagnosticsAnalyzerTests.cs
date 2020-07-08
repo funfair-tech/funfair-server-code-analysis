@@ -47,7 +47,7 @@ namespace FunFair.CodeAnalysis.Tests
 
             public sealed class Test {
 
-            public void DoIt(ILogger<Test> logger, string banana, CancelationToken cancellationToken)
+            public void DoIt(ILogger<Test> logger, string banana, CancellationToken cancellationToken)
             {
             }
 }";
