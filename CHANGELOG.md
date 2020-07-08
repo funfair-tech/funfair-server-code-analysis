@@ -7,6 +7,7 @@ Please ADD ALL Changes to the UNRELASED SECTION and not a specific release
 
 ## [Unreleased]
 ### Added
+- FF-2616 - Check compiler errors in unit test source code
 ### Fixed
 ### Changed
 ### Removed

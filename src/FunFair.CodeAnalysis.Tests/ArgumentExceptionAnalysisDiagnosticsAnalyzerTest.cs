@@ -160,7 +160,7 @@ public sealed class Test {
 
     public void DoIt(string value)
     {
-        var x = new ArgumentNUllException(""Hello World"", nameof(value));
+        var x = new ArgumentNullException(""Hello World"", nameof(value));
         
     }
 }";
@@ -280,7 +280,7 @@ public sealed class Test {
 
     public void DoIt(string value)
     {
-        var x = new String(nameof(value));
+        var x = new string(nameof(value));
     }
 }";
 

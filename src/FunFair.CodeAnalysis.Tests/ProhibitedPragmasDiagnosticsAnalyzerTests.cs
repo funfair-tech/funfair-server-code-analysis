@@ -40,19 +40,25 @@ namespace FunFair.CodeAnalysis.Tests
         [Fact]
         public Task BannedWarningCannotBeDisabledInMethodAsync()
         {
-            const string test = @"void DoIt()
-{
-#pragma warning disable CS1234
-    int i = 2;
-}
-";
+            const string test = @"
+
+    namespace ConsoleApplication1
+    {
+        class TypeName
+        {
+            void DoIt()
+            {
+            #pragma warning disable CS1234
+            }
+        }
+    }";
 
             DiagnosticResult expected = new DiagnosticResult
                                         {
                                             Id = "FFS0008",
                                             Message = "Don't disable warnings using #pragma warning disable",
                                             Severity = DiagnosticSeverity.Error,
-                                            Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 3, column: 25)}
+                                            Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 9, column: 37)}
                                         };
 
             return this.VerifyCSharpDiagnosticAsync(source: test, expected);

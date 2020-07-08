@@ -5,6 +5,7 @@ using FunFair.Test.Common;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace FunFair.CodeAnalysis.Tests
 {
@@ -64,19 +65,26 @@ using Xunit;
             const string test = @"
 using FunFair.Test.Common;
 using Xunit;
+using Xunit.Abstractions;
 
             public sealed class Test : LoggingTestBase {
+
+            public Test(ITestOutputHelper output)
+                : base(output)
+            {
+            }
 
             [Fact]
             public void DoIt()
             {
             }
 }";
-
+            
+            MetadataReference xunitAbstractionsReference = MetadataReference.CreateFromFile(typeof(ITestOutputHelper).Assembly.Location);
             MetadataReference xunitReference = MetadataReference.CreateFromFile(typeof(FactAttribute).Assembly.Location);
-            MetadataReference ffTestReference = MetadataReference.CreateFromFile(typeof(TestBase).Assembly.Location);
+            MetadataReference ffTestReference = MetadataReference.CreateFromFile(typeof(LoggingTestBase).Assembly.Location);
 
-            return this.VerifyCSharpDiagnosticAsync(source: test, new[] {xunitReference, ffTestReference});
+            return this.VerifyCSharpDiagnosticAsync(source: test, new[] {xunitReference, ffTestReference, xunitAbstractionsReference});
         }
 
         [Fact]
@@ -132,8 +140,14 @@ using Xunit;
             const string test = @"
 using FunFair.Test.Common;
 using Xunit;
+using Xunit.Abstractions;
 
             public sealed class Test : LoggingTestBase {
+
+            public Test(ITestOutputHelper output)
+                : base(output)
+            {
+            }
 
             [Theory]
             [InlineData(1)]
@@ -142,10 +156,11 @@ using Xunit;
             }
 }";
 
+            MetadataReference xunitAbstractionsReference = MetadataReference.CreateFromFile(typeof(ITestOutputHelper).Assembly.Location);
             MetadataReference xunitReference = MetadataReference.CreateFromFile(typeof(FactAttribute).Assembly.Location);
-            MetadataReference ffTestReference = MetadataReference.CreateFromFile(typeof(TestBase).Assembly.Location);
+            MetadataReference ffTestReference = MetadataReference.CreateFromFile(typeof(LoggingTestBase).Assembly.Location);
 
-            return this.VerifyCSharpDiagnosticAsync(source: test, new[] {xunitReference, ffTestReference});
+            return this.VerifyCSharpDiagnosticAsync(source: test, new[] {xunitReference, ffTestReference, xunitAbstractionsReference});
         }
 
         [Fact]
