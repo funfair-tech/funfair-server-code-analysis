@@ -18,7 +18,6 @@ namespace FunFair.CodeAnalysis.Tests
         public Task AssertFalseWithMessageIsAllowedAsync()
         {
             const string test = @"
-     using System;
      using Xunit;
 
      namespace ConsoleApplication1
@@ -31,15 +30,16 @@ namespace FunFair.CodeAnalysis.Tests
              }
          }
      }";
+            
+            MetadataReference reference = MetadataReference.CreateFromFile(typeof(Assert).Assembly.Location);
 
-            return this.VerifyCSharpDiagnosticAsync(test);
+            return this.VerifyCSharpDiagnosticAsync(source: test, new[] {reference});
         }
 
         [Fact]
         public Task AssertFalseWithoutMessageIsBannedAsync()
         {
             const string test = @"
-    using System;
     using Xunit;
 
     namespace ConsoleApplication1
@@ -49,7 +49,7 @@ namespace FunFair.CodeAnalysis.Tests
         {
             void Test()
             {
-                Xunit.Assert.False(false);
+                Assert.False(false);
             }
         }
     }";
@@ -58,7 +58,7 @@ namespace FunFair.CodeAnalysis.Tests
                                             Id = "FFS0010",
                                             Message = @"Only use Assert.False with message parameter",
                                             Severity = DiagnosticSeverity.Error,
-                                            Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 12, column: 17)}
+                                            Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 11, column: 17)}
                                         };
 
             MetadataReference reference = MetadataReference.CreateFromFile(typeof(Assert).Assembly.Location);
@@ -70,7 +70,6 @@ namespace FunFair.CodeAnalysis.Tests
         public Task AssertTrueWithMessageIsAllowedAsync()
         {
             const string test = @"
-    using System;
     using Xunit;
 
     namespace ConsoleApplication1
@@ -94,7 +93,6 @@ namespace FunFair.CodeAnalysis.Tests
         public Task AssertTrueWithoutMessageIsBannedAsync()
         {
             const string test = @"
-     using System;
      using Xunit;
 
      namespace ConsoleApplication1
@@ -112,7 +110,7 @@ namespace FunFair.CodeAnalysis.Tests
                                             Id = "FFS0009",
                                             Message = @"Only use Assert.True with message parameter",
                                             Severity = DiagnosticSeverity.Error,
-                                            Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 11, column: 18)}
+                                            Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 10, column: 18)}
                                         };
 
             MetadataReference reference = MetadataReference.CreateFromFile(typeof(Assert).Assembly.Location);

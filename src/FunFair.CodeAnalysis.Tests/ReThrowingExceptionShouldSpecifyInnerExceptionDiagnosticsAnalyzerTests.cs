@@ -18,23 +18,25 @@ namespace FunFair.CodeAnalysis.Tests
         public Task ReThrowingExceptionShouldNotTriggerErrorAsync()
         {
             const string test = @"
-using System;
+    using System;
 
-public sealed class Test {
-
-    public void DoIt()
+    namespace ConsoleApplication1
     {
-        try
+        public class Test 
         {
-        }
-        catch(Exception exception)
-        {
-            Console.WriteLine(exception.Message);
-            throw;
-        }
-    }
-}";
-
+            public void DoIt()
+            {
+                    try
+                    {
+                    }
+                    catch(Exception failingException)
+                    {
+                        Console.WriteLine(failingException.Message);
+                        throw;
+                    }
+            }
+         }
+    }";
             return this.VerifyCSharpDiagnosticAsync(source: test);
         }
 
@@ -51,10 +53,10 @@ public sealed class Test {
         try
         {
         }
-        catch(Exception exception)
+        catch(Exception failingException)
         {
-            Console.WriteLine(exception.Message);
-            throw new NotImplementedException(""Not Implemented yet"", exception);
+            Console.WriteLine(failingException.Message);
+            throw new NotImplementedException(""Not Implemented yet"", failingException);
         }
     }
 }";
@@ -77,7 +79,7 @@ public sealed class Test {
         }
         catch(Exception failingException)
         {
-            Console.WriteLine(exception.Message);
+            Console.WriteLine(failingException.Message);
             throw new NotImplementedException(""Not Implemented yet"", new Exception(""Oops""));
         }
     }
@@ -109,7 +111,7 @@ public sealed class Test {
         }
         catch(Exception failingException)
         {
-            Console.WriteLine(exception.Message);
+            Console.WriteLine(failingException.Message);
             throw new NotImplementedException();
         }
     }

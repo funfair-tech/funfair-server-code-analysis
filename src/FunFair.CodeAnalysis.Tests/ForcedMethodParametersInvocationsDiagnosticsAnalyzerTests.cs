@@ -41,7 +41,7 @@ namespace FunFair.CodeAnalysis.Tests
 
             MetadataReference reference = MetadataReference.CreateFromFile(typeof(JsonSerializer).Assembly.Location);
 
-            return this.VerifyCSharpDiagnosticAsync(source: test, new[] {reference});
+            return this.VerifyCSharpDiagnosticAsync(source: test, new[] {reference });
         }
 
         [Fact]

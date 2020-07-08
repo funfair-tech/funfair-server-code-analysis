@@ -104,6 +104,7 @@ namespace FunFair.CodeAnalysis.Tests
         {
             const string test = @"
     using System;
+    using System.Diagnostics;
 
     namespace ConsoleApplication1
     {
@@ -113,7 +114,23 @@ namespace FunFair.CodeAnalysis.Tests
 
             public static bool operator ==(TypeName left, TypeName right)
             {
-                return left == right || left == DateTime.Now;
+                Debug.Write(DateTime.Now);
+                return left == right;
+            }
+
+            public static bool operator !=(TypeName left, TypeName right)
+            {
+                return left == right;
+            }
+
+            public override int GetHashCode()
+            {
+                return 1;
+            }
+            
+            public override bool Equals(object obj)
+            {
+                return false;
             }
         }
     }";
@@ -122,7 +139,7 @@ namespace FunFair.CodeAnalysis.Tests
                                             Id = "FFS0001",
                                             Message = @"Call IDateTimeSource.UtcNow() rather than DateTime.Now",
                                             Severity = DiagnosticSeverity.Error,
-                                            Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 12, column: 49)}
+                                            Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 13, column: 29)}
                                         };
 
             return this.VerifyCSharpDiagnosticAsync(source: test, expected);
@@ -270,8 +287,7 @@ namespace FunFair.CodeAnalysis.Tests
         public Task ExecuteArbitrarySqlAsyncIsBannedAsync()
         {
             const string test = @"
-    using System;
-
+    using System.Threading.Tasks;
     namespace FunFair.Common.Data
     {
          public interface ISqlServerDatabase
@@ -296,9 +312,9 @@ namespace FunFair.CodeAnalysis.Tests
                                             Id = "FFS0006",
                                             Message = @"Only use ISqlServerDatabase.ExecuteArbitrarySqlAsync in integration tests",
                                             Severity = DiagnosticSeverity.Error,
-                                            Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 19, column: 17)}
+                                            Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 18, column: 17)}
                                         };
-
+            
             return this.VerifyCSharpDiagnosticAsync(source: test, expected);
         }
 
@@ -314,7 +330,8 @@ namespace FunFair.CodeAnalysis.Tests
         public Task QueryArbitrarySqlAsyncGenericIsBannedAsync()
         {
             const string test = @"
-    using System;
+
+    using System.Threading.Tasks;
 
     namespace FunFair.Common.Data
     {
@@ -335,7 +352,7 @@ namespace FunFair.CodeAnalysis.Tests
         {
             void Test(FunFair.Common.Data.ISqlServerDatabase sqlServerDatabase, string sql)
             {
-                sqlServerDatabase.QueryArbitrarySqlAsync<Test>(sql)
+                sqlServerDatabase.QueryArbitrarySqlAsync<Test>(sql);
             }
         }
     }";
@@ -344,7 +361,7 @@ namespace FunFair.CodeAnalysis.Tests
                                             Id = "FFS0007",
                                             Message = @"Only use ISqlServerDatabase.QueryArbitrarySqlAsync in integration tests",
                                             Severity = DiagnosticSeverity.Error,
-                                            Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 23, column: 17)}
+                                            Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 24, column: 17)}
                                         };
 
             return this.VerifyCSharpDiagnosticAsync(source: test, expected);
@@ -354,7 +371,7 @@ namespace FunFair.CodeAnalysis.Tests
         public Task QueryArbitrarySqlAsyncIsBannedAsync()
         {
             const string test = @"
-    using System;
+    using System.Threading.Tasks;
 
     namespace FunFair.Common.Data
     {
@@ -370,7 +387,7 @@ namespace FunFair.CodeAnalysis.Tests
         {
             void Test(FunFair.Common.Data.ISqlServerDatabase sqlServerDatabase, string sql)
             {
-                sqlServerDatabase.QueryArbitrarySqlAsync(sql)
+                sqlServerDatabase.QueryArbitrarySqlAsync(sql);
             }
         }
     }";
