@@ -7,18 +7,22 @@ Please ADD ALL Changes to the UNRELASED SECTION and not a specific release
 
 ## [Unreleased]
 ### Added
-- FF-2616 - Check compiler errors in unit test source code
-- FF-2623 - Check parameter ordering to make logger parameters last or next to last.
 ### Fixed
 ### Changed
-- FF-1429 - Updated FunFair.Test.Common to 1.8.1.387
-- FF-1429 - Updated FunFair.Test.Common to 1.8.1.386
 ### Removed
 ### Deployment Changes
 
 <!--
 Releases that have at least been deployed to staging, BUT NOT necessarily released to live.  Changes should be moved from [Unreleased] into here as they are merged into the appropriate release branch
 -->
+## [1.7.2] - 2019-07-08
+### Added
+- FF-2616 - Check compiler errors in unit test source code
+- FF-2623 - Check parameter ordering to make logger parameters last or next to last.
+### Changed
+- FF-1429 - Updated FunFair.Test.Common to 1.8.1.387
+- FF-1429 - Updated FunFair.Test.Common to 1.8.1.386
+
 ## [1.7.1] - 2019-07-07
 ### Added
 - FF-2617 - ILogger parameters should be called 'logger'
