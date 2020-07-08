@@ -30,10 +30,8 @@ namespace FunFair.CodeAnalysis.Tests
              }
          }
      }";
-            
-            MetadataReference reference = MetadataReference.CreateFromFile(typeof(Assert).Assembly.Location);
 
-            return this.VerifyCSharpDiagnosticAsync(source: test, new[] {reference});
+            return this.VerifyCSharpDiagnosticAsync(source: test, new[] {WellKnownMetadataReferences.Assert});
         }
 
         [Fact]
@@ -61,9 +59,7 @@ namespace FunFair.CodeAnalysis.Tests
                                             Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 11, column: 17)}
                                         };
 
-            MetadataReference reference = MetadataReference.CreateFromFile(typeof(Assert).Assembly.Location);
-
-            return this.VerifyCSharpDiagnosticAsync(source: test, new[] {reference}, expected);
+            return this.VerifyCSharpDiagnosticAsync(source: test, new[] {WellKnownMetadataReferences.Assert}, expected);
         }
 
         [Fact]
@@ -84,9 +80,7 @@ namespace FunFair.CodeAnalysis.Tests
         }
     }";
 
-            MetadataReference reference = MetadataReference.CreateFromFile(typeof(Assert).Assembly.Location);
-
-            return this.VerifyCSharpDiagnosticAsync(source: test, new[] {reference});
+            return this.VerifyCSharpDiagnosticAsync(source: test, new[] {WellKnownMetadataReferences.Assert});
         }
 
         [Fact]
@@ -113,9 +107,7 @@ namespace FunFair.CodeAnalysis.Tests
                                             Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 10, column: 18)}
                                         };
 
-            MetadataReference reference = MetadataReference.CreateFromFile(typeof(Assert).Assembly.Location);
-
-            return this.VerifyCSharpDiagnosticAsync(source: test, new[] {reference}, expected);
+            return this.VerifyCSharpDiagnosticAsync(source: test, new[] {WellKnownMetadataReferences.Assert}, expected);
         }
     }
 }

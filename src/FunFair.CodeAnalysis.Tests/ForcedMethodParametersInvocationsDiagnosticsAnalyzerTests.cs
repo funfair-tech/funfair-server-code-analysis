@@ -1,10 +1,8 @@
-﻿using System.Text.Json;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using FunFair.CodeAnalysis.Tests.Helpers;
 using FunFair.CodeAnalysis.Tests.Verifiers;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
-using NSubstitute;
 using Xunit;
 
 namespace FunFair.CodeAnalysis.Tests
@@ -39,9 +37,7 @@ namespace FunFair.CodeAnalysis.Tests
         }
     }";
 
-            MetadataReference reference = MetadataReference.CreateFromFile(typeof(JsonSerializer).Assembly.Location);
-
-            return this.VerifyCSharpDiagnosticAsync(source: test, new[] {reference });
+            return this.VerifyCSharpDiagnosticAsync(source: test, new[] {WellKnownMetadataReferences.JsonSerializer});
         }
 
         [Fact]
@@ -74,9 +70,64 @@ namespace FunFair.CodeAnalysis.Tests
                                             Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 15, column: 29)}
                                         };
 
-            MetadataReference reference = MetadataReference.CreateFromFile(typeof(JsonSerializer).Assembly.Location);
+            return this.VerifyCSharpDiagnosticAsync(source: test, new[] {WellKnownMetadataReferences.JsonSerializer}, expected);
+        }
 
-            return this.VerifyCSharpDiagnosticAsync(source: test, new[] {reference}, expected);
+        [Fact]
+        public Task NSubstituteExtensionsReceivedWithExpectedCallCountIsPassingAsync()
+        {
+            const string test = @"
+     using NSubstitute;
+
+     namespace ConsoleApplication1
+     {
+         public interface IDoSomething
+          {
+                 void DoIt();
+          }
+
+         class TypeName
+         {
+             void Test()
+             {
+                 Substitute.For<IDoSomething>().Received(1).DoIt();
+             }
+         }
+     }";
+
+            return this.VerifyCSharpDiagnosticAsync(source: test, new[] {WellKnownMetadataReferences.Substitute});
+        }
+
+        [Fact]
+        public Task NSubstituteExtensionsReceivedWithoutExpectedCallCountIsBannedAsync()
+        {
+            const string test = @"
+     using NSubstitute;
+
+     namespace ConsoleApplication1
+     {
+         public interface IDoSomething
+          {
+                 void DoIt();
+          }
+
+         class TypeName
+         {
+             void Test()
+             {
+                 Substitute.For<IDoSomething>().Received().DoIt();
+             }
+         }
+     }";
+            DiagnosticResult expected = new DiagnosticResult
+                                        {
+                                            Id = "FFS0018",
+                                            Message = @"Only use Received with expected call count",
+                                            Severity = DiagnosticSeverity.Error,
+                                            Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 15, column: 18)}
+                                        };
+
+            return this.VerifyCSharpDiagnosticAsync(source: test, new[] {WellKnownMetadataReferences.Substitute}, expected);
         }
 
         [Fact]
@@ -102,9 +153,7 @@ namespace FunFair.CodeAnalysis.Tests
         }
     }";
 
-            MetadataReference reference = MetadataReference.CreateFromFile(typeof(JsonSerializer).Assembly.Location);
-
-            return this.VerifyCSharpDiagnosticAsync(source: test, new[] {reference});
+            return this.VerifyCSharpDiagnosticAsync(source: test, new[] {WellKnownMetadataReferences.JsonSerializer});
         }
 
         [Fact]
@@ -136,70 +185,7 @@ namespace FunFair.CodeAnalysis.Tests
                                             Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 15, column: 34)}
                                         };
 
-            MetadataReference reference = MetadataReference.CreateFromFile(typeof(JsonSerializer).Assembly.Location);
-
-            return this.VerifyCSharpDiagnosticAsync(source: test, new[] {reference}, expected);
-        }
-        
-        [Fact]
-        public Task NSubstituteExtensionsReceivedWithoutExpectedCallCountIsBannedAsync()
-        {
-            const string test = @"
-     using NSubstitute;
-
-     namespace ConsoleApplication1
-     {
-         public interface IDoSomething
-          {
-                 void DoIt();
-          }
-
-         class TypeName
-         {
-             void Test()
-             {
-                 Substitute.For<IDoSomething>().Received().DoIt();
-             }
-         }
-     }";
-            DiagnosticResult expected = new DiagnosticResult
-                                        {
-                                            Id = "FFS0018",
-                                            Message = @"Only use Received with expected call count",
-                                            Severity = DiagnosticSeverity.Error,
-                                            Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 15, column: 18) }
-                                        };
-
-            MetadataReference reference = MetadataReference.CreateFromFile(typeof(Substitute).Assembly.Location);
-
-            return this.VerifyCSharpDiagnosticAsync(source: test, new[] {reference}, expected);
-        }
-        
-        [Fact]
-        public Task NSubstituteExtensionsReceivedWithExpectedCallCountIsPassingAsync()
-        {
-            const string test = @"
-     using NSubstitute;
-
-     namespace ConsoleApplication1
-     {
-         public interface IDoSomething
-          {
-                 void DoIt();
-          }
-
-         class TypeName
-         {
-             void Test()
-             {
-                 Substitute.For<IDoSomething>().Received(1).DoIt();
-             }
-         }
-     }";
-            
-            MetadataReference reference = MetadataReference.CreateFromFile(typeof(Substitute).Assembly.Location);
-
-            return this.VerifyCSharpDiagnosticAsync(source: test, new[] {reference});
+            return this.VerifyCSharpDiagnosticAsync(source: test, new[] {WellKnownMetadataReferences.JsonSerializer}, expected);
         }
     }
 }

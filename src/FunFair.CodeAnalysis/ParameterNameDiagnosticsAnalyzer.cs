@@ -10,7 +10,7 @@ using Microsoft.CodeAnalysis.Diagnostics;
 namespace FunFair.CodeAnalysis
 {
     /// <summary>
-    ///     Looks for issues with class declarations
+    ///     Looks for issues with parameter names
     /// </summary>
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public sealed class ParameterNameDiagnosticsAnalyzer : DiagnosticAnalyzer
@@ -47,44 +47,28 @@ namespace FunFair.CodeAnalysis
 
         private void PerformCheck(CompilationStartAnalysisContext compilationStartContext)
         {
-            compilationStartContext.RegisterSyntaxNodeAction(action: this.MustHaveASaneName, SyntaxKind.Parameter);
+            compilationStartContext.RegisterSyntaxNodeAction(action: MustHaveASaneName, SyntaxKind.Parameter);
         }
 
-        private void MustHaveASaneName(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
+        private static void MustHaveASaneName(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
         {
-            if (syntaxNodeAnalysisContext.Node is ParameterSyntax ps)
+            if (syntaxNodeAnalysisContext.Node is ParameterSyntax parameterSyntax)
             {
-                IParameterSymbol? ds = syntaxNodeAnalysisContext.SemanticModel.GetDeclaredSymbol(ps);
+                string? fullTypeName = ParameterHelpers.GetFullTypeName(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, parameterSyntax: parameterSyntax);
 
-                if (ds != null)
+                if (fullTypeName != null)
                 {
-                    ITypeSymbol dsType = GetTypeSymbol(ds);
-
-                    string fullType = dsType.ToDisplayString();
-
-                    NameSanitationSpec? rule = NameSpecifications.FirstOrDefault(ns => ns.SourceClass == fullType);
+                    NameSanitationSpec? rule = NameSpecifications.FirstOrDefault(ns => ns.SourceClass == fullTypeName);
 
                     if (rule != null)
                     {
-                        if (!rule.WhitelistedParameterNames.Contains(ps.Identifier.Text))
+                        if (!rule.WhitelistedParameterNames.Contains(parameterSyntax.Identifier.Text))
                         {
-                            syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(descriptor: rule.Rule, ps.GetLocation()));
+                            syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(descriptor: rule.Rule, parameterSyntax.GetLocation()));
                         }
                     }
                 }
             }
-        }
-
-        private static ITypeSymbol GetTypeSymbol(IParameterSymbol ds)
-        {
-            ITypeSymbol dsType = ds.Type;
-
-            if (dsType is INamedTypeSymbol nts && nts.IsGenericType)
-            {
-                dsType = dsType.OriginalDefinition;
-            }
-
-            return dsType;
         }
 
         private sealed class NameSanitationSpec

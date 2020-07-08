@@ -7,7 +7,7 @@ namespace FunFair.CodeAnalysis.Helpers
     /// <summary>
     ///     Method symbol helper
     /// </summary>
-    public static class MethodSymbolHelper
+    internal static class MethodSymbolHelper
     {
         /// <summary>
         ///     Find invoked member symbol

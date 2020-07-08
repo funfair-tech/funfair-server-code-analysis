@@ -8,6 +8,7 @@ Please ADD ALL Changes to the UNRELASED SECTION and not a specific release
 ## [Unreleased]
 ### Added
 - FF-2616 - Check compiler errors in unit test source code
+- FF-2623 - Check parameter ordering to make logger parameters last or next to last.
 ### Fixed
 ### Changed
 - FF-1429 - Updated FunFair.Test.Common to 1.8.1.387

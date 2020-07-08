@@ -314,7 +314,7 @@ namespace FunFair.CodeAnalysis.Tests
                                             Severity = DiagnosticSeverity.Error,
                                             Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 18, column: 17)}
                                         };
-            
+
             return this.VerifyCSharpDiagnosticAsync(source: test, expected);
         }
 
