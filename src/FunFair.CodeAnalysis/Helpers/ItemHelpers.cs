@@ -5,7 +5,7 @@ namespace FunFair.CodeAnalysis.Helpers
     /// <summary>
     ///     Item helpers
     /// </summary>
-    public static class ItemHelpers
+    internal static class ItemHelpers
     {
         /// <summary>
         ///     Removes nulls from the source collection.
