@@ -3,7 +3,6 @@ using FunFair.CodeAnalysis.Tests.Helpers;
 using FunFair.CodeAnalysis.Tests.Verifiers;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
-using Microsoft.Extensions.Logging;
 using Xunit;
 
 namespace FunFair.CodeAnalysis.Tests
@@ -36,9 +35,7 @@ namespace FunFair.CodeAnalysis.Tests
                                             Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 6, column: 30)}
                                         };
 
-            MetadataReference loggerReference = MetadataReference.CreateFromFile(typeof(ILogger<>).Assembly.Location);
-
-            return this.VerifyCSharpDiagnosticAsync(source: test, new[] {loggerReference}, expected);
+            return this.VerifyCSharpDiagnosticAsync(source: test, new[] {WellKnownMetadataReferences.GenericLogger}, expected);
         }
 
         [Fact]
@@ -54,9 +51,7 @@ namespace FunFair.CodeAnalysis.Tests
             }
 }";
 
-            MetadataReference loggerReference = MetadataReference.CreateFromFile(typeof(ILogger<>).Assembly.Location);
-
-            return this.VerifyCSharpDiagnosticAsync(source: test, new[] {loggerReference});
+            return this.VerifyCSharpDiagnosticAsync(source: test, new[] {WellKnownMetadataReferences.GenericLogger});
         }
 
         [Fact]
@@ -80,9 +75,7 @@ namespace FunFair.CodeAnalysis.Tests
                                             Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 6, column: 30)}
                                         };
 
-            MetadataReference loggerReference = MetadataReference.CreateFromFile(typeof(ILogger).Assembly.Location);
-
-            return this.VerifyCSharpDiagnosticAsync(source: test, new[] {loggerReference}, expected);
+            return this.VerifyCSharpDiagnosticAsync(source: test, new[] {WellKnownMetadataReferences.Logger}, expected);
         }
 
         [Fact]
@@ -98,9 +91,7 @@ namespace FunFair.CodeAnalysis.Tests
             }
 }";
 
-            MetadataReference loggerReference = MetadataReference.CreateFromFile(typeof(ILogger).Assembly.Location);
-
-            return this.VerifyCSharpDiagnosticAsync(source: test, new[] {loggerReference});
+            return this.VerifyCSharpDiagnosticAsync(source: test, new[] {WellKnownMetadataReferences.Logger});
         }
     }
 }
