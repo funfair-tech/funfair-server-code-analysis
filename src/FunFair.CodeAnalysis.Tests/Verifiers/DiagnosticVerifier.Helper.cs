@@ -26,8 +26,8 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
         private static readonly MetadataReference SystemCoreReference = MetadataReference.CreateFromFile(typeof(Enumerable).Assembly.Location);
         private static readonly MetadataReference CSharpSymbolsReference = MetadataReference.CreateFromFile(typeof(CSharpCompilation).Assembly.Location);
         private static readonly MetadataReference CodeAnalysisReference = MetadataReference.CreateFromFile(typeof(Compilation).Assembly.Location);
-        private static readonly MetadataReference SystemRuntimeReference = MetadataReference.CreateFromFile(Path.Combine(path1: AssemblyPath ?? string.Empty, path2: "System.Runtime.dll"));
-        private static readonly MetadataReference SystemReference = MetadataReference.CreateFromFile(Path.Combine(path1: AssemblyPath ?? string.Empty, path2: "System.dll"));
+        private static readonly MetadataReference SystemRuntimeReference = MetadataReference.CreateFromFile(Path.Combine(AssemblyPath ?? string.Empty, path2: "System.Runtime.dll"));
+        private static readonly MetadataReference SystemReference = MetadataReference.CreateFromFile(Path.Combine(AssemblyPath ?? string.Empty, path2: "System.dll"));
         private static readonly MetadataReference SystemConsoleReference = MetadataReference.CreateFromFile(typeof(Console).Assembly.Location);
 
         internal static string DefaultFilePathPrefix = "Test";

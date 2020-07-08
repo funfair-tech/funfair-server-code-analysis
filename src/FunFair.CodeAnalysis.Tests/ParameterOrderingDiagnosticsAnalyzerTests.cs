@@ -15,7 +15,39 @@ namespace FunFair.CodeAnalysis.Tests
         }
 
         [Fact]
-        public Task LoggerParameterShouldBeLastWhenNoCancellationTokenAsync()
+        public Task GenericLoggerAsLastParameterIsNotAnErrorAsync()
+        {
+            const string test = @"
+            using Microsoft.Extensions.Logging;
+
+            public sealed class Test {
+
+            public void DoIt(string banana, ILogger<Test> logger)
+            {
+            }
+}";
+
+            return this.VerifyCSharpDiagnosticAsync(source: test, new[] {WellKnownMetadataReferences.GenericLogger});
+        }
+
+        [Fact]
+        public Task GenericLoggerAsOnlyParameterIsNotAnErrorAsync()
+        {
+            const string test = @"
+            using Microsoft.Extensions.Logging;
+
+            public sealed class Test {
+
+            public void DoIt(ILogger<Test> logger)
+            {
+            }
+}";
+
+            return this.VerifyCSharpDiagnosticAsync(source: test, new[] {WellKnownMetadataReferences.GenericLogger});
+        }
+
+        [Fact]
+        public Task GenericLoggerParameterShouldBeLastWhenNoCancellationTokenAsync()
         {
             const string test = @"
             using Microsoft.Extensions.Logging;
@@ -23,6 +55,87 @@ namespace FunFair.CodeAnalysis.Tests
             public sealed class Test {
 
             public void DoIt(ILogger<Test> logger, string banana)
+            {
+            }
+}";
+
+            DiagnosticResult expected = new DiagnosticResult
+                                        {
+                                            Id = "FFS0020",
+                                            Message = "Parameter 'logger' must be parameter 2",
+                                            Severity = DiagnosticSeverity.Error,
+                                            Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 6, column: 30)}
+                                        };
+
+            return this.VerifyCSharpDiagnosticAsync(source: test, new[] {WellKnownMetadataReferences.GenericLogger}, expected);
+        }
+
+        [Fact]
+        public Task GenericLoggerParameterShouldBeNextLastWhenCancellationTokenAsync()
+        {
+            const string test = @"
+            using System.Threading;
+            using Microsoft.Extensions.Logging;
+
+            public sealed class Test {
+
+            public void DoIt(ILogger<Test> logger, string banana, CancellationToken cancellationToken)
+            {
+            }
+}";
+
+            DiagnosticResult expected = new DiagnosticResult
+                                        {
+                                            Id = "FFS0020",
+                                            Message = "Parameter 'logger' must be parameter 2",
+                                            Severity = DiagnosticSeverity.Error,
+                                            Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 7, column: 30)}
+                                        };
+
+            return this.VerifyCSharpDiagnosticAsync(source: test, new[] {WellKnownMetadataReferences.GenericLogger, WellKnownMetadataReferences.CancellationToken}, expected);
+        }
+
+        [Fact]
+        public Task LoggerAsLastParameterIsNotAnErrorAsync()
+        {
+            const string test = @"
+            using Microsoft.Extensions.Logging;
+
+            public sealed class Test {
+
+            public void DoIt(string banana, ILogger logger)
+            {
+            }
+}";
+
+            return this.VerifyCSharpDiagnosticAsync(source: test, new[] {WellKnownMetadataReferences.GenericLogger});
+        }
+
+        [Fact]
+        public Task LoggerAsOnlyParameterIsNotAnErrorAsync()
+        {
+            const string test = @"
+            using Microsoft.Extensions.Logging;
+
+            public sealed class Test {
+
+            public void DoIt(ILogger logger)
+            {
+            }
+}";
+
+            return this.VerifyCSharpDiagnosticAsync(source: test, new[] {WellKnownMetadataReferences.GenericLogger});
+        }
+
+        [Fact]
+        public Task LoggerParameterShouldBeLastWhenNoCancellationTokenAsync()
+        {
+            const string test = @"
+            using Microsoft.Extensions.Logging;
+
+            public sealed class Test {
+
+            public void DoIt(ILogger logger, string banana)
             {
             }
 }";
@@ -47,7 +160,7 @@ namespace FunFair.CodeAnalysis.Tests
 
             public sealed class Test {
 
-            public void DoIt(ILogger<Test> logger, string banana, CancellationToken cancellationToken)
+            public void DoIt(ILogger logger, string banana, CancellationToken cancellationToken)
             {
             }
 }";
