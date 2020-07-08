@@ -10,6 +10,7 @@ Please ADD ALL Changes to the UNRELASED SECTION and not a specific release
 - FF-2616 - Check compiler errors in unit test source code
 ### Fixed
 ### Changed
+- FF-1429 - Updated FunFair.Test.Common to 1.8.1.387
 - FF-1429 - Updated FunFair.Test.Common to 1.8.1.386
 ### Removed
 ### Deployment Changes
@@ -93,6 +94,7 @@ Releases that have at least been deployed to staging, BUT NOT necessarily releas
 ## [1.0.0] - 2019-12-18
 ### Added
 - Banned DateTime.Now, DateTime.UtcNow, DateTime.Today, DateTimeOffset.Now and DateTimeOffset.UtcNow pointing to use DateTimeSource instead
+
 
 
 
