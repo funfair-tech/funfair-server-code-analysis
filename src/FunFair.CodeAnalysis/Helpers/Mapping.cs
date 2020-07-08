@@ -5,7 +5,7 @@ namespace FunFair.CodeAnalysis.Helpers
     /// <summary>
     ///     Mapping class
     /// </summary>
-    public sealed class Mapping : IEquatable<Mapping>
+    internal sealed class Mapping : IEquatable<Mapping>
     {
         /// <summary>
         ///     Constructor
