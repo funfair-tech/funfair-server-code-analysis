@@ -70,7 +70,7 @@ namespace FunFair.CodeAnalysis
                     {
                         matchedEndings.Add(parameterType);
 
-                        int parameterIndex = parameters.Length - matchingParameter.Index;
+                        int parameterIndex = matchingParameter.Index;
                         int requiredParameterIndex = parameters.Length - matchedEndings.Count;
 
                         if (parameterIndex != requiredParameterIndex)
