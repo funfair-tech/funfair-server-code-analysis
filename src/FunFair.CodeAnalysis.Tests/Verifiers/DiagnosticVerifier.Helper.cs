@@ -2,8 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
+using FunFair.CodeAnalysis.Tests.Exceptions;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Diagnostics;
@@ -18,10 +21,14 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
     /// </summary>
     public abstract partial class DiagnosticVerifier
     {
+        private static readonly string? AssemblyPath = Path.GetDirectoryName(typeof(object).Assembly.Location);
         private static readonly MetadataReference CorlibReference = MetadataReference.CreateFromFile(typeof(object).Assembly.Location);
         private static readonly MetadataReference SystemCoreReference = MetadataReference.CreateFromFile(typeof(Enumerable).Assembly.Location);
         private static readonly MetadataReference CSharpSymbolsReference = MetadataReference.CreateFromFile(typeof(CSharpCompilation).Assembly.Location);
         private static readonly MetadataReference CodeAnalysisReference = MetadataReference.CreateFromFile(typeof(Compilation).Assembly.Location);
+        private static readonly MetadataReference SystemRuntimeReference = MetadataReference.CreateFromFile(Path.Combine(path1: AssemblyPath ?? string.Empty, path2: "System.Runtime.dll"));
+        private static readonly MetadataReference SystemReference = MetadataReference.CreateFromFile(Path.Combine(path1: AssemblyPath ?? string.Empty, path2: "System.dll"));
+        private static readonly MetadataReference SystemConsoleReference = MetadataReference.CreateFromFile(typeof(Console).Assembly.Location);
 
         internal static string DefaultFilePathPrefix = "Test";
         internal static string CSharpDefaultFileExt = "cs";
@@ -68,6 +75,25 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
                 if (compilation == null)
                 {
                     continue;
+                }
+
+                ImmutableArray<Diagnostic> compilerErrors = compilation.GetDiagnostics();
+
+                if (compilerErrors.Length > 0)
+                {
+                    StringBuilder errors = new StringBuilder();
+
+                    foreach (Diagnostic compilerError in compilerErrors.Where(compilerError => !compilerError.ToString()
+                                                                                                             .Contains("netstandard") && !compilerError.ToString()
+                                                                                                                                                       .Contains("static 'Main' method")))
+                    {
+                        errors.Append(compilerError);
+                    }
+
+                    if (errors.Length > 0)
+                    {
+                        throw new UnitTestSourceException("Please correct following compiler errors in your unit test source:" + errors);
+                    }
                 }
 
                 CompilationWithAnalyzers compilationWithAnalyzers = compilation.WithAnalyzers(ImmutableArray.Create(analyzer));
@@ -183,7 +209,10 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
                                                     .AddMetadataReference(projectId: projectId, metadataReference: CorlibReference)
                                                     .AddMetadataReference(projectId: projectId, metadataReference: SystemCoreReference)
                                                     .AddMetadataReference(projectId: projectId, metadataReference: CSharpSymbolsReference)
-                                                    .AddMetadataReference(projectId: projectId, metadataReference: CodeAnalysisReference);
+                                                    .AddMetadataReference(projectId: projectId, metadataReference: CodeAnalysisReference)
+                                                    .AddMetadataReference(projectId: projectId, metadataReference: SystemRuntimeReference)
+                                                    .AddMetadataReference(projectId: projectId, metadataReference: SystemReference)
+                                                    .AddMetadataReference(projectId: projectId, metadataReference: SystemConsoleReference);
 
             foreach (MetadataReference reference in references)
             {
