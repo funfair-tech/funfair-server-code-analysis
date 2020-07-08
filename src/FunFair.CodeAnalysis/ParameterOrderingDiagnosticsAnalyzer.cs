@@ -27,7 +27,7 @@ namespace FunFair.CodeAnalysis
         private static readonly DiagnosticDescriptor Rule = RuleHelpers.CreateRule(code: Rules.RuleParametersShouldBeInOrder,
                                                                                    category: CATEGORY,
                                                                                    title: "Parameters are out of order",
-                                                                                   message: "Parameter {0} must be the {1} parameter");
+                                                                                   message: "Parameter '{0}' must be parameter {1}");
 
         /// <inheritdoc />
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => new[] {Rule}.ToImmutableArray();
@@ -78,7 +78,7 @@ namespace FunFair.CodeAnalysis
                             syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(descriptor: Rule,
                                                                                          matchingParameter.Parameter.GetLocation(),
                                                                                          matchingParameter.Parameter.Identifier.Text,
-                                                                                         requiredParameterIndex));
+                                                                                         requiredParameterIndex + 1));
                         }
                     }
                 }
