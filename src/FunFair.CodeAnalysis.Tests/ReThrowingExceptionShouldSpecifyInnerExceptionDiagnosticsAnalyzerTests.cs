@@ -37,6 +37,7 @@ namespace FunFair.CodeAnalysis.Tests
             }
          }
     }";
+
             return this.VerifyCSharpDiagnosticAsync(source: test);
         }
 
