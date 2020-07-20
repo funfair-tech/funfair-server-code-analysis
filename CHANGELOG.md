@@ -9,6 +9,7 @@ Please ADD ALL Changes to the UNRELASED SECTION and not a specific release
 ### Added
 ### Fixed
 ### Changed
+- FF-2652 - Update all the .NET components to .NET Core 3.1.302
 - FF-1429 - Updated TeamCity.VSTest.TestAdapter to 1.0.22
 ### Removed
 ### Deployment Changes
