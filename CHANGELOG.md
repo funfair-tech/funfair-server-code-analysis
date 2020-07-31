@@ -9,6 +9,7 @@ Please ADD ALL Changes to the UNRELASED SECTION and not a specific release
 ### Added
 ### Fixed
 ### Changed
+- FF-1429 - Updated Microsoft.VisualStudio.Threading.Analyzers to 16.7.54
 - FF-1429 - Updated FunFair.Test.Common to 1.10.1.430
 - FF-1429 - Updated FunFair.Test.Common to 1.10.0.421
 - FF-1429 - Updated SonarAnalyzer.CSharp to 8.10.0.19839
@@ -109,6 +110,7 @@ Releases that have at least been deployed to staging, BUT NOT necessarily releas
 ## [1.0.0] - 2019-12-18
 ### Added
 - Banned DateTime.Now, DateTime.UtcNow, DateTime.Today, DateTimeOffset.Now and DateTimeOffset.UtcNow pointing to use DateTimeSource instead
+
 
 
 
