@@ -1,9 +1,6 @@
 ﻿using System.Threading.Tasks;
 using FunFair.CodeAnalysis.Tests.Helpers;
 using FunFair.CodeAnalysis.Tests.Verifiers;
-using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.Diagnostics;
-using Xunit;
 
 namespace FunFair.CodeAnalysis.Tests
 {
@@ -74,7 +71,12 @@ using Xunit.Abstractions;
 }";
 
             return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                    new[] {WellKnownMetadataReferences.Xunit, WellKnownMetadataReferences.FunFairTestCommon, WellKnownMetadataReferences.XunitAbstractions});
+                                                    new[]
+                                                    {
+                                                        WellKnownMetadataReferences.Xunit,
+                                                        WellKnownMetadataReferences.FunFairTestCommon,
+                                                        WellKnownMetadataReferences.XunitAbstractions
+                                                    });
         }
 
         [Fact]
@@ -143,7 +145,12 @@ using Xunit.Abstractions;
 }";
 
             return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                    new[] {WellKnownMetadataReferences.Xunit, WellKnownMetadataReferences.FunFairTestCommon, WellKnownMetadataReferences.XunitAbstractions});
+                                                    new[]
+                                                    {
+                                                        WellKnownMetadataReferences.Xunit,
+                                                        WellKnownMetadataReferences.FunFairTestCommon,
+                                                        WellKnownMetadataReferences.XunitAbstractions
+                                                    });
         }
 
         [Fact]

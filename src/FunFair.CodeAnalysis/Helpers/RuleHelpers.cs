@@ -1,5 +1,3 @@
-using Microsoft.CodeAnalysis;
-
 namespace FunFair.CodeAnalysis.Helpers
 {
     internal static class RuleHelpers
