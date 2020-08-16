@@ -1,9 +1,4 @@
-﻿using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.CodeAnalysis.Diagnostics;
-
-namespace FunFair.CodeAnalysis.Helpers
+﻿namespace FunFair.CodeAnalysis.Helpers
 {
     internal static class ParameterHelpers
     {

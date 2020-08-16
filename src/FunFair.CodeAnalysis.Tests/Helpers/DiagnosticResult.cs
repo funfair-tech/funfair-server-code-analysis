@@ -1,6 +1,5 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
-using Microsoft.CodeAnalysis;
 
 namespace FunFair.CodeAnalysis.Tests.Helpers
 {

@@ -2,13 +2,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CodeActions;
-using Microsoft.CodeAnalysis.CodeFixes;
-using Microsoft.CodeAnalysis.Diagnostics;
-using Microsoft.CodeAnalysis.Formatting;
-using Xunit;
-using Xunit.Sdk;
 
 namespace FunFair.CodeAnalysis.Tests.Verifiers
 {
@@ -97,7 +90,10 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
             for (int i = 0; i < attempts; ++i)
             {
                 List<CodeAction> actions = new List<CodeAction>();
-                CodeFixContext context = new CodeFixContext(document: document, analyzerDiagnostics[0], registerCodeFix: (a, d) => actions.Add(a), cancellationToken: CancellationToken.None);
+                CodeFixContext context = new CodeFixContext(document: document,
+                                                            analyzerDiagnostics[0],
+                                                            registerCodeFix: (a, d) => actions.Add(a),
+                                                            cancellationToken: CancellationToken.None);
                 await codeFixProvider.RegisterCodeFixesAsync(context);
 
                 if (!actions.Any())
@@ -121,7 +117,9 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
                 if (!allowNewCompilerDiagnostics && newCompilerDiagnostics.Any())
                 {
                     // Format and get the compiler diagnostics again so that the locations make sense in the output
-                    document = document.WithSyntaxRoot(Formatter.Format(await document.GetSyntaxRootAsync(), annotation: Formatter.Annotation, workspace: document.Project.Solution.Workspace));
+                    document = document.WithSyntaxRoot(Formatter.Format(await document.GetSyntaxRootAsync(),
+                                                                        annotation: Formatter.Annotation,
+                                                                        workspace: document.Project.Solution.Workspace));
 
                     newCompilerDiagnostics = GetNewDiagnostics(diagnostics: compilerDiagnostics, await GetCompilerDiagnosticsAsync(document));
 

@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace FunFair.CodeAnalysis.Helpers
+﻿namespace FunFair.CodeAnalysis.Helpers
 {
     /// <summary>
     ///     Item helpers

@@ -1,6 +1,3 @@
-using System;
-using Microsoft.CodeAnalysis;
-
 namespace FunFair.CodeAnalysis.Helpers
 {
     internal sealed class LiteralString : LocalizableString

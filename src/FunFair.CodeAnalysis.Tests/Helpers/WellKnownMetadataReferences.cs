@@ -1,11 +1,5 @@
 ﻿using System.Text.Json;
 using System.Threading;
-using FunFair.Test.Common;
-using Microsoft.CodeAnalysis;
-using Microsoft.Extensions.Logging;
-using NSubstitute;
-using Xunit;
-using Xunit.Abstractions;
 
 namespace FunFair.CodeAnalysis.Tests.Helpers
 {
