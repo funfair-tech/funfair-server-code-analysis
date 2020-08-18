@@ -129,7 +129,13 @@ namespace FunFair.CodeAnalysis
 
         private sealed class ForcedMethodsSpec
         {
-            public ForcedMethodsSpec(string ruleId, string title, string message, string sourceClass, string forcedMethod, IEnumerable<IEnumerable<string>> forcedSignatures, int requiredArgumentCount)
+            public ForcedMethodsSpec(string ruleId,
+                                     string title,
+                                     string message,
+                                     string sourceClass,
+                                     string forcedMethod,
+                                     IEnumerable<IEnumerable<string>> forcedSignatures,
+                                     int requiredArgumentCount)
             {
                 this.SourceClass = sourceClass;
                 this.ForcedMethod = forcedMethod;
