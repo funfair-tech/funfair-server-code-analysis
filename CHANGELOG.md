@@ -10,6 +10,7 @@ Please ADD ALL Changes to the UNRELASED SECTION and not a specific release
 ### Fixed
 ### Changed
 - FF-1429 - Updated Microsoft.NET.Test.Sdk to 16.7.1
+- FF-1429 - Updated SonarAnalyzer.CSharp to 8.12.0.21095
 - FF-1429 - Updated FunFair.Test.Common to 1.11.1.466
 - FF-1429 - Updated FunFair.Test.Common to 1.11.0.461
 ### Removed
