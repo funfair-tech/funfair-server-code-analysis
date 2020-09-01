@@ -25,35 +25,30 @@ namespace FunFair.CodeAnalysis
                                   message: "Only use JsonSerializer.Serialize with own JsonSerializerOptions",
                                   sourceClass: "System.Text.Json.JsonSerializer",
                                   forcedMethod: "Serialize",
-                                  new[] {new[] {"TValue", "JsonOptionsSerializer"}},
                                   requiredArgumentCount: 2),
             new ForcedMethodsSpec(ruleId: Rules.RuleDontUseJsonSerializerWithoutJsonOptions,
                                   title: @"Avoid use of serializer without own JsonSerializerOptions parameter",
                                   message: "Only use JsonSerializer.Serialize with own JsonSerializerOptions",
                                   sourceClass: "System.Text.Json.JsonSerializer",
                                   forcedMethod: "SerializeAsync",
-                                  new[] {new[] {"Stream", "TValue", "JsonOptionsSerializer", "CancellationToken"}},
                                   requiredArgumentCount: 2),
             new ForcedMethodsSpec(ruleId: Rules.RuleDontUseJsonDeserializerWithoutJsonOptions,
                                   title: @"Avoid use of deserializer without own JsonSerializerOptions parameter",
                                   message: "Only use JsonSerializer.Deserialize with own JsonSerializerOptions",
                                   sourceClass: "System.Text.Json.JsonSerializer",
                                   forcedMethod: "Deserialize",
-                                  new[] {new[] {"string", "JsonOptionsSerializer"}},
                                   requiredArgumentCount: 2),
             new ForcedMethodsSpec(ruleId: Rules.RuleDontUseJsonDeserializerWithoutJsonOptions,
                                   title: @"Avoid use of deserializer without own JsonSerializerOptions parameter",
                                   message: "Only use JsonSerializer.Deserialize with own JsonSerializerOptions",
                                   sourceClass: "System.Text.Json.JsonSerializer",
                                   forcedMethod: "DeserializeAsync",
-                                  new[] {new[] {"Stream", "JsonOptionsSerializer", "CancellationToken"}},
                                   requiredArgumentCount: 2),
             new ForcedMethodsSpec(ruleId: Rules.RuleDontUseSubstituteReceivedWithoutAmountOfCalls,
                                   title: @"Avoid use of received without call count",
                                   message: "Only use Received with expected call count",
                                   sourceClass: "NSubstitute.SubstituteExtensions",
                                   forcedMethod: "Received",
-                                  new[] {new[] {"int"}},
                                   requiredArgumentCount: 1)
         };
 
@@ -93,7 +88,7 @@ namespace FunFair.CodeAnalysis
                         continue;
                     }
 
-                    Mapping mapping = new Mapping(className: memberSymbol.ContainingNamespace + "." + memberSymbol.ContainingType.Name, methodName: memberSymbol.Name);
+                    Mapping mapping = new Mapping(methodName: memberSymbol.Name, memberSymbol.ContainingNamespace + "." + memberSymbol.ContainingType.Name);
 
                     IEnumerable<ForcedMethodsSpec> forcedMethods = ForcedMethods.Where(predicate: rule => rule.QualifiedName == mapping.QualifiedName);
 
@@ -116,8 +111,8 @@ namespace FunFair.CodeAnalysis
         ///     Check if invoked method is invoked as per rules
         /// </summary>
         /// <param name="invocationArguments">Arguments used in invocation of method</param>
-        /// <param name="requiredArgumentsCount">Required arguments count</param>
         /// <param name="argumentsInvokedCount">Method invoked with argument amount</param>
+        /// <param name="requiredArgumentsCount">Required arguments count</param>
         /// <returns>true, if the method was allowed; otherwise, false.</returns>
         private static bool IsInvocationAllowed(IMethodSymbol invocationArguments, int argumentsInvokedCount, int requiredArgumentsCount)
         {
@@ -129,29 +124,17 @@ namespace FunFair.CodeAnalysis
 
         private sealed class ForcedMethodsSpec
         {
-            public ForcedMethodsSpec(string ruleId,
-                                     string title,
-                                     string message,
-                                     string sourceClass,
-                                     string forcedMethod,
-                                     IEnumerable<IEnumerable<string>> forcedSignatures,
-                                     int requiredArgumentCount)
+            public ForcedMethodsSpec(string ruleId, string title, string message, string sourceClass, string forcedMethod, int requiredArgumentCount)
             {
                 this.SourceClass = sourceClass;
                 this.ForcedMethod = forcedMethod;
                 this.Rule = CreateRule(code: ruleId, title: title, message: message);
-                this.ForcedSignatures = forcedSignatures;
                 this.RequiredArgumentCount = requiredArgumentCount;
             }
 
             public string SourceClass { get; }
 
             public string ForcedMethod { get; }
-
-            /// <summary>
-            ///     List of all method signatures that are banned, every signature is given with array of types in exact parameter order
-            /// </summary>
-            public IEnumerable<IEnumerable<string>> ForcedSignatures { get; }
 
             public int RequiredArgumentCount { get; }
 
