@@ -22,5 +22,6 @@ namespace FunFair.CodeAnalysis.Helpers
         public const string RuleDontUseSubstituteReceivedWithoutAmountOfCalls = @"FFS0018";
         public const string RuleLoggerParametersShouldBeCalledLogger = @"FFS0019";
         public const string RuleParametersShouldBeInOrder = @"FFS0020";
+        public const string RuleDontUseSubstituteReceivedWithZeroNumberOfCalls = @"FFS0021";
     }
 }
