@@ -9,19 +9,22 @@ Please ADD ALL Changes to the UNRELASED SECTION and not a specific release
 ### Added
 ### Fixed
 ### Changed
-- FF-2802 - Prohibit Received(0) in tests
-- FF-1429 - Updated FunFair.Test.Common to 1.11.2.471
-- FF-1429 - Updated Microsoft.NET.Test.Sdk to 16.7.1
-- FF-1429 - Updated SonarAnalyzer.CSharp to 8.12.0.21095
-- FF-1429 - Updated FunFair.Test.Common to 1.11.1.466
-- FF-1429 - Updated FunFair.Test.Common to 1.11.0.461
 ### Removed
 ### Deployment Changes
 
 <!--
 Releases that have at least been deployed to staging, BUT NOT necessarily released to live.  Changes should be moved from [Unreleased] into here as they are merged into the appropriate release branch
 -->
-## [1.9.0] - 2020-08.12
+## [1.10.0] - 2020-09-02
+### Changed
+- FF-2802 - Prohibit Received(0) in tests
+- FF-1429 - Updated FunFair.Test.Common to 1.11.2.471
+- FF-1429 - Updated Microsoft.NET.Test.Sdk to 16.7.1
+- FF-1429 - Updated SonarAnalyzer.CSharp to 8.12.0.21095
+- FF-1429 - Updated FunFair.Test.Common to 1.11.1.466
+- FF-1429 - Updated FunFair.Test.Common to 1.11.0.461
+
+## [1.9.0] - 2020-08-12
 ### Changed
 - FF-1429 - Updated SonarAnalyzer.CSharp to 8.11.0.20529
 - FF-1429 - Updated Microsoft.CodeAnalysis.Analyzers to 3.3.0
