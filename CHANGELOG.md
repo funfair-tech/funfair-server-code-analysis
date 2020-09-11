@@ -9,6 +9,7 @@ Please ADD ALL Changes to the UNRELASED SECTION and not a specific release
 ### Added
 ### Fixed
 ### Changed
+- FF-1429 - Updated FunFair.Test.Common to 1.13.0.520
 - FF-1429 - Updated FunFair.Test.Common to 1.12.0.508
 ### Removed
 ### Deployment Changes
