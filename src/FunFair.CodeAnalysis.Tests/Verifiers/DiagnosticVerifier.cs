@@ -52,8 +52,7 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
                         }
                         else
                         {
-                            Assert.True(condition: location.IsInSource,
-                                        $"Test base does not currently handle diagnostics in metadata locations. Diagnostic in metadata: {diagnostics[i]}\r\n");
+                            Assert.True(condition: location.IsInSource, $"Test base does not currently handle diagnostics in metadata locations. Diagnostic in metadata: {diagnostics[i]}\r\n");
 
                             string resultMethodName = diagnostics[i]
                                                       .Location.SourceTree!.FilePath.EndsWith(value: ".cs", comparisonType: StringComparison.OrdinalIgnoreCase)
@@ -165,11 +164,7 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
         /// <param name="language">The language of the classes represented by the source strings</param>
         /// <param name="analyzer">The analyzer to be run on the source code</param>
         /// <param name="expected">DiagnosticResults that should appear after the analyzer is run on the sources</param>
-        private static async Task VerifyDiagnosticsAsync(string[] sources,
-                                                         MetadataReference[] references,
-                                                         string language,
-                                                         DiagnosticAnalyzer analyzer,
-                                                         params DiagnosticResult[] expected)
+        private static async Task VerifyDiagnosticsAsync(string[] sources, MetadataReference[] references, string language, DiagnosticAnalyzer analyzer, params DiagnosticResult[] expected)
         {
             Diagnostic[] diagnostics = await GetSortedDiagnosticsAsync(sources: sources, references: references, language: language, analyzer: analyzer);
 
@@ -189,12 +184,13 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
         /// <param name="expectedResults">Diagnostic Results that should have appeared in the code</param>
         private static void VerifyDiagnosticResults(IEnumerable<Diagnostic> actualResults, DiagnosticAnalyzer analyzer, params DiagnosticResult[] expectedResults)
         {
+            Diagnostic[] results = actualResults.ToArray();
             int expectedCount = expectedResults.Length;
-            int actualCount = actualResults.Count();
+            int actualCount = results.Length;
 
             if (expectedCount != actualCount)
             {
-                string diagnosticsOutput = actualResults.Any() ? FormatDiagnostics(analyzer: analyzer, actualResults.ToArray()) : "    NONE.";
+                string diagnosticsOutput = results.Any() ? FormatDiagnostics(analyzer: analyzer, results.ToArray()) : "    NONE.";
 
                 Assert.True(condition: false,
                             string.Format(format: "Mismatch between number of diagnostics returned, expected \"{0}\" actual \"{1}\"\r\n\r\nDiagnostics:\r\n{2}\r\n",
@@ -205,15 +201,14 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
 
             for (int i = 0; i < expectedResults.Length; i++)
             {
-                Diagnostic actual = actualResults.ElementAt(i);
+                Diagnostic actual = results.ElementAt(i);
                 DiagnosticResult expected = expectedResults[i];
 
                 if (expected.Line == -1 && expected.Column == -1)
                 {
                     if (actual.Location != Location.None)
                     {
-                        Assert.True(condition: false,
-                                    string.Format(format: "Expected:\nA project diagnostic with No location\nActual:\n{0}", FormatDiagnostics(analyzer: analyzer, actual)));
+                        Assert.True(condition: false, string.Format(format: "Expected:\nA project diagnostic with No location\nActual:\n{0}", FormatDiagnostics(analyzer: analyzer, actual)));
                     }
                 }
                 else

@@ -73,7 +73,7 @@ namespace FunFair.CodeAnalysis
                         continue;
                     }
 
-                    Mapping mapping = new Mapping(className: memberSymbol.ContainingNamespace + "." + memberSymbol.ContainingType.Name, methodName: memberSymbol.Name);
+                    Mapping mapping = new Mapping(className: SymbolDisplay.ToDisplayString(memberSymbol.ContainingType), methodName: memberSymbol.Name);
 
                     if (!cachedSymbols.TryGetValue(key: mapping, out IReadOnlyList<IMethodSymbol> allowedMethodSignatures))
                     {
@@ -151,7 +151,7 @@ namespace FunFair.CodeAnalysis
 
             foreach (IEnumerable<string> ruleSignature in ruleSignatures)
             {
-                methodSignatureList.RemoveAll(match: methodSymbol => methodSymbol.Parameters.Select(selector: parameterSymbol => parameterSymbol.Type.ToString())
+                methodSignatureList.RemoveAll(match: methodSymbol => methodSymbol.Parameters.Select(selector: parameterSymbol => SymbolDisplay.ToDisplayString(parameterSymbol.Type))
                                                                                  .SequenceEqual(ruleSignature));
             }
 

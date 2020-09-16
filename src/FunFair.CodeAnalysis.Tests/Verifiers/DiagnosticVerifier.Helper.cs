@@ -27,8 +27,7 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
         private static readonly MetadataReference CSharpSymbolsReference = MetadataReference.CreateFromFile(typeof(CSharpCompilation).Assembly.Location);
         private static readonly MetadataReference CodeAnalysisReference = MetadataReference.CreateFromFile(typeof(Compilation).Assembly.Location);
 
-        private static readonly MetadataReference SystemRuntimeReference =
-            MetadataReference.CreateFromFile(Path.Combine(AssemblyPath ?? string.Empty, path2: "System.Runtime.dll"));
+        private static readonly MetadataReference SystemRuntimeReference = MetadataReference.CreateFromFile(Path.Combine(AssemblyPath ?? string.Empty, path2: "System.Runtime.dll"));
 
         private static readonly MetadataReference SystemReference = MetadataReference.CreateFromFile(Path.Combine(AssemblyPath ?? string.Empty, path2: "System.dll"));
         private static readonly MetadataReference SystemConsoleReference = MetadataReference.CreateFromFile(typeof(Console).Assembly.Location);
@@ -185,6 +184,7 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
         ///     Create a Document from a string through creating a project that contains it.
         /// </summary>
         /// <param name="source">Classes in the form of a string</param>
+        /// <param name="references">Metadata References.</param>
         /// <param name="language">The language the source code is in</param>
         /// <returns>A Document created from the source string</returns>
         protected static Document CreateDocument(string source, MetadataReference[] references, string language = LanguageNames.CSharp)

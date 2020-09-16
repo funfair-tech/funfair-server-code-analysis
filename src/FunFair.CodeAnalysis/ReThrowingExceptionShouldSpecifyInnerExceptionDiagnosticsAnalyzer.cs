@@ -41,38 +41,40 @@ namespace FunFair.CodeAnalysis
 
         private static void MustBeReadOnly(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
         {
-            if (syntaxNodeAnalysisContext.Node is CatchClauseSyntax catchClause)
+            if (!(syntaxNodeAnalysisContext.Node is CatchClauseSyntax catchClause))
             {
-                string? exceptionVariable = catchClause.Declaration?.Identifier.Text;
+                return;
+            }
 
-                if (exceptionVariable == null)
+            string? exceptionVariable = catchClause.Declaration?.Identifier.Text;
+
+            if (exceptionVariable == null)
+            {
+                return;
+            }
+
+            IReadOnlyList<ExpressionSyntax> allExpressions = GetAllThrowExpressions(catchClause.Block);
+
+            if (allExpressions.Count == 0)
+            {
+                return;
+            }
+
+            foreach (ExpressionSyntax expression in allExpressions)
+            {
+                if (expression is ObjectCreationExpressionSyntax objectCreationExpression)
                 {
-                    return;
+                    TryToReportDiagnostic(argumentListSyntax: objectCreationExpression.ArgumentList,
+                                          exceptionVariable: exceptionVariable,
+                                          syntaxNodeContext: syntaxNodeAnalysisContext,
+                                          objectCreationExpression: objectCreationExpression);
                 }
-
-                IReadOnlyList<ExpressionSyntax> allExpressions = GetAllThrowExpressions(catchClause.Block);
-
-                if (allExpressions.Count == 0)
+                else if (expression is InvocationExpressionSyntax invocationExpressionSyntax)
                 {
-                    return;
-                }
-
-                foreach (ExpressionSyntax expression in allExpressions)
-                {
-                    if (expression is ObjectCreationExpressionSyntax objectCreationExpression)
-                    {
-                        TryToReportDiagnostic(argumentListSyntax: objectCreationExpression.ArgumentList,
-                                              exceptionVariable: exceptionVariable,
-                                              syntaxNodeContext: syntaxNodeAnalysisContext,
-                                              objectCreationExpression: objectCreationExpression);
-                    }
-                    else if (expression is InvocationExpressionSyntax invocationExpressionSyntax)
-                    {
-                        TryToReportDiagnostic(argumentListSyntax: invocationExpressionSyntax.ArgumentList,
-                                              exceptionVariable: exceptionVariable,
-                                              syntaxNodeContext: syntaxNodeAnalysisContext,
-                                              objectCreationExpression: invocationExpressionSyntax);
-                    }
+                    TryToReportDiagnostic(argumentListSyntax: invocationExpressionSyntax.ArgumentList,
+                                          exceptionVariable: exceptionVariable,
+                                          syntaxNodeContext: syntaxNodeAnalysisContext,
+                                          objectCreationExpression: invocationExpressionSyntax);
                 }
             }
         }

@@ -63,11 +63,6 @@ namespace FunFair.CodeAnalysis
         {
             try
             {
-                if (compilation.ReferencedAssemblyNames == null)
-                {
-                    return false;
-                }
-
                 foreach (AssemblyIdentity assembly in compilation.ReferencedAssemblyNames)
                 {
                     foreach (string testAssemblyName in TestAssemblies)

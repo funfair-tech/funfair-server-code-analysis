@@ -68,7 +68,7 @@ namespace FunFair.CodeAnalysis
                 return false;
             }
 
-            string typeName = methodSymbolReceiverType.ToString();
+            string typeName = SymbolDisplay.ToDisplayString(methodSymbolReceiverType);
 
             return ArgumentExceptions.Contains(typeName);
         }

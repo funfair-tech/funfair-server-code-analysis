@@ -42,10 +42,10 @@ namespace FunFair.CodeAnalysis
             context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.None);
             context.EnableConcurrentExecution();
 
-            context.RegisterCompilationStartAction(this.PerformCheck);
+            context.RegisterCompilationStartAction(PerformCheck);
         }
 
-        private void PerformCheck(CompilationStartAnalysisContext compilationStartContext)
+        private static void PerformCheck(CompilationStartAnalysisContext compilationStartContext)
         {
             compilationStartContext.RegisterSyntaxNodeAction(action: MustHaveASaneName, SyntaxKind.Parameter);
         }

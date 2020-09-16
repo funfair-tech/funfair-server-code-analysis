@@ -64,7 +64,7 @@ namespace FunFair.CodeAnalysis
                         continue;
                     }
 
-                    Mapping mapping = new Mapping(methodName: memberSymbol.Name, memberSymbol.ContainingNamespace + "." + memberSymbol.ContainingType.Name);
+                    Mapping mapping = new Mapping(methodName: memberSymbol.Name, SymbolDisplay.ToDisplayString(memberSymbol.ContainingType));
 
                     IEnumerable<ProhibitedMethodsSpec> forcedMethods = ForcedMethods.Where(predicate: rule => rule.QualifiedName == mapping.QualifiedName);
 
@@ -142,12 +142,7 @@ namespace FunFair.CodeAnalysis
 
         private sealed class ProhibitedMethodsSpec
         {
-            public ProhibitedMethodsSpec(string ruleId,
-                                         string title,
-                                         string message,
-                                         string sourceClass,
-                                         string forcedMethod,
-                                         IEnumerable<IEnumerable<ParameterSpec>> bannedSignatures)
+            public ProhibitedMethodsSpec(string ruleId, string title, string message, string sourceClass, string forcedMethod, IEnumerable<IEnumerable<ParameterSpec>> bannedSignatures)
             {
                 this.SourceClass = sourceClass;
                 this.ForcedMethod = forcedMethod;

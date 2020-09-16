@@ -68,7 +68,7 @@ namespace FunFair.CodeAnalysis
 
             for (INamedTypeSymbol? parent = containingType.ContainingType; parent != null; parent = parent.BaseType)
             {
-                if (parent.ToString() == "FunFair.Test.Common.TestBase")
+                if (SymbolDisplay.ToDisplayString(parent) == "FunFair.Test.Common.TestBase")
                 {
                     return true;
                 }
