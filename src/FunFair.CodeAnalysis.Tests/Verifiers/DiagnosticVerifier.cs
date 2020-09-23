@@ -52,8 +52,7 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
                         }
                         else
                         {
-                            Assert.True(condition: location.IsInSource,
-                                        $"Test base does not currently handle diagnostics in metadata locations. Diagnostic in metadata: {diagnostics[i]}\r\n");
+                            Assert.True(condition: location.IsInSource, $"Test base does not currently handle diagnostics in metadata locations. Diagnostic in metadata: {diagnostics[i]}\r\n");
 
                             string resultMethodName = diagnostics[i]
                                                       .Location.SourceTree!.FilePath.EndsWith(value: ".cs", comparisonType: StringComparison.OrdinalIgnoreCase)
@@ -113,6 +112,7 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
         ///     Note: input a DiagnosticResult for each Diagnostic expected
         /// </summary>
         /// <param name="source">A class in the form of a string to run the analyzer on</param>
+        /// <param name="references">The project/assemblies that are referenced by the code.</param>
         /// <param name="expected"> DiagnosticResults that should appear after the analyzer is run on the source</param>
         protected Task VerifyCSharpDiagnosticAsync(string source, MetadataReference[] references, params DiagnosticResult[] expected)
         {
@@ -142,7 +142,7 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
         ///     Note: input a DiagnosticResult for each Diagnostic expected
         /// </summary>
         /// <param name="sources">An array of strings to create source documents from to run the analyzers on</param>
-        /// <param name="references">References.</param>
+        /// <param name="references">The project/assemblies that are referenced by the code.</param>
         /// <param name="expected">DiagnosticResults that should appear after the analyzer is run on the sources</param>
         protected Task VerifyCSharpDiagnosticAsync(string[] sources, MetadataReference[] references, params DiagnosticResult[] expected)
         {
@@ -161,15 +161,11 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
         ///     then verifies each of them.
         /// </summary>
         /// <param name="sources">An array of strings to create source documents from to run the analyzers on</param>
-        /// <param name="references">Metadata References.</param>
+        /// <param name="references">The project/assemblies that are referenced by the code.</param>
         /// <param name="language">The language of the classes represented by the source strings</param>
         /// <param name="analyzer">The analyzer to be run on the source code</param>
         /// <param name="expected">DiagnosticResults that should appear after the analyzer is run on the sources</param>
-        private static async Task VerifyDiagnosticsAsync(string[] sources,
-                                                         MetadataReference[] references,
-                                                         string language,
-                                                         DiagnosticAnalyzer analyzer,
-                                                         params DiagnosticResult[] expected)
+        private static async Task VerifyDiagnosticsAsync(string[] sources, MetadataReference[] references, string language, DiagnosticAnalyzer analyzer, params DiagnosticResult[] expected)
         {
             Diagnostic[] diagnostics = await GetSortedDiagnosticsAsync(sources: sources, references: references, language: language, analyzer: analyzer);
 
@@ -213,8 +209,7 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
                 {
                     if (actual.Location != Location.None)
                     {
-                        Assert.True(condition: false,
-                                    string.Format(format: "Expected:\nA project diagnostic with No location\nActual:\n{0}", FormatDiagnostics(analyzer: analyzer, actual)));
+                        Assert.True(condition: false, string.Format(format: "Expected:\nA project diagnostic with No location\nActual:\n{0}", FormatDiagnostics(analyzer: analyzer, actual)));
                     }
                 }
                 else
