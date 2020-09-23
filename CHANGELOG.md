@@ -7,6 +7,7 @@ Please ADD ALL Changes to the UNRELASED SECTION and not a specific release
 
 ## [Unreleased]
 ### Added
+- FF-2876 - Prohibition of #nullable disable as nullable should be enabled globally on a per project level.
 ### Fixed
 ### Changed
 - FF-1429 - Updated SonarAnalyzer.CSharp to 8.13.1.21947
