@@ -8,18 +8,22 @@ Please ADD ALL Changes to the UNRELASED SECTION and not a specific release
 ## [Unreleased]
 ### Added
 - FF-2876 - Prohibition of #nullable disable as nullable should be enabled globally on a per project level.
-### Fixed
 ### Changed
-- FF-1429 - Updated SonarAnalyzer.CSharp to 8.13.1.21947
-- FF-1429 - Updated SonarAnalyzer.CSharp to 8.13.0.21683
-- FF-1429 - Updated FunFair.Test.Common to 1.13.0.520
-- FF-1429 - Updated FunFair.Test.Common to 1.12.0.508
 ### Removed
 ### Deployment Changes
 
 <!--
 Releases that have at least been deployed to staging, BUT NOT necessarily released to live.  Changes should be moved from [Unreleased] into here as they are merged into the appropriate release branch
 -->
+## [1.12.0] - 2020-09-23
+### Added
+- FF-2876 - Prohibition of #nullable disable as nullable should be enabled globally on a per project level.
+### Changed
+- FF-1429 - Updated SonarAnalyzer.CSharp to 8.13.1.21947
+- FF-1429 - Updated SonarAnalyzer.CSharp to 8.13.0.21683
+- FF-1429 - Updated FunFair.Test.Common to 1.13.0.520
+- FF-1429 - Updated FunFair.Test.Common to 1.12.0.508
+
 ## [1.11.0] - 2020-09-09
 ### Changed
 - FF-2830 - Update all the .NET components to .NET Core 3.1.402
