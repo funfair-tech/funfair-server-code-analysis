@@ -7,7 +7,7 @@ Please ADD ALL Changes to the UNRELASED SECTION and not a specific release
 
 ## [Unreleased]
 ### Added
-- FF-2876 - Prohibition of #nullable disable as nullable should be enabled globally on a per project level.
+- FF-2885 - Checks for ILogger<T> being misused (e.g. not using the correct category)
 ### Changed
 ### Removed
 ### Deployment Changes

@@ -142,16 +142,11 @@ namespace FunFair.CodeAnalysis
 
         private sealed class ProhibitedMethodsSpec
         {
-            public ProhibitedMethodsSpec(string ruleId,
-                                         string title,
-                                         string message,
-                                         string sourceClass,
-                                         string forcedMethod,
-                                         IEnumerable<IEnumerable<ParameterSpec>> bannedSignatures)
+            public ProhibitedMethodsSpec(string ruleId, string title, string message, string sourceClass, string forcedMethod, IEnumerable<IEnumerable<ParameterSpec>> bannedSignatures)
             {
                 this.SourceClass = sourceClass;
                 this.ForcedMethod = forcedMethod;
-                this.Rule = CreateRule(code: ruleId, title: title, message: message);
+                this.Rule = RuleHelpers.CreateRule(code: ruleId, category: CATEGORY, title: title, message: message);
                 this.BannedSignatures = bannedSignatures;
             }
 
@@ -170,20 +165,6 @@ namespace FunFair.CodeAnalysis
             ///     Full qualified name of method
             /// </summary>
             public string QualifiedName => string.Concat(str0: this.SourceClass, str1: ".", str2: this.ForcedMethod);
-
-            private static DiagnosticDescriptor CreateRule(string code, string title, string message)
-            {
-                LiteralString translatableTitle = new LiteralString(title);
-                LiteralString translatableMessage = new LiteralString(message);
-
-                return new DiagnosticDescriptor(id: code,
-                                                title: translatableTitle,
-                                                messageFormat: translatableMessage,
-                                                category: CATEGORY,
-                                                defaultSeverity: DiagnosticSeverity.Error,
-                                                isEnabledByDefault: true,
-                                                description: translatableMessage);
-            }
         }
     }
 }

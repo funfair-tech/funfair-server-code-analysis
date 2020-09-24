@@ -24,5 +24,8 @@ namespace FunFair.CodeAnalysis.Helpers
         public const string RuleParametersShouldBeInOrder = @"FFS0020";
         public const string RuleDontUseSubstituteReceivedWithZeroNumberOfCalls = @"FFS0021";
         public const string RuleDontConfigureNullableInCode = @"FFS0022";
+        public const string LoggerParametersOnBaseClassesShouldNotUseGenericLoggerCategory = @"FFS0023";
+        public const string LoggerParametersOnLeafClassesShouldUseGenericLoggerCategory = @"FFS0024";
+        public const string GenericTypeMissMatch = @"FFS0025";
     }
 }

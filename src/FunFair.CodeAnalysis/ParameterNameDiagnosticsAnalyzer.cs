@@ -83,7 +83,7 @@ namespace FunFair.CodeAnalysis
                 this.SourceClass = sourceClass;
                 this.WhitelistedParameterNames = whitelistedParameterNames;
 
-                this.Rule = CreateRule(code: ruleId, title: title, message: message);
+                this.Rule = RuleHelpers.CreateRule(code: ruleId, category: CATEGORY, title: title, message: message);
             }
 
             public string SourceClass { get; }
@@ -91,20 +91,6 @@ namespace FunFair.CodeAnalysis
             public IReadOnlyList<string> WhitelistedParameterNames { get; }
 
             public DiagnosticDescriptor Rule { get; }
-
-            private static DiagnosticDescriptor CreateRule(string code, string title, string message)
-            {
-                LiteralString translatableTitle = new LiteralString(title);
-                LiteralString translatableMessage = new LiteralString(message);
-
-                return new DiagnosticDescriptor(id: code,
-                                                title: translatableTitle,
-                                                messageFormat: translatableMessage,
-                                                category: CATEGORY,
-                                                defaultSeverity: DiagnosticSeverity.Error,
-                                                isEnabledByDefault: true,
-                                                description: translatableMessage);
-            }
         }
     }
 }
