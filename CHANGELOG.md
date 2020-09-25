@@ -7,6 +7,7 @@ Please ADD ALL Changes to the UNRELASED SECTION and not a specific release
 
 ## [Unreleased]
 ### Added
+- FF-2866 - Prohibit querying RemoteIpAddress directly on connection.
 ### Changed
 ### Removed
 ### Deployment Changes
