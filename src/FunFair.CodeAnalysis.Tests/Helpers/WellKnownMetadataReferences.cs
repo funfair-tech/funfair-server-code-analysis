@@ -30,11 +30,11 @@ namespace FunFair.CodeAnalysis.Tests.Helpers
         public static readonly MetadataReference XunitAbstractions = MetadataReference.CreateFromFile(typeof(ITestOutputHelper).Assembly.Location);
 
         public static readonly MetadataReference FunFairTestCommon = MetadataReference.CreateFromFile(typeof(TestBase).Assembly.Location);
-        
+
         public static readonly MetadataReference HttpContext = MetadataReference.CreateFromFile(typeof(DefaultHttpContext).Assembly.Location);
-        
+
         public static readonly MetadataReference IpAddress = MetadataReference.CreateFromFile(typeof(IPAddress).Assembly.Location);
-        
+
         public static readonly MetadataReference ConnectionInfo = MetadataReference.CreateFromFile(typeof(ConnectionInfo).Assembly.Location);
     }
 }

@@ -142,7 +142,12 @@ namespace FunFair.CodeAnalysis
 
         private sealed class ProhibitedMethodsSpec
         {
-            public ProhibitedMethodsSpec(string ruleId, string title, string message, string sourceClass, string forcedMethod, IEnumerable<IEnumerable<ParameterSpec>> bannedSignatures)
+            public ProhibitedMethodsSpec(string ruleId,
+                                         string title,
+                                         string message,
+                                         string sourceClass,
+                                         string forcedMethod,
+                                         IEnumerable<IEnumerable<ParameterSpec>> bannedSignatures)
             {
                 this.SourceClass = sourceClass;
                 this.ForcedMethod = forcedMethod;

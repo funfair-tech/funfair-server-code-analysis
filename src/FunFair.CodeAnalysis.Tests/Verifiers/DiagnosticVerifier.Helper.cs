@@ -86,11 +86,11 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
                 {
                     StringBuilder errors = new StringBuilder();
 
-                    foreach (Diagnostic compilerError in compilerErrors.Where(compilerError => 
-                                                                                  !compilerError.ToString().Contains("netstandard") && 
-                                                                                  !compilerError.ToString().Contains("static 'Main' method") && 
-                                                                                  !compilerError.ToString().Contains("CS1002") &&
-                                                                                  !compilerError.ToString().Contains("CS1702")))
+                    foreach (Diagnostic compilerError in compilerErrors.Where(compilerError => !compilerError.ToString()
+                                                                                                             .Contains("netstandard") && !compilerError.ToString()
+                                                                                  .Contains("static 'Main' method") && !compilerError.ToString()
+                                                                                  .Contains("CS1002") && !compilerError.ToString()
+                                                                                                                       .Contains("CS1702")))
                     {
                         errors.Append(compilerError);
                     }

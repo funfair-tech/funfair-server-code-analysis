@@ -151,8 +151,9 @@ namespace FunFair.CodeAnalysis
 
             foreach (IEnumerable<string> ruleSignature in ruleSignatures)
             {
-                methodSignatureList.RemoveAll(match: methodSymbol => methodSymbol.Parameters.Select(selector: parameterSymbol => SymbolDisplay.ToDisplayString(parameterSymbol.Type))
-                                                                                 .SequenceEqual(ruleSignature));
+                methodSignatureList.RemoveAll(match: methodSymbol => methodSymbol
+                                                                     .Parameters.Select(selector: parameterSymbol => SymbolDisplay.ToDisplayString(parameterSymbol.Type))
+                                                                     .SequenceEqual(ruleSignature));
             }
 
             return methodSignatureList;
