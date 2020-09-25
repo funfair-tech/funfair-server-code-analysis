@@ -1,4 +1,4 @@
-﻿using System.Text.Json;
+using System.Text.Json;
 using System.Threading;
 using FunFair.Test.Common;
 using Microsoft.CodeAnalysis;
