@@ -425,7 +425,36 @@ namespace FunFair.CodeAnalysis.Tests
                                             Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 8, column: 66) }
                                         };
 
-            return this.VerifyCSharpDiagnosticAsync(source: test, expected);
+            return this.VerifyCSharpDiagnosticAsync(source: test, new []{ WellKnownMetadataReferences.IpAddress, WellKnownMetadataReferences.ConnectionInfo, WellKnownMetadataReferences.HttpContext }, expected);
+        }
+
+        [Fact]
+        public Task RemoteIpAddressIsBannedWithUsingsAsync()
+        {
+            const string test = @"
+    using System.Net;
+    using Microsoft.AspNetCore.Http;
+
+    namespace ConsoleApplication1
+    {
+        class TypeName
+        {
+            void Test()
+            {
+                IPAddress connectionRemoteIpAddress = new DefaultHttpContext().Connection.RemoteIpAddress;
+            }
+        }
+    }";
+
+            DiagnosticResult expected = new DiagnosticResult
+                                        {
+                                            Id = "FFS0026",
+                                            Message = @"Use RemoteIpAddressRetriever",
+                                            Severity = DiagnosticSeverity.Error,
+                                            Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 11, column: 55) }
+                                        };
+
+            return this.VerifyCSharpDiagnosticAsync(source: test, new[] { WellKnownMetadataReferences.IpAddress, WellKnownMetadataReferences.ConnectionInfo, WellKnownMetadataReferences.HttpContext }, expected);
         }
     }
 }

@@ -1,6 +1,8 @@
+using System.Net;
 using System.Text.Json;
 using System.Threading;
 using FunFair.Test.Common;
+using Microsoft.AspNetCore.Http;
 using Microsoft.CodeAnalysis;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
@@ -28,5 +30,11 @@ namespace FunFair.CodeAnalysis.Tests.Helpers
         public static readonly MetadataReference XunitAbstractions = MetadataReference.CreateFromFile(typeof(ITestOutputHelper).Assembly.Location);
 
         public static readonly MetadataReference FunFairTestCommon = MetadataReference.CreateFromFile(typeof(TestBase).Assembly.Location);
+        
+        public static readonly MetadataReference HttpContext = MetadataReference.CreateFromFile(typeof(DefaultHttpContext).Assembly.Location);
+        
+        public static readonly MetadataReference IpAddress = MetadataReference.CreateFromFile(typeof(IPAddress).Assembly.Location);
+        
+        public static readonly MetadataReference ConnectionInfo = MetadataReference.CreateFromFile(typeof(ConnectionInfo).Assembly.Location);
     }
 }
