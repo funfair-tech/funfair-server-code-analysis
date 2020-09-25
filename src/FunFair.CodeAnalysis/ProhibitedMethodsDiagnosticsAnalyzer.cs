@@ -55,7 +55,12 @@ namespace FunFair.CodeAnalysis
                                       title: @"Avoid use of inline SQL statements",
                                       message: "Only use ISqlServerDatabase.QueryArbitrarySqlAsync in integration tests",
                                       sourceClass: "FunFair.Common.Data.ISqlServerDatabase",
-                                      bannedMethod: "QueryArbitrarySqlAsync")
+                                      bannedMethod: "QueryArbitrarySqlAsync"),
+            new ProhibitedMethodsSpec(ruleId: Rules.RuleDontReadRemoteIpAddressDirectlyFromConnection,
+                                      title: @"Use RemoteIpAddressRetriever instead of getting RemoteIpAddress directly from the HttpRequest",
+                                      message: "Use RemoteIpAddressRetriever",
+                                      sourceClass: "Microsoft.AspNetCore.Http.ConnectionInfo",
+                                      bannedMethod: "RemoteIpAddress")
         };
 
         /// <inheritdoc />

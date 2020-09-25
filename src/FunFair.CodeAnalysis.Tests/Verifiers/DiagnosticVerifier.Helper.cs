@@ -4,9 +4,11 @@ using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using FunFair.CodeAnalysis.Tests.Exceptions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Diagnostics;
@@ -26,6 +28,9 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
         private static readonly MetadataReference SystemCoreReference = MetadataReference.CreateFromFile(typeof(Enumerable).Assembly.Location);
         private static readonly MetadataReference CSharpSymbolsReference = MetadataReference.CreateFromFile(typeof(CSharpCompilation).Assembly.Location);
         private static readonly MetadataReference CodeAnalysisReference = MetadataReference.CreateFromFile(typeof(Compilation).Assembly.Location);
+        public static readonly MetadataReference HttpContextReference = MetadataReference.CreateFromFile(typeof(DefaultHttpContext).Assembly.Location);
+        public static readonly MetadataReference IpAddressReference = MetadataReference.CreateFromFile(typeof(IPAddress).Assembly.Location);
+        public static readonly MetadataReference ConnectionInfoReference = MetadataReference.CreateFromFile(typeof(ConnectionInfo).Assembly.Location);
 
         private static readonly MetadataReference SystemRuntimeReference =
             MetadataReference.CreateFromFile(Path.Combine(AssemblyPath ?? string.Empty, path2: "System.Runtime.dll"));
@@ -86,9 +91,11 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
                 {
                     StringBuilder errors = new StringBuilder();
 
-                    foreach (Diagnostic compilerError in compilerErrors.Where(compilerError => !compilerError.ToString()
-                                                                                                             .Contains("netstandard") && !compilerError.ToString()
-                                                                                  .Contains("static 'Main' method")))
+                    foreach (Diagnostic compilerError in compilerErrors.Where(compilerError => 
+                                                                                  !compilerError.ToString().Contains("netstandard") && 
+                                                                                  !compilerError.ToString().Contains("static 'Main' method") && 
+                                                                                  !compilerError.ToString().Contains("CS1002") &&
+                                                                                  !compilerError.ToString().Contains("CS1702")))
                     {
                         errors.Append(compilerError);
                     }
@@ -216,7 +223,10 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
                                                     .AddMetadataReference(projectId: projectId, metadataReference: CodeAnalysisReference)
                                                     .AddMetadataReference(projectId: projectId, metadataReference: SystemRuntimeReference)
                                                     .AddMetadataReference(projectId: projectId, metadataReference: SystemReference)
-                                                    .AddMetadataReference(projectId: projectId, metadataReference: SystemConsoleReference);
+                                                    .AddMetadataReference(projectId: projectId, metadataReference: SystemConsoleReference)
+                                                    .AddMetadataReference(projectId: projectId, metadataReference: HttpContextReference)
+                                                    .AddMetadataReference(projectId: projectId, metadataReference: ConnectionInfoReference)
+                                                    .AddMetadataReference(projectId: projectId, metadataReference: IpAddressReference);
 
             foreach (MetadataReference reference in references)
             {

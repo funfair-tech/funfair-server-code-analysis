@@ -24,5 +24,6 @@ namespace FunFair.CodeAnalysis.Helpers
         public const string RuleParametersShouldBeInOrder = @"FFS0020";
         public const string RuleDontUseSubstituteReceivedWithZeroNumberOfCalls = @"FFS0021";
         public const string RuleDontConfigureNullableInCode = @"FFS0022";
+        public const string RuleDontReadRemoteIpAddressDirectlyFromConnection = @"FFS0023";
     }
 }

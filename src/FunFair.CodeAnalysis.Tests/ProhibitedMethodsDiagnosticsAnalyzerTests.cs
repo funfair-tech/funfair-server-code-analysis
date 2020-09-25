@@ -401,5 +401,31 @@ namespace FunFair.CodeAnalysis.Tests
 
             return this.VerifyCSharpDiagnosticAsync(source: test, expected);
         }
+
+        [Fact]
+        public Task RemoteIpAddressIsBannedAsync()
+        {
+            const string test = @"
+    namespace ConsoleApplication1
+    {
+        class TypeName
+        {
+            void Test()
+            {
+                System.Net.IPAddress connectionRemoteIpAddress = new Microsoft.AspNetCore.Http.DefaultHttpContext().Connection.RemoteIpAddress;
+            }
+        }
+    }";
+
+            DiagnosticResult expected = new DiagnosticResult
+                                        {
+                                            Id = "FFS0023",
+                                            Message = @"Use RemoteIpAddressRetriever",
+                                            Severity = DiagnosticSeverity.Error,
+                                            Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 8, column: 66) }
+                                        };
+
+            return this.VerifyCSharpDiagnosticAsync(source: test, expected);
+        }
     }
 }
