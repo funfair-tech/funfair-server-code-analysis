@@ -419,7 +419,7 @@ namespace FunFair.CodeAnalysis.Tests
 
             DiagnosticResult expected = new DiagnosticResult
                                         {
-                                            Id = "FFS0023",
+                                            Id = "FFS0026",
                                             Message = @"Use RemoteIpAddressRetriever",
                                             Severity = DiagnosticSeverity.Error,
                                             Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 8, column: 66) }

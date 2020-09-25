@@ -27,6 +27,6 @@ namespace FunFair.CodeAnalysis.Helpers
         public const string LoggerParametersOnBaseClassesShouldNotUseGenericLoggerCategory = @"FFS0023";
         public const string LoggerParametersOnLeafClassesShouldUseGenericLoggerCategory = @"FFS0024";
         public const string GenericTypeMissMatch = @"FFS0025";
-        public const string RuleDontReadRemoteIpAddressDirectlyFromConnection = @"FFS0023";
+        public const string RuleDontReadRemoteIpAddressDirectlyFromConnection = @"FFS0026";
     }
 }
