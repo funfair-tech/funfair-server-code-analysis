@@ -7,7 +7,6 @@ Please ADD ALL Changes to the UNRELASED SECTION and not a specific release
 
 ## [Unreleased]
 ### Added
-- FF-2885 - Checks for ILogger<T> being misused (e.g. not using the correct category)
 ### Changed
 ### Removed
 ### Deployment Changes
@@ -15,6 +14,10 @@ Please ADD ALL Changes to the UNRELASED SECTION and not a specific release
 <!--
 Releases that have at least been deployed to staging, BUT NOT necessarily released to live.  Changes should be moved from [Unreleased] into here as they are merged into the appropriate release branch
 -->
+## [1.13.0] - 2020-09-25
+### Added
+- FF-2885 - Checks for ILogger<T> being misused (e.g. not using the correct category)
+
 ## [1.12.0] - 2020-09-23
 ### Added
 - FF-2876 - Prohibition of #nullable disable as nullable should be enabled globally on a per project level.
