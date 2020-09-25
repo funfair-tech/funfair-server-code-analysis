@@ -422,10 +422,15 @@ namespace FunFair.CodeAnalysis.Tests
                                             Id = "FFS0026",
                                             Message = @"Use RemoteIpAddressRetriever",
                                             Severity = DiagnosticSeverity.Error,
-                                            Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 8, column: 66) }
+                                            Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 8, column: 66)}
                                         };
 
-            return this.VerifyCSharpDiagnosticAsync(source: test, new []{ WellKnownMetadataReferences.IpAddress, WellKnownMetadataReferences.ConnectionInfo, WellKnownMetadataReferences.HttpContext }, expected);
+            return this.VerifyCSharpDiagnosticAsync(source: test,
+                                                    new[]
+                                                    {
+                                                        WellKnownMetadataReferences.IpAddress, WellKnownMetadataReferences.ConnectionInfo, WellKnownMetadataReferences.HttpContext
+                                                    },
+                                                    expected);
         }
 
         [Fact]
@@ -451,10 +456,15 @@ namespace FunFair.CodeAnalysis.Tests
                                             Id = "FFS0026",
                                             Message = @"Use RemoteIpAddressRetriever",
                                             Severity = DiagnosticSeverity.Error,
-                                            Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 11, column: 55) }
+                                            Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 11, column: 55)}
                                         };
 
-            return this.VerifyCSharpDiagnosticAsync(source: test, new[] { WellKnownMetadataReferences.IpAddress, WellKnownMetadataReferences.ConnectionInfo, WellKnownMetadataReferences.HttpContext }, expected);
+            return this.VerifyCSharpDiagnosticAsync(source: test,
+                                                    new[]
+                                                    {
+                                                        WellKnownMetadataReferences.IpAddress, WellKnownMetadataReferences.ConnectionInfo, WellKnownMetadataReferences.HttpContext
+                                                    },
+                                                    expected);
         }
     }
 }
