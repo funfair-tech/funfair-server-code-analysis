@@ -121,5 +121,78 @@ public sealed class Test {
 
             return this.VerifyCSharpDiagnosticAsync(source: test, new[] {WellKnownMetadataReferences.Logger}, expected);
         }
+
+        [Fact]
+        public Task SealedInternalClassNotUsingItsOwnNameIsAnNotErrorAsync()
+        {
+            const string test = @"
+using Microsoft.Extensions.Logging;
+
+internal sealed class Test {
+
+    public Test(ILogger logger)
+    {
+    }
+}";
+
+            return this.VerifyCSharpDiagnosticAsync(source: test, new[] {WellKnownMetadataReferences.Logger});
+        }
+
+        [Fact]
+        public Task NestedSealedInternalClassNotUsingItsOwnNameIsAnNotErrorAsync()
+        {
+            const string test = @"
+using Microsoft.Extensions.Logging;
+
+public sealed class Onion {
+
+    internal sealed class Test {
+
+        public Test(ILogger logger)
+        {
+        }
+    }
+}";
+
+            return this.VerifyCSharpDiagnosticAsync(source: test, new[] {WellKnownMetadataReferences.Logger});
+        }
+
+        [Fact]
+        public Task NestedSealedPrivateClassNotUsingItsOwnNameIsAnNotErrorAsync()
+        {
+            const string test = @"
+using Microsoft.Extensions.Logging;
+
+public sealed class Onion {
+
+    private sealed class Test {
+
+        public Test(ILogger logger)
+        {
+        }
+    }
+}";
+
+            return this.VerifyCSharpDiagnosticAsync(source: test, new[] {WellKnownMetadataReferences.Logger});
+        }
+
+        [Fact]
+        public Task NestedSealedProtectedClassNotUsingItsOwnNameIsAnNotErrorAsync()
+        {
+            const string test = @"
+using Microsoft.Extensions.Logging;
+
+public class Onion {
+
+    protected class Test {
+
+        public Test(ILogger logger)
+        {
+        }
+    }
+}";
+
+            return this.VerifyCSharpDiagnosticAsync(source: test, new[] {WellKnownMetadataReferences.Logger});
+        }
     }
 }

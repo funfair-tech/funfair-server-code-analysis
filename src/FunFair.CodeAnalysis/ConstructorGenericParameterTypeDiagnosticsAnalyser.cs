@@ -63,14 +63,23 @@ namespace FunFair.CodeAnalysis
         {
             if (syntaxNodeAnalysisContext.Node is ConstructorDeclarationSyntax constructorDeclarationSyntax)
             {
-                string className = syntaxNodeAnalysisContext.SemanticModel.GetDeclaredSymbol(constructorDeclarationSyntax.Parent!)
-                                                            .ToDisplayString();
-
-                bool isProtected = constructorDeclarationSyntax.Modifiers.Any(x => x.IsKind(SyntaxKind.ProtectedKeyword));
-
-                foreach (ParameterSyntax parameterSyntax in constructorDeclarationSyntax.ParameterList.Parameters)
+                if (constructorDeclarationSyntax.Parent! is ClassDeclarationSyntax parentSymbolForClassForConstructor)
                 {
-                    CheckParameter(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, parameterSyntax: parameterSyntax, isProtected: isProtected, className: className);
+                    ISymbol classForConstructor = syntaxNodeAnalysisContext.SemanticModel.GetDeclaredSymbol(parentSymbolForClassForConstructor)!;
+                    string className = classForConstructor.ToDisplayString();
+
+                    bool classIsPublic = parentSymbolForClassForConstructor.Modifiers.Any(x => x.IsKind(SyntaxKind.PublicKeyword));
+
+                    bool classIsNested = classForConstructor.ContainingType != null;
+
+                    bool isProtected = constructorDeclarationSyntax.Modifiers.Any(x => x.IsKind(SyntaxKind.ProtectedKeyword));
+
+                    bool needed = isProtected || !classIsPublic || classIsNested;
+
+                    foreach (ParameterSyntax parameterSyntax in constructorDeclarationSyntax.ParameterList.Parameters)
+                    {
+                        CheckParameter(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, parameterSyntax: parameterSyntax, isProtected: needed, className: className);
+                    }
                 }
             }
         }
@@ -84,8 +93,7 @@ namespace FunFair.CodeAnalysis
                 return;
             }
 
-            TypeCheckSpec? rule =
-                Specifications.FirstOrDefault(ns => ns.IsProtected == isProtected && (ns.AllowedSourceClass == fullTypeName || ns.ProhibitedClass == fullTypeName));
+            TypeCheckSpec? rule = Specifications.FirstOrDefault(ns => ns.IsProtected == isProtected && (ns.AllowedSourceClass == fullTypeName || ns.ProhibitedClass == fullTypeName));
 
             if (rule == null)
             {
@@ -96,10 +104,7 @@ namespace FunFair.CodeAnalysis
             {
                 if (rule.MatchTypeOnGenericParameters)
                 {
-                    CheckGenericParameterTypeMatch(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
-                                                   parameterSyntax: parameterSyntax,
-                                                   className: className,
-                                                   fullTypeName: fullTypeName);
+                    CheckGenericParameterTypeMatch(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, parameterSyntax: parameterSyntax, className: className, fullTypeName: fullTypeName);
                 }
 
                 return;
@@ -111,10 +116,7 @@ namespace FunFair.CodeAnalysis
             }
         }
 
-        private static void CheckGenericParameterTypeMatch(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext,
-                                                           ParameterSyntax parameterSyntax,
-                                                           string className,
-                                                           string fullTypeName)
+        private static void CheckGenericParameterTypeMatch(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, ParameterSyntax parameterSyntax, string className, string fullTypeName)
         {
             IParameterSymbol? ds = syntaxNodeAnalysisContext.SemanticModel.GetDeclaredSymbol(parameterSyntax);
 
@@ -133,11 +135,7 @@ namespace FunFair.CodeAnalysis
 
                         if (displayName != className)
                         {
-                            syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(descriptor: MissMatchTypes,
-                                                                                         parameterSyntax.GetLocation(),
-                                                                                         className,
-                                                                                         displayName,
-                                                                                         fullTypeName));
+                            syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(descriptor: MissMatchTypes, parameterSyntax.GetLocation(), className, displayName, fullTypeName));
                         }
                     }
                 }
@@ -146,13 +144,7 @@ namespace FunFair.CodeAnalysis
 
         private sealed class TypeCheckSpec
         {
-            public TypeCheckSpec(string ruleId,
-                                 string title,
-                                 string message,
-                                 string allowedSourceClass,
-                                 string prohibitedClass,
-                                 bool isProtected,
-                                 bool matchTypeOnGenericParameters)
+            public TypeCheckSpec(string ruleId, string title, string message, string allowedSourceClass, string prohibitedClass, bool isProtected, bool matchTypeOnGenericParameters)
             {
                 this.AllowedSourceClass = allowedSourceClass;
                 this.ProhibitedClass = prohibitedClass;
