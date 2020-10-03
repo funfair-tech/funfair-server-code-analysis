@@ -1,4 +1,5 @@
-﻿using System;
+using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FunFair.CodeAnalysis.Tests.Exceptions
 {
@@ -10,8 +11,7 @@ namespace FunFair.CodeAnalysis.Tests.Exceptions
         /// <summary>
         ///     Constructor.
         /// </summary>
-
-        // ReSharper disable once UnusedMember.Global
+        [SuppressMessage(category: "ReSharper", checkId: "UnusedMember.Global", Justification = "TODO: Review")]
         public UnitTestSourceException()
             : this(message: "House not ready")
         {
@@ -31,8 +31,7 @@ namespace FunFair.CodeAnalysis.Tests.Exceptions
         /// </summary>
         /// <param name="message">The message to return.</param>
         /// <param name="innerException">The inner exception.</param>
-
-        // ReSharper disable once UnusedMember.Global
+        [SuppressMessage(category: "ReSharper", checkId: "UnusedMember.Global", Justification = "TODO: Review")]
         public UnitTestSourceException(string message, Exception innerException)
             : base(message: message, innerException: innerException)
         {
