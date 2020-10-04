@@ -1,7 +1,7 @@
 # funfair-server-codeanalyis
 Static Code analysis Repo for C# projects
 
-### Changelog
+## Changelog
 
 View [changelog](CHANGELOG.md)
 
