@@ -1,5 +1,7 @@
 param($installPath, $toolsPath, $package, $project)
 
+Write-Information "Removing $package from $installPath"
+
 if($project.Object.SupportsPackageDependencyResolution)
 {
     if($project.Object.SupportsPackageDependencyResolution())
@@ -57,7 +59,7 @@ foreach($analyzersPath in $analyzersPaths)
                 }
                 catch
                 {
-
+                    Write-Warning "Failed to remove $package"
                 }
             }
         }

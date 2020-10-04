@@ -1,5 +1,7 @@
 param($installPath, $toolsPath, $package, $project)
 
+Write-Information "Installing $package to $installPath"
+
 if($project.Object.SupportsPackageDependencyResolution)
 {
     if($project.Object.SupportsPackageDependencyResolution())
