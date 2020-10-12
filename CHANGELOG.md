@@ -8,6 +8,7 @@ Please ADD ALL Changes to the UNRELASED SECTION and not a specific release
 ## [Unreleased]
 ### Added
 ### Changed
+- FF-1429 - Updated SonarAnalyzer.CSharp to 8.14.0.22654
 ### Removed
 ### Deployment Changes
 
