@@ -9,6 +9,7 @@ Please ADD ALL Changes to the UNRELASED SECTION and not a specific release
 ### Added
 ### Changed
 - FF-1429 - Updated SonarAnalyzer.CSharp to 8.14.0.22654
+- FF-2930 - Updated to .net core 3.1.403
 ### Removed
 ### Deployment Changes
 
