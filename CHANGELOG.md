@@ -7,15 +7,19 @@ Please ADD ALL Changes to the UNRELASED SECTION and not a specific release
 
 ## [Unreleased]
 ### Added
-### Changed
-- FF-1429 - Updated SonarAnalyzer.CSharp to 8.14.0.22654
-- FF-2930 - Updated to .net core 3.1.403
+
 ### Removed
 ### Deployment Changes
 
 <!--
 Releases that have at least been deployed to staging, BUT NOT necessarily released to live.  Changes should be moved from [Unreleased] into here as they are merged into the appropriate release branch
 -->
+
+## [1.15.0] - 2020-09-14
+### Changed
+- FF-1429 - Updated SonarAnalyzer.CSharp to 8.14.0.22654
+- FF-2930 - Updated to .net core 3.1.403
+
 ## [1.14.0] - 2020-09-27
 ### Added
 - FF-2866 - Prohibit querying RemoteIpAddress directly on connection.
