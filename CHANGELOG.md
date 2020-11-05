@@ -17,6 +17,7 @@ Releases that have at least been deployed to staging, BUT NOT necessarily releas
 
 ## [1.15.0] - 2020-09-14
 ### Changed
+- FF-1429 - Updated Microsoft.VisualStudio.Threading.Analyzers to 16.8.55
 - FF-1429 - Updated FunFair.Test.Common to 1.14.0.633
 - FF-1429 - Updated Microsoft.CodeAnalysis.Analyzers to 3.3.1
 - FF-1429 - Updated Microsoft.CodeAnalysis.FxCopAnalyzers to 3.3.1
