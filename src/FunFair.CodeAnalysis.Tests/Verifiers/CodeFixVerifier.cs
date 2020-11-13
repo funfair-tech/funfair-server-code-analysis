@@ -97,10 +97,7 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
             for (int i = 0; i < attempts; ++i)
             {
                 List<CodeAction> actions = new List<CodeAction>();
-                CodeFixContext context = new CodeFixContext(document: document,
-                                                            analyzerDiagnostics[0],
-                                                            registerCodeFix: (a, d) => actions.Add(a),
-                                                            cancellationToken: CancellationToken.None);
+                CodeFixContext context = new CodeFixContext(document: document, analyzerDiagnostics[0], registerCodeFix: (a, d) => actions.Add(a), cancellationToken: CancellationToken.None);
                 await codeFixProvider.RegisterCodeFixesAsync(context);
 
                 if (!actions.Any())
@@ -123,10 +120,15 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
                 //check if applying the code fix introduced any new compiler diagnostics
                 if (!allowNewCompilerDiagnostics && newCompilerDiagnostics.Any())
                 {
+                    SyntaxNode? syntaxRoot = await document.GetSyntaxRootAsync();
+
+                    if (syntaxRoot == null)
+                    {
+                        throw new NotNullException();
+                    }
+
                     // Format and get the compiler diagnostics again so that the locations make sense in the output
-                    document = document.WithSyntaxRoot(Formatter.Format(await document.GetSyntaxRootAsync(),
-                                                                        annotation: Formatter.Annotation,
-                                                                        workspace: document.Project.Solution.Workspace));
+                    document = document.WithSyntaxRoot(Formatter.Format(node: syntaxRoot, annotation: Formatter.Annotation, workspace: document.Project.Solution.Workspace));
 
                     newCompilerDiagnostics = GetNewDiagnostics(diagnostics: compilerDiagnostics, await GetCompilerDiagnosticsAsync(document));
 
