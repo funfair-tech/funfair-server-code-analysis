@@ -17,6 +17,7 @@ Releases that have at least been deployed to staging, BUT NOT necessarily releas
 
 ## [1.15.0] - 2020-09-14
 ### Changed
+- FF-1429 - Updated NSubstitute.Analyzers.CSharp to 1.0.14
 - FF-1429 - Updated Microsoft.Extensions to 5.0.0
 - FF-1429 - Updated TeamCity.VSTest.TestAdapter to 1.0.23
 - FF-1429 - Updated Microsoft.NET.Test.Sdk to 16.8.0
