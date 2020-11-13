@@ -97,7 +97,10 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
             for (int i = 0; i < attempts; ++i)
             {
                 List<CodeAction> actions = new List<CodeAction>();
-                CodeFixContext context = new CodeFixContext(document: document, analyzerDiagnostics[0], registerCodeFix: (a, d) => actions.Add(a), cancellationToken: CancellationToken.None);
+                CodeFixContext context = new CodeFixContext(document: document,
+                                                            analyzerDiagnostics[0],
+                                                            registerCodeFix: (a, d) => actions.Add(a),
+                                                            cancellationToken: CancellationToken.None);
                 await codeFixProvider.RegisterCodeFixesAsync(context);
 
                 if (!actions.Any())
