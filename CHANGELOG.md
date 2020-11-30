@@ -1,4 +1,4 @@
-# Changelog
+﻿# Changelog
 All notable changes to this project will be documented in this file.
 
 <!--
@@ -31,6 +31,7 @@ Releases that have at least been deployed to staging, BUT NOT necessarily releas
 - FF-1429 - Updated FunFair.Test.Common to 1.14.0.607
 - FF-1429 - Updated SonarAnalyzer.CSharp to 8.14.0.22654
 - FF-2930 - Updated to .net core 3.1.403
+- FF-1429 - Updated SonarAnalyzer.CSharp to 8.15.0.24505
 
 ## [1.14.0] - 2020-09-27
 ### Added
