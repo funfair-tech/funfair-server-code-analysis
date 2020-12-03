@@ -32,6 +32,7 @@ Releases that have at least been deployed to staging, BUT NOT necessarily releas
 - FF-1429 - Updated SonarAnalyzer.CSharp to 8.14.0.22654
 - FF-2930 - Updated to .net core 3.1.403
 - FF-1429 - Updated SonarAnalyzer.CSharp to 8.15.0.24505
+- FF-1429 - Updated Microsoft.NET.Test.Sdk to 16.8.3
 
 ## [1.14.0] - 2020-09-27
 ### Added
