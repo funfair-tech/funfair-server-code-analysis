@@ -86,7 +86,7 @@ public sealed class Test {
     }
 }";
 
-            DiagnosticResult expected = new DiagnosticResult
+            DiagnosticResult expected = new()
                                         {
                                             Id = "FFS0017",
                                             Message = "Provide 'failingException' as a inner exception when throw from the catch clauses",
@@ -118,7 +118,7 @@ public sealed class Test {
     }
 }";
 
-            DiagnosticResult expected = new DiagnosticResult
+            DiagnosticResult expected = new()
                                         {
                                             Id = "FFS0017",
                                             Message = "Provide 'failingException' as a inner exception when throw from the catch clauses",

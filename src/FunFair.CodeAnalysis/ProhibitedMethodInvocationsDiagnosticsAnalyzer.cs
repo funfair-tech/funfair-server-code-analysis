@@ -21,18 +21,18 @@ namespace FunFair.CodeAnalysis
 
         private static readonly ProhibitedMethodsSpec[] BannedMethods =
         {
-            new ProhibitedMethodsSpec(ruleId: Rules.RuleDontUseAssertTrueWithoutMessage,
-                                      title: @"Avoid use of assert method without message",
-                                      message: "Only use Assert.True with message parameter",
-                                      sourceClass: "Xunit.Assert",
-                                      bannedMethod: "True",
-                                      new[] {new[] {"bool"}}),
-            new ProhibitedMethodsSpec(ruleId: Rules.RuleDontUseAssertFalseWithoutMessage,
-                                      title: @"Avoid use of assert method without message",
-                                      message: "Only use Assert.False with message parameter",
-                                      sourceClass: "Xunit.Assert",
-                                      bannedMethod: "False",
-                                      new[] {new[] {"bool"}})
+            new(ruleId: Rules.RuleDontUseAssertTrueWithoutMessage,
+                title: @"Avoid use of assert method without message",
+                message: "Only use Assert.True with message parameter",
+                sourceClass: "Xunit.Assert",
+                bannedMethod: "True",
+                new[] {new[] {"bool"}}),
+            new(ruleId: Rules.RuleDontUseAssertFalseWithoutMessage,
+                title: @"Avoid use of assert method without message",
+                message: "Only use Assert.False with message parameter",
+                sourceClass: "Xunit.Assert",
+                bannedMethod: "False",
+                new[] {new[] {"bool"}})
         };
 
         /// <inheritdoc />
@@ -73,7 +73,7 @@ namespace FunFair.CodeAnalysis
                         continue;
                     }
 
-                    Mapping mapping = new Mapping(className: SymbolDisplay.ToDisplayString(memberSymbol.ContainingType), methodName: memberSymbol.Name);
+                    Mapping mapping = new(className: SymbolDisplay.ToDisplayString(memberSymbol.ContainingType), methodName: memberSymbol.Name);
 
                     if (!cachedSymbols.TryGetValue(key: mapping, out IReadOnlyList<IMethodSymbol> allowedMethodSignatures))
                     {
@@ -97,11 +97,11 @@ namespace FunFair.CodeAnalysis
 
         private static IReadOnlyDictionary<Mapping, IReadOnlyList<IMethodSymbol>> BuildCachedSymbols(Compilation compilation)
         {
-            Dictionary<Mapping, IReadOnlyList<IMethodSymbol>> cachedSymbols = new Dictionary<Mapping, IReadOnlyList<IMethodSymbol>>();
+            Dictionary<Mapping, IReadOnlyList<IMethodSymbol>> cachedSymbols = new();
 
             foreach (ProhibitedMethodsSpec rule in BannedMethods)
             {
-                Mapping mapping = new Mapping(className: rule.SourceClass, methodName: rule.BannedMethod);
+                Mapping mapping = new(className: rule.SourceClass, methodName: rule.BannedMethod);
 
                 if (cachedSymbols.ContainsKey(mapping))
                 {
@@ -151,9 +151,8 @@ namespace FunFair.CodeAnalysis
 
             foreach (IEnumerable<string> ruleSignature in ruleSignatures)
             {
-                methodSignatureList.RemoveAll(match: methodSymbol => methodSymbol
-                                                                     .Parameters.Select(selector: parameterSymbol => SymbolDisplay.ToDisplayString(parameterSymbol.Type))
-                                                                     .SequenceEqual(ruleSignature));
+                methodSignatureList.RemoveAll(match: methodSymbol => methodSymbol.Parameters.Select(selector: parameterSymbol => SymbolDisplay.ToDisplayString(parameterSymbol.Type))
+                                                                                 .SequenceEqual(ruleSignature));
             }
 
             return methodSignatureList;

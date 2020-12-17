@@ -26,7 +26,7 @@ namespace FunFair.CodeAnalysis.Tests
         public Task BannedWarningCannotBeDisabledAsync()
         {
             const string test = @"#pragma warning disable 1234";
-            DiagnosticResult expected = new DiagnosticResult
+            DiagnosticResult expected = new()
                                         {
                                             Id = "FFS0008",
                                             Message = "Don't disable warnings using #pragma warning disable",
@@ -53,7 +53,7 @@ namespace FunFair.CodeAnalysis.Tests
         }
     }";
 
-            DiagnosticResult expected = new DiagnosticResult
+            DiagnosticResult expected = new()
                                         {
                                             Id = "FFS0008",
                                             Message = "Don't disable warnings using #pragma warning disable",
@@ -76,7 +76,7 @@ namespace FunFair.CodeAnalysis.Tests
         public Task RestoringBannedWarningIsNotAnErrorAsync()
         {
             const string test = @"#pragma warning restore 1234";
-            DiagnosticResult expected = new DiagnosticResult
+            DiagnosticResult expected = new()
                                         {
                                             Id = "FFS0008",
                                             Message = "Don't disable warnings using #pragma warning disable",

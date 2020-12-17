@@ -27,7 +27,7 @@ namespace FunFair.CodeAnalysis.Tests
             }
 }";
 
-            DiagnosticResult expected = new DiagnosticResult
+            DiagnosticResult expected = new()
                                         {
                                             Id = "FFS0019",
                                             Message = "ILogger parameters should be called 'logger'",
@@ -67,7 +67,7 @@ namespace FunFair.CodeAnalysis.Tests
             }
 }";
 
-            DiagnosticResult expected = new DiagnosticResult
+            DiagnosticResult expected = new()
                                         {
                                             Id = "FFS0019",
                                             Message = "ILogger parameters should be called 'logger'",

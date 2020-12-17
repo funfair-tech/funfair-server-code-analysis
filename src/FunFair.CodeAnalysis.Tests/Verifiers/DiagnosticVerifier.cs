@@ -29,7 +29,7 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
         /// <returns>The Diagnostics formatted as a string</returns>
         private static string FormatDiagnostics(DiagnosticAnalyzer analyzer, params Diagnostic[] diagnostics)
         {
-            StringBuilder builder = new StringBuilder();
+            StringBuilder builder = new();
 
             for (int i = 0; i < diagnostics.Length; ++i)
             {
@@ -52,8 +52,7 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
                         }
                         else
                         {
-                            Assert.True(condition: location.IsInSource,
-                                        $"Test base does not currently handle diagnostics in metadata locations. Diagnostic in metadata: {diagnostics[i]}\r\n");
+                            Assert.True(condition: location.IsInSource, $"Test base does not currently handle diagnostics in metadata locations. Diagnostic in metadata: {diagnostics[i]}\r\n");
 
                             string resultMethodName = diagnostics[i]
                                                       .Location.SourceTree!.FilePath.EndsWith(value: ".cs", comparisonType: StringComparison.OrdinalIgnoreCase)
@@ -166,11 +165,7 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
         /// <param name="language">The language of the classes represented by the source strings</param>
         /// <param name="analyzer">The analyzer to be run on the source code</param>
         /// <param name="expected">DiagnosticResults that should appear after the analyzer is run on the sources</param>
-        private static async Task VerifyDiagnosticsAsync(string[] sources,
-                                                         MetadataReference[] references,
-                                                         string language,
-                                                         DiagnosticAnalyzer analyzer,
-                                                         params DiagnosticResult[] expected)
+        private static async Task VerifyDiagnosticsAsync(string[] sources, MetadataReference[] references, string language, DiagnosticAnalyzer analyzer, params DiagnosticResult[] expected)
         {
             Diagnostic[] diagnostics = await GetSortedDiagnosticsAsync(sources: sources, references: references, language: language, analyzer: analyzer);
 
@@ -214,8 +209,7 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
                 {
                     if (actual.Location != Location.None)
                     {
-                        Assert.True(condition: false,
-                                    string.Format(format: "Expected:\nA project diagnostic with No location\nActual:\n{0}", FormatDiagnostics(analyzer: analyzer, actual)));
+                        Assert.True(condition: false, string.Format(format: "Expected:\nA project diagnostic with No location\nActual:\n{0}", FormatDiagnostics(analyzer: analyzer, actual)));
                     }
                 }
                 else

@@ -18,7 +18,7 @@ namespace FunFair.CodeAnalysis.Tests
         public Task NonReadOnlyStructIsAnErrorAsync()
         {
             const string test = @"public struct Test {}";
-            DiagnosticResult expected = new DiagnosticResult
+            DiagnosticResult expected = new()
                                         {
                                             Id = "FFS0011",
                                             Message = "Structs should be read-only",

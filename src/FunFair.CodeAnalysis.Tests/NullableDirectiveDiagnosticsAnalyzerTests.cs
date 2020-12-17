@@ -19,7 +19,7 @@ namespace FunFair.CodeAnalysis.Tests
         {
             const string test = @"#nullable disable";
 
-            DiagnosticResult expected = new DiagnosticResult
+            DiagnosticResult expected = new()
                                         {
                                             Id = "FFS0022",
                                             Message = "Don't use #nulllable directive, make the change globally for the project",
@@ -35,7 +35,7 @@ namespace FunFair.CodeAnalysis.Tests
         {
             const string test = @"#nullable restore";
 
-            DiagnosticResult expected = new DiagnosticResult
+            DiagnosticResult expected = new()
                                         {
                                             Id = "FFS0022",
                                             Message = "Don't use #nulllable directive, make the change globally for the project",
@@ -51,7 +51,7 @@ namespace FunFair.CodeAnalysis.Tests
         {
             const string test = @"#nullable enable";
 
-            DiagnosticResult expected = new DiagnosticResult
+            DiagnosticResult expected = new()
                                         {
                                             Id = "FFS0022",
                                             Message = "Don't use #nulllable directive, make the change globally for the project",

@@ -59,7 +59,7 @@ namespace FunFair.CodeAnalysis.Tests
             }
 }";
 
-            DiagnosticResult expected = new DiagnosticResult
+            DiagnosticResult expected = new()
                                         {
                                             Id = "FFS0020",
                                             Message = "Parameter 'logger' must be parameter 2",
@@ -84,7 +84,7 @@ namespace FunFair.CodeAnalysis.Tests
             }
 }";
 
-            DiagnosticResult expected = new DiagnosticResult
+            DiagnosticResult expected = new()
                                         {
                                             Id = "FFS0020",
                                             Message = "Parameter 'logger' must be parameter 2",
@@ -156,7 +156,7 @@ namespace FunFair.CodeAnalysis.Tests
             }
 }";
 
-            DiagnosticResult expected = new DiagnosticResult
+            DiagnosticResult expected = new()
                                         {
                                             Id = "FFS0020",
                                             Message = "Parameter 'logger' must be parameter 2",
@@ -181,7 +181,7 @@ namespace FunFair.CodeAnalysis.Tests
             }
 }";
 
-            DiagnosticResult expected = new DiagnosticResult
+            DiagnosticResult expected = new()
                                         {
                                             Id = "FFS0020",
                                             Message = "Parameter 'logger' must be parameter 2",

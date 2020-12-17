@@ -6,8 +6,8 @@ namespace FunFair.CodeAnalysis.Helpers
     {
         public static DiagnosticDescriptor CreateRule(string code, string category, string title, string message)
         {
-            LiteralString translatableTitle = new LiteralString(title);
-            LiteralString translatableMessage = new LiteralString(message);
+            LiteralString translatableTitle = new(title);
+            LiteralString translatableMessage = new(message);
 
             return new DiagnosticDescriptor(id: code,
                                             title: translatableTitle,

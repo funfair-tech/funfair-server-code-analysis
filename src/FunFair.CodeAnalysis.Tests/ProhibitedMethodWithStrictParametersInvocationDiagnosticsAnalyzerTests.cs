@@ -60,7 +60,7 @@ namespace FunFair.CodeAnalysis.Tests
              }
          }
      }";
-            DiagnosticResult expected = new DiagnosticResult
+            DiagnosticResult expected = new()
                                         {
                                             Id = "FFS0021",
                                             Message = "Only use Received with expected call count greater than 0, use DidNotReceived instead if 0 call received expected",

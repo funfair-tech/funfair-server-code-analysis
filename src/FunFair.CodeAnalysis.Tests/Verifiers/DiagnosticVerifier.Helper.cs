@@ -27,8 +27,7 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
         private static readonly MetadataReference CSharpSymbolsReference = MetadataReference.CreateFromFile(typeof(CSharpCompilation).Assembly.Location);
         private static readonly MetadataReference CodeAnalysisReference = MetadataReference.CreateFromFile(typeof(Compilation).Assembly.Location);
 
-        private static readonly MetadataReference SystemRuntimeReference =
-            MetadataReference.CreateFromFile(Path.Combine(AssemblyPath ?? string.Empty, path2: "System.Runtime.dll"));
+        private static readonly MetadataReference SystemRuntimeReference = MetadataReference.CreateFromFile(Path.Combine(AssemblyPath ?? string.Empty, path2: "System.Runtime.dll"));
 
         private static readonly MetadataReference SystemReference = MetadataReference.CreateFromFile(Path.Combine(AssemblyPath ?? string.Empty, path2: "System.dll"));
         private static readonly MetadataReference SystemConsoleReference = MetadataReference.CreateFromFile(typeof(Console).Assembly.Location);
@@ -62,14 +61,14 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
         /// <returns>An IEnumerable of Diagnostics that surfaced in the source code, sorted by Location</returns>
         protected static async Task<Diagnostic[]> GetSortedDiagnosticsFromDocumentsAsync(DiagnosticAnalyzer analyzer, Document[] documents)
         {
-            HashSet<Project> projects = new HashSet<Project>();
+            HashSet<Project> projects = new();
 
             foreach (Document document in documents)
             {
                 projects.Add(document.Project);
             }
 
-            List<Diagnostic> diagnostics = new List<Diagnostic>();
+            List<Diagnostic> diagnostics = new();
 
             foreach (Project project in projects)
             {
@@ -84,7 +83,7 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
 
                 if (compilerErrors.Length > 0)
                 {
-                    StringBuilder errors = new StringBuilder();
+                    StringBuilder errors = new();
 
                     foreach (Diagnostic compilerError in compilerErrors.Where(compilerError => !compilerError.ToString()
                                                                                                              .Contains("netstandard") && !compilerError.ToString()
