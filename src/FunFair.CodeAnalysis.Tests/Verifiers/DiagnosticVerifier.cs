@@ -272,7 +272,7 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
         {
             FileLinePositionSpan actualSpan = actual.GetLineSpan();
 
-            Assert.True(actualSpan.Path == expected.Path || actualSpan.Path != null && actualSpan.Path.Contains(value: "Test0.") && expected.Path.Contains(value: "Test."),
+            Assert.True(actualSpan.Path == expected.Path || actualSpan.Path.Contains(value: "Test0.") && expected.Path.Contains(value: "Test."),
                         string.Format(format: "Expected diagnostic to be in file \"{0}\" was actually in file \"{1}\"\r\n\r\nDiagnostic:\r\n    {2}\r\n",
                                       arg0: expected.Path,
                                       arg1: actualSpan.Path,
