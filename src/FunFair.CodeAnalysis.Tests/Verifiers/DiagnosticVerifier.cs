@@ -40,40 +40,42 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
 
                 foreach (DiagnosticDescriptor rule in rules)
                 {
-                    if (rule != null && rule.Id == diagnostics[i]
+                    if (rule.Id != diagnostics[i]
                         .Id)
                     {
-                        Location location = diagnostics[i]
-                            .Location;
-
-                        if (location == Location.None)
-                        {
-                            builder.AppendFormat(format: "GetGlobalResult({0}.{1})", arg0: analyzerType.Name, arg1: rule.Id);
-                        }
-                        else
-                        {
-                            Assert.True(condition: location.IsInSource, $"Test base does not currently handle diagnostics in metadata locations. Diagnostic in metadata: {diagnostics[i]}\r\n");
-
-                            string resultMethodName = diagnostics[i]
-                                                      .Location.SourceTree!.FilePath.EndsWith(value: ".cs", comparisonType: StringComparison.OrdinalIgnoreCase)
-                                ? "GetCSharpResultAt"
-                                : "GetBasicResultAt";
-                            LinePosition linePosition = diagnostics[i]
-                                                        .Location.GetLineSpan()
-                                                        .StartLinePosition;
-
-                            builder.AppendFormat(format: "{0}({1}, {2}, {3}.{4})", resultMethodName, linePosition.Line + 1, linePosition.Character + 1, analyzerType.Name, rule.Id);
-                        }
-
-                        if (i != diagnostics.Length - 1)
-                        {
-                            builder.Append(value: ',');
-                        }
-
-                        builder.AppendLine();
-
-                        break;
+                        continue;
                     }
+
+                    Location location = diagnostics[i]
+                        .Location;
+
+                    if (location == Location.None)
+                    {
+                        builder.AppendFormat(format: "GetGlobalResult({0}.{1})", arg0: analyzerType.Name, arg1: rule.Id);
+                    }
+                    else
+                    {
+                        Assert.True(condition: location.IsInSource, $"Test base does not currently handle diagnostics in metadata locations. Diagnostic in metadata: {diagnostics[i]}\r\n");
+
+                        string resultMethodName = diagnostics[i]
+                                                  .Location.SourceTree!.FilePath.EndsWith(value: ".cs", comparisonType: StringComparison.OrdinalIgnoreCase)
+                            ? "GetCSharpResultAt"
+                            : "GetBasicResultAt";
+                        LinePosition linePosition = diagnostics[i]
+                                                    .Location.GetLineSpan()
+                                                    .StartLinePosition;
+
+                        builder.AppendFormat(format: "{0}({1}, {2}, {3}.{4})", resultMethodName, linePosition.Line + 1, linePosition.Character + 1, analyzerType.Name, rule.Id);
+                    }
+
+                    if (i != diagnostics.Length - 1)
+                    {
+                        builder.Append(value: ',');
+                    }
+
+                    builder.AppendLine();
+
+                    break;
                 }
             }
 
@@ -132,6 +134,7 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
         /// </summary>
         /// <param name="sources">An array of strings to create source documents from to run the analyzers on</param>
         /// <param name="expected">DiagnosticResults that should appear after the analyzer is run on the sources</param>
+
         // ReSharper disable once UnusedMember.Global
         protected Task VerifyCSharpDiagnosticAsync(string[] sources, params DiagnosticResult[] expected)
         {
