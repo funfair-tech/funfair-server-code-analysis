@@ -9,13 +9,15 @@ Please ADD ALL Changes to the UNRELASED SECTION and not a specific release
 ### Added
 ### Fixed
 ### Changed
-- FF-3198 - Update all the .NET components to .NET 5.0.101
 ### Removed
 ### Deployment Changes
 
 <!--
 Releases that have at least been deployed to staging, BUT NOT necessarily released to live.  Changes should be moved from [Unreleased] into here as they are merged into the appropriate release branch
 -->
+## [5.0.0] - 2020-12-18
+### Changed
+- FF-3198 - Update all the .NET components to .NET 5.0.101
 
 ## [1.15.0] - 2020-09-14
 ### Changed
