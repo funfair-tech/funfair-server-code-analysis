@@ -1,4 +1,3 @@
-using System;
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.CodeAnalysis;
 
@@ -8,28 +7,22 @@ namespace FunFair.CodeAnalysis.Tests.Helpers
     ///     Struct that stores information about a Diagnostic appearing in a source
     /// </summary>
     [SuppressMessage(category: "Microsoft.Performance", checkId: "CA1815:OverrideEqualsAndOperatorEqualsOnValueTypes", Justification = "Test code")]
-    public struct DiagnosticResult
+    public readonly struct DiagnosticResult
     {
-        private DiagnosticResultLocation[]? _locations;
+        public DiagnosticResultLocation[] Locations { get; init; }
 
-        public DiagnosticResultLocation[] Locations
-        {
-            get => this._locations ??= Array.Empty<DiagnosticResultLocation>();
+        public DiagnosticSeverity Severity { get; init; }
 
-            set => this._locations = value;
-        }
+        public string Id { get; init; }
 
-        public DiagnosticSeverity Severity { get; set; }
+        public string Message { get; init; }
 
-        public string Id { get; set; }
-
-        public string Message { get; set; }
-
+        // ReSharper disable once UnusedMember.Global
         public string Path =>
             this.Locations.Length > 0
                 ? this.Locations[0]
                       .Path
-                : "";
+                : string.Empty;
 
         public int Line =>
             this.Locations.Length > 0

@@ -29,7 +29,7 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
         /// <returns>The Diagnostics formatted as a string</returns>
         private static string FormatDiagnostics(DiagnosticAnalyzer analyzer, params Diagnostic[] diagnostics)
         {
-            StringBuilder builder = new StringBuilder();
+            StringBuilder builder = new();
 
             for (int i = 0; i < diagnostics.Length; ++i)
             {
@@ -52,8 +52,7 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
                         }
                         else
                         {
-                            Assert.True(condition: location.IsInSource,
-                                        $"Test base does not currently handle diagnostics in metadata locations. Diagnostic in metadata: {diagnostics[i]}\r\n");
+                            Assert.True(condition: location.IsInSource, $"Test base does not currently handle diagnostics in metadata locations. Diagnostic in metadata: {diagnostics[i]}\r\n");
 
                             string resultMethodName = diagnostics[i]
                                                       .Location.SourceTree!.FilePath.EndsWith(value: ".cs", comparisonType: StringComparison.OrdinalIgnoreCase)
@@ -133,6 +132,7 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
         /// </summary>
         /// <param name="sources">An array of strings to create source documents from to run the analyzers on</param>
         /// <param name="expected">DiagnosticResults that should appear after the analyzer is run on the sources</param>
+        // ReSharper disable once UnusedMember.Global
         protected Task VerifyCSharpDiagnosticAsync(string[] sources, params DiagnosticResult[] expected)
         {
             return this.VerifyCSharpDiagnosticAsync(sources: sources, Array.Empty<MetadataReference>(), expected: expected);
@@ -166,11 +166,7 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
         /// <param name="language">The language of the classes represented by the source strings</param>
         /// <param name="analyzer">The analyzer to be run on the source code</param>
         /// <param name="expected">DiagnosticResults that should appear after the analyzer is run on the sources</param>
-        private static async Task VerifyDiagnosticsAsync(string[] sources,
-                                                         MetadataReference[] references,
-                                                         string language,
-                                                         DiagnosticAnalyzer analyzer,
-                                                         params DiagnosticResult[] expected)
+        private static async Task VerifyDiagnosticsAsync(string[] sources, MetadataReference[] references, string language, DiagnosticAnalyzer analyzer, params DiagnosticResult[] expected)
         {
             Diagnostic[] diagnostics = await GetSortedDiagnosticsAsync(sources: sources, references: references, language: language, analyzer: analyzer);
 
@@ -214,8 +210,7 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
                 {
                     if (actual.Location != Location.None)
                     {
-                        Assert.True(condition: false,
-                                    string.Format(format: "Expected:\nA project diagnostic with No location\nActual:\n{0}", FormatDiagnostics(analyzer: analyzer, actual)));
+                        Assert.True(condition: false, string.Format(format: "Expected:\nA project diagnostic with No location\nActual:\n{0}", FormatDiagnostics(analyzer: analyzer, actual)));
                     }
                 }
                 else
@@ -278,7 +273,7 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
         {
             FileLinePositionSpan actualSpan = actual.GetLineSpan();
 
-            Assert.True(actualSpan.Path == expected.Path || actualSpan.Path != null && actualSpan.Path.Contains(value: "Test0.") && expected.Path.Contains(value: "Test."),
+            Assert.True(actualSpan.Path == expected.Path || actualSpan.Path.Contains(value: "Test0.") && expected.Path.Contains(value: "Test."),
                         string.Format(format: "Expected diagnostic to be in file \"{0}\" was actually in file \"{1}\"\r\n\r\nDiagnostic:\r\n    {2}\r\n",
                                       arg0: expected.Path,
                                       arg1: actualSpan.Path,

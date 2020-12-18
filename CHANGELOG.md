@@ -7,7 +7,9 @@ Please ADD ALL Changes to the UNRELASED SECTION and not a specific release
 
 ## [Unreleased]
 ### Added
-
+### Fixed
+### Changed
+- FF-3198 - Update all the .NET components to .NET 5.0.101
 ### Removed
 ### Deployment Changes
 

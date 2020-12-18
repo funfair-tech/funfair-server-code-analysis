@@ -62,7 +62,7 @@ namespace FunFair.CodeAnalysis.Tests
         }
     }";
 
-            DiagnosticResult expected = new DiagnosticResult
+            DiagnosticResult expected = new()
                                         {
                                             Id = "FFS0015",
                                             Message = @"Only use JsonSerializer.Deserialize with own JsonSerializerOptions",
@@ -119,7 +119,7 @@ namespace FunFair.CodeAnalysis.Tests
              }
          }
      }";
-            DiagnosticResult expected = new DiagnosticResult
+            DiagnosticResult expected = new()
                                         {
                                             Id = "FFS0018",
                                             Message = @"Only use Received with expected call count",
@@ -177,7 +177,7 @@ namespace FunFair.CodeAnalysis.Tests
             }
         }
     }";
-            DiagnosticResult expected = new DiagnosticResult
+            DiagnosticResult expected = new()
                                         {
                                             Id = "FFS0014",
                                             Message = @"Only use JsonSerializer.Serialize with own JsonSerializerOptions",

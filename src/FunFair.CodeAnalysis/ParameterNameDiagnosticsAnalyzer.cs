@@ -19,16 +19,16 @@ namespace FunFair.CodeAnalysis
 
         private static readonly NameSanitationSpec[] NameSpecifications =
         {
-            new NameSanitationSpec(ruleId: Rules.RuleLoggerParametersShouldBeCalledLogger,
-                                   title: @"ILogger parameters should be called 'logger'",
-                                   message: "ILogger parameters should be called 'logger'",
-                                   sourceClass: "Microsoft.Extensions.Logging.ILogger",
-                                   whitelistedParameterName: "logger"),
-            new NameSanitationSpec(ruleId: Rules.RuleLoggerParametersShouldBeCalledLogger,
-                                   title: @"ILogger parameters should be called 'logger'",
-                                   message: "ILogger parameters should be called 'logger'",
-                                   sourceClass: "Microsoft.Extensions.Logging.ILogger<TCategoryName>",
-                                   whitelistedParameterName: "logger")
+            new(ruleId: Rules.RuleLoggerParametersShouldBeCalledLogger,
+                title: @"ILogger parameters should be called 'logger'",
+                message: "ILogger parameters should be called 'logger'",
+                sourceClass: "Microsoft.Extensions.Logging.ILogger",
+                whitelistedParameterName: "logger"),
+            new(ruleId: Rules.RuleLoggerParametersShouldBeCalledLogger,
+                title: @"ILogger parameters should be called 'logger'",
+                message: "ILogger parameters should be called 'logger'",
+                sourceClass: "Microsoft.Extensions.Logging.ILogger<TCategoryName>",
+                whitelistedParameterName: "logger")
         };
 
         /// <inheritdoc />

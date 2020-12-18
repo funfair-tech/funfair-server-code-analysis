@@ -32,7 +32,7 @@ namespace FunFair.CodeAnalysis.Tests
             }
         }
     }";
-            DiagnosticResult expected = new DiagnosticResult
+            DiagnosticResult expected = new()
                                         {
                                             Id = "FFS0001",
                                             Message = @"Call IDateTimeSource.UtcNow() rather than DateTime.Now",
@@ -61,7 +61,7 @@ namespace FunFair.CodeAnalysis.Tests
              }
         }
     }";
-            DiagnosticResult expected = new DiagnosticResult
+            DiagnosticResult expected = new()
                                         {
                                             Id = "FFS0001",
                                             Message = @"Call IDateTimeSource.UtcNow() rather than DateTime.Now",
@@ -88,7 +88,7 @@ namespace FunFair.CodeAnalysis.Tests
             }
         }
     }";
-            DiagnosticResult expected = new DiagnosticResult
+            DiagnosticResult expected = new()
                                         {
                                             Id = "FFS0001",
                                             Message = @"Call IDateTimeSource.UtcNow() rather than DateTime.Now",
@@ -134,7 +134,7 @@ namespace FunFair.CodeAnalysis.Tests
             }
         }
     }";
-            DiagnosticResult expected = new DiagnosticResult
+            DiagnosticResult expected = new()
                                         {
                                             Id = "FFS0001",
                                             Message = @"Call IDateTimeSource.UtcNow() rather than DateTime.Now",
@@ -164,7 +164,7 @@ namespace FunFair.CodeAnalysis.Tests
             }
         }
     }";
-            DiagnosticResult expected = new DiagnosticResult
+            DiagnosticResult expected = new()
                                         {
                                             Id = "FFS0001",
                                             Message = @"Call IDateTimeSource.UtcNow() rather than DateTime.Now",
@@ -191,7 +191,7 @@ namespace FunFair.CodeAnalysis.Tests
             }
         }
     }";
-            DiagnosticResult expected = new DiagnosticResult
+            DiagnosticResult expected = new()
                                         {
                                             Id = "FFS0004",
                                             Message = @"Call IDateTimeSource.UtcNow() rather than DateTimeOffset.Now",
@@ -218,7 +218,7 @@ namespace FunFair.CodeAnalysis.Tests
             }
         }
     }";
-            DiagnosticResult expected = new DiagnosticResult
+            DiagnosticResult expected = new()
                                         {
                                             Id = "FFS0005",
                                             Message = @"Call IDateTimeSource.UtcNow() rather than DateTimeOffset.UtcNow",
@@ -245,7 +245,7 @@ namespace FunFair.CodeAnalysis.Tests
             }
         }
     }";
-            DiagnosticResult expected = new DiagnosticResult
+            DiagnosticResult expected = new()
                                         {
                                             Id = "FFS0003",
                                             Message = @"Call IDateTimeSource.UtcNow().Date rather than DateTime.Today",
@@ -272,7 +272,7 @@ namespace FunFair.CodeAnalysis.Tests
             }
         }
     }";
-            DiagnosticResult expected = new DiagnosticResult
+            DiagnosticResult expected = new()
                                         {
                                             Id = "FFS0002",
                                             Message = @"Call IDateTimeSource.UtcNow() rather than DateTime.UtcNow",
@@ -307,7 +307,7 @@ namespace FunFair.CodeAnalysis.Tests
             }
         }
     }";
-            DiagnosticResult expected = new DiagnosticResult
+            DiagnosticResult expected = new()
                                         {
                                             Id = "FFS0006",
                                             Message = @"Only use ISqlServerDatabase.ExecuteArbitrarySqlAsync in integration tests",
@@ -356,7 +356,7 @@ namespace FunFair.CodeAnalysis.Tests
             }
         }
     }";
-            DiagnosticResult expected = new DiagnosticResult
+            DiagnosticResult expected = new()
                                         {
                                             Id = "FFS0007",
                                             Message = @"Only use ISqlServerDatabase.QueryArbitrarySqlAsync in integration tests",
@@ -391,7 +391,7 @@ namespace FunFair.CodeAnalysis.Tests
             }
         }
     }";
-            DiagnosticResult expected = new DiagnosticResult
+            DiagnosticResult expected = new()
                                         {
                                             Id = "FFS0007",
                                             Message = @"Only use ISqlServerDatabase.QueryArbitrarySqlAsync in integration tests",
@@ -417,7 +417,7 @@ namespace FunFair.CodeAnalysis.Tests
         }
     }";
 
-            DiagnosticResult expected = new DiagnosticResult
+            DiagnosticResult expected = new()
                                         {
                                             Id = "FFS0026",
                                             Message = @"Use RemoteIpAddressRetriever",
@@ -426,10 +426,7 @@ namespace FunFair.CodeAnalysis.Tests
                                         };
 
             return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                    new[]
-                                                    {
-                                                        WellKnownMetadataReferences.IpAddress, WellKnownMetadataReferences.ConnectionInfo, WellKnownMetadataReferences.HttpContext
-                                                    },
+                                                    new[] {WellKnownMetadataReferences.IpAddress, WellKnownMetadataReferences.ConnectionInfo, WellKnownMetadataReferences.HttpContext},
                                                     expected);
         }
 
@@ -451,7 +448,7 @@ namespace FunFair.CodeAnalysis.Tests
         }
     }";
 
-            DiagnosticResult expected = new DiagnosticResult
+            DiagnosticResult expected = new()
                                         {
                                             Id = "FFS0026",
                                             Message = @"Use RemoteIpAddressRetriever",
@@ -460,10 +457,7 @@ namespace FunFair.CodeAnalysis.Tests
                                         };
 
             return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                    new[]
-                                                    {
-                                                        WellKnownMetadataReferences.IpAddress, WellKnownMetadataReferences.ConnectionInfo, WellKnownMetadataReferences.HttpContext
-                                                    },
+                                                    new[] {WellKnownMetadataReferences.IpAddress, WellKnownMetadataReferences.ConnectionInfo, WellKnownMetadataReferences.HttpContext},
                                                     expected);
         }
     }

@@ -60,7 +60,7 @@ namespace FunFair.CodeAnalysis
                                                                                        })
                                               .ToArray();
 
-                List<string> matchedEndings = new List<string>();
+                List<string> matchedEndings = new();
 
                 foreach (var parameterType in PreferredEndingOrdering.Reverse())
                 {

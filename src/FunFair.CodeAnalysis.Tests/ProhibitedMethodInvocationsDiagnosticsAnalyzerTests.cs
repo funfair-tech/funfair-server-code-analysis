@@ -51,7 +51,7 @@ namespace FunFair.CodeAnalysis.Tests
             }
         }
     }";
-            DiagnosticResult expected = new DiagnosticResult
+            DiagnosticResult expected = new()
                                         {
                                             Id = "FFS0010",
                                             Message = @"Only use Assert.False with message parameter",
@@ -99,7 +99,7 @@ namespace FunFair.CodeAnalysis.Tests
              }
          }
      }";
-            DiagnosticResult expected = new DiagnosticResult
+            DiagnosticResult expected = new()
                                         {
                                             Id = "FFS0009",
                                             Message = @"Only use Assert.True with message parameter",

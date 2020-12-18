@@ -20,36 +20,36 @@ namespace FunFair.CodeAnalysis
 
         private static readonly ForcedMethodsSpec[] ForcedMethods =
         {
-            new ForcedMethodsSpec(ruleId: Rules.RuleDontUseJsonSerializerWithoutJsonOptions,
-                                  title: @"Avoid use of serializer without own JsonSerializerOptions parameter",
-                                  message: "Only use JsonSerializer.Serialize with own JsonSerializerOptions",
-                                  sourceClass: "System.Text.Json.JsonSerializer",
-                                  forcedMethod: "Serialize",
-                                  requiredArgumentCount: 2),
-            new ForcedMethodsSpec(ruleId: Rules.RuleDontUseJsonSerializerWithoutJsonOptions,
-                                  title: @"Avoid use of serializer without own JsonSerializerOptions parameter",
-                                  message: "Only use JsonSerializer.Serialize with own JsonSerializerOptions",
-                                  sourceClass: "System.Text.Json.JsonSerializer",
-                                  forcedMethod: "SerializeAsync",
-                                  requiredArgumentCount: 2),
-            new ForcedMethodsSpec(ruleId: Rules.RuleDontUseJsonDeserializerWithoutJsonOptions,
-                                  title: @"Avoid use of deserializer without own JsonSerializerOptions parameter",
-                                  message: "Only use JsonSerializer.Deserialize with own JsonSerializerOptions",
-                                  sourceClass: "System.Text.Json.JsonSerializer",
-                                  forcedMethod: "Deserialize",
-                                  requiredArgumentCount: 2),
-            new ForcedMethodsSpec(ruleId: Rules.RuleDontUseJsonDeserializerWithoutJsonOptions,
-                                  title: @"Avoid use of deserializer without own JsonSerializerOptions parameter",
-                                  message: "Only use JsonSerializer.Deserialize with own JsonSerializerOptions",
-                                  sourceClass: "System.Text.Json.JsonSerializer",
-                                  forcedMethod: "DeserializeAsync",
-                                  requiredArgumentCount: 2),
-            new ForcedMethodsSpec(ruleId: Rules.RuleDontUseSubstituteReceivedWithoutAmountOfCalls,
-                                  title: @"Avoid use of received without call count",
-                                  message: "Only use Received with expected call count",
-                                  sourceClass: "NSubstitute.SubstituteExtensions",
-                                  forcedMethod: "Received",
-                                  requiredArgumentCount: 1)
+            new(ruleId: Rules.RuleDontUseJsonSerializerWithoutJsonOptions,
+                title: @"Avoid use of serializer without own JsonSerializerOptions parameter",
+                message: "Only use JsonSerializer.Serialize with own JsonSerializerOptions",
+                sourceClass: "System.Text.Json.JsonSerializer",
+                forcedMethod: "Serialize",
+                requiredArgumentCount: 2),
+            new(ruleId: Rules.RuleDontUseJsonSerializerWithoutJsonOptions,
+                title: @"Avoid use of serializer without own JsonSerializerOptions parameter",
+                message: "Only use JsonSerializer.Serialize with own JsonSerializerOptions",
+                sourceClass: "System.Text.Json.JsonSerializer",
+                forcedMethod: "SerializeAsync",
+                requiredArgumentCount: 2),
+            new(ruleId: Rules.RuleDontUseJsonDeserializerWithoutJsonOptions,
+                title: @"Avoid use of deserializer without own JsonSerializerOptions parameter",
+                message: "Only use JsonSerializer.Deserialize with own JsonSerializerOptions",
+                sourceClass: "System.Text.Json.JsonSerializer",
+                forcedMethod: "Deserialize",
+                requiredArgumentCount: 2),
+            new(ruleId: Rules.RuleDontUseJsonDeserializerWithoutJsonOptions,
+                title: @"Avoid use of deserializer without own JsonSerializerOptions parameter",
+                message: "Only use JsonSerializer.Deserialize with own JsonSerializerOptions",
+                sourceClass: "System.Text.Json.JsonSerializer",
+                forcedMethod: "DeserializeAsync",
+                requiredArgumentCount: 2),
+            new(ruleId: Rules.RuleDontUseSubstituteReceivedWithoutAmountOfCalls,
+                title: @"Avoid use of received without call count",
+                message: "Only use Received with expected call count",
+                sourceClass: "NSubstitute.SubstituteExtensions",
+                forcedMethod: "Received",
+                requiredArgumentCount: 1)
         };
 
         /// <inheritdoc />
@@ -88,7 +88,7 @@ namespace FunFair.CodeAnalysis
                         continue;
                     }
 
-                    Mapping mapping = new Mapping(methodName: memberSymbol.Name, SymbolDisplay.ToDisplayString(memberSymbol.ContainingType));
+                    Mapping mapping = new(methodName: memberSymbol.Name, SymbolDisplay.ToDisplayString(memberSymbol.ContainingType));
 
                     IEnumerable<ForcedMethodsSpec> forcedMethods = ForcedMethods.Where(predicate: rule => rule.QualifiedName == mapping.QualifiedName);
 

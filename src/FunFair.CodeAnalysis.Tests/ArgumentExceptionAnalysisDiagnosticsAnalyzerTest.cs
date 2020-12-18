@@ -28,7 +28,7 @@ public sealed class Test {
     }
 }";
 
-            DiagnosticResult expected = new DiagnosticResult
+            DiagnosticResult expected = new()
                                         {
                                             Id = "FFS0016",
                                             Message = "Argument Exceptions should pass parameter name",
@@ -53,7 +53,7 @@ public sealed class Test {
     }
 }";
 
-            DiagnosticResult expected = new DiagnosticResult
+            DiagnosticResult expected = new()
                                         {
                                             Id = "FFS0016",
                                             Message = "Argument Exceptions should pass parameter name",
@@ -75,7 +75,7 @@ public sealed class Test {
     public void DoIt(string value)
     {
         var x = new ArgumentException(""Hello World"", nameof(value));
-        
+
     }
 }";
 
@@ -93,7 +93,7 @@ public sealed class Test {
     public void DoIt(string value)
     {
         var x = new ArgumentException(""Hello World"", ""value"");
-        
+
     }
 }";
 
@@ -114,7 +114,7 @@ public sealed class Test {
     }
 }";
 
-            DiagnosticResult expected = new DiagnosticResult
+            DiagnosticResult expected = new()
                                         {
                                             Id = "FFS0016",
                                             Message = "Argument Exceptions should pass parameter name",
@@ -139,7 +139,7 @@ public sealed class Test {
     }
 }";
 
-            DiagnosticResult expected = new DiagnosticResult
+            DiagnosticResult expected = new()
                                         {
                                             Id = "FFS0016",
                                             Message = "Argument Exceptions should pass parameter name",
@@ -161,7 +161,7 @@ public sealed class Test {
     public void DoIt(string value)
     {
         var x = new ArgumentNullException(""Hello World"", nameof(value));
-        
+
     }
 }";
 
@@ -179,7 +179,7 @@ public sealed class Test {
     public void DoIt(string value)
     {
         var x = new ArgumentNullException(""Hello World"", ""value"");
-        
+
     }
 }";
 
@@ -200,7 +200,7 @@ public sealed class Test {
     }
 }";
 
-            DiagnosticResult expected = new DiagnosticResult
+            DiagnosticResult expected = new()
                                         {
                                             Id = "FFS0016",
                                             Message = "Argument Exceptions should pass parameter name",
@@ -225,7 +225,7 @@ public sealed class Test {
     }
 }";
 
-            DiagnosticResult expected = new DiagnosticResult
+            DiagnosticResult expected = new()
                                         {
                                             Id = "FFS0016",
                                             Message = "Argument Exceptions should pass parameter name",
@@ -247,7 +247,7 @@ public sealed class Test {
     public void DoIt(string value)
     {
         var x = new ArgumentOutOfRangeException(""Hello World"", nameof(value));
-        
+
     }
 }";
 
@@ -265,7 +265,7 @@ public sealed class Test {
     public void DoIt(string value)
     {
         var x = new ArgumentOutOfRangeException(""Hello World"", ""value"");
-        
+
     }
 }";
 

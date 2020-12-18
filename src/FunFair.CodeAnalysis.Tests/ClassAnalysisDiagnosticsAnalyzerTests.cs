@@ -26,7 +26,7 @@ namespace FunFair.CodeAnalysis.Tests
         public Task ClassWithNoModifiersIsAnErrorAsync()
         {
             const string test = @"public class Test {}";
-            DiagnosticResult expected = new DiagnosticResult
+            DiagnosticResult expected = new()
                                         {
                                             Id = "FFS0012",
                                             Message = "Classes should be static, sealed or abstract",
