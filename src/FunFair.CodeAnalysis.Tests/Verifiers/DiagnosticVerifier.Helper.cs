@@ -21,6 +21,10 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
     /// </summary>
     public abstract partial class DiagnosticVerifier
     {
+        private const string DEFAULT_FILE_PATH_PREFIX = "Test";
+        private const string C_SHARP_DEFAULT_FILE_EXT = "cs";
+        private const string VISUAL_BASIC_DEFAULT_EXT = "vb";
+        private const string TEST_PROJECT_NAME = "TestProject";
         private static readonly string? AssemblyPath = Path.GetDirectoryName(typeof(object).Assembly.Location);
         private static readonly MetadataReference CorlibReference = MetadataReference.CreateFromFile(typeof(object).Assembly.Location);
         private static readonly MetadataReference SystemCoreReference = MetadataReference.CreateFromFile(typeof(Enumerable).Assembly.Location);
@@ -31,11 +35,6 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
 
         private static readonly MetadataReference SystemReference = MetadataReference.CreateFromFile(Path.Combine(AssemblyPath ?? string.Empty, path2: "System.dll"));
         private static readonly MetadataReference SystemConsoleReference = MetadataReference.CreateFromFile(typeof(Console).Assembly.Location);
-
-        internal static string DefaultFilePathPrefix = "Test";
-        internal static string CSharpDefaultFileExt = "cs";
-        internal static string VisualBasicDefaultExt = "vb";
-        internal static string TestProjectName = "TestProject";
 
         #region Get Diagnostics
 
@@ -205,12 +204,12 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
         [SuppressMessage(category: "Microsoft.Reliability", checkId: "CA2000:DisposeObjectsBeforeLosingScope", Justification = "Test code")]
         private static Project CreateProject(string[] sources, MetadataReference[] references, string language = LanguageNames.CSharp)
         {
-            string fileNamePrefix = DefaultFilePathPrefix;
-            string fileExt = language == LanguageNames.CSharp ? CSharpDefaultFileExt : VisualBasicDefaultExt;
+            const string fileNamePrefix = DEFAULT_FILE_PATH_PREFIX;
+            string fileExt = language == LanguageNames.CSharp ? C_SHARP_DEFAULT_FILE_EXT : VISUAL_BASIC_DEFAULT_EXT;
 
-            ProjectId projectId = ProjectId.CreateNewId(TestProjectName);
+            ProjectId projectId = ProjectId.CreateNewId(TEST_PROJECT_NAME);
 
-            Solution solution = new AdhocWorkspace().CurrentSolution.AddProject(projectId: projectId, name: TestProjectName, assemblyName: TestProjectName, language: language)
+            Solution solution = new AdhocWorkspace().CurrentSolution.AddProject(projectId: projectId, name: TEST_PROJECT_NAME, assemblyName: TEST_PROJECT_NAME, language: language)
                                                     .AddMetadataReference(projectId: projectId, metadataReference: CorlibReference)
                                                     .AddMetadataReference(projectId: projectId, metadataReference: SystemCoreReference)
                                                     .AddMetadataReference(projectId: projectId, metadataReference: CSharpSymbolsReference)
