@@ -74,7 +74,12 @@ using Xunit.Abstractions;
 }";
 
             return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                    new[] {WellKnownMetadataReferences.Xunit, WellKnownMetadataReferences.FunFairTestCommon, WellKnownMetadataReferences.XunitAbstractions});
+                                                    new[]
+                                                    {
+                                                        WellKnownMetadataReferences.Xunit,
+                                                        WellKnownMetadataReferences.FunFairTestCommon,
+                                                        WellKnownMetadataReferences.XunitAbstractions
+                                                    });
         }
 
         [Fact]
@@ -143,7 +148,12 @@ using Xunit.Abstractions;
 }";
 
             return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                    new[] {WellKnownMetadataReferences.Xunit, WellKnownMetadataReferences.FunFairTestCommon, WellKnownMetadataReferences.XunitAbstractions});
+                                                    new[]
+                                                    {
+                                                        WellKnownMetadataReferences.Xunit,
+                                                        WellKnownMetadataReferences.FunFairTestCommon,
+                                                        WellKnownMetadataReferences.XunitAbstractions
+                                                    });
         }
 
         [Fact]

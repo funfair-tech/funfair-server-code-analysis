@@ -426,7 +426,10 @@ namespace FunFair.CodeAnalysis.Tests
                                         };
 
             return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                    new[] {WellKnownMetadataReferences.IpAddress, WellKnownMetadataReferences.ConnectionInfo, WellKnownMetadataReferences.HttpContext},
+                                                    new[]
+                                                    {
+                                                        WellKnownMetadataReferences.IpAddress, WellKnownMetadataReferences.ConnectionInfo, WellKnownMetadataReferences.HttpContext
+                                                    },
                                                     expected);
         }
 
@@ -457,7 +460,10 @@ namespace FunFair.CodeAnalysis.Tests
                                         };
 
             return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                    new[] {WellKnownMetadataReferences.IpAddress, WellKnownMetadataReferences.ConnectionInfo, WellKnownMetadataReferences.HttpContext},
+                                                    new[]
+                                                    {
+                                                        WellKnownMetadataReferences.IpAddress, WellKnownMetadataReferences.ConnectionInfo, WellKnownMetadataReferences.HttpContext
+                                                    },
                                                     expected);
         }
     }

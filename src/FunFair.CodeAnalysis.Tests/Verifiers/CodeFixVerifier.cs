@@ -31,6 +31,7 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
         ///     Returns the codefix being tested (VB) - to be implemented in non-abstract class
         /// </summary>
         /// <returns>The CodeFixProvider to be used for VisualBasic code</returns>
+
         // ReSharper disable once UnusedMember.Global
         protected virtual CodeFixProvider? GetBasicCodeFixProvider()
         {
@@ -44,6 +45,7 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
         /// <param name="newSource">A class in the form of a string after the CodeFix was applied to it</param>
         /// <param name="codeFixIndex">Index determining which codefix to apply if there are multiple</param>
         /// <param name="allowNewCompilerDiagnostics">A bool controlling whether or not the test will fail if the CodeFix introduces other warnings after being applied</param>
+
         // ReSharper disable once UnusedMember.Global
         protected Task VerifyCSharpFixAsync(string oldSource, string newSource, int? codeFixIndex = null, bool allowNewCompilerDiagnostics = false)
         {
