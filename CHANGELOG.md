@@ -14,6 +14,7 @@ Please ADD ALL Changes to the UNRELASED SECTION and not a specific release
 - FF-1429 - Updated AsyncFixer to 1.4.0
 - FF-1429 - Updated FunFair.Test.Common to 5.1.0.784
 - FF-1429 - Updated FunFair.Test.Common to 5.1.1.792
+- FF-1429 - Updated AsyncFixer to 1.4.1
 ### Removed
 ### Deployment Changes
 
