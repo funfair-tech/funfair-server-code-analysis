@@ -17,7 +17,7 @@ namespace FunFair.CodeAnalysis.Tests.Helpers
 
         public string Message { get; init; }
 
-        // ReSharper disable once UnusedMember.Global
+        [SuppressMessage(category: "ReSharper", checkId: "UnusedMember.Global", Justification = "TODO: Review")]
         public string Path =>
             this.Locations.Length > 0
                 ? this.Locations[0]
