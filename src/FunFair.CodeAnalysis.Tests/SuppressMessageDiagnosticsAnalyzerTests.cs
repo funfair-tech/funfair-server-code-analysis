@@ -54,5 +54,30 @@ namespace FunFair.CodeAnalysis.Tests
 
             return this.VerifyCSharpDiagnosticAsync(source: test, new[] {WellKnownMetadataReferences.SuppressMessage}, expected);
         }
+
+        [Fact]
+        public Task SuppressMessageWithBlankJustificationIsErrorAsync()
+        {
+            const string test = @"
+            using System.Diagnostics.CodeAnalysis;
+
+            public sealed class Test {
+
+            [SuppressMessage(""Example"", ""ExampleCheckId"", Justification = "" "")]
+            public void DoIt()
+            {
+            }
+}";
+
+            DiagnosticResult expected = new()
+                                        {
+                                            Id = "FFS0027",
+                                            Message = "SuppressMessage must specify a Justification",
+                                            Severity = DiagnosticSeverity.Error,
+                                            Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 6, column: 75)}
+                                        };
+
+            return this.VerifyCSharpDiagnosticAsync(source: test, new[] {WellKnownMetadataReferences.SuppressMessage}, expected);
+        }
     }
 }

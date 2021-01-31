@@ -67,6 +67,18 @@ namespace FunFair.CodeAnalysis
             if (justification == null)
             {
                 syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(descriptor: Rule, methodDeclarationSyntax.GetLocation()));
+
+                return;
+            }
+
+            if (justification.Expression is LiteralExpressionSyntax l)
+            {
+                string text = l.Token.ValueText;
+
+                if (string.IsNullOrWhiteSpace(text))
+                {
+                    syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(descriptor: Rule, l.GetLocation()));
+                }
             }
         }
     }
