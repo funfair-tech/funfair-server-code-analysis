@@ -28,5 +28,6 @@ namespace FunFair.CodeAnalysis.Helpers
         public const string LoggerParametersOnLeafClassesShouldUseGenericLoggerCategory = @"FFS0024";
         public const string GenericTypeMissMatch = @"FFS0025";
         public const string RuleDontReadRemoteIpAddressDirectlyFromConnection = @"FFS0026";
+        public const string RuleSuppressMessageMustHaveJustification = @"FFS0027";
     }
 }

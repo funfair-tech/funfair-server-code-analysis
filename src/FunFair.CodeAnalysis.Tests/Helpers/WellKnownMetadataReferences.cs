@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using System.Text.Json;
 using System.Threading;
@@ -36,5 +37,7 @@ namespace FunFair.CodeAnalysis.Tests.Helpers
         public static readonly MetadataReference IpAddress = MetadataReference.CreateFromFile(typeof(IPAddress).Assembly.Location);
 
         public static readonly MetadataReference ConnectionInfo = MetadataReference.CreateFromFile(typeof(ConnectionInfo).Assembly.Location);
+
+        public static readonly MetadataReference SuppressMessage = MetadataReference.CreateFromFile(typeof(SuppressMessageAttribute).Assembly.Location);
     }
 }
