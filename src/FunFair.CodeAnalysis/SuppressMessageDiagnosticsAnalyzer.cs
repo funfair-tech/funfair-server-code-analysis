@@ -44,7 +44,8 @@ namespace FunFair.CodeAnalysis
             }
 
             compilationStartContext.RegisterSyntaxNodeAction(action: syntaxNodeAnalysisContext =>
-                                                                         MustDeriveFromTestBase(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, sourceClassType: sourceClassType),
+                                                                         MustDeriveFromTestBase(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
+                                                                                                sourceClassType: sourceClassType),
                                                              SyntaxKind.Attribute);
         }
 
