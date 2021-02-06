@@ -10,8 +10,7 @@ namespace FunFair.CodeAnalysis.Tests.Exceptions
     {
         /// <summary>
         ///     Constructor.
-        /// </summary>
-        [SuppressMessage(category: "ReSharper", checkId: "UnusedMember.Global", Justification = "TODO: Review")]
+        /// </summary>        [SuppressMessage(category: "ReSharper", checkId: "UnusedMember.Global", Justification = "TODO: Review")]
         public UnitTestSourceException()
             : this(message: "House not ready")
         {
@@ -30,8 +29,7 @@ namespace FunFair.CodeAnalysis.Tests.Exceptions
         ///     Constructor.
         /// </summary>
         /// <param name="message">The message to return.</param>
-        /// <param name="innerException">The inner exception.</param>
-        [SuppressMessage(category: "ReSharper", checkId: "UnusedMember.Global", Justification = "TODO: Review")]
+        /// <param name="innerException">The inner exception.</param>        [SuppressMessage(category: "ReSharper", checkId: "UnusedMember.Global", Justification = "TODO: Review")]
         public UnitTestSourceException(string message, Exception innerException)
             : base(message: message, innerException: innerException)
         {
