@@ -5,7 +5,8 @@ namespace FunFair.CodeAnalysis.Tests.Helpers
 {
     /// <summary>
     ///     Location where the diagnostic appears, as determined by path, line number, and column number.
-    /// </summary>    [SuppressMessage(category: "Microsoft.Performance", checkId: "CA1815:OverrideEqualsAndOperatorEqualsOnValueTypes", Justification = "Test code")]
+    /// </summary>
+    [SuppressMessage(category: "Microsoft.Performance", checkId: "CA1815:OverrideEqualsAndOperatorEqualsOnValueTypes", Justification = "Test code")]
     public readonly struct DiagnosticResultLocation
     {
         public DiagnosticResultLocation(string path, int line, int column)
@@ -32,3 +33,4 @@ namespace FunFair.CodeAnalysis.Tests.Helpers
         public int Column { get; }
     }
 }
+
