@@ -31,7 +31,8 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
         /// <summary>
         ///     Returns the codefix being tested (VB) - to be implemented in non-abstract class
         /// </summary>
-        /// <returns>The CodeFixProvider to be used for VisualBasic code</returns>        [SuppressMessage(category: "ReSharper", checkId: "UnusedMember.Global", Justification = "TODO: Review")]
+        /// <returns>The CodeFixProvider to be used for VisualBasic code</returns>
+        [SuppressMessage(category: "ReSharper", checkId: "UnusedMember.Global", Justification = "TODO: Review")]
         protected virtual CodeFixProvider? GetBasicCodeFixProvider()
         {
             return null;
@@ -43,7 +44,8 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
         /// <param name="oldSource">A class in the form of a string before the CodeFix was applied to it</param>
         /// <param name="newSource">A class in the form of a string after the CodeFix was applied to it</param>
         /// <param name="codeFixIndex">Index determining which codefix to apply if there are multiple</param>
-        /// <param name="allowNewCompilerDiagnostics">A bool controlling whether or not the test will fail if the CodeFix introduces other warnings after being applied</param>        [SuppressMessage(category: "ReSharper", checkId: "UnusedMember.Global", Justification = "TODO: Review")]
+        /// <param name="allowNewCompilerDiagnostics">A bool controlling whether or not the test will fail if the CodeFix introduces other warnings after being applied</param>
+        [SuppressMessage(category: "ReSharper", checkId: "UnusedMember.Global", Justification = "TODO: Review")]
         protected Task VerifyCSharpFixAsync(string oldSource, string newSource, int? codeFixIndex = null, bool allowNewCompilerDiagnostics = false)
         {
             DiagnosticAnalyzer? analyzer = this.GetCSharpDiagnosticAnalyzer();
@@ -159,3 +161,4 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
         }
     }
 }
+
