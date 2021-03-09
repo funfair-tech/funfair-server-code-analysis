@@ -6,6 +6,7 @@ namespace FunFair.CodeAnalysis.Tests.Helpers
     /// <summary>
     ///     Struct that stores information about a Diagnostic appearing in a source
     /// </summary>
+
     [SuppressMessage(category: "Microsoft.Performance", checkId: "CA1815:OverrideEqualsAndOperatorEqualsOnValueTypes", Justification = "Test code")]
     public readonly struct DiagnosticResult
     {
@@ -37,4 +38,5 @@ namespace FunFair.CodeAnalysis.Tests.Helpers
                 : -1;
     }
 }
+
 

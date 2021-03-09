@@ -136,6 +136,7 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
         /// </summary>
         /// <param name="sources">An array of strings to create source documents from to run the analyzers on</param>
         /// <param name="expected">DiagnosticResults that should appear after the analyzer is run on the sources</param>
+
         [SuppressMessage(category: "ReSharper", checkId: "UnusedMember.Global", Justification = "TODO: Review")]
         protected Task VerifyCSharpDiagnosticAsync(string[] sources, params DiagnosticResult[] expected)
         {
@@ -320,4 +321,5 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
         #endregion
     }
 }
+
 

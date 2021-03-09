@@ -202,6 +202,7 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
         /// <param name="references">Metadata References.</param>
         /// <param name="language">The language the source code is in</param>
         /// <returns>A Project created out of the Documents created from the source strings</returns>
+
         [SuppressMessage(category: "Microsoft.Reliability", checkId: "CA2000:DisposeObjectsBeforeLosingScope", Justification = "Test code")]
         private static Project CreateProject(string[] sources, MetadataReference[] references, string language = LanguageNames.CSharp)
         {
@@ -247,4 +248,5 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
         #endregion
     }
 }
+
 
