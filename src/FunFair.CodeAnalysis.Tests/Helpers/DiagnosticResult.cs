@@ -37,6 +37,3 @@ namespace FunFair.CodeAnalysis.Tests.Helpers
                 : -1;
     }
 }
-
-
-

@@ -161,6 +161,3 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
         }
     }
 }
-
-
-

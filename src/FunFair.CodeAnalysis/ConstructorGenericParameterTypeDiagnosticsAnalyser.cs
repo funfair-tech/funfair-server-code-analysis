@@ -18,20 +18,12 @@ namespace FunFair.CodeAnalysis
 
         private static readonly TypeCheckSpec[] Specifications =
         {
-            new(ruleId: Rules.LoggerParametersOnBaseClassesShouldNotUseGenericLoggerCategory,
-                title: "ILogger parameters on base classes should not be ILogger<{0}> but ILogger",
-                message: "ILogger parameters on base classes should not be ILogger<{0}> but ILogger",
-                allowedSourceClass: "Microsoft.Extensions.Logging.ILogger",
-                prohibitedClass: "Microsoft.Extensions.Logging.ILogger<TCategoryName>",
-                isProtected: true,
-                matchTypeOnGenericParameters: false),
-            new(ruleId: Rules.LoggerParametersOnLeafClassesShouldUseGenericLoggerCategory,
-                title: "ILogger parameters on leaf classes should not be ILogger but ILogger<{0}>",
-                message: "ILogger parameters on leaf classes should not be ILogger but ILogger<{0}>",
-                allowedSourceClass: "Microsoft.Extensions.Logging.ILogger<TCategoryName>",
-                prohibitedClass: "Microsoft.Extensions.Logging.ILogger",
-                isProtected: false,
-                matchTypeOnGenericParameters: true)
+            new(ruleId: Rules.LoggerParametersOnBaseClassesShouldNotUseGenericLoggerCategory, title: "ILogger parameters on base classes should not be ILogger<{0}> but ILogger"
+                , message: "ILogger parameters on base classes should not be ILogger<{0}> but ILogger", allowedSourceClass: "Microsoft.Extensions.Logging.ILogger",
+                prohibitedClass: "Microsoft.Extensions.Logging.ILogger<TCategoryName>", isProtected: true, matchTypeOnGenericParameters: false),
+            new(ruleId: Rules.LoggerParametersOnLeafClassesShouldUseGenericLoggerCategory, title: "ILogger parameters on leaf classes should not be ILogger but ILogger<{0}>",
+                message: "ILogger parameters on leaf classes should not be ILogger but ILogger<{0}>", allowedSourceClass: "Microsoft.Extensions.Logging.ILogger<TCategoryName>",
+                prohibitedClass: "Microsoft.Extensions.Logging.ILogger", isProtected: false, matchTypeOnGenericParameters: true)
         };
 
         private static readonly DiagnosticDescriptor MissMatchTypes = RuleHelpers.CreateRule(code: Rules.GenericTypeMissMatch,
