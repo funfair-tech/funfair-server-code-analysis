@@ -320,6 +320,3 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
         #endregion
     }
 }
-
-
-

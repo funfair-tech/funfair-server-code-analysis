@@ -33,6 +33,3 @@ namespace FunFair.CodeAnalysis.Tests.Helpers
         public int Column { get; }
     }
 }
-
-
-

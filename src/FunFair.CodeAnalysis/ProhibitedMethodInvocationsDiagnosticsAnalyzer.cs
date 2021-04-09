@@ -21,18 +21,10 @@ namespace FunFair.CodeAnalysis
 
         private static readonly ProhibitedMethodsSpec[] BannedMethods =
         {
-            new(ruleId: Rules.RuleDontUseAssertTrueWithoutMessage,
-                title: @"Avoid use of assert method without message",
-                message: "Only use Assert.True with message parameter",
-                sourceClass: "Xunit.Assert",
-                bannedMethod: "True",
-                new[] {new[] {"bool"}}),
-            new(ruleId: Rules.RuleDontUseAssertFalseWithoutMessage,
-                title: @"Avoid use of assert method without message",
-                message: "Only use Assert.False with message parameter",
-                sourceClass: "Xunit.Assert",
-                bannedMethod: "False",
-                new[] {new[] {"bool"}})
+            new(ruleId: Rules.RuleDontUseAssertTrueWithoutMessage, title: @"Avoid use of assert method without message", message: "Only use Assert.True with message parameter",
+                sourceClass: "Xunit.Assert", bannedMethod: "True", new[] {new[] {"bool"}}),
+            new(ruleId: Rules.RuleDontUseAssertFalseWithoutMessage, title: @"Avoid use of assert method without message", message:
+                "Only use Assert.False with message parameter", sourceClass: "Xunit.Assert", bannedMethod: "False", new[] {new[] {"bool"}})
         };
 
         /// <inheritdoc />

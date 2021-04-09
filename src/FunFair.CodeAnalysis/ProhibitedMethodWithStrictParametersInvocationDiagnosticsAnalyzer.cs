@@ -20,12 +20,18 @@ namespace FunFair.CodeAnalysis
 
         private static readonly ProhibitedMethodsSpec[] ForcedMethods =
         {
-            new(ruleId: Rules.RuleDontUseSubstituteReceivedWithZeroNumberOfCalls,
-                title: "Avoid use of received with zero call count",
-                message: "Only use Received with expected call count greater than 0, use DidNotReceived instead if 0 call received expected",
-                sourceClass: "NSubstitute.SubstituteExtensions",
-                forcedMethod: "Received",
-                new[] {new[] {new ParameterSpec(name: "requiredNumberOfCalls", type: "NumericLiteralExpression", value: "0")}})
+            new(ruleId: Rules.RuleDontUseSubstituteReceivedWithZeroNumberOfCalls, title: "Avoid use of received with zero call count", message:
+                "Only use Received with expected call count greater than 0, use DidNotReceived instead if 0 call received expected", sourceClass:
+                "NSubstitute.SubstituteExtensions", forcedMethod: "Received", new[]
+                                                                              {
+                                                                                  new[]
+                                                                                  {
+                                                                                      new ParameterSpec(
+                                                                                          name: "requiredNumberOfCalls",
+                                                                                          type: "NumericLiteralExpression",
+                                                                                          value: "0")
+                                                                                  }
+                                                                              })
         };
 
         /// <inheritdoc />

@@ -21,46 +21,25 @@ namespace FunFair.CodeAnalysis
 
         private static readonly ProhibitedMethodsSpec[] BannedMethods =
         {
-            new(ruleId: Rules.RuleDontUseDateTimeNow,
-                title: @"Avoid use of DateTime methods",
-                message: "Call IDateTimeSource.UtcNow() rather than DateTime.Now",
-                sourceClass: "System.DateTime",
-                bannedMethod: "Now"),
-            new(ruleId: Rules.RuleDontUseDateTimeUtcNow,
-                title: @"Avoid use of DateTime methods",
-                message: "Call IDateTimeSource.UtcNow() rather than DateTime.UtcNow",
-                sourceClass: "System.DateTime",
-                bannedMethod: "UtcNow"),
-            new(ruleId: Rules.RuleDontUseDateTimeToday,
-                title: @"Avoid use of DateTime methods",
-                message: "Call IDateTimeSource.UtcNow().Date rather than DateTime.Today",
-                sourceClass: "System.DateTime",
-                bannedMethod: "Today"),
-            new(ruleId: Rules.RuleDontUseDateTimeOffsetNow,
-                title: @"Avoid use of DateTime methods",
-                message: "Call IDateTimeSource.UtcNow() rather than DateTimeOffset.Now",
-                sourceClass: "System.DateTimeOffset",
-                bannedMethod: "Now"),
-            new(ruleId: Rules.RuleDontUseDateTimeOffsetUtcNow,
-                title: @"Avoid use of DateTime methods",
-                message: "Call IDateTimeSource.UtcNow() rather than DateTimeOffset.UtcNow",
-                sourceClass: "System.DateTimeOffset",
-                bannedMethod: "UtcNow"),
-            new(ruleId: Rules.RuleDontUseArbitrarySql,
-                title: @"Avoid use of inline SQL statements",
-                message: "Only use ISqlServerDatabase.ExecuteArbitrarySqlAsync in integration tests",
-                sourceClass: "FunFair.Common.Data.ISqlServerDatabase",
-                bannedMethod: "ExecuteArbitrarySqlAsync"),
-            new(ruleId: Rules.RuleDontUseArbitrarySqlForQueries,
-                title: @"Avoid use of inline SQL statements",
-                message: "Only use ISqlServerDatabase.QueryArbitrarySqlAsync in integration tests",
-                sourceClass: "FunFair.Common.Data.ISqlServerDatabase",
-                bannedMethod: "QueryArbitrarySqlAsync"),
-            new(ruleId: Rules.RuleDontReadRemoteIpAddressDirectlyFromConnection,
-                title: @"Use RemoteIpAddressRetriever instead of getting RemoteIpAddress directly from the HttpRequest",
-                message: "Use RemoteIpAddressRetriever",
-                sourceClass: "Microsoft.AspNetCore.Http.ConnectionInfo",
-                bannedMethod: "RemoteIpAddress")
+            new(ruleId: Rules.RuleDontUseDateTimeNow, title: @"Avoid use of DateTime methods", message: "Call IDateTimeSource.UtcNow() rather than DateTime.Now", sourceClass:
+                "System.DateTime", bannedMethod: "Now"),
+            new(ruleId: Rules.RuleDontUseDateTimeUtcNow, title: @"Avoid use of DateTime methods", message: "Call IDateTimeSource.UtcNow() rather than DateTime.UtcNow",
+                sourceClass: "System.DateTime", bannedMethod: "UtcNow"),
+            new(ruleId: Rules.RuleDontUseDateTimeToday, title: @"Avoid use of DateTime methods", message: "Call IDateTimeSource.UtcNow().Date rather than DateTime.Today",
+                sourceClass: "System.DateTime", bannedMethod: "Today"),
+            new(ruleId: Rules.RuleDontUseDateTimeOffsetNow, title: @"Avoid use of DateTime methods", message: "Call IDateTimeSource.UtcNow() rather than DateTimeOffset.Now",
+                sourceClass: "System.DateTimeOffset", bannedMethod: "Now"),
+            new(ruleId: Rules.RuleDontUseDateTimeOffsetUtcNow, title: @"Avoid use of DateTime methods", message:
+                "Call IDateTimeSource.UtcNow() rather than DateTimeOffset.UtcNow", sourceClass: "System.DateTimeOffset", bannedMethod: "UtcNow"),
+            new(ruleId: Rules.RuleDontUseArbitrarySql, title: @"Avoid use of inline SQL statements", message:
+                "Only use ISqlServerDatabase.ExecuteArbitrarySqlAsync in integration tests", sourceClass: "FunFair.Common.Data.ISqlServerDatabase", bannedMethod:
+                "ExecuteArbitrarySqlAsync"),
+            new(ruleId: Rules.RuleDontUseArbitrarySqlForQueries, title: @"Avoid use of inline SQL statements", message:
+                "Only use ISqlServerDatabase.QueryArbitrarySqlAsync in integration tests", sourceClass: "FunFair.Common.Data.ISqlServerDatabase", bannedMethod:
+                "QueryArbitrarySqlAsync"),
+            new(ruleId: Rules.RuleDontReadRemoteIpAddressDirectlyFromConnection, title:
+                @"Use RemoteIpAddressRetriever instead of getting RemoteIpAddress directly from the HttpRequest", message: "Use RemoteIpAddressRetriever", sourceClass:
+                "Microsoft.AspNetCore.Http.ConnectionInfo", bannedMethod: "RemoteIpAddress")
         };
 
         /// <inheritdoc />
