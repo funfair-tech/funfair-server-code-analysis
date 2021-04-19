@@ -21,17 +21,8 @@ namespace FunFair.CodeAnalysis
         private static readonly ProhibitedMethodsSpec[] ForcedMethods =
         {
             new(ruleId: Rules.RuleDontUseSubstituteReceivedWithZeroNumberOfCalls, title: "Avoid use of received with zero call count", message:
-                "Only use Received with expected call count greater than 0, use DidNotReceived instead if 0 call received expected", sourceClass:
-                "NSubstitute.SubstituteExtensions", forcedMethod: "Received", new[]
-                                                                              {
-                                                                                  new[]
-                                                                                  {
-                                                                                      new ParameterSpec(
-                                                                                          name: "requiredNumberOfCalls",
-                                                                                          type: "NumericLiteralExpression",
-                                                                                          value: "0")
-                                                                                  }
-                                                                              })
+                "Only use Received with expected call count greater than 0, use DidNotReceived instead if 0 call received expected", sourceClass: "NSubstitute.SubstituteExtensions", forcedMethod:
+                "Received", new[] {new[] {new ParameterSpec(name: "requiredNumberOfCalls", type: "NumericLiteralExpression", value: "0")}})
         };
 
         /// <inheritdoc />
@@ -112,12 +103,7 @@ namespace FunFair.CodeAnalysis
                         continue;
                     }
 
-                    ArgumentSyntax? argument = arguments.Arguments[parameter.Ordinal];
-
-                    if (argument == null)
-                    {
-                        continue;
-                    }
+                    ArgumentSyntax argument = arguments.Arguments[parameter.Ordinal];
 
                     if (argument.Expression.ToFullString() == parameterSpec.Value && argument.Expression.Kind()
                                                                                              .ToString() == parameterSpec.Type)
@@ -148,12 +134,7 @@ namespace FunFair.CodeAnalysis
 
         private sealed class ProhibitedMethodsSpec
         {
-            public ProhibitedMethodsSpec(string ruleId,
-                                         string title,
-                                         string message,
-                                         string sourceClass,
-                                         string forcedMethod,
-                                         IEnumerable<IEnumerable<ParameterSpec>> bannedSignatures)
+            public ProhibitedMethodsSpec(string ruleId, string title, string message, string sourceClass, string forcedMethod, IEnumerable<IEnumerable<ParameterSpec>> bannedSignatures)
             {
                 this.SourceClass = sourceClass;
                 this.ForcedMethod = forcedMethod;
