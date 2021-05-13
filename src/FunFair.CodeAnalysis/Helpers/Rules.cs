@@ -30,5 +30,7 @@ namespace FunFair.CodeAnalysis.Helpers
         public const string RuleDontReadRemoteIpAddressDirectlyFromConnection = @"FFS0026";
         public const string RuleSuppressMessageMustHaveJustification = @"FFS0027";
         public const string RuleRecordsShouldBeSealed = @"FFS0028";
+        public const string MockBaseClassInstancesMustBeInternal = @"FFS0029";
+        public const string MockBaseClassInstancesMustBeSealed = @"FFS0030";
     }
 }

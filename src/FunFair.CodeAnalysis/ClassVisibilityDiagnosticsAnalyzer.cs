@@ -1,4 +1,6 @@
-﻿using System.Collections.Immutable;
+﻿using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Linq;
 using FunFair.CodeAnalysis.Helpers;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -15,13 +17,24 @@ namespace FunFair.CodeAnalysis
     {
         private const string CATEGORY = "Classes";
 
-        private static readonly DiagnosticDescriptor Rule = RuleHelpers.CreateRule(code: Rules.RuleTestClassesShouldBeStaticSealedOrAbstractDerivedFromTestBase,
-                                                                                   category: CATEGORY,
-                                                                                   title: "Test classes should be derived from TestBase",
-                                                                                   message: "Test classes should be derived from TestBase");
+        private static readonly IReadOnlyList<ConfiguredClass> Classes = new[]
+                                                                         {
+                                                                             new ConfiguredClass(ruleId: Rules.MockBaseClassInstancesMustBeInternal,
+                                                                                                 title: "MockBase<T> instances must be internal",
+                                                                                                 message: "MockBase<T> instances must be internal",
+                                                                                                 className: "FunFair.Test.Common.Mocks.MockBase<T>",
+                                                                                                 visibility: SyntaxKind.InternalKeyword),
+                                                                             new ConfiguredClass(ruleId: Rules.MockBaseClassInstancesMustBeSealed,
+                                                                                                 title: "MockBase<T> instances must be sealed",
+                                                                                                 message: "MockBase<T> instances must be sealed",
+                                                                                                 className: "FunFair.Test.Common.Mocks.MockBase<T>",
+                                                                                                 visibility: SyntaxKind.SealedKeyword)
+                                                                         };
 
         /// <inheritdoc />
-        public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => new[] {Rule}.ToImmutableArray();
+        public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
+            Classes.Select(c => c.Rule)
+                   .ToImmutableArray();
 
         /// <inheritdoc />
         public override void Initialize(AnalysisContext context)
@@ -44,32 +57,61 @@ namespace FunFair.CodeAnalysis
                 return;
             }
 
-            if (!IsDerivedFromMockBase(syntaxNodeAnalysisContext))
+            foreach (ConfiguredClass classDefinition in Classes)
             {
-                return;
+                if (classDefinition.TypeMatchesClass(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext) && !classDefinition.HasCorrectClassModifier(classDeclarationSyntax: classDeclarationSyntax))
+                {
+                    syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(descriptor: classDefinition.Rule, classDeclarationSyntax.GetLocation()));
+                }
             }
-
-            syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(descriptor: Rule, classDeclarationSyntax.GetLocation()));
         }
 
-        private static bool IsDerivedFromMockBase(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
+        private sealed class ConfiguredClass
         {
-            ISymbol? containingType = syntaxNodeAnalysisContext.ContainingSymbol;
-
-            if (containingType == null)
+            public ConfiguredClass(string ruleId, string title, string message, string className, SyntaxKind visibility)
             {
+                this.ClassName = className;
+                this.Visibility = visibility;
+                this.Rule = RuleHelpers.CreateRule(code: ruleId, category: CATEGORY, title: title, message: message);
+            }
+
+            public DiagnosticDescriptor Rule { get; }
+
+            private string ClassName { get; }
+
+            private SyntaxKind Visibility { get; }
+
+            public bool TypeMatchesClass(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
+            {
+                INamedTypeSymbol? containingType = syntaxNodeAnalysisContext.ContainingSymbol as INamedTypeSymbol;
+
+                if (containingType == null)
+                {
+                    return false;
+                }
+
+                for (INamedTypeSymbol? parent = containingType.BaseType; parent != null; parent = parent.BaseType)
+                {
+                    INamedTypeSymbol originalDefinition = parent.OriginalDefinition;
+
+                    if (SymbolDisplay.ToDisplayString(originalDefinition) == this.ClassName)
+                    {
+                        return true;
+                    }
+                }
+
                 return false;
             }
 
-            for (INamedTypeSymbol? parent = containingType.ContainingType; parent != null; parent = parent.BaseType)
+            public bool HasCorrectClassModifier(ClassDeclarationSyntax classDeclarationSyntax)
             {
-                if (SymbolDisplay.ToDisplayString(parent) == "FunFair.Test.Common.MockBase<>")
+                static bool MatchesVisibility(ConfiguredClass classDefinition, SyntaxToken syntaxToken)
                 {
-                    return true;
+                    return syntaxToken.Kind() == classDefinition.Visibility;
                 }
-            }
 
-            return false;
+                return classDeclarationSyntax.Modifiers.Any(modifier => MatchesVisibility(this, syntaxToken: modifier));
+            }
         }
     }
 }
