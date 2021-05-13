@@ -1,4 +1,4 @@
-# funfair-server-codeanalyis
+# funfair-server-codeanalysis
 Static Code analysis Repo for C# projects
 
 ## Changelog
