@@ -59,7 +59,8 @@ namespace FunFair.CodeAnalysis
 
             foreach (ConfiguredClass classDefinition in Classes)
             {
-                if (classDefinition.TypeMatchesClass(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext) && !classDefinition.HasCorrectClassModifier(classDeclarationSyntax: classDeclarationSyntax))
+                if (classDefinition.TypeMatchesClass(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext) &&
+                    !classDefinition.HasCorrectClassModifier(classDeclarationSyntax: classDeclarationSyntax))
                 {
                     syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(descriptor: classDefinition.Rule, classDeclarationSyntax.GetLocation()));
                 }
