@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <!-- Visual Studio 2019 is incapable of running .net standard 2.1 ! -->
         <OutputType>Library</OutputType>
@@ -41,7 +41,7 @@
         <PackageReference Include="AsyncFixer" Version="1.5.1" PrivateAssets="All" />
         <PackageReference Include="DisableDateTimeNow" Version="1.0.5883.39470" PrivateAssets="All" />
         <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="16.10.56" PrivateAssets="All" />
-        <PackageReference Include="SonarAnalyzer.CSharp" Version="8.23.0.32424" PrivateAssets="All" />
+        <PackageReference Include="SonarAnalyzer.CSharp" Version="8.24.0.32949" PrivateAssets="All" />
         <PackageReference Include="Roslynator.Analyzers" Version="3.1.0" PrivateAssets="All" />
         <PackageReference Include="SourceLink.Create.CommandLine" Version="2.8.3" PrivateAssets="All" />
         <PackageReference Include="ToStringWithoutOverrideAnalyzer" Version="0.6.0" PrivateAssets="All" />
