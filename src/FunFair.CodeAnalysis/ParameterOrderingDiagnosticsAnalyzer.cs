@@ -48,45 +48,49 @@ namespace FunFair.CodeAnalysis
 
         private void MustBeInASaneOrder(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
         {
-            if (syntaxNodeAnalysisContext.Node is ParameterListSyntax parameterList)
+            if (syntaxNodeAnalysisContext.Node is not ParameterListSyntax parameterList)
             {
-                var parameters = parameterList.Parameters.Select((parameter, index) => new
-                                                                                       {
-                                                                                           Parameter = parameter,
-                                                                                           Index = index,
-                                                                                           FullTypeName = ParameterHelpers.GetFullTypeName(
-                                                                                               syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
-                                                                                               parameterSyntax: parameter)
-                                                                                       })
-                                              .ToArray();
+                return;
+            }
 
-                List<string> matchedEndings = new();
+            var parameters = parameterList.Parameters.Select((parameter, index) => new
+                                                                                   {
+                                                                                       Parameter = parameter,
+                                                                                       Index = index,
+                                                                                       FullTypeName = ParameterHelpers.GetFullTypeName(
+                                                                                           syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
+                                                                                           parameterSyntax: parameter)
+                                                                                   })
+                                          .ToArray();
 
-                foreach (var parameterType in PreferredEndingOrdering.Reverse())
+            List<string> matchedEndings = new();
+
+            foreach (var parameterType in PreferredEndingOrdering.Reverse())
+            {
+                var matchingParameter = parameters.FirstOrDefault(x => x.FullTypeName == parameterType);
+
+                if (matchingParameter == null)
                 {
-                    var matchingParameter = parameters.FirstOrDefault(x => x.FullTypeName == parameterType);
+                    continue;
+                }
 
-                    if (matchingParameter != null)
-                    {
-                        if (matchingParameter.Parameter.Modifiers.Any(pm => pm.Kind() == SyntaxKind.ThisKeyword))
-                        {
-                            // Ignore parameters that are extension methods - they have to be the first parameter
-                            continue;
-                        }
+                if (matchingParameter.Parameter.Modifiers.Any(pm => pm.Kind() == SyntaxKind.ThisKeyword))
+                {
+                    // Ignore parameters that are extension methods - they have to be the first parameter
+                    continue;
+                }
 
-                        matchedEndings.Add(parameterType);
+                matchedEndings.Add(parameterType);
 
-                        int parameterIndex = matchingParameter.Index;
-                        int requiredParameterIndex = parameters.Length - matchedEndings.Count;
+                int parameterIndex = matchingParameter.Index;
+                int requiredParameterIndex = parameters.Length - matchedEndings.Count;
 
-                        if (parameterIndex != requiredParameterIndex)
-                        {
-                            syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(descriptor: Rule,
-                                                                                         matchingParameter.Parameter.GetLocation(),
-                                                                                         matchingParameter.Parameter.Identifier.Text,
-                                                                                         requiredParameterIndex + 1));
-                        }
-                    }
+                if (parameterIndex != requiredParameterIndex)
+                {
+                    syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(descriptor: Rule,
+                                                                                 matchingParameter.Parameter.GetLocation(),
+                                                                                 matchingParameter.Parameter.Identifier.Text,
+                                                                                 requiredParameterIndex + 1));
                 }
             }
         }
