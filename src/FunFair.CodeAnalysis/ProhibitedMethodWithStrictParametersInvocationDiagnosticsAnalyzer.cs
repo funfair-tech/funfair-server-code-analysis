@@ -21,17 +21,8 @@ namespace FunFair.CodeAnalysis
         private static readonly ProhibitedMethodsSpec[] ForcedMethods =
         {
             new(ruleId: Rules.RuleDontUseSubstituteReceivedWithZeroNumberOfCalls, title: "Avoid use of received with zero call count", message:
-                "Only use Received with expected call count greater than 0, use DidNotReceived instead if 0 call received expected", sourceClass:
-                "NSubstitute.SubstituteExtensions", forcedMethod: "Received", new[]
-                                                                              {
-                                                                                  new[]
-                                                                                  {
-                                                                                      new ParameterSpec(
-                                                                                          name: "requiredNumberOfCalls",
-                                                                                          type: "NumericLiteralExpression",
-                                                                                          value: "0")
-                                                                                  }
-                                                                              })
+                "Only use Received with expected call count greater than 0, use DidNotReceived instead if 0 call received expected", sourceClass: "NSubstitute.SubstituteExtensions", forcedMethod:
+                "Received", new[] {new[] {new ParameterSpec(name: "requiredNumberOfCalls", type: "NumericLiteralExpression", value: "0")}})
         };
 
         /// <inheritdoc />
@@ -101,28 +92,14 @@ namespace FunFair.CodeAnalysis
                 return true;
             }
 
-            foreach (IEnumerable<ParameterSpec> bannedSignature in prohibitedMethod.BannedSignatures)
-            {
-                foreach (ParameterSpec? parameterSpec in bannedSignature)
-                {
-                    IParameterSymbol? parameter = parameters.FirstOrDefault(predicate: param => param.MetadataName == parameterSpec.Name);
-
-                    if (parameter == null)
-                    {
-                        continue;
-                    }
-
-                    ArgumentSyntax argument = arguments.Arguments[parameter.Ordinal];
-
-                    if (argument.Expression.ToFullString() == parameterSpec.Value && argument.Expression.Kind()
-                                                                                             .ToString() == parameterSpec.Type)
-                    {
-                        return false;
-                    }
-                }
-            }
-
-            return true;
+            return !(from bannedSignature in prohibitedMethod.BannedSignatures
+                     from parameterSpec in bannedSignature
+                     let parameter = parameters.FirstOrDefault(predicate: param => param.MetadataName == parameterSpec.Name)
+                     where parameter != null
+                     let argument = arguments.Arguments[parameter.Ordinal]
+                     where argument.Expression.ToFullString() == parameterSpec.Value && argument.Expression.Kind()
+                                                                                                .ToString() == parameterSpec.Type
+                     select parameterSpec).Any();
         }
 
         private sealed class ParameterSpec
@@ -143,12 +120,7 @@ namespace FunFair.CodeAnalysis
 
         private sealed class ProhibitedMethodsSpec
         {
-            public ProhibitedMethodsSpec(string ruleId,
-                                         string title,
-                                         string message,
-                                         string sourceClass,
-                                         string forcedMethod,
-                                         IEnumerable<IEnumerable<ParameterSpec>> bannedSignatures)
+            public ProhibitedMethodsSpec(string ruleId, string title, string message, string sourceClass, string forcedMethod, IEnumerable<IEnumerable<ParameterSpec>> bannedSignatures)
             {
                 this.SourceClass = sourceClass;
                 this.ForcedMethod = forcedMethod;
