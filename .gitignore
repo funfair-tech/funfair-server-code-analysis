@@ -267,10 +267,6 @@ paket-files/
 # FAKE - F# Make
 .fake/
 
-# JetBrains Rider
-.idea/
-*.sln.iml
-
 # CodeRush
 .cr/
 
@@ -310,3 +306,4 @@ src/Content
 src/Data
 
 /.gtm/
+.config
