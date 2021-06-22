@@ -43,10 +43,10 @@ namespace FunFair.CodeAnalysis
 
         private void PerformCheck(CompilationStartAnalysisContext compilationStartContext)
         {
-            compilationStartContext.RegisterSyntaxNodeAction(action: this.MustBeInASaneOrder, SyntaxKind.ParameterList);
+            compilationStartContext.RegisterSyntaxNodeAction(action: MustBeInASaneOrder, SyntaxKind.ParameterList);
         }
 
-        private void MustBeInASaneOrder(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
+        private static void MustBeInASaneOrder(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
         {
             if (syntaxNodeAnalysisContext.Node is not ParameterListSyntax parameterList)
             {
