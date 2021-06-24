@@ -18,12 +18,12 @@ namespace FunFair.CodeAnalysis
 
         private static readonly TypeCheckSpec[] Specifications =
         {
-            new(ruleId: Rules.LoggerParametersOnBaseClassesShouldNotUseGenericLoggerCategory, title: "ILogger parameters on base classes should not be ILogger<{0}> but ILogger", message:
-                "ILogger parameters on base classes should not be ILogger<{0}> but ILogger", allowedSourceClass: "Microsoft.Extensions.Logging.ILogger", prohibitedClass:
-                "Microsoft.Extensions.Logging.ILogger<TCategoryName>", isProtected: true, matchTypeOnGenericParameters: false),
-            new(ruleId: Rules.LoggerParametersOnLeafClassesShouldUseGenericLoggerCategory, title: "ILogger parameters on leaf classes should not be ILogger but ILogger<{0}>", message:
-                "ILogger parameters on leaf classes should not be ILogger but ILogger<{0}>", allowedSourceClass: "Microsoft.Extensions.Logging.ILogger<TCategoryName>", prohibitedClass:
-                "Microsoft.Extensions.Logging.ILogger", isProtected: false, matchTypeOnGenericParameters: true)
+            new(ruleId: Rules.LoggerParametersOnBaseClassesShouldNotUseGenericLoggerCategory, title: "ILogger parameters on base classes should not be ILogger<{0}> but ILogger"
+                , message: "ILogger parameters on base classes should not be ILogger<{0}> but ILogger", allowedSourceClass: "Microsoft.Extensions.Logging.ILogger",
+                prohibitedClass: "Microsoft.Extensions.Logging.ILogger<TCategoryName>", isProtected: true, matchTypeOnGenericParameters: false),
+            new(ruleId: Rules.LoggerParametersOnLeafClassesShouldUseGenericLoggerCategory, title: "ILogger parameters on leaf classes should not be ILogger but ILogger<{0}>",
+                message: "ILogger parameters on leaf classes should not be ILogger but ILogger<{0}>", allowedSourceClass: "Microsoft.Extensions.Logging.ILogger<TCategoryName>",
+                prohibitedClass: "Microsoft.Extensions.Logging.ILogger", isProtected: false, matchTypeOnGenericParameters: true)
         };
 
         private static readonly DiagnosticDescriptor MissMatchTypes = RuleHelpers.CreateRule(code: Rules.GenericTypeMissMatch,
@@ -85,7 +85,8 @@ namespace FunFair.CodeAnalysis
                 return;
             }
 
-            TypeCheckSpec? rule = Specifications.FirstOrDefault(ns => ns.IsProtected == isProtected && (ns.AllowedSourceClass == fullTypeName || ns.ProhibitedClass == fullTypeName));
+            TypeCheckSpec? rule =
+                Specifications.FirstOrDefault(ns => ns.IsProtected == isProtected && (ns.AllowedSourceClass == fullTypeName || ns.ProhibitedClass == fullTypeName));
 
             if (rule == null)
             {
@@ -96,7 +97,10 @@ namespace FunFair.CodeAnalysis
             {
                 if (rule.MatchTypeOnGenericParameters)
                 {
-                    CheckGenericParameterTypeMatch(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, parameterSyntax: parameterSyntax, className: className, fullTypeName: fullTypeName);
+                    CheckGenericParameterTypeMatch(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
+                                                   parameterSyntax: parameterSyntax,
+                                                   className: className,
+                                                   fullTypeName: fullTypeName);
                 }
 
                 return;
@@ -108,7 +112,10 @@ namespace FunFair.CodeAnalysis
             }
         }
 
-        private static void CheckGenericParameterTypeMatch(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, ParameterSyntax parameterSyntax, string className, string fullTypeName)
+        private static void CheckGenericParameterTypeMatch(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext,
+                                                           ParameterSyntax parameterSyntax,
+                                                           string className,
+                                                           string fullTypeName)
         {
             IParameterSymbol? ds = syntaxNodeAnalysisContext.SemanticModel.GetDeclaredSymbol(parameterSyntax);
 
@@ -137,7 +144,13 @@ namespace FunFair.CodeAnalysis
 
         private sealed class TypeCheckSpec
         {
-            public TypeCheckSpec(string ruleId, string title, string message, string allowedSourceClass, string prohibitedClass, bool isProtected, bool matchTypeOnGenericParameters)
+            public TypeCheckSpec(string ruleId,
+                                 string title,
+                                 string message,
+                                 string allowedSourceClass,
+                                 string prohibitedClass,
+                                 bool isProtected,
+                                 bool matchTypeOnGenericParameters)
             {
                 this.AllowedSourceClass = allowedSourceClass;
                 this.ProhibitedClass = prohibitedClass;
