@@ -13,6 +13,7 @@ ProjectSection(SolutionItems) = preProject
 	global.json = global.json
 	..\CHANGELOG.md = ..\CHANGELOG.md
 	..\README.md = ..\README.md
+	FunFair.props = FunFair.props
 EndProjectSection
 EndProject
 Global
