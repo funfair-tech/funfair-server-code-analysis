@@ -10,6 +10,6 @@
     <RepositoryType>git</RepositoryType>
     <PackageProjectUrl>$(RepositoryUrl)</PackageProjectUrl>
     <PackageLicenseUrl>$(RepositoryUrl)/blob/master/LICENSE.md</PackageLicenseUrl>
-    <PackageIconUrl>https://raw.githubusercontent.com/funfair-tech/funfair-server-code-analysis/master/src/packageicon.png</PackageIconUrl>
+    <PackageIconUrl>https://avatars.githubusercontent.com/u/29401895</PackageIconUrl>
   </PropertyGroup>
 </Project>
