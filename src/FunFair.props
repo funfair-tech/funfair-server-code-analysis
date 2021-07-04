@@ -10,6 +10,6 @@
     <RepositoryType>git</RepositoryType>
     <PackageProjectUrl>$(RepositoryUrl)</PackageProjectUrl>
     <PackageLicenseUrl>$(RepositoryUrl)/blob/master/LICENSE.md</PackageLicenseUrl>
-    <PackageIconUrl>https://www.nuget.org/profiles/FunFair/avatar?imageSize=64</PackageIconUrl>
+    <PackageIconUrl>https://raw.githubusercontent.com/funfair-tech/funfair-server-code-analysis/master/src/packageicon.png</PackageIconUrl>
   </PropertyGroup>
 </Project>
