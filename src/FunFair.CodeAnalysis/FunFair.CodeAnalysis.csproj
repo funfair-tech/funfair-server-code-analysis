@@ -27,7 +27,6 @@
   </PropertyGroup>
   <PropertyGroup>
     <PackageIcon>packageicon.png</PackageIcon>
-    <PackageIconUrl>https://github.com/funfair-tech/funfair-server-code-analysis/blob/master/src/packageicon.png</PackageIconUrl>
   </PropertyGroup>
   <PropertyGroup>
     <AnalysisLevel>latest</AnalysisLevel>
