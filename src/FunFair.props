@@ -9,7 +9,7 @@
   <PropertyGroup>
     <RepositoryType>git</RepositoryType>
     <PackageProjectUrl>$(RepositoryUrl)</PackageProjectUrl>
-    <PackageLicenseUrl>$(RepositoryUrl)/blob/master/LICENSE.md</PackageLicenseUrl>
+<!--    <PackageLicenseUrl>$(RepositoryUrl)/blob/master/LICENSE.md</PackageLicenseUrl>-->
     <PackageIconUrl>https://avatars.githubusercontent.com/u/29401895</PackageIconUrl>
   </PropertyGroup>
 </Project>
