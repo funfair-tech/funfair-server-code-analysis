@@ -9,6 +9,14 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 ### Added
 ### Fixed
 ### Changed
+### Removed
+### Deployment Changes
+
+<!--
+Releases that have at least been deployed to staging, BUT NOT necessarily released to live.  Changes should be moved from [Unreleased] into here as they are merged into the appropriate release branch
+-->
+## [5.2.1] - 2021-07-04
+### Changed
 - FF-1429 - Updated SonarAnalyzer.CSharp to 8.23.0.32424
 - FF-1429 - Updated Microsoft.NET.Test.Sdk to 16.10.0
 - FF-1429 - Updated Microsoft.VisualStudio.Threading.Analyzers to 16.10.56
@@ -17,12 +25,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 - FF-1429 - Updated Microsoft.CodeAnalysis to 3.10.0
 - FF-1429 - Updated SonarAnalyzer.CSharp to 8.25.0.33663
 - FF-1429 - Updated FunFair.Test.Common to 5.4.0.1031
-### Removed
-### Deployment Changes
 
-<!--
-Releases that have at least been deployed to staging, BUT NOT necessarily released to live.  Changes should be moved from [Unreleased] into here as they are merged into the appropriate release branch
--->
 ## [5.2.0] - 2021-05-13
 ### Added
 - Checks on classes that are derived from MockBase
