@@ -20,7 +20,7 @@
   <PropertyGroup>
     <RepositoryUrl>https://github.com/funfair-tech/funfair-server-code-analysis</RepositoryUrl>
     <NeutralLanguage>en-GB</NeutralLanguage>
-    <Description>Code analysis rules</Description>
+    <Description>Code analysis rules that are used throught FunFair dotnet packages to pick up common issues that are encountered.</Description>
     <PackageTags>FunFair CodeAnalysis, CSharp, Roslyn, analyzers</PackageTags>
     <NoPackageAnalysis>true</NoPackageAnalysis>
     <DevelopmentDependency>true</DevelopmentDependency>
