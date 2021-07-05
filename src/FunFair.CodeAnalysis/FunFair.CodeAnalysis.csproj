@@ -16,7 +16,7 @@
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(MSBuildProjectName).xml</DocumentationFile>
   </PropertyGroup>
-  <Import Project="$(SolutionDir)\FunFair.props" />
+  <Import Project="$(SolutionDir)FunFair.props"/>
   <PropertyGroup>
     <RepositoryUrl>https://github.com/funfair-tech/funfair-server-code-analysis</RepositoryUrl>
     <NeutralLanguage>en-GB</NeutralLanguage>
