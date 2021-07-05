@@ -26,9 +26,6 @@
     <DevelopmentDependency>true</DevelopmentDependency>
   </PropertyGroup>
   <PropertyGroup>
-    <PackageIcon Condition="Exists('$(Solution)\ethereumconfiguration-local.json')">packageicon.png</PackageIcon>
-  </PropertyGroup>
-  <PropertyGroup>
     <AnalysisLevel>latest</AnalysisLevel>
     <AnalysisMode>AllEnabledByDefault</AnalysisMode>
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
@@ -50,7 +47,6 @@
     <PackageReference Include="ToStringWithoutOverrideAnalyzer" Version="0.6.0" PrivateAssets="All"/>
   </ItemGroup>
   <ItemGroup>
-    <None Include="$(SolutionDir)\packageicon.png" Pack="true" PackagePath="\" Condition="Exists('$(Solution)\ethereumconfiguration-local.json')"/>
     <None Update="tools\*.ps1" CopyToOutputDirectory="Always" Pack="true" PackagePath=""/>
     <None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false"/>
   </ItemGroup>
