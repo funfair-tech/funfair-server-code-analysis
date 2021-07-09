@@ -43,6 +43,6 @@ namespace FunFair.CodeAnalysis.Tests.Helpers
 
         public static readonly MetadataReference ConcurrentDictionary  = MetadataReference.CreateFromFile(typeof(ConcurrentDictionary<int,int>).Assembly.Location);
 
-        public static readonly MetadataReference NonBlockingConcurrentDictionary  = MetadataReference.CreateFromFile(typeof(NonBlocking.ConcurrentDictionary<int,int>).Assembly.Location);
+        public static readonly MetadataReference NonBlockingConcurrentDictionary  = MetadataReference.CreateFromFile(typeof(NonBlocking.ConcurrentDictionary<,>).Assembly.Location);
     }
 }

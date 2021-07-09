@@ -58,13 +58,14 @@ namespace FunFair.CodeAnalysis
             compilationStartContext.RegisterSyntaxNodeAction(action: LookForBannedClasses, SyntaxKind.VariableDeclarator);
             compilationStartContext.RegisterSyntaxNodeAction(action: LookForBannedClasses, SyntaxKind.MethodDeclaration);
             compilationStartContext.RegisterSyntaxNodeAction(action: LookForBannedClasses, SyntaxKind.PropertyDeclaration);
+            compilationStartContext.RegisterSyntaxNodeAction(action: LookForBannedClasses, SyntaxKind.ConstructorDeclaration);
         }
 
         private static void ReportAnyBannedSymbols(IReadOnlyCollection<INamedTypeSymbol> typeSymbols, SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
         {
             foreach (INamedTypeSymbol typeSymbol in typeSymbols)
             {
-                ProhibitedClassSpec? bannedClass = BannedClasses.FirstOrDefault(rule => StringComparer.OrdinalIgnoreCase.Equals(x: typeSymbol.ToFullyQualifiedName(), y: rule.SourceClass));
+                ProhibitedClassSpec? bannedClass = BannedClasses.FirstOrDefault(rule => StringComparer.OrdinalIgnoreCase.Equals(typeSymbol.ToFullyQualifiedName(), y: rule.SourceClass));
 
                 if (bannedClass != null)
                 {
@@ -120,26 +121,21 @@ namespace FunFair.CodeAnalysis
 
         private static IEnumerable<INamedTypeSymbol> GetSymbol(IEnumerable<ITypeSymbol> symbols, Dictionary<string, INamedTypeSymbol> cachedSymbols)
         {
-            return symbols.Select(symbol => GetSymbol(symbol: symbol, cachedSymbols: cachedSymbols))
+            return symbols.Select(symbol => GetSymbol(typeSymbol: symbol, cachedSymbols: cachedSymbols))
                           .Where(symbol => symbol != null)!;
         }
 
         /// <summary>
         ///     Get symbol from list of defined banned classes
         /// </summary>
-        /// <param name="symbol">Symbol to get</param>
+        /// <param name="typeSymbol">Type symbol to get</param>
         /// <param name="cachedSymbols">The symbol cache</param>
         /// <returns></returns>
-        private static INamedTypeSymbol? GetSymbol(ITypeSymbol symbol, Dictionary<string, INamedTypeSymbol> cachedSymbols)
+        private static INamedTypeSymbol? GetSymbol(ITypeSymbol typeSymbol, Dictionary<string, INamedTypeSymbol> cachedSymbols)
         {
-            string typeName = symbol.ToFullyQualifiedName();
+            string typeName = typeSymbol.ToFullyQualifiedName();
 
-            if (cachedSymbols.ContainsKey(typeName))
-            {
-                return cachedSymbols[typeName];
-            }
-
-            return null;
+            return cachedSymbols.TryGetValue(key: typeName, out INamedTypeSymbol? symbol) ? symbol : null;
         }
 
         private sealed class ProhibitedClassSpec

@@ -15,7 +15,7 @@ namespace FunFair.CodeAnalysis.Tests
         }
 
         [Fact]
-        public Task AssertFalseWithMessageIsAllowedAsync()
+        public Task AssertFalseForNonBlockingConcurrentDictionaryAsync()
         {
             const string test = @"
      using NonBlocking;
@@ -151,6 +151,33 @@ namespace FunFair.CodeAnalysis.Tests
                                             Message = @"Use NonBlocking.ConcurrentDictionary  rather than System.Collections.Concurrent.ConcurrentDictionary",
                                             Severity = DiagnosticSeverity.Error,
                                             Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 8, column: 13)}
+                                        };
+
+            return this.VerifyCSharpDiagnosticAsync(source: test, new[] {WellKnownMetadataReferences.ConcurrentDictionary}, expected);
+        }
+
+        [Fact]
+        public Task AssertTrueForParameterInConstructorDeclarationWithMessageIsBannedAsync()
+        {
+            const string test = @"
+     using System.Collections.Concurrent;
+
+     namespace ConsoleApplication1
+     {
+         class TypeName
+         {
+             public TypeName(ConcurrentDictionary<int,int> dictionary)
+             {
+
+             }
+         }
+     }";
+            DiagnosticResult expected = new()
+                                        {
+                                            Id = "FFS0031",
+                                            Message = @"Use NonBlocking.ConcurrentDictionary  rather than System.Collections.Concurrent.ConcurrentDictionary",
+                                            Severity = DiagnosticSeverity.Error,
+                                            Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 8, column: 14)}
                                         };
 
             return this.VerifyCSharpDiagnosticAsync(source: test, new[] {WellKnownMetadataReferences.ConcurrentDictionary}, expected);
