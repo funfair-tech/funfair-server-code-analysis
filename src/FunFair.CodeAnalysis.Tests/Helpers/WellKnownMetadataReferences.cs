@@ -41,7 +41,7 @@ namespace FunFair.CodeAnalysis.Tests.Helpers
 
         public static readonly MetadataReference SuppressMessage = MetadataReference.CreateFromFile(typeof(SuppressMessageAttribute).Assembly.Location);
 
-        public static readonly MetadataReference ConcurrentDictionary  = MetadataReference.CreateFromFile(typeof(ConcurrentDictionary<int,int>).Assembly.Location);
+        public static readonly MetadataReference ConcurrentDictionary  = MetadataReference.CreateFromFile(typeof(ConcurrentDictionary<,>).Assembly.Location);
 
         public static readonly MetadataReference NonBlockingConcurrentDictionary  = MetadataReference.CreateFromFile(typeof(NonBlocking.ConcurrentDictionary<,>).Assembly.Location);
     }
