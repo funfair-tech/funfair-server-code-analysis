@@ -33,6 +33,7 @@ Static Code analysis Repo for FunFair Server dotnet projects.
 |FFS0028|Records should be ``sealed``|
 |FFS0029|Classes derived from ``MockBase<T>`` should be ``internal``|
 |FFS0030|Classes derived from ``MockBase<T>`` should be ``sealed``|
+|FFS0031|Avoid using ``System.Collections.Concurrent.ConcurrentDictionary<,>`` - Use ``NonBlocking.ConcurrentDictionary<,>``|
 
 
 ## Changelog

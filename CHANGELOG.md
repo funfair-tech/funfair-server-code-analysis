@@ -7,7 +7,6 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 
 ## [Unreleased]
 ### Added
-- Check if NonBlocking dictionary is used
 ### Fixed
 ### Changed
 ### Removed
@@ -16,6 +15,9 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 <!--
 Releases that have at least been deployed to staging, BUT NOT necessarily released to live.  Changes should be moved from [Unreleased] into here as they are merged into the appropriate release branch
 -->
+## [5.2.2] - 2021-07-12
+- Check if NonBlocking dictionary is used
+
 ## [5.2.1] - 2021-07-04
 ### Changed
 - FF-1429 - Updated SonarAnalyzer.CSharp to 8.23.0.32424
