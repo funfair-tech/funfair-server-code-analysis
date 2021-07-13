@@ -8,6 +8,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 ## [Unreleased]
 ### Added
 ### Fixed
+- Check that symbol has ContainingNamespace
 ### Changed
 - FF-1429 - Updated SonarAnalyzer.CSharp to 8.26.0.34506
 ### Removed

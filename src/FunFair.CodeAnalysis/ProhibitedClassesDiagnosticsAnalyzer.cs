@@ -133,9 +133,14 @@ namespace FunFair.CodeAnalysis
         /// <returns></returns>
         private static INamedTypeSymbol? GetSymbol(ITypeSymbol typeSymbol, Dictionary<string, INamedTypeSymbol> cachedSymbols)
         {
-            string typeName = typeSymbol.ToFullyQualifiedName();
+            string? fullyQualifiedSymbolName = typeSymbol.ToFullyQualifiedName();
 
-            return cachedSymbols.TryGetValue(key: typeName, out INamedTypeSymbol? symbol) ? symbol : null;
+            if (fullyQualifiedSymbolName == null)
+            {
+                return null;
+            }
+
+            return cachedSymbols.TryGetValue(key: fullyQualifiedSymbolName, out INamedTypeSymbol? symbol) ? symbol : null;
         }
 
         private sealed class ProhibitedClassSpec
