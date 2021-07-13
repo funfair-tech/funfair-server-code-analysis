@@ -8,16 +8,21 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 ## [Unreleased]
 ### Added
 ### Fixed
-- Check that symbol has ContainingNamespace
 ### Changed
-- FF-1429 - Updated SonarAnalyzer.CSharp to 8.26.0.34506
 ### Removed
 ### Deployment Changes
 
 <!--
 Releases that have at least been deployed to staging, BUT NOT necessarily released to live.  Changes should be moved from [Unreleased] into here as they are merged into the appropriate release branch
 -->
+## [5.2.3] - 2021-07-13
+### Fixed
+- Check that symbol has ContainingNamespace
+### Changed
+- FF-1429 - Updated SonarAnalyzer.CSharp to 8.26.0.34506
+
 ## [5.2.2] - 2021-07-12
+### Added
 - Check if NonBlocking dictionary is used
 
 ## [5.2.1] - 2021-07-04
