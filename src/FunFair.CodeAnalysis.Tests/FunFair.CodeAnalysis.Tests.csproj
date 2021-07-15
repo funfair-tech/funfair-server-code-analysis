@@ -5,12 +5,13 @@
         <DisableImplicitNuGetFallbackFolder>true</DisableImplicitNuGetFallbackFolder>
         <WarningsAsErrors />
         <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
-        <NoWarn></NoWarn>
+        <NoWarn/>
         <LangVersion>latest</LangVersion>
         <Features>strict;flow-analysis</Features>
         <Nullable>enable</Nullable>
         <IncludeOpenAPIAnalyzers>true</IncludeOpenAPIAnalyzers>
         <IsPackable>false</IsPackable>
+      <IsPublishable>false</IsPublishable>
     </PropertyGroup>
     <Import Project="$(SolutionDir)\FunFair.props" />
     <PropertyGroup>

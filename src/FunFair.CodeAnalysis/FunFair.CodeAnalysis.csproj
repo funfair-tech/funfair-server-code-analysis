@@ -6,11 +6,13 @@
         <LangVersion>latest</LangVersion>
         <DisableImplicitNuGetFallbackFolder>true</DisableImplicitNuGetFallbackFolder>
         <WarningsAsErrors />
+        <NoWarn/>
         <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
         <IncludeOpenAPIAnalyzers>true</IncludeOpenAPIAnalyzers>
         <Features>strict;flow-analysis</Features>
         <PackAsTool>false</PackAsTool>
         <IsPackable>true</IsPackable>
+      <IsPublishable>false</IsPublishable>
         <Nullable>enable</Nullable>
         <IncludeBuildOutput>false</IncludeBuildOutput>
         <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
