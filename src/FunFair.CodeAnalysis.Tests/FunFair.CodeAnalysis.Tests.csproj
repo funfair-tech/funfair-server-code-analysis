@@ -5,13 +5,13 @@
         <DisableImplicitNuGetFallbackFolder>true</DisableImplicitNuGetFallbackFolder>
         <WarningsAsErrors />
         <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
-        <NoWarn/>
+        <NoWarn />
         <LangVersion>latest</LangVersion>
         <Features>strict;flow-analysis</Features>
         <Nullable>enable</Nullable>
         <IncludeOpenAPIAnalyzers>true</IncludeOpenAPIAnalyzers>
         <IsPackable>false</IsPackable>
-      <IsPublishable>false</IsPublishable>
+        <IsPublishable>false</IsPublishable>
     </PropertyGroup>
     <Import Project="$(SolutionDir)\FunFair.props" />
     <PropertyGroup>
@@ -34,17 +34,17 @@
         <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3" />
     </ItemGroup>
     <ItemGroup>
-      <PackageReference Include="AsyncFixer" Version="1.5.1" PrivateAssets="All"/>
-      <PackageReference Include="coverlet.collector" Version="3.0.3" PrivateAssets="All"/>
-      <PackageReference Include="coverlet.msbuild" Version="3.0.3" PrivateAssets="All"/>
-      <PackageReference Include="DisableDateTimeNow" Version="1.0.5883.39470" PrivateAssets="All"/>
-      <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="16.10.56" PrivateAssets="all"/>
-      <PackageReference Include="NSubstitute.Analyzers.CSharp" Version="1.0.14" PrivateAssets="All"/>
-      <PackageReference Include="Roslynator.Analyzers" Version="3.2.0" PrivateAssets="All"/>
-      <PackageReference Include="SonarAnalyzer.CSharp" Version="8.26.0.34506" PrivateAssets="All"/>
-      <PackageReference Include="SourceLink.Create.CommandLine" Version="2.8.3" PrivateAssets="All"/>
-      <PackageReference Include="ToStringWithoutOverrideAnalyzer" Version="0.6.0" PrivateAssets="All"/>
-      <PackageReference Include="xunit.analyzers" Version="0.10.0" PrivateAssets="All"/>
+        <PackageReference Include="AsyncFixer" Version="1.5.1" PrivateAssets="All" />
+        <PackageReference Include="coverlet.collector" Version="3.0.3" PrivateAssets="All" />
+        <PackageReference Include="coverlet.msbuild" Version="3.0.3" PrivateAssets="All" />
+        <PackageReference Include="DisableDateTimeNow" Version="1.0.5883.39470" PrivateAssets="All" />
+        <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="16.10.56" PrivateAssets="all" />
+        <PackageReference Include="NSubstitute.Analyzers.CSharp" Version="1.0.14" PrivateAssets="All" />
+        <PackageReference Include="Roslynator.Analyzers" Version="3.2.0" PrivateAssets="All" />
+        <PackageReference Include="SonarAnalyzer.CSharp" Version="8.26.0.34506" PrivateAssets="All" />
+        <PackageReference Include="SourceLink.Create.CommandLine" Version="2.8.3" PrivateAssets="All" />
+        <PackageReference Include="ToStringWithoutOverrideAnalyzer" Version="0.6.0" PrivateAssets="All" />
+        <PackageReference Include="xunit.analyzers" Version="0.10.0" PrivateAssets="All" />
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\FunFair.CodeAnalysis\FunFair.CodeAnalysis.csproj" />
