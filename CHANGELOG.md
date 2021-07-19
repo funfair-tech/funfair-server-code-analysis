@@ -7,16 +7,20 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 
 ## [Unreleased]
 ### Added
-- Check if built-in methods are used for NonBlocking.ConcurrentDictionary<,> and force usage of extension methods under FunFair.Common.Extensions.ConcurrentDictionaryExtensions
 ### Fixed
 ### Changed
-- FF-1429 - Updated TeamCity.VSTest.TestAdapter to 1.0.26
 ### Removed
 ### Deployment Changes
 
 <!--
 Releases that have at least been deployed to staging, BUT NOT necessarily released to live.  Changes should be moved from [Unreleased] into here as they are merged into the appropriate release branch
 -->
+## [5.2.4] - 2021-07-19
+### Added
+- Check if built-in methods are used for NonBlocking.ConcurrentDictionary<,> and force usage of extension methods under FunFair.Common.Extensions.ConcurrentDictionaryExtensions
+### Changed
+- FF-1429 - Updated TeamCity.VSTest.TestAdapter to 1.0.26
+
 ## [5.2.3] - 2021-07-13
 ### Fixed
 - Check that symbol has ContainingNamespace
