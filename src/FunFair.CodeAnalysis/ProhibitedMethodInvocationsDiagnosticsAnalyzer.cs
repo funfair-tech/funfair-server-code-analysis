@@ -181,15 +181,6 @@ namespace FunFair.CodeAnalysis
 
             return methodSignatures.Any(predicate: methodSignature => methodSignature.Parameters.Select(x => SymbolDisplay.ToDisplayString(x.OriginalDefinition))
                                                                                      .SequenceEqual(invocationParameters));
-
-            // // check if method is prohibited
-            // if (prohibitedMethodsSymbols.Any(symbol => symbol.Parameters.SequenceEqual(invocationArguments.Select(invocationArgument => invocationArgument.ParameterSymbol))))
-            // {
-            //     return !LambdaCheckNeeded(invocationArguments: invocationArguments, prohibitedMethodsSpecs: prohibitedMethodsSpecs, out IReadOnlyList<ParameterSpecs> bannedSignature) ||
-            //            IncorrectUseOfLambdas(invocationArguments: invocationArguments, bannedSignature: bannedSignature);
-            // }
-            //
-            // return false;
         }
 
         private sealed class ProhibitedMethodsSpec
