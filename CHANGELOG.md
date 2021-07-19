@@ -7,6 +7,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 
 ## [Unreleased]
 ### Added
+- Check if built-in methods are used for NonBlocking.ConcurrentDictionary<,> and force usage of extension methods under FunFair.Common.Extensions.ConcurrentDictionaryExtensions
 ### Fixed
 ### Changed
 - FF-1429 - Updated TeamCity.VSTest.TestAdapter to 1.0.26

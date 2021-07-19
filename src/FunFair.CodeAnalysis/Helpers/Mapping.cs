@@ -10,9 +10,9 @@ namespace FunFair.CodeAnalysis.Helpers
         /// <summary>
         ///     Constructor
         /// </summary>
-        /// <param name="methodName">Method name</param>
         /// <param name="className">Class name</param>
-        public Mapping(string methodName, string className)
+        /// <param name="methodName">Method name</param>
+        public Mapping(string className, string methodName)
         {
             this.MethodName = methodName;
             this.ClassName = className;
@@ -21,12 +21,12 @@ namespace FunFair.CodeAnalysis.Helpers
         /// <summary>
         ///     Method name
         /// </summary>
-        public string MethodName { get; }
+        private string MethodName { get; }
 
         /// <summary>
         ///     Class name
         /// </summary>
-        public string ClassName { get; }
+        private string ClassName { get; }
 
         /// <summary>
         ///     Full qualified name of method

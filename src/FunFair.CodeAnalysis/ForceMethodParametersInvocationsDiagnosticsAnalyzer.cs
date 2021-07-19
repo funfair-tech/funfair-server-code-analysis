@@ -72,7 +72,7 @@ namespace FunFair.CodeAnalysis
                         continue;
                     }
 
-                    Mapping mapping = new(methodName: memberSymbol.Name, SymbolDisplay.ToDisplayString(memberSymbol.ContainingType));
+                    Mapping mapping = new(SymbolDisplay.ToDisplayString(memberSymbol.ContainingType), methodName: memberSymbol.Name);
 
                     IEnumerable<ForcedMethodsSpec> forcedMethods = ForcedMethods.Where(predicate: rule => rule.QualifiedName == mapping.QualifiedName);
 
