@@ -34,7 +34,8 @@ Static Code analysis Repo for FunFair Server dotnet projects.
 |FFS0029|Classes derived from ``MockBase<T>`` should be ``internal``|
 |FFS0030|Classes derived from ``MockBase<T>`` should be ``sealed``|
 |FFS0031|Avoid using ``System.Collections.Concurrent.ConcurrentDictionary<,>`` - Use ``NonBlocking.ConcurrentDictionary<,>``|
-
+|FFS0032|Avoid using ``NonBlocing.ConcurrentDictionary<,>.AddOrUpdate`` - Use ``FunFair.Common.Extensions.ConcurrentDictionaryExtensions.AddOrUpdate``|
+|FFS0033|Avoid using ``NonBlocing.ConcurrentDictionary<,>.GetOrAdd`` - Use ``FunFair.Common.Extensions.ConcurrentDictionaryExtensions.GetOrAdd``|
 
 ## Changelog
 

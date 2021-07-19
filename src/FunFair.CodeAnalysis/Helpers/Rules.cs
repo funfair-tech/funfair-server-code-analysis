@@ -33,5 +33,7 @@ namespace FunFair.CodeAnalysis.Helpers
         public const string MockBaseClassInstancesMustBeInternal = @"FFS0029";
         public const string MockBaseClassInstancesMustBeSealed = @"FFS0030";
         public const string RuleDontUseConcurrentDictionary = @"FFS0031";
+        public const string RuleDontUseBuildInAddOrUpdateConcurrentDictionary = @"FFS0032";
+        public const string RuleDontUseBuildInGetOrAddConcurrentDictionary = @"FFS0033";
     }
 }
