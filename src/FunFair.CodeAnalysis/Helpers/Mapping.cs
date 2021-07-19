@@ -21,12 +21,12 @@ namespace FunFair.CodeAnalysis.Helpers
         /// <summary>
         ///     Method name
         /// </summary>
-        public string MethodName { get; }
+        private string MethodName { get; }
 
         /// <summary>
         ///     Class name
         /// </summary>
-        public string ClassName { get; }
+        private string ClassName { get; }
 
         /// <summary>
         ///     Full qualified name of method
