@@ -21,10 +21,10 @@ namespace FunFair.CodeAnalysis
 
         private static readonly ProhibitedMethodsSpec[] BannedMethods =
         {
-            new(ruleId: Rules.RuleDontUseAssertTrueWithoutMessage, title: @"Avoid use of assert method without message", message: "Only use Assert.True with message parameter", sourceClass:
-                "Xunit.Assert", bannedMethod: "True", new[] {new[] {"bool"}}),
-            new(ruleId: Rules.RuleDontUseAssertFalseWithoutMessage, title: @"Avoid use of assert method without message", message: "Only use Assert.False with message parameter", sourceClass:
-                "Xunit.Assert", bannedMethod: "False", new[] {new[] {"bool"}}),
+            new(ruleId: Rules.RuleDontUseAssertTrueWithoutMessage, title: @"Avoid use of assert method without message", message: "Only use Assert.True with message parameter",
+                sourceClass: "Xunit.Assert", bannedMethod: "True", new[] {new[] {"bool"}}),
+            new(ruleId: Rules.RuleDontUseAssertFalseWithoutMessage, title: @"Avoid use of assert method without message", message:
+                "Only use Assert.False with message parameter", sourceClass: "Xunit.Assert", bannedMethod: "False", new[] {new[] {"bool"}}),
             new(ruleId: Rules.RuleDontUseBuildInAddOrUpdateConcurrentDictionary, title: @"Avoid use of the built in AddOrUpdate methods", message:
                 "Don't use any of the built in AddOrUpdate methods, instead FunFair.Common.Extensions.ConcurrentDictionaryExtensions.AddOrUpdate can be used", sourceClass:
                 "NonBlocking.ConcurrentDictionary`2", bannedMethod: "AddOrUpdate", new[] {new[] {"TKey", "System.Func<TKey, TValue>", "System.Func<TKey, TValue, TValue>"}}),
@@ -159,8 +159,9 @@ namespace FunFair.CodeAnalysis
             foreach (IEnumerable<string> ruleSignature in ruleSignatures)
             {
                 IEnumerable<IMethodSymbol> bannedMethodSymbols = methodSymbols.Where(methodSymbol => methodSymbol
-                                                                                                     .Parameters
-                                                                                                     .Select(selector: parameterSymbol => SymbolDisplay.ToDisplayString(parameterSymbol.Type))
+                                                                                                     .Parameters.Select(
+                                                                                                         selector: parameterSymbol =>
+                                                                                                                       SymbolDisplay.ToDisplayString(parameterSymbol.Type))
                                                                                                      .SequenceEqual(ruleSignature));
 
                 methodSignatureList.AddRange(bannedMethodSymbols);
