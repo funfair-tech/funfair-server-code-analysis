@@ -123,7 +123,8 @@ namespace FunFair.CodeAnalysis.Tests
             DiagnosticResult expected = new()
                                         {
                                             Id = "FFS0032",
-                                            Message = @"Don't use any of the built in AddOrUpdate methods, instead FunFair.Common.Extensions.ConcurrentDictionaryExtensions.AddOrUpdate can be used",
+                                            Message =
+                                                @"Don't use any of the built in AddOrUpdate methods, instead FunFair.Common.Extensions.ConcurrentDictionaryExtensions.AddOrUpdate can be used",
                                             Severity = DiagnosticSeverity.Error,
                                             Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 10, column: 18)}
                                         };
@@ -150,7 +151,8 @@ namespace FunFair.CodeAnalysis.Tests
             DiagnosticResult expected = new()
                                         {
                                             Id = "FFS0032",
-                                            Message = @"Don't use any of the built in AddOrUpdate methods, instead FunFair.Common.Extensions.ConcurrentDictionaryExtensions.AddOrUpdate can be used",
+                                            Message =
+                                                @"Don't use any of the built in AddOrUpdate methods, instead FunFair.Common.Extensions.ConcurrentDictionaryExtensions.AddOrUpdate can be used",
                                             Severity = DiagnosticSeverity.Error,
                                             Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 10, column: 18)}
                                         };
@@ -184,7 +186,8 @@ namespace FunFair.CodeAnalysis.Tests
             DiagnosticResult expected = new()
                                         {
                                             Id = "FFS0032",
-                                            Message = @"Don't use any of the built in AddOrUpdate methods, instead FunFair.Common.Extensions.ConcurrentDictionaryExtensions.AddOrUpdate can be used",
+                                            Message =
+                                                @"Don't use any of the built in AddOrUpdate methods, instead FunFair.Common.Extensions.ConcurrentDictionaryExtensions.AddOrUpdate can be used",
                                             Severity = DiagnosticSeverity.Error,
                                             Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 16, column: 18)}
                                         };
@@ -215,7 +218,8 @@ namespace FunFair.CodeAnalysis.Tests
             DiagnosticResult expected = new()
                                         {
                                             Id = "FFS0032",
-                                            Message = @"Don't use any of the built in AddOrUpdate methods, instead FunFair.Common.Extensions.ConcurrentDictionaryExtensions.AddOrUpdate can be used",
+                                            Message =
+                                                @"Don't use any of the built in AddOrUpdate methods, instead FunFair.Common.Extensions.ConcurrentDictionaryExtensions.AddOrUpdate can be used",
                                             Severity = DiagnosticSeverity.Error,
                                             Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 13, column: 18)}
                                         };
@@ -242,7 +246,8 @@ namespace FunFair.CodeAnalysis.Tests
             DiagnosticResult expected = new()
                                         {
                                             Id = "FFS0033",
-                                            Message = @"Don't use any of the built in GetOrAdd methods, instead FunFair.Common.Extensions.ConcurrentDictionaryExtensions.GetOrAdd can be used",
+                                            Message =
+                                                @"Don't use any of the built in GetOrAdd methods, instead FunFair.Common.Extensions.ConcurrentDictionaryExtensions.GetOrAdd can be used",
                                             Severity = DiagnosticSeverity.Error,
                                             Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 10, column: 18)}
                                         };
@@ -272,7 +277,8 @@ namespace FunFair.CodeAnalysis.Tests
             DiagnosticResult expected = new()
                                         {
                                             Id = "FFS0033",
-                                            Message = @"Don't use any of the built in GetOrAdd methods, instead FunFair.Common.Extensions.ConcurrentDictionaryExtensions.GetOrAdd can be used",
+                                            Message =
+                                                @"Don't use any of the built in GetOrAdd methods, instead FunFair.Common.Extensions.ConcurrentDictionaryExtensions.GetOrAdd can be used",
                                             Severity = DiagnosticSeverity.Error,
                                             Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 13, column: 18)}
                                         };
