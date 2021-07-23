@@ -21,19 +21,15 @@ namespace FunFair.CodeAnalysis
         private static readonly ForcedMethodsSpec[] ForcedMethods =
         {
             new(ruleId: Rules.RuleDontUseJsonSerializerWithoutJsonOptions, title: @"Avoid use of serializer without own JsonSerializerOptions parameter", message:
-                "Only use JsonSerializer.Serialize with own JsonSerializerOptions", sourceClass: "System.Text.Json.JsonSerializer", forcedMethod: "Serialize",
-                requiredArgumentCount: 2),
+                "Only use JsonSerializer.Serialize with own JsonSerializerOptions", sourceClass: "System.Text.Json.JsonSerializer", forcedMethod: "Serialize", requiredArgumentCount: 2),
             new(ruleId: Rules.RuleDontUseJsonSerializerWithoutJsonOptions, title: @"Avoid use of serializer without own JsonSerializerOptions parameter", message:
-                "Only use JsonSerializer.Serialize with own JsonSerializerOptions", sourceClass: "System.Text.Json.JsonSerializer", forcedMethod: "SerializeAsync",
-                requiredArgumentCount: 2),
+                "Only use JsonSerializer.Serialize with own JsonSerializerOptions", sourceClass: "System.Text.Json.JsonSerializer", forcedMethod: "SerializeAsync", requiredArgumentCount: 2),
             new(ruleId: Rules.RuleDontUseJsonDeserializerWithoutJsonOptions, title: @"Avoid use of deserializer without own JsonSerializerOptions parameter", message:
-                "Only use JsonSerializer.Deserialize with own JsonSerializerOptions", sourceClass: "System.Text.Json.JsonSerializer", forcedMethod: "Deserialize",
-                requiredArgumentCount: 2),
+                "Only use JsonSerializer.Deserialize with own JsonSerializerOptions", sourceClass: "System.Text.Json.JsonSerializer", forcedMethod: "Deserialize", requiredArgumentCount: 2),
             new(ruleId: Rules.RuleDontUseJsonDeserializerWithoutJsonOptions, title: @"Avoid use of deserializer without own JsonSerializerOptions parameter", message:
-                "Only use JsonSerializer.Deserialize with own JsonSerializerOptions", sourceClass: "System.Text.Json.JsonSerializer", forcedMethod: "DeserializeAsync",
-                requiredArgumentCount: 2),
-            new(ruleId: Rules.RuleDontUseSubstituteReceivedWithoutAmountOfCalls, title: @"Avoid use of received without call count", message:
-                "Only use Received with expected call count", sourceClass: "NSubstitute.SubstituteExtensions", forcedMethod: "Received", requiredArgumentCount: 1)
+                "Only use JsonSerializer.Deserialize with own JsonSerializerOptions", sourceClass: "System.Text.Json.JsonSerializer", forcedMethod: "DeserializeAsync", requiredArgumentCount: 2),
+            new(ruleId: Rules.RuleDontUseSubstituteReceivedWithoutAmountOfCalls, title: @"Avoid use of received without call count", message: "Only use Received with expected call count",
+                sourceClass: "NSubstitute.SubstituteExtensions", forcedMethod: "Received", requiredArgumentCount: 1)
         };
 
         /// <inheritdoc />
@@ -56,39 +52,37 @@ namespace FunFair.CodeAnalysis
         /// <param name="compilationStartContext"></param>
         private static void PerformCheck(CompilationStartAnalysisContext compilationStartContext)
         {
-            void LookForForcedMethods(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
+            compilationStartContext.RegisterSyntaxNodeAction(action: LookForForcedMethods, SyntaxKind.InvocationExpression);
+        }
+
+        private static void LookForForcedMethods(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
+        {
+            if (syntaxNodeAnalysisContext.Node is not InvocationExpressionSyntax invocation)
             {
-                InvocationExpressionSyntax[] invocations = syntaxNodeAnalysisContext.Node.DescendantNodesAndSelf()
-                                                                                    .OfType<InvocationExpressionSyntax>()
-                                                                                    .ToArray();
-
-                foreach (InvocationExpressionSyntax invocation in invocations)
-                {
-                    IMethodSymbol? memberSymbol = MethodSymbolHelper.FindInvokedMemberSymbol(invocation: invocation, syntaxNodeAnalysisContext: syntaxNodeAnalysisContext);
-
-                    // check if there is at least one rule that correspond to invocation method
-                    if (memberSymbol == null)
-                    {
-                        continue;
-                    }
-
-                    Mapping mapping = new(methodName: memberSymbol.Name, SymbolDisplay.ToDisplayString(memberSymbol.ContainingType));
-
-                    IEnumerable<ForcedMethodsSpec> forcedMethods = ForcedMethods.Where(predicate: rule => rule.QualifiedName == mapping.QualifiedName);
-
-                    foreach (ForcedMethodsSpec prohibitedMethod in forcedMethods)
-                    {
-                        if (!IsInvocationAllowed(invocationArguments: memberSymbol,
-                                                 argumentsInvokedCount: invocation.ArgumentList.Arguments.Count,
-                                                 requiredArgumentsCount: prohibitedMethod.RequiredArgumentCount))
-                        {
-                            syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(descriptor: prohibitedMethod.Rule, invocation.GetLocation()));
-                        }
-                    }
-                }
+                return;
             }
 
-            compilationStartContext.RegisterSyntaxNodeAction(action: LookForForcedMethods, SyntaxKind.MethodDeclaration);
+            IMethodSymbol? memberSymbol = MethodSymbolHelper.FindInvokedMemberSymbol(invocation: invocation, syntaxNodeAnalysisContext: syntaxNodeAnalysisContext);
+
+            // check if there is at least one rule that correspond to invocation method
+            if (memberSymbol == null)
+            {
+                return;
+            }
+
+            Mapping mapping = new(methodName: memberSymbol.Name, SymbolDisplay.ToDisplayString(memberSymbol.ContainingType));
+
+            IEnumerable<ForcedMethodsSpec> forcedMethods = ForcedMethods.Where(predicate: rule => rule.QualifiedName == mapping.QualifiedName);
+
+            foreach (ForcedMethodsSpec prohibitedMethod in forcedMethods)
+            {
+                if (!IsInvocationAllowed(invocationArguments: memberSymbol,
+                                         argumentsInvokedCount: invocation.ArgumentList.Arguments.Count,
+                                         requiredArgumentsCount: prohibitedMethod.RequiredArgumentCount))
+                {
+                    syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(descriptor: prohibitedMethod.Rule, invocation.GetLocation()));
+                }
+            }
         }
 
         /// <summary>
