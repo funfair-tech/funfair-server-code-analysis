@@ -6,6 +6,7 @@ using System.Threading;
 using FunFair.Test.Common;
 using Microsoft.AspNetCore.Http;
 using Microsoft.CodeAnalysis;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using Xunit;
@@ -44,5 +45,11 @@ namespace FunFair.CodeAnalysis.Tests.Helpers
         public static readonly MetadataReference ConcurrentDictionary = MetadataReference.CreateFromFile(typeof(ConcurrentDictionary<,>).Assembly.Location);
 
         public static readonly MetadataReference NonBlockingConcurrentDictionary = MetadataReference.CreateFromFile(typeof(NonBlocking.ConcurrentDictionary<,>).Assembly.Location);
+
+        public static readonly MetadataReference ConfigurationBuilder = MetadataReference.CreateFromFile(typeof(ConfigurationBuilder).Assembly.Location);
+
+        public static readonly MetadataReference JsonConfigurationExtensions = MetadataReference.CreateFromFile(typeof(JsonConfigurationExtensions).Assembly.Location);
+
+        public static readonly MetadataReference IConfigurationBuilder = MetadataReference.CreateFromFile(typeof(IConfigurationBuilder).Assembly.Location);
     }
 }

@@ -31,6 +31,18 @@ namespace FunFair.CodeAnalysis
                                                                                           type: "NumericLiteralExpression",
                                                                                           value: "0")
                                                                                   }
+                                                                              }),
+            new(ruleId: Rules.RuleDontUseConfigurationBuilderAddJsonFileWithReload, title: "Avoid use of reloadOnChange with value true", message:
+                "Only use AddJsonFile with reloadOnChange set to false", sourceClass:
+                "Microsoft.Extensions.Configuration.JsonConfigurationExtensions", forcedMethod: "AddJsonFile", new[]
+                                                                              {
+                                                                                  new[]
+                                                                                  {
+                                                                                      new ParameterSpec(
+                                                                                          name: "reloadOnChange",
+                                                                                          type: "TrueLiteralExpression",
+                                                                                          value: "true")
+                                                                                  }
                                                                               })
         };
 
@@ -59,6 +71,10 @@ namespace FunFair.CodeAnalysis
                 InvocationExpressionSyntax[] invocations = syntaxNodeAnalysisContext.Node.DescendantNodesAndSelf()
                                                                                     .OfType<InvocationExpressionSyntax>()
                                                                                     .ToArray();
+
+                // VariableDeclarationSyntax[] invocations1 = syntaxNodeAnalysisContext.Node.DescendantNodesAndSelf()
+                //                                                                    .OfType<VariableDeclarationSyntax>()
+                //                                                                    .ToArray();
 
                 foreach (InvocationExpressionSyntax invocation in invocations)
                 {

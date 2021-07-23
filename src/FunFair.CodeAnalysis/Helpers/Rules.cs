@@ -35,5 +35,6 @@ namespace FunFair.CodeAnalysis.Helpers
         public const string RuleDontUseConcurrentDictionary = @"FFS0031";
         public const string RuleDontUseBuildInAddOrUpdateConcurrentDictionary = @"FFS0032";
         public const string RuleDontUseBuildInGetOrAddConcurrentDictionary = @"FFS0033";
+        public const string RuleDontUseConfigurationBuilderAddJsonFileWithReload = @"FFS0034";
     }
 }

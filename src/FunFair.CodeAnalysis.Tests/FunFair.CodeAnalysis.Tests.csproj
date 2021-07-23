@@ -26,6 +26,8 @@
         <PackageReference Include="FunFair.Test.Common" Version="5.5.0.1195" />
         <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.2" />
         <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="3.10.0" />
+        <PackageReference Include="Microsoft.Extensions.Configuration" Version="5.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="5.0.0" />
         <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="5.0.0" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.10.0" />
         <PackageReference Include="NonBlocking" Version="1.1.2" />
