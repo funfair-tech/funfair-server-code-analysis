@@ -50,6 +50,6 @@ namespace FunFair.CodeAnalysis.Tests.Helpers
 
         public static readonly MetadataReference JsonConfigurationExtensions = MetadataReference.CreateFromFile(typeof(JsonConfigurationExtensions).Assembly.Location);
 
-        public static readonly MetadataReference IConfigurationBuilder = MetadataReference.CreateFromFile(typeof(IConfigurationBuilder).Assembly.Location);
+        public static readonly MetadataReference MicrosoftExtensionsIConfigurationBuilder = MetadataReference.CreateFromFile(typeof(IConfigurationBuilder).Assembly.Location);
     }
 }
