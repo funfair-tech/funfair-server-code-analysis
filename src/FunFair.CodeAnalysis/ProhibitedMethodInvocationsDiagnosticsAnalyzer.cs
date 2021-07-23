@@ -21,10 +21,10 @@ namespace FunFair.CodeAnalysis
 
         private static readonly ProhibitedMethodsSpec[] BannedMethods =
         {
-            new(ruleId: Rules.RuleDontUseAssertTrueWithoutMessage, title: @"Avoid use of assert method without message", message: "Only use Assert.True with message parameter",
-                sourceClass: "Xunit.Assert", bannedMethod: "True", new[] {new[] {"bool"}}),
-            new(ruleId: Rules.RuleDontUseAssertFalseWithoutMessage, title: @"Avoid use of assert method without message", message:
-                "Only use Assert.False with message parameter", sourceClass: "Xunit.Assert", bannedMethod: "False", new[] {new[] {"bool"}}),
+            new(ruleId: Rules.RuleDontUseAssertTrueWithoutMessage, title: @"Avoid use of assert method without message", message: "Only use Assert.True with message parameter", sourceClass:
+                "Xunit.Assert", bannedMethod: "True", new[] {new[] {"bool"}}),
+            new(ruleId: Rules.RuleDontUseAssertFalseWithoutMessage, title: @"Avoid use of assert method without message", message: "Only use Assert.False with message parameter", sourceClass:
+                "Xunit.Assert", bannedMethod: "False", new[] {new[] {"bool"}}),
             new(ruleId: Rules.RuleDontUseBuildInAddOrUpdateConcurrentDictionary, title: @"Avoid use of the built in AddOrUpdate methods", message:
                 "Don't use any of the built in AddOrUpdate methods, instead FunFair.Common.Extensions.ConcurrentDictionaryExtensions.AddOrUpdate can be used", sourceClass:
                 "NonBlocking.ConcurrentDictionary`2", bannedMethod: "AddOrUpdate", new[] {new[] {"TKey", "System.Func<TKey, TValue>", "System.Func<TKey, TValue, TValue>"}}),
@@ -33,7 +33,7 @@ namespace FunFair.CodeAnalysis
                 "NonBlocking.ConcurrentDictionary`2", bannedMethod: "AddOrUpdate", new[] {new[] {"TKey", "TValue", "System.Func<TKey, TValue, TValue>"}}),
             new(ruleId: Rules.RuleDontUseBuildInGetOrAddConcurrentDictionary, title: @"Avoid use of the built in GetOrAdd methods", message:
                 "Don't use any of the built in GetOrAdd methods, instead FunFair.Common.Extensions.ConcurrentDictionaryExtensions.GetOrAdd can be used", sourceClass:
-                "NonBlocking.ConcurrentDictionary`2", bannedMethod: "GetOrAdd", new[] {new[] {"TKey", "System.Func<TKey, TValue>"}}),
+                "NonBlocking.ConcurrentDictionary`2", bannedMethod: "GetOrAdd", new[] {new[] {"TKey", "System.Func<TKey, TValue>"}})
         };
 
         /// <inheritdoc />
@@ -58,47 +58,48 @@ namespace FunFair.CodeAnalysis
         {
             IReadOnlyDictionary<ProhibitedMethodsSpec, IReadOnlyList<IMethodSymbol>> cachedSymbols = BuildCachedSymbols(compilationStartContext.Compilation);
 
-            void LookForBannedMethods(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
+            void LookForBannedInvocation(InvocationExpressionSyntax invocation, SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
             {
-                InvocationExpressionSyntax[] invocations = syntaxNodeAnalysisContext.Node.DescendantNodesAndSelf()
-                                                                                    .OfType<InvocationExpressionSyntax>()
-                                                                                    .ToArray();
+                IMethodSymbol? memberSymbol = MethodSymbolHelper.FindInvokedMemberSymbol(invocation: invocation, syntaxNodeAnalysisContext: syntaxNodeAnalysisContext);
 
-                foreach (InvocationExpressionSyntax invocation in invocations)
+                // check if there is at least one rule that correspond to invocation method
+                if (memberSymbol == null)
                 {
-                    IMethodSymbol? memberSymbol = MethodSymbolHelper.FindInvokedMemberSymbol(invocation: invocation, syntaxNodeAnalysisContext: syntaxNodeAnalysisContext);
+                    return;
+                }
 
-                    // check if there is at least one rule that correspond to invocation method
-                    if (memberSymbol == null)
+                string? fullyQualifiedName = memberSymbol.ContainingType.ToFullyQualifiedName();
+
+                if (fullyQualifiedName == null)
+                {
+                    return;
+                }
+
+                Mapping mapping = new(methodName: memberSymbol.Name, className: fullyQualifiedName);
+
+                foreach (ProhibitedMethodsSpec prohibitedMethod in BannedMethods.Where(predicate: rule => rule.QualifiedName == mapping.QualifiedName))
+                {
+                    if (!cachedSymbols.TryGetValue(key: prohibitedMethod, out IReadOnlyList<IMethodSymbol> prohibitedMethodSignatures))
                     {
                         continue;
                     }
 
-                    string? fullyQualifiedName = memberSymbol.ContainingType.ToFullyQualifiedName();
-
-                    if (fullyQualifiedName == null)
+                    if (IsBannedMethodSignature(invocationArguments: memberSymbol, methodSignatures: prohibitedMethodSignatures))
                     {
-                        continue;
-                    }
-
-                    Mapping mapping = new(methodName: memberSymbol.Name, className: fullyQualifiedName);
-
-                    foreach (ProhibitedMethodsSpec prohibitedMethod in BannedMethods.Where(predicate: rule => rule.QualifiedName == mapping.QualifiedName))
-                    {
-                        if (!cachedSymbols.TryGetValue(key: prohibitedMethod, out IReadOnlyList<IMethodSymbol> prohibitedMethodSignatures))
-                        {
-                            continue;
-                        }
-
-                        if (IsBannedMethodSignature(invocationArguments: memberSymbol, methodSignatures: prohibitedMethodSignatures))
-                        {
-                            syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(descriptor: prohibitedMethod.Rule, invocation.GetLocation()));
-                        }
+                        syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(descriptor: prohibitedMethod.Rule, invocation.GetLocation()));
                     }
                 }
             }
 
-            compilationStartContext.RegisterSyntaxNodeAction(action: LookForBannedMethods, SyntaxKind.MethodDeclaration);
+            void LookForBannedMethods(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
+            {
+                if (syntaxNodeAnalysisContext.Node is InvocationExpressionSyntax invocation)
+                {
+                    LookForBannedInvocation(invocation: invocation, syntaxNodeAnalysisContext: syntaxNodeAnalysisContext);
+                }
+            }
+
+            compilationStartContext.RegisterSyntaxNodeAction(action: LookForBannedMethods, SyntaxKind.InvocationExpression);
         }
 
         private static IReadOnlyDictionary<ProhibitedMethodsSpec, IReadOnlyList<IMethodSymbol>> BuildCachedSymbols(Compilation compilation)
@@ -160,8 +161,7 @@ namespace FunFair.CodeAnalysis
             {
                 IEnumerable<IMethodSymbol> bannedMethodSymbols = methodSymbols.Where(methodSymbol => methodSymbol
                                                                                                      .Parameters.Select(
-                                                                                                         selector: parameterSymbol =>
-                                                                                                                       SymbolDisplay.ToDisplayString(parameterSymbol.Type))
+                                                                                                         selector: parameterSymbol => SymbolDisplay.ToDisplayString(parameterSymbol.Type))
                                                                                                      .SequenceEqual(ruleSignature));
 
                 methodSignatureList.AddRange(bannedMethodSymbols);
