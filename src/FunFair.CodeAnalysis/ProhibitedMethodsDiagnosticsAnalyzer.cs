@@ -21,25 +21,22 @@ namespace FunFair.CodeAnalysis
 
         private static readonly ProhibitedMethodsSpec[] BannedMethods =
         {
-            new(ruleId: Rules.RuleDontUseDateTimeNow, title: @"Avoid use of DateTime methods", message: "Call IDateTimeSource.UtcNow() rather than DateTime.Now", sourceClass:
-                "System.DateTime", bannedMethod: "Now"),
-            new(ruleId: Rules.RuleDontUseDateTimeUtcNow, title: @"Avoid use of DateTime methods", message: "Call IDateTimeSource.UtcNow() rather than DateTime.UtcNow",
-                sourceClass: "System.DateTime", bannedMethod: "UtcNow"),
-            new(ruleId: Rules.RuleDontUseDateTimeToday, title: @"Avoid use of DateTime methods", message: "Call IDateTimeSource.UtcNow().Date rather than DateTime.Today",
-                sourceClass: "System.DateTime", bannedMethod: "Today"),
-            new(ruleId: Rules.RuleDontUseDateTimeOffsetNow, title: @"Avoid use of DateTime methods", message: "Call IDateTimeSource.UtcNow() rather than DateTimeOffset.Now",
-                sourceClass: "System.DateTimeOffset", bannedMethod: "Now"),
-            new(ruleId: Rules.RuleDontUseDateTimeOffsetUtcNow, title: @"Avoid use of DateTime methods", message:
-                "Call IDateTimeSource.UtcNow() rather than DateTimeOffset.UtcNow", sourceClass: "System.DateTimeOffset", bannedMethod: "UtcNow"),
-            new(ruleId: Rules.RuleDontUseArbitrarySql, title: @"Avoid use of inline SQL statements", message:
-                "Only use ISqlServerDatabase.ExecuteArbitrarySqlAsync in integration tests", sourceClass: "FunFair.Common.Data.ISqlServerDatabase", bannedMethod:
-                "ExecuteArbitrarySqlAsync"),
-            new(ruleId: Rules.RuleDontUseArbitrarySqlForQueries, title: @"Avoid use of inline SQL statements", message:
-                "Only use ISqlServerDatabase.QueryArbitrarySqlAsync in integration tests", sourceClass: "FunFair.Common.Data.ISqlServerDatabase", bannedMethod:
-                "QueryArbitrarySqlAsync"),
-            new(ruleId: Rules.RuleDontReadRemoteIpAddressDirectlyFromConnection, title:
-                @"Use RemoteIpAddressRetriever instead of getting RemoteIpAddress directly from the HttpRequest", message: "Use RemoteIpAddressRetriever", sourceClass:
-                "Microsoft.AspNetCore.Http.ConnectionInfo", bannedMethod: "RemoteIpAddress")
+            new(ruleId: Rules.RuleDontUseDateTimeNow, title: @"Avoid use of DateTime methods", message: "Call IDateTimeSource.UtcNow() rather than DateTime.Now", sourceClass: "System.DateTime",
+                bannedMethod: "Now"),
+            new(ruleId: Rules.RuleDontUseDateTimeUtcNow, title: @"Avoid use of DateTime methods", message: "Call IDateTimeSource.UtcNow() rather than DateTime.UtcNow", sourceClass:
+                "System.DateTime", bannedMethod: "UtcNow"),
+            new(ruleId: Rules.RuleDontUseDateTimeToday, title: @"Avoid use of DateTime methods", message: "Call IDateTimeSource.UtcNow().Date rather than DateTime.Today", sourceClass:
+                "System.DateTime", bannedMethod: "Today"),
+            new(ruleId: Rules.RuleDontUseDateTimeOffsetNow, title: @"Avoid use of DateTime methods", message: "Call IDateTimeSource.UtcNow() rather than DateTimeOffset.Now", sourceClass:
+                "System.DateTimeOffset", bannedMethod: "Now"),
+            new(ruleId: Rules.RuleDontUseDateTimeOffsetUtcNow, title: @"Avoid use of DateTime methods", message: "Call IDateTimeSource.UtcNow() rather than DateTimeOffset.UtcNow", sourceClass:
+                "System.DateTimeOffset", bannedMethod: "UtcNow"),
+            new(ruleId: Rules.RuleDontUseArbitrarySql, title: @"Avoid use of inline SQL statements", message: "Only use ISqlServerDatabase.ExecuteArbitrarySqlAsync in integration tests",
+                sourceClass: "FunFair.Common.Data.ISqlServerDatabase", bannedMethod: "ExecuteArbitrarySqlAsync"),
+            new(ruleId: Rules.RuleDontUseArbitrarySqlForQueries, title: @"Avoid use of inline SQL statements", message: "Only use ISqlServerDatabase.QueryArbitrarySqlAsync in integration tests",
+                sourceClass: "FunFair.Common.Data.ISqlServerDatabase", bannedMethod: "QueryArbitrarySqlAsync"),
+            new(ruleId: Rules.RuleDontReadRemoteIpAddressDirectlyFromConnection, title: @"Use RemoteIpAddressRetriever instead of getting RemoteIpAddress directly from the HttpRequest", message:
+                "Use RemoteIpAddressRetriever", sourceClass: "Microsoft.AspNetCore.Http.ConnectionInfo", bannedMethod: "RemoteIpAddress")
         };
 
         /// <inheritdoc />
@@ -60,29 +57,27 @@ namespace FunFair.CodeAnalysis
         {
             Dictionary<string, INamedTypeSymbol> cachedSymbols = BuildCachedSymbols(compilationStartContext.Compilation);
 
+            void LookForBannedMethod(MemberAccessExpressionSyntax memberAccessExpressionSyntax, SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
+            {
+                INamedTypeSymbol? typeInfo = ExtractExpressionSyntax(invocation: memberAccessExpressionSyntax, syntaxNodeAnalysisContext: syntaxNodeAnalysisContext);
+
+                if (typeInfo == null)
+                {
+                    return;
+                }
+
+                ReportAnyBannedSymbols(cachedSymbols: cachedSymbols, typeInfo: typeInfo, invocation: memberAccessExpressionSyntax, syntaxNodeAnalysisContext: syntaxNodeAnalysisContext);
+            }
+
             void LookForBannedMethods(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
             {
-                IEnumerable<MemberAccessExpressionSyntax> invocations = syntaxNodeAnalysisContext.Node.DescendantNodes()
-                                                                                                 .OfType<MemberAccessExpressionSyntax>();
-
-                foreach (MemberAccessExpressionSyntax invocation in invocations)
+                if (syntaxNodeAnalysisContext.Node is MemberAccessExpressionSyntax memberAccessExpressionSyntax)
                 {
-                    INamedTypeSymbol? typeInfo = ExtractExpressionSyntax(invocation: invocation, syntaxNodeAnalysisContext: syntaxNodeAnalysisContext);
-
-                    if (typeInfo == null)
-                    {
-                        continue;
-                    }
-
-                    ReportAnyBannedSymbols(cachedSymbols: cachedSymbols, typeInfo: typeInfo, invocation: invocation, syntaxNodeAnalysisContext: syntaxNodeAnalysisContext);
+                    LookForBannedMethod(memberAccessExpressionSyntax: memberAccessExpressionSyntax, syntaxNodeAnalysisContext: syntaxNodeAnalysisContext);
                 }
             }
 
-            compilationStartContext.RegisterSyntaxNodeAction(action: LookForBannedMethods, SyntaxKind.ConstructorDeclaration);
-            compilationStartContext.RegisterSyntaxNodeAction(action: LookForBannedMethods, SyntaxKind.ConversionOperatorDeclaration);
-            compilationStartContext.RegisterSyntaxNodeAction(action: LookForBannedMethods, SyntaxKind.MethodDeclaration);
-            compilationStartContext.RegisterSyntaxNodeAction(action: LookForBannedMethods, SyntaxKind.OperatorDeclaration);
-            compilationStartContext.RegisterSyntaxNodeAction(action: LookForBannedMethods, SyntaxKind.PropertyDeclaration);
+            compilationStartContext.RegisterSyntaxNodeAction(action: LookForBannedMethods, SyntaxKind.PointerMemberAccessExpression, SyntaxKind.SimpleMemberAccessExpression);
         }
 
         private static void ReportAnyBannedSymbols(Dictionary<string, INamedTypeSymbol> cachedSymbols,
