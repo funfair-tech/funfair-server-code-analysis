@@ -21,7 +21,8 @@ namespace FunFair.CodeAnalysis
         private static readonly ProhibitedClassSpec[] BannedClasses =
         {
             new(ruleId: Rules.RuleDontUseConcurrentDictionary, title: "Avoid use of System.Collections.Concurrent.ConcurrentDictionary class", message:
-                "Use NonBlocking.ConcurrentDictionary  rather than System.Collections.Concurrent.ConcurrentDictionary", sourceClass: "System.Collections.Concurrent.ConcurrentDictionary`2")
+                "Use NonBlocking.ConcurrentDictionary  rather than System.Collections.Concurrent.ConcurrentDictionary", sourceClass:
+                "System.Collections.Concurrent.ConcurrentDictionary`2")
         };
 
         /// <inheritdoc />
@@ -66,7 +67,8 @@ namespace FunFair.CodeAnalysis
         {
             foreach (INamedTypeSymbol typeSymbol in typeSymbols)
             {
-                ProhibitedClassSpec? bannedClass = BannedClasses.FirstOrDefault(rule => StringComparer.OrdinalIgnoreCase.Equals(typeSymbol.ToFullyQualifiedName(), y: rule.SourceClass));
+                ProhibitedClassSpec? bannedClass =
+                    BannedClasses.FirstOrDefault(rule => StringComparer.OrdinalIgnoreCase.Equals(typeSymbol.ToFullyQualifiedName(), y: rule.SourceClass));
 
                 if (bannedClass != null)
                 {
@@ -95,7 +97,8 @@ namespace FunFair.CodeAnalysis
             return cachedSymbols;
         }
 
-        private static IEnumerable<INamedTypeSymbol>? LookForUsageOfBannedClasses(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, Dictionary<string, INamedTypeSymbol> cachedSymbols)
+        private static IEnumerable<INamedTypeSymbol>? LookForUsageOfBannedClasses(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext,
+                                                                                  Dictionary<string, INamedTypeSymbol> cachedSymbols)
         {
             ISymbol? symbol = syntaxNodeAnalysisContext.SemanticModel.GetDeclaredSymbol(syntaxNodeAnalysisContext.Node);
 
