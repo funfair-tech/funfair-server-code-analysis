@@ -7,17 +7,21 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 
 ## [Unreleased]
 ### Added
-- FF-3697 - Explicitly ban .AddJsonFile where 'reloadOnChange' parameter is true
 ### Fixed
 ### Changed
-- FF-1429 - Updated coverlet to 3.1.0
-- FF-1429 - Updated FunFair.Test.Common to 5.5.0.1195
 ### Removed
 ### Deployment Changes
 
 <!--
 Releases that have at least been deployed to staging, BUT NOT necessarily released to live.  Changes should be moved from [Unreleased] into here as they are merged into the appropriate release branch
 -->
+## [5.2.5] - 2021-07-26
+### Added
+- FF-3697 - Explicitly ban .AddJsonFile where 'reloadOnChange' parameter is true
+### Changed
+- FF-1429 - Updated coverlet to 3.1.0
+- FF-1429 - Updated FunFair.Test.Common to 5.5.0.1195
+
 ## [5.2.4] - 2021-07-19
 ### Added
 - Check if built-in methods are used for NonBlocking.ConcurrentDictionary<,> and force usage of extension methods under FunFair.Common.Extensions.ConcurrentDictionaryExtensions
