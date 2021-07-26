@@ -40,7 +40,7 @@ namespace FunFair.CodeAnalysis
 
         private static void MustBeReadOnly(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
         {
-            if (!(syntaxNodeAnalysisContext.Node is StructDeclarationSyntax structDeclarationSyntax))
+            if (syntaxNodeAnalysisContext.Node is not StructDeclarationSyntax structDeclarationSyntax)
             {
                 return;
             }

@@ -36,7 +36,7 @@ namespace FunFair.CodeAnalysis
         {
             void LookForProhibition(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
             {
-                if (!(syntaxNodeAnalysisContext.Node is NullableDirectiveTriviaSyntax pragmaWarningDirective))
+                if (syntaxNodeAnalysisContext.Node is not NullableDirectiveTriviaSyntax pragmaWarningDirective)
                 {
                     return;
                 }

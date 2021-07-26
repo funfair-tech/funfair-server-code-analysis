@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Immutable;
-using System.Linq;
+﻿using System.Collections.Immutable;
 using FunFair.CodeAnalysis.Helpers;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -41,64 +39,20 @@ namespace FunFair.CodeAnalysis
 
         private static void MustDeriveFromTestBase(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
         {
-            if (!(syntaxNodeAnalysisContext.Node is MethodDeclarationSyntax methodDeclarationSyntax))
+            if (syntaxNodeAnalysisContext.Node is not MethodDeclarationSyntax methodDeclarationSyntax)
             {
                 return;
             }
 
-            if (!IsTestMethod(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, methodDeclarationSyntax: methodDeclarationSyntax))
+            if (!TestDetection.IsTestMethod(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, methodDeclarationSyntax: methodDeclarationSyntax))
             {
                 return;
             }
 
-            if (!IsDerivedFromTestBase(syntaxNodeAnalysisContext))
+            if (!TestDetection.IsDerivedFromTestBase(syntaxNodeAnalysisContext))
             {
                 syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(descriptor: Rule, methodDeclarationSyntax.GetLocation()));
             }
-        }
-
-        private static bool IsDerivedFromTestBase(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
-        {
-            ISymbol? containingType = syntaxNodeAnalysisContext.ContainingSymbol;
-
-            if (containingType == null)
-            {
-                return false;
-            }
-
-            for (INamedTypeSymbol? parent = containingType.ContainingType; parent != null; parent = parent.BaseType)
-            {
-                if (SymbolDisplay.ToDisplayString(parent) == "FunFair.Test.Common.TestBase")
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        private static bool IsTestMethod(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, MethodDeclarationSyntax methodDeclarationSyntax)
-        {
-            foreach (AttributeSyntax attribute in methodDeclarationSyntax.AttributeLists.SelectMany(selector: al => al.Attributes))
-            {
-                TypeInfo ti = syntaxNodeAnalysisContext.SemanticModel.GetTypeInfo(attribute);
-
-                if (ti.Type != null)
-                {
-                    if (IsTestMethodAttribute(ti.Type.ToDisplayString()))
-                    {
-                        return true;
-                    }
-                }
-            }
-
-            return false;
-        }
-
-        private static bool IsTestMethodAttribute(string attributeType)
-        {
-            return StringComparer.InvariantCultureIgnoreCase.Equals(x: attributeType, y: @"Xunit.FactAttribute") ||
-                   StringComparer.InvariantCultureIgnoreCase.Equals(x: attributeType, y: @"Xunit.TheoryAttribute");
         }
     }
 }

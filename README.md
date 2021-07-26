@@ -37,6 +37,7 @@ Static Code analysis Repo for FunFair Server dotnet projects.
 |FFS0032|Avoid using ``NonBlocing.ConcurrentDictionary<,>.AddOrUpdate`` - Use ``FunFair.Common.Extensions.ConcurrentDictionaryExtensions.AddOrUpdate``|
 |FFS0033|Avoid using ``NonBlocing.ConcurrentDictionary<,>.GetOrAdd`` - Use ``FunFair.Common.Extensions.ConcurrentDictionaryExtensions.GetOrAdd``|
 |FFS0034|Avoid using ``Microsoft.Extensions.Configuration.ConfigurationBuilder.AddJsonFile`` with reload set to true|
+|FFS0035|Checks that test classes do not define mutable fields|
 
 ## Changelog
 

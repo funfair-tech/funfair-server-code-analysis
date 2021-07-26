@@ -40,7 +40,7 @@ namespace FunFair.CodeAnalysis
 
         private static void MustBeReadOnly(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
         {
-            if (!(syntaxNodeAnalysisContext.Node is ClassDeclarationSyntax classDeclarationSyntax))
+            if (syntaxNodeAnalysisContext.Node is not ClassDeclarationSyntax classDeclarationSyntax)
             {
                 return;
             }

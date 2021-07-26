@@ -52,15 +52,14 @@ namespace FunFair.CodeAnalysis
 
         private static void CheckClassVisibility(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
         {
-            if (!(syntaxNodeAnalysisContext.Node is ClassDeclarationSyntax classDeclarationSyntax))
+            if (syntaxNodeAnalysisContext.Node is not ClassDeclarationSyntax classDeclarationSyntax)
             {
                 return;
             }
 
             foreach (ConfiguredClass classDefinition in Classes)
             {
-                if (classDefinition.TypeMatchesClass(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext) &&
-                    !classDefinition.HasCorrectClassModifier(classDeclarationSyntax: classDeclarationSyntax))
+                if (classDefinition.TypeMatchesClass(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext) && !classDefinition.HasCorrectClassModifier(classDeclarationSyntax: classDeclarationSyntax))
                 {
                     syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(descriptor: classDefinition.Rule, classDeclarationSyntax.GetLocation()));
                 }

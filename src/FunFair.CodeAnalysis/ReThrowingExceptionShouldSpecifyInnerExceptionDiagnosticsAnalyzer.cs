@@ -41,7 +41,7 @@ namespace FunFair.CodeAnalysis
 
         private static void MustBeReadOnly(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
         {
-            if (!(syntaxNodeAnalysisContext.Node is CatchClauseSyntax catchClause))
+            if (syntaxNodeAnalysisContext.Node is not CatchClauseSyntax catchClause)
             {
                 return;
             }
