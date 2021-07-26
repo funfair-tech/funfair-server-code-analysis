@@ -95,5 +95,106 @@ namespace FunFair.CodeAnalysis.Tests
 
             return this.VerifyCSharpDiagnosticAsync(source: test, new[] {WellKnownMetadataReferences.Substitute});
         }
+
+        [Fact]
+        public Task AddJsonFileWithReloadOnChangeSetToFalseIsPassingAsync()
+        {
+            const string test = @"
+     using Microsoft.Extensions.Configuration;
+
+     namespace ConsoleApplication1
+     {
+         class TypeName
+         {
+             void Test()
+             {
+                 IConfigurationBuilder builder = new ConfigurationBuilder().AddJsonFile(path: ""appsettings.json"", optional: true, reloadOnChange: false);
+             }
+         }
+     }";
+
+            return this.VerifyCSharpDiagnosticAsync(source: test,
+                                                    new[]
+                                                    {
+                                                        WellKnownMetadataReferences.MicrosoftExtensionsIConfigurationBuilder,
+                                                        WellKnownMetadataReferences.ConfigurationBuilder,
+                                                        WellKnownMetadataReferences.JsonConfigurationExtensions
+                                                    });
+        }
+
+        [Fact]
+        public Task AddJsonFileWithReloadOnChangeSetToTrueIsBannedConstructorAsync()
+        {
+            const string test = @"
+     using Microsoft.Extensions.Configuration;
+
+     namespace ConsoleApplication1
+     {
+         class TypeName
+         {
+             void Test()
+             {
+                 IConfigurationBuilder builder = new ConfigurationBuilder()
+                                    .AddJsonFile(path: ""appsettings.json"", optional: false, reloadOnChange: true)
+                                    .Build();
+           }
+         }
+     }";
+
+            DiagnosticResult expected = new()
+                                        {
+                                            Id = "FFS0034",
+                                            Message = "Only use AddJsonFile with reloadOnChange set to false",
+                                            Severity = DiagnosticSeverity.Error,
+                                            Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 10, column: 50)}
+                                        };
+
+            return this.VerifyCSharpDiagnosticAsync(source: test,
+                                                    new[]
+                                                    {
+                                                        WellKnownMetadataReferences.MicrosoftExtensionsIConfigurationBuilder,
+                                                        WellKnownMetadataReferences.ConfigurationBuilder,
+                                                        WellKnownMetadataReferences.JsonConfigurationExtensions
+                                                    },
+                                                    expected);
+        }
+
+        [Fact]
+        public Task AddJsonFileWithReloadOnChangeSetToTrueIsBannedNonConstructorAsync()
+        {
+            const string test = @"
+     using Microsoft.Extensions.Configuration;
+
+     namespace ConsoleApplication1
+     {
+         class TypeName
+         {
+             void Test()
+             {
+                 IConfigurationBuilder builder = new ConfigurationBuilder()
+                                    .AddJsonFile(path: ""appsettings.json"", optional: false, reloadOnChange: false)
+                                    .AddJsonFile(path: ""appsettings1.json"", optional: true, reloadOnChange: true)
+                                    .Build();
+           }
+         }
+     }";
+
+            DiagnosticResult expected = new()
+                                        {
+                                            Id = "FFS0034",
+                                            Message = "Only use AddJsonFile with reloadOnChange set to false",
+                                            Severity = DiagnosticSeverity.Error,
+                                            Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 10, column: 50)}
+                                        };
+
+            return this.VerifyCSharpDiagnosticAsync(source: test,
+                                                    new[]
+                                                    {
+                                                        WellKnownMetadataReferences.MicrosoftExtensionsIConfigurationBuilder,
+                                                        WellKnownMetadataReferences.ConfigurationBuilder,
+                                                        WellKnownMetadataReferences.JsonConfigurationExtensions
+                                                    },
+                                                    expected);
+        }
     }
 }
