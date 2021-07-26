@@ -1,4 +1,5 @@
 ﻿using System.Collections.Immutable;
+using System.Linq;
 using FunFair.CodeAnalysis.Helpers;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -11,14 +12,14 @@ namespace FunFair.CodeAnalysis
     ///     Looks for issues with class declarations
     /// </summary>
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    public sealed class TestClassFieldsAnalysisDiagnosticsAnalyzer : DiagnosticAnalyzer
+    public sealed class TestClassPropertyAnalysisDiagnosticsAnalyzer : DiagnosticAnalyzer
     {
         private const string CATEGORY = "Classes";
 
-        private static readonly DiagnosticDescriptor Rule = RuleHelpers.CreateRule(code: Rules.RuleTestClassesShouldNotDefineMutableFields,
+        private static readonly DiagnosticDescriptor Rule = RuleHelpers.CreateRule(code: Rules.RuleTestClassesShouldNotDefineMutableProperties,
                                                                                    category: CATEGORY,
-                                                                                   title: "Fields in test classes should be read-only or const",
-                                                                                   message: "Fields in test classes should be read-only or const");
+                                                                                   title: "Properties in test classes should be read-only or const",
+                                                                                   message: "Properties in test classes should be read-only or const");
 
         /// <inheritdoc />
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => new[] {Rule}.ToImmutableArray();
@@ -34,28 +35,31 @@ namespace FunFair.CodeAnalysis
 
         private static void PerformCheck(CompilationStartAnalysisContext compilationStartContext)
         {
-            compilationStartContext.RegisterSyntaxNodeAction(action: FieldMustBeReadOnly, SyntaxKind.FieldDeclaration);
+            compilationStartContext.RegisterSyntaxNodeAction(action: PropertyMustBeReadOnly, SyntaxKind.PropertyDeclaration);
         }
 
-        private static void FieldMustBeReadOnly(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
+        private static void PropertyMustBeReadOnly(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
         {
             if (!TestDetection.IsDerivedFromTestBase(syntaxNodeAnalysisContext))
             {
                 return;
             }
 
-            if (syntaxNodeAnalysisContext.Node is not FieldDeclarationSyntax fieldDeclarationSyntax)
+            if (syntaxNodeAnalysisContext.Node is not PropertyDeclarationSyntax propertyDeclarationSyntax)
             {
                 return;
             }
 
-            if (fieldDeclarationSyntax.Modifiers.Any(SyntaxKind.ReadOnlyKeyword) || fieldDeclarationSyntax.Modifiers.Any(SyntaxKind.ConstKeyword))
+            if (propertyDeclarationSyntax.AccessorList?.Accessors.Any(IsMutable) == true)
             {
                 // its read-only or const.
-                return;
+                syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(descriptor: Rule, propertyDeclarationSyntax.GetLocation()));
             }
+        }
 
-            syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(descriptor: Rule, fieldDeclarationSyntax.GetLocation()));
+        private static bool IsMutable(AccessorDeclarationSyntax a)
+        {
+            return a.Kind() == SyntaxKind.SetAccessorDeclaration;
         }
     }
 }
