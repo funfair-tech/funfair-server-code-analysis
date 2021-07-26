@@ -78,6 +78,10 @@ namespace FunFair.CodeAnalysis.Helpers
         private static bool HasMatchingArguments(InvocationExpressionSyntax invocation, IMethodSymbol arguments)
         {
             // TODO: Match on something more than just the count of methods - i.e. match on types and argument names?
+            // It is hard to make any match because we don't know for sure to which parameter argument is related.
+            // Argument may or may not have argument name - this is optional
+            // We can't compare lists by types user in parameters, order in invocation list can be different than in parameter list
+            // due to use of parameter names (then order is not relevant).
             return arguments.Parameters.Length == invocation.ArgumentList.Arguments.Count;
         }
 

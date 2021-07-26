@@ -178,14 +178,7 @@ namespace FunFair.CodeAnalysis.Tests
            }
          }
      }";
-/*
-            IConfigurationBuilder builder1 = new ConfigurationBuilder();
-            builder1.AddJsonFile(path: ""appsettings.json"", optional: true, reloadOnChange: true);
 
-
-
-                IConfigurationRoot builder2 = new ConfigurationBuilder().Build();
-  */
             DiagnosticResult expected = new()
                                         {
                                             Id = "FFS0034",
