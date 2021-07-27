@@ -15,10 +15,10 @@ namespace FunFair.CodeAnalysis.Tests
         }
 
         [Fact]
-        public Task NonTestClassAllowedMutableFieldsAsync()
+        public Task NonTestClassAllowedMutablePropertiesAsync()
         {
             const string test = @"
-public sealed class Test {
+public sealed class NormalClass {
     public int TestValue {get; set;}
 
 }";

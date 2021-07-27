@@ -18,7 +18,7 @@ namespace FunFair.CodeAnalysis.Tests
         public Task NonTestClassAllowedMutableFieldsAsync()
         {
             const string test = @"
-public sealed class Test {
+public sealed class NormalClass {
     private int _test;
 
     public void Exec()
