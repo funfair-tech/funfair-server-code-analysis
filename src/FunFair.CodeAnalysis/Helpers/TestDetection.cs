@@ -27,7 +27,7 @@ namespace FunFair.CodeAnalysis.Helpers
                 return false;
             }
 
-            return containingType.BaseClasses()
+            return containingType.ContainingType.BaseClasses()
                                  .Any(IsTestBase);
         }
 

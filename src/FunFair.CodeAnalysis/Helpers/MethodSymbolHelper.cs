@@ -42,7 +42,7 @@ namespace FunFair.CodeAnalysis.Helpers
                                                                               MemberAccessExpressionSyntax memberAccessExpressionSyntax)
         {
             // TODO: find a better and more reliable way of doing this - e.g. must be something built into roslyn already.
-            ITypeSymbol? sourceType = GetSourceType(memberAccessExpressionSyntax: memberAccessExpressionSyntax, semanticModel: syntaxNodeAnalysisContext.SemanticModel);
+            INamedTypeSymbol? sourceType = GetSourceType(memberAccessExpressionSyntax: memberAccessExpressionSyntax, semanticModel: syntaxNodeAnalysisContext.SemanticModel);
 
             if (sourceType == null)
             {
@@ -56,11 +56,11 @@ namespace FunFair.CodeAnalysis.Helpers
                           .FirstOrDefault(sym => HasMatchingArguments(invocation: invocation, arguments: sym));
         }
 
-        private static ImmutableArray<ISymbol> BuildSymbols(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, ITypeSymbol sourceType, string fullName)
+        private static ImmutableArray<ISymbol> BuildSymbols(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, INamedTypeSymbol sourceType, string fullName)
         {
             ImmutableArray<ISymbol> symbols = syntaxNodeAnalysisContext.SemanticModel.LookupSymbols(position: 0, container: sourceType, name: fullName, includeReducedExtensionMethods: true);
 
-            for (INamedTypeSymbol? baseType = sourceType.BaseType; baseType != null; baseType = baseType.BaseType)
+            foreach (INamedTypeSymbol? baseType in sourceType.BaseClasses())
             {
                 symbols = symbols.AddRange(syntaxNodeAnalysisContext.SemanticModel.LookupSymbols(position: 0, container: baseType, name: fullName, includeReducedExtensionMethods: true));
             }
@@ -99,7 +99,7 @@ namespace FunFair.CodeAnalysis.Helpers
                                             .Symbol;
         }
 
-        private static ITypeSymbol? GetSourceType(MemberAccessExpressionSyntax memberAccessExpressionSyntax, SemanticModel semanticModel)
+        private static INamedTypeSymbol? GetSourceType(MemberAccessExpressionSyntax memberAccessExpressionSyntax, SemanticModel semanticModel)
         {
             ISymbol? symbol = semanticModel.GetSymbolInfo(memberAccessExpressionSyntax.Expression)
                                            .Symbol;
@@ -112,7 +112,7 @@ namespace FunFair.CodeAnalysis.Helpers
                 IPropertySymbol prop => prop.Type,
                 IMethodSymbol method => method.MethodKind == MethodKind.Constructor ? method.ReceiverType : method.ReturnType,
                 _ => null
-            };
+            } as INamedTypeSymbol;
         }
     }
 }

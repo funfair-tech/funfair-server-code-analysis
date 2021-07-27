@@ -90,17 +90,15 @@ namespace FunFair.CodeAnalysis
                     return false;
                 }
 
-                for (INamedTypeSymbol? parent = containingType.BaseType; parent != null; parent = parent.BaseType)
-                {
-                    INamedTypeSymbol originalDefinition = parent.OriginalDefinition;
+                return containingType.BaseClasses()
+                                     .Any(this.IsMatchingClass);
+            }
 
-                    if (SymbolDisplay.ToDisplayString(originalDefinition) == this.ClassName)
-                    {
-                        return true;
-                    }
-                }
+            private bool IsMatchingClass(INamedTypeSymbol typeSymbol)
+            {
+                INamedTypeSymbol originalDefinition = typeSymbol.OriginalDefinition;
 
-                return false;
+                return SymbolDisplay.ToDisplayString(originalDefinition) == this.ClassName;
             }
 
             public bool HasCorrectClassModifier(ClassDeclarationSyntax classDeclarationSyntax)

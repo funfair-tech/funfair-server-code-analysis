@@ -5,9 +5,9 @@ namespace FunFair.CodeAnalysis.Helpers
 {
     internal static class TypeHelpers
     {
-        public static IEnumerable<INamedTypeSymbol> BaseClasses(this ISymbol containingType)
+        public static IEnumerable<INamedTypeSymbol> BaseClasses(this INamedTypeSymbol sourceType)
         {
-            for (INamedTypeSymbol? parent = containingType.ContainingType; parent != null; parent = parent.BaseType)
+            for (INamedTypeSymbol? parent = sourceType; parent != null; parent = parent.BaseType)
             {
                 yield return parent;
             }
