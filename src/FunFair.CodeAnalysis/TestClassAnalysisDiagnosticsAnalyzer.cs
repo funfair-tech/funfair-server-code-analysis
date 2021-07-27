@@ -44,15 +44,16 @@ namespace FunFair.CodeAnalysis
                 return;
             }
 
-            if (!TestDetection.IsTestMethod(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, methodDeclarationSyntax: methodDeclarationSyntax))
-            {
-                return;
-            }
-
-            if (!TestDetection.IsDerivedFromTestBase(syntaxNodeAnalysisContext))
+            if (IsTestMethodInClassNotDerivedFromTestBase(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, methodDeclarationSyntax: methodDeclarationSyntax))
             {
                 syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(descriptor: Rule, methodDeclarationSyntax.GetLocation()));
             }
+        }
+
+        private static bool IsTestMethodInClassNotDerivedFromTestBase(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, MethodDeclarationSyntax methodDeclarationSyntax)
+        {
+            return TestDetection.IsTestMethod(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, methodDeclarationSyntax: methodDeclarationSyntax) &&
+                   !TestDetection.IsDerivedFromTestBase(syntaxNodeAnalysisContext);
         }
     }
 }
