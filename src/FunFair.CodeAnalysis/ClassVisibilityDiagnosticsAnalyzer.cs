@@ -52,15 +52,14 @@ namespace FunFair.CodeAnalysis
 
         private static void CheckClassVisibility(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
         {
-            if (!(syntaxNodeAnalysisContext.Node is ClassDeclarationSyntax classDeclarationSyntax))
+            if (syntaxNodeAnalysisContext.Node is not ClassDeclarationSyntax classDeclarationSyntax)
             {
                 return;
             }
 
             foreach (ConfiguredClass classDefinition in Classes)
             {
-                if (classDefinition.TypeMatchesClass(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext) &&
-                    !classDefinition.HasCorrectClassModifier(classDeclarationSyntax: classDeclarationSyntax))
+                if (classDefinition.TypeMatchesClass(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext) && !classDefinition.HasCorrectClassModifier(classDeclarationSyntax: classDeclarationSyntax))
                 {
                     syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(descriptor: classDefinition.Rule, classDeclarationSyntax.GetLocation()));
                 }
@@ -91,17 +90,15 @@ namespace FunFair.CodeAnalysis
                     return false;
                 }
 
-                for (INamedTypeSymbol? parent = containingType.BaseType; parent != null; parent = parent.BaseType)
-                {
-                    INamedTypeSymbol originalDefinition = parent.OriginalDefinition;
+                return containingType.BaseClasses()
+                                     .Any(this.IsMatchingClass);
+            }
 
-                    if (SymbolDisplay.ToDisplayString(originalDefinition) == this.ClassName)
-                    {
-                        return true;
-                    }
-                }
+            private bool IsMatchingClass(INamedTypeSymbol typeSymbol)
+            {
+                INamedTypeSymbol originalDefinition = typeSymbol.OriginalDefinition;
 
-                return false;
+                return SymbolDisplay.ToDisplayString(originalDefinition) == this.ClassName;
             }
 
             public bool HasCorrectClassModifier(ClassDeclarationSyntax classDeclarationSyntax)

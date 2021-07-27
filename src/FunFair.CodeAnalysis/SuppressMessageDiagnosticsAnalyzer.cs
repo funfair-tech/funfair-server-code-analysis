@@ -44,14 +44,13 @@ namespace FunFair.CodeAnalysis
             }
 
             compilationStartContext.RegisterSyntaxNodeAction(action: syntaxNodeAnalysisContext =>
-                                                                         MustDeriveFromTestBase(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
-                                                                                                sourceClassType: sourceClassType),
+                                                                         MustDeriveFromTestBase(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, sourceClassType: sourceClassType),
                                                              SyntaxKind.Attribute);
         }
 
         private static void MustDeriveFromTestBase(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, INamedTypeSymbol sourceClassType)
         {
-            if (!(syntaxNodeAnalysisContext.Node is AttributeSyntax methodDeclarationSyntax))
+            if (syntaxNodeAnalysisContext.Node is not AttributeSyntax methodDeclarationSyntax)
             {
                 return;
             }
