@@ -27,15 +27,13 @@ namespace FunFair.CodeAnalysis.Helpers
                 return false;
             }
 
-            for (INamedTypeSymbol? parent = containingType.ContainingType; parent != null; parent = parent.BaseType)
-            {
-                if (SymbolDisplay.ToDisplayString(parent) == "FunFair.Test.Common.TestBase")
-                {
-                    return true;
-                }
-            }
+            return containingType.BaseClasses()
+                                 .Any(IsTestBase);
+        }
 
-            return false;
+        private static bool IsTestBase(INamedTypeSymbol symbol)
+        {
+            return symbol.ToFullyQualifiedName() == "FunFair.Test.Common.TestBase";
         }
 
         private static bool IsTestMethodAttribute(string attributeType)
