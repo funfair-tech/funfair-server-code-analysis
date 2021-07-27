@@ -7,8 +7,6 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 
 ## [Unreleased]
 ### Added
-- Check that test classes do not define mutable fields.
-- Check that test classes do not define mutable properties
 ### Fixed
 ### Changed
 ### Removed
@@ -17,6 +15,11 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 <!--
 Releases that have at least been deployed to staging, BUT NOT necessarily released to live.  Changes should be moved from [Unreleased] into here as they are merged into the appropriate release branch
 -->
+## [5.3.0] - 2021-07-27
+### Added
+- Check that test classes do not define mutable fields.
+- Check that test classes do not define mutable properties
+
 ## [5.2.5] - 2021-07-26
 ### Added
 - FF-3697 - Explicitly ban .AddJsonFile where 'reloadOnChange' parameter is true
