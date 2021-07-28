@@ -21,13 +21,12 @@ namespace FunFair.CodeAnalysis
         private static readonly ProhibitedMethodsSpec[] ForcedMethods =
         {
             new(ruleId: Rules.RuleDontUseSubstituteReceivedWithZeroNumberOfCalls, title: "Avoid use of received with zero call count", message:
-                "Only use Received with expected call count greater than 0, use DidNotReceived instead if 0 call received expected", sourceClass: "NSubstitute.SubstituteExtensions", forcedMethod:
-                "Received", new[] {new[] {new ParameterSpec(name: "requiredNumberOfCalls", type: "NumericLiteralExpression", value: "0")}}),
+                "Only use Received with expected call count greater than 0, use DidNotReceived instead if 0 call received expected", sourceClass:
+                "NSubstitute.SubstituteExtensions", forcedMethod: "Received",
+                new[] {new[] {new ParameterSpec(name: "requiredNumberOfCalls", type: "NumericLiteralExpression", value: "0")}}),
             new(ruleId: Rules.RuleDontUseConfigurationBuilderAddJsonFileWithReload, title: "Avoid use of reloadOnChange with value true", message:
-                "Only use AddJsonFile with reloadOnChange set to false", sourceClass: "Microsoft.Extensions.Configuration.JsonConfigurationExtensions", forcedMethod: "AddJsonFile", new[]
-                    {
-                        new[] {new ParameterSpec(name: "reloadOnChange", type: "TrueLiteralExpression", value: "true")}
-                    })
+                "Only use AddJsonFile with reloadOnChange set to false", sourceClass: "Microsoft.Extensions.Configuration.JsonConfigurationExtensions", forcedMethod:
+                "AddJsonFile", new[] {new[] {new ParameterSpec(name: "reloadOnChange", type: "TrueLiteralExpression", value: "true")}})
         };
 
         /// <inheritdoc />
@@ -121,7 +120,12 @@ namespace FunFair.CodeAnalysis
 
         private sealed class ProhibitedMethodsSpec
         {
-            public ProhibitedMethodsSpec(string ruleId, string title, string message, string sourceClass, string forcedMethod, IEnumerable<IEnumerable<ParameterSpec>> bannedSignatures)
+            public ProhibitedMethodsSpec(string ruleId,
+                                         string title,
+                                         string message,
+                                         string sourceClass,
+                                         string forcedMethod,
+                                         IEnumerable<IEnumerable<ParameterSpec>> bannedSignatures)
             {
                 this.SourceClass = sourceClass;
                 this.ForcedMethod = forcedMethod;
