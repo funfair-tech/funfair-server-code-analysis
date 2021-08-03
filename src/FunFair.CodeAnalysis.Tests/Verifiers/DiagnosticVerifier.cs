@@ -127,7 +127,7 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
                 throw new NotNullException();
             }
 
-            return VerifyDiagnosticsAsync(new[] {source}, references: references, language: LanguageNames.CSharp, analyzer: diagnostic, expected: expected);
+            return VerifyDiagnosticsAsync(new[] { source }, references: references, language: LanguageNames.CSharp, analyzer: diagnostic, expected: expected);
         }
 
         /// <summary>

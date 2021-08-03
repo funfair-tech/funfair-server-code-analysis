@@ -19,10 +19,16 @@ namespace FunFair.CodeAnalysis
 
         private static readonly NameSanitationSpec[] NameSpecifications =
         {
-            new(ruleId: Rules.RuleLoggerParametersShouldBeCalledLogger, title: @"ILogger parameters should be called 'logger'", message:
-                "ILogger parameters should be called 'logger'", sourceClass: "Microsoft.Extensions.Logging.ILogger", whitelistedParameterName: "logger"),
-            new(ruleId: Rules.RuleLoggerParametersShouldBeCalledLogger, title: @"ILogger parameters should be called 'logger'", message:
-                "ILogger parameters should be called 'logger'", sourceClass: "Microsoft.Extensions.Logging.ILogger<TCategoryName>", whitelistedParameterName: "logger")
+            new(ruleId: Rules.RuleLoggerParametersShouldBeCalledLogger,
+                title: @"ILogger parameters should be called 'logger'",
+                message: "ILogger parameters should be called 'logger'",
+                sourceClass: "Microsoft.Extensions.Logging.ILogger",
+                whitelistedParameterName: "logger"),
+            new(ruleId: Rules.RuleLoggerParametersShouldBeCalledLogger,
+                title: @"ILogger parameters should be called 'logger'",
+                message: "ILogger parameters should be called 'logger'",
+                sourceClass: "Microsoft.Extensions.Logging.ILogger<TCategoryName>",
+                whitelistedParameterName: "logger")
         };
 
         /// <inheritdoc />
@@ -68,7 +74,7 @@ namespace FunFair.CodeAnalysis
         private sealed class NameSanitationSpec
         {
             public NameSanitationSpec(string ruleId, string title, string message, string sourceClass, string whitelistedParameterName)
-                : this(ruleId: ruleId, title: title, message: message, sourceClass: sourceClass, new[] {whitelistedParameterName})
+                : this(ruleId: ruleId, title: title, message: message, sourceClass: sourceClass, new[] { whitelistedParameterName })
             {
             }
 

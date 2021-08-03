@@ -93,7 +93,7 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
                                                  bool allowNewCompilerDiagnostics)
         {
             Document document = CreateDocument(source: oldSource, language: language);
-            Diagnostic[] analyzerDiagnostics = await GetSortedDiagnosticsFromDocumentsAsync(analyzer: analyzer, new[] {document});
+            Diagnostic[] analyzerDiagnostics = await GetSortedDiagnosticsFromDocumentsAsync(analyzer: analyzer, new[] { document });
             Diagnostic[] compilerDiagnostics = await GetCompilerDiagnosticsAsync(document);
             int attempts = analyzerDiagnostics.Length;
 
@@ -110,13 +110,13 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
 
                 if (codeFixIndex != null)
                 {
-                    document = await ApplyFixAsync(document: document, actions.ElementAt((int) codeFixIndex));
+                    document = await ApplyFixAsync(document: document, actions.ElementAt((int)codeFixIndex));
 
                     break;
                 }
 
                 document = await ApplyFixAsync(document: document, actions.ElementAt(index: 0));
-                analyzerDiagnostics = await GetSortedDiagnosticsFromDocumentsAsync(analyzer: analyzer, new[] {document});
+                analyzerDiagnostics = await GetSortedDiagnosticsFromDocumentsAsync(analyzer: analyzer, new[] { document });
 
                 IEnumerable<Diagnostic> newCompilerDiagnostics = GetNewDiagnostics(diagnostics: compilerDiagnostics, await GetCompilerDiagnosticsAsync(document));
 

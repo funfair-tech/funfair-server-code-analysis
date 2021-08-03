@@ -31,7 +31,7 @@ namespace FunFair.CodeAnalysis.Tests
                                             Id = "FFS0008",
                                             Message = "Don't disable warnings using #pragma warning disable",
                                             Severity = DiagnosticSeverity.Error,
-                                            Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 12, column: 25)}
+                                            Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 12, column: 25) }
                                         };
 
             return this.VerifyCSharpDiagnosticAsync(source: test, expected);
@@ -58,7 +58,7 @@ namespace FunFair.CodeAnalysis.Tests
                                             Id = "FFS0008",
                                             Message = "Don't disable warnings using #pragma warning disable",
                                             Severity = DiagnosticSeverity.Error,
-                                            Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 9, column: 37)}
+                                            Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 9, column: 37) }
                                         };
 
             return this.VerifyCSharpDiagnosticAsync(source: test, expected);
@@ -81,7 +81,7 @@ namespace FunFair.CodeAnalysis.Tests
                                             Id = "FFS0008",
                                             Message = "Don't disable warnings using #pragma warning disable",
                                             Severity = DiagnosticSeverity.Error,
-                                            Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 12, column: 25)}
+                                            Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 12, column: 25) }
                                         };
 
             return this.VerifyCSharpDiagnosticAsync(source: test, expected);
