@@ -21,19 +21,36 @@ namespace FunFair.CodeAnalysis
 
         private static readonly ProhibitedMethodsSpec[] BannedMethods =
         {
-            new(ruleId: Rules.RuleDontUseAssertTrueWithoutMessage, title: @"Avoid use of assert method without message", message: "Only use Assert.True with message parameter",
-                sourceClass: "Xunit.Assert", bannedMethod: "True", new[] {new[] {"bool"}}),
-            new(ruleId: Rules.RuleDontUseAssertFalseWithoutMessage, title: @"Avoid use of assert method without message", message:
-                "Only use Assert.False with message parameter", sourceClass: "Xunit.Assert", bannedMethod: "False", new[] {new[] {"bool"}}),
-            new(ruleId: Rules.RuleDontUseBuildInAddOrUpdateConcurrentDictionary, title: @"Avoid use of the built in AddOrUpdate methods", message:
-                "Don't use any of the built in AddOrUpdate methods, instead FunFair.Common.Extensions.ConcurrentDictionaryExtensions.AddOrUpdate can be used", sourceClass:
-                "NonBlocking.ConcurrentDictionary`2", bannedMethod: "AddOrUpdate", new[] {new[] {"TKey", "System.Func<TKey, TValue>", "System.Func<TKey, TValue, TValue>"}}),
-            new(ruleId: Rules.RuleDontUseBuildInAddOrUpdateConcurrentDictionary, title: @"Avoid use of the built in AddOrUpdate methods", message:
-                "Don't use any of the built in AddOrUpdate methods, instead FunFair.Common.Extensions.ConcurrentDictionaryExtensions.AddOrUpdate can be used", sourceClass:
-                "NonBlocking.ConcurrentDictionary`2", bannedMethod: "AddOrUpdate", new[] {new[] {"TKey", "TValue", "System.Func<TKey, TValue, TValue>"}}),
-            new(ruleId: Rules.RuleDontUseBuildInGetOrAddConcurrentDictionary, title: @"Avoid use of the built in GetOrAdd methods", message:
-                "Don't use any of the built in GetOrAdd methods, instead FunFair.Common.Extensions.ConcurrentDictionaryExtensions.GetOrAdd can be used", sourceClass:
-                "NonBlocking.ConcurrentDictionary`2", bannedMethod: "GetOrAdd", new[] {new[] {"TKey", "System.Func<TKey, TValue>"}})
+            new(ruleId: Rules.RuleDontUseAssertTrueWithoutMessage,
+                title: @"Avoid use of assert method without message",
+                message: "Only use Assert.True with message parameter",
+                sourceClass: "Xunit.Assert",
+                bannedMethod: "True",
+                new[] { new[] { "bool" } }),
+            new(ruleId: Rules.RuleDontUseAssertFalseWithoutMessage,
+                title: @"Avoid use of assert method without message",
+                message: "Only use Assert.False with message parameter",
+                sourceClass: "Xunit.Assert",
+                bannedMethod: "False",
+                new[] { new[] { "bool" } }),
+            new(ruleId: Rules.RuleDontUseBuildInAddOrUpdateConcurrentDictionary,
+                title: @"Avoid use of the built in AddOrUpdate methods",
+                message: "Don't use any of the built in AddOrUpdate methods, instead FunFair.Common.Extensions.ConcurrentDictionaryExtensions.AddOrUpdate can be used",
+                sourceClass: "NonBlocking.ConcurrentDictionary`2",
+                bannedMethod: "AddOrUpdate",
+                new[] { new[] { "TKey", "System.Func<TKey, TValue>", "System.Func<TKey, TValue, TValue>" } }),
+            new(ruleId: Rules.RuleDontUseBuildInAddOrUpdateConcurrentDictionary,
+                title: @"Avoid use of the built in AddOrUpdate methods",
+                message: "Don't use any of the built in AddOrUpdate methods, instead FunFair.Common.Extensions.ConcurrentDictionaryExtensions.AddOrUpdate can be used",
+                sourceClass: "NonBlocking.ConcurrentDictionary`2",
+                bannedMethod: "AddOrUpdate",
+                new[] { new[] { "TKey", "TValue", "System.Func<TKey, TValue, TValue>" } }),
+            new(ruleId: Rules.RuleDontUseBuildInGetOrAddConcurrentDictionary,
+                title: @"Avoid use of the built in GetOrAdd methods",
+                message: "Don't use any of the built in GetOrAdd methods, instead FunFair.Common.Extensions.ConcurrentDictionaryExtensions.GetOrAdd can be used",
+                sourceClass: "NonBlocking.ConcurrentDictionary`2",
+                bannedMethod: "GetOrAdd",
+                new[] { new[] { "TKey", "System.Func<TKey, TValue>" } })
         };
 
         /// <inheritdoc />

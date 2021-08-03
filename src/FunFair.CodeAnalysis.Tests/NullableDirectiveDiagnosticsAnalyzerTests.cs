@@ -24,7 +24,7 @@ namespace FunFair.CodeAnalysis.Tests
                                             Id = "FFS0022",
                                             Message = "Don't use #nulllable directive, make the change globally for the project",
                                             Severity = DiagnosticSeverity.Error,
-                                            Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 9, column: 37)}
+                                            Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 9, column: 37) }
                                         };
 
             return this.VerifyCSharpDiagnosticAsync(source: test, expected);
@@ -40,7 +40,7 @@ namespace FunFair.CodeAnalysis.Tests
                                             Id = "FFS0022",
                                             Message = "Don't use #nulllable directive, make the change globally for the project",
                                             Severity = DiagnosticSeverity.Error,
-                                            Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 9, column: 37)}
+                                            Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 9, column: 37) }
                                         };
 
             return this.VerifyCSharpDiagnosticAsync(source: test, expected);
@@ -56,7 +56,7 @@ namespace FunFair.CodeAnalysis.Tests
                                             Id = "FFS0022",
                                             Message = "Don't use #nulllable directive, make the change globally for the project",
                                             Severity = DiagnosticSeverity.Error,
-                                            Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 9, column: 37)}
+                                            Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 9, column: 37) }
                                         };
 
             return this.VerifyCSharpDiagnosticAsync(source: test, expected);

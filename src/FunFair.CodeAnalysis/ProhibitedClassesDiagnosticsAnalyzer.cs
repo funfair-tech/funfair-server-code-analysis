@@ -20,9 +20,10 @@ namespace FunFair.CodeAnalysis
 
         private static readonly ProhibitedClassSpec[] BannedClasses =
         {
-            new(ruleId: Rules.RuleDontUseConcurrentDictionary, title: "Avoid use of System.Collections.Concurrent.ConcurrentDictionary class", message:
-                "Use NonBlocking.ConcurrentDictionary  rather than System.Collections.Concurrent.ConcurrentDictionary", sourceClass:
-                "System.Collections.Concurrent.ConcurrentDictionary`2")
+            new(ruleId: Rules.RuleDontUseConcurrentDictionary,
+                title: "Avoid use of System.Collections.Concurrent.ConcurrentDictionary class",
+                message: "Use NonBlocking.ConcurrentDictionary  rather than System.Collections.Concurrent.ConcurrentDictionary",
+                sourceClass: "System.Collections.Concurrent.ConcurrentDictionary`2")
         };
 
         /// <inheritdoc />
@@ -106,8 +107,8 @@ namespace FunFair.CodeAnalysis
             {
                 switch (symbol.OriginalDefinition)
                 {
-                    case IPropertySymbol propertySymbol: return GetSymbol(new[] {propertySymbol.Type}, cachedSymbols: cachedSymbols);
-                    case IFieldSymbol fieldSymbol: return GetSymbol(new[] {fieldSymbol.Type}, cachedSymbols: cachedSymbols);
+                    case IPropertySymbol propertySymbol: return GetSymbol(new[] { propertySymbol.Type }, cachedSymbols: cachedSymbols);
+                    case IFieldSymbol fieldSymbol: return GetSymbol(new[] { fieldSymbol.Type }, cachedSymbols: cachedSymbols);
                     case IMethodSymbol parameterSymbol: return GetSymbol(parameterSymbol.Parameters.Select(x => x.Type), cachedSymbols: cachedSymbols);
                 }
             }
@@ -117,7 +118,7 @@ namespace FunFair.CodeAnalysis
 
             if (typeInfo != null)
             {
-                return GetSymbol(new[] {typeInfo}, cachedSymbols: cachedSymbols);
+                return GetSymbol(new[] { typeInfo }, cachedSymbols: cachedSymbols);
             }
 
             return null;

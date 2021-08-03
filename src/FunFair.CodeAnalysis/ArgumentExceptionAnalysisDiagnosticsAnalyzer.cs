@@ -21,10 +21,10 @@ namespace FunFair.CodeAnalysis
                                                                                    title: "Argument Exceptions should pass parameter name",
                                                                                    message: "Argument Exceptions should pass parameter name");
 
-        private static readonly string[] ArgumentExceptions = {"System.ArgumentException", "System.ArgumentNullException", "System.ArgumentOutOfRangeException"};
+        private static readonly string[] ArgumentExceptions = { "System.ArgumentException", "System.ArgumentNullException", "System.ArgumentOutOfRangeException" };
 
         /// <inheritdoc />
-        public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => new[] {Rule}.ToImmutableArray();
+        public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => new[] { Rule }.ToImmutableArray();
 
         /// <inheritdoc />
         public override void Initialize(AnalysisContext context)
