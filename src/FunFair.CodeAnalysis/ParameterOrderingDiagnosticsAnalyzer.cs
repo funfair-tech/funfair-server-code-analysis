@@ -30,7 +30,7 @@ namespace FunFair.CodeAnalysis
                                                                                    message: "Parameter '{0}' must be parameter {1}");
 
         /// <inheritdoc />
-        public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => new[] {Rule}.ToImmutableArray();
+        public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => new[] { Rule }.ToImmutableArray();
 
         /// <inheritdoc />
         public override void Initialize(AnalysisContext context)
@@ -65,7 +65,7 @@ namespace FunFair.CodeAnalysis
 
             List<string> matchedEndings = new();
 
-            foreach (var parameterType in PreferredEndingOrdering.Reverse())
+            foreach (string parameterType in PreferredEndingOrdering.Reverse())
             {
                 var matchingParameter = parameters.FirstOrDefault(x => x.FullTypeName == parameterType);
 
