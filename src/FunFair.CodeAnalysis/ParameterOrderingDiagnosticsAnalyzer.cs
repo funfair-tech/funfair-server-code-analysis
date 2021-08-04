@@ -65,7 +65,7 @@ namespace FunFair.CodeAnalysis
 
             List<string> matchedEndings = new();
 
-            foreach (var parameterType in PreferredEndingOrdering.Reverse())
+            foreach (string parameterType in PreferredEndingOrdering.Reverse())
             {
                 var matchingParameter = parameters.FirstOrDefault(x => x.FullTypeName == parameterType);
 
