@@ -31,7 +31,7 @@ namespace FunFair.CodeAnalysis.Tests
                                             Id = "FFS0012",
                                             Message = "Classes should be static, sealed or abstract",
                                             Severity = DiagnosticSeverity.Error,
-                                            Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 12, column: 25)}
+                                            Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 12, column: 25) }
                                         };
 
             return this.VerifyCSharpDiagnosticAsync(source: test, expected);

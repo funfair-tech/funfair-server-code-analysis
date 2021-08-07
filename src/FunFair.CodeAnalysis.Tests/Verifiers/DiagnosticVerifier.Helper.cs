@@ -191,7 +191,7 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
         /// <returns>A Document created from the source string</returns>
         protected static Document CreateDocument(string source, MetadataReference[] references, string language = LanguageNames.CSharp)
         {
-            return CreateProject(new[] {source}, references: references, language: language)
+            return CreateProject(new[] { source }, references: references, language: language)
                    .Documents.First();
         }
 

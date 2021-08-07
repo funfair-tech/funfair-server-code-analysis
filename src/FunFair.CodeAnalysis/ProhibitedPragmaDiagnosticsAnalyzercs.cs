@@ -35,10 +35,10 @@ namespace FunFair.CodeAnalysis
                                                                                    title: "Don't disable warnings with #pragma warning disable",
                                                                                    message: "Don't disable warnings using #pragma warning disable");
 
-        private static readonly IReadOnlyList<string> TestAssemblies = new[] {@"Microsoft.NET.Test.Sdk"};
+        private static readonly IReadOnlyList<string> TestAssemblies = new[] { @"Microsoft.NET.Test.Sdk" };
 
         /// <inheritdoc />
-        public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => new[] {Rule}.ToImmutableArray();
+        public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => new[] { Rule }.ToImmutableArray();
 
         /// <inheritdoc />
         public override void Initialize(AnalysisContext context)

@@ -32,10 +32,10 @@ namespace FunFair.CodeAnalysis.Tests
                                             Id = "FFS0019",
                                             Message = "ILogger parameters should be called 'logger'",
                                             Severity = DiagnosticSeverity.Error,
-                                            Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 6, column: 30)}
+                                            Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 6, column: 30) }
                                         };
 
-            return this.VerifyCSharpDiagnosticAsync(source: test, new[] {WellKnownMetadataReferences.GenericLogger}, expected);
+            return this.VerifyCSharpDiagnosticAsync(source: test, new[] { WellKnownMetadataReferences.GenericLogger }, expected);
         }
 
         [Fact]
@@ -51,7 +51,7 @@ namespace FunFair.CodeAnalysis.Tests
             }
 }";
 
-            return this.VerifyCSharpDiagnosticAsync(source: test, new[] {WellKnownMetadataReferences.GenericLogger});
+            return this.VerifyCSharpDiagnosticAsync(source: test, new[] { WellKnownMetadataReferences.GenericLogger });
         }
 
         [Fact]
@@ -72,10 +72,10 @@ namespace FunFair.CodeAnalysis.Tests
                                             Id = "FFS0019",
                                             Message = "ILogger parameters should be called 'logger'",
                                             Severity = DiagnosticSeverity.Error,
-                                            Locations = new[] {new DiagnosticResultLocation(path: "Test0.cs", line: 6, column: 30)}
+                                            Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 6, column: 30) }
                                         };
 
-            return this.VerifyCSharpDiagnosticAsync(source: test, new[] {WellKnownMetadataReferences.Logger}, expected);
+            return this.VerifyCSharpDiagnosticAsync(source: test, new[] { WellKnownMetadataReferences.Logger }, expected);
         }
 
         [Fact]
@@ -91,7 +91,7 @@ namespace FunFair.CodeAnalysis.Tests
             }
 }";
 
-            return this.VerifyCSharpDiagnosticAsync(source: test, new[] {WellKnownMetadataReferences.Logger});
+            return this.VerifyCSharpDiagnosticAsync(source: test, new[] { WellKnownMetadataReferences.Logger });
         }
     }
 }
