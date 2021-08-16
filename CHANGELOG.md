@@ -12,6 +12,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 - FF-1429 - Updated SonarAnalyzer.CSharp to 8.27.0.35380
 - FF-1429 - Updated Microsoft.CodeAnalysis.CSharp.Workspaces to 3.11.0
 - FF-1429 - Updated Microsoft.NET.Test.Sdk to 16.11.0
+- FF-1429 - Updated Roslynator.Analyzers to 3.2.2
 ### Removed
 ### Deployment Changes
 
