@@ -127,7 +127,7 @@ namespace FunFair.CodeAnalysis.Tests
             {
                 return 1;
             }
-            
+
             public override bool Equals(object obj)
             {
                 return false;
@@ -426,10 +426,7 @@ namespace FunFair.CodeAnalysis.Tests
                                         };
 
             return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                    new[]
-                                                    {
-                                                        WellKnownMetadataReferences.IpAddress, WellKnownMetadataReferences.ConnectionInfo, WellKnownMetadataReferences.HttpContext
-                                                    },
+                                                    new[] { WellKnownMetadataReferences.IpAddress, WellKnownMetadataReferences.ConnectionInfo, WellKnownMetadataReferences.HttpContext },
                                                     expected);
         }
 
@@ -460,11 +457,35 @@ namespace FunFair.CodeAnalysis.Tests
                                         };
 
             return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                    new[]
-                                                    {
-                                                        WellKnownMetadataReferences.IpAddress, WellKnownMetadataReferences.ConnectionInfo, WellKnownMetadataReferences.HttpContext
-                                                    },
+                                                    new[] { WellKnownMetadataReferences.IpAddress, WellKnownMetadataReferences.ConnectionInfo, WellKnownMetadataReferences.HttpContext },
                                                     expected);
+        }
+
+        [Fact]
+        public Task GuidParseIsBannedInMethodsAsync()
+        {
+            const string test = @"
+    using System;
+
+    namespace ConsoleApplication1
+    {
+        class TypeName
+        {
+            void Test()
+            {
+                var when = Guid.Parse(""66D3F243-10D5-4A17-9676-6F258BB56A46"");
+            }
+        }
+    }";
+            DiagnosticResult expected = new()
+                                        {
+                                            Id = "FFS0037",
+                                            Message = @"Use new Guid() with constant guids or Guid.TryParse everywhere else",
+                                            Severity = DiagnosticSeverity.Error,
+                                            Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 10, column: 28) }
+                                        };
+
+            return this.VerifyCSharpDiagnosticAsync(source: test, expected);
         }
     }
 }
