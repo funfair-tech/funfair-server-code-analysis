@@ -39,6 +39,7 @@ Static Code analysis Repo for FunFair Server dotnet projects.
 |FFS0034|Avoid using ``Microsoft.Extensions.Configuration.ConfigurationBuilder.AddJsonFile`` with reload set to true|
 |FFS0035|Checks that test classes do not define mutable fields|
 |FFS0036|Checks that test classes do not define mutable properties|
+|FFS0037|Checks that ``Guid.Parse`` is not used and that ``new Guid`` or ``Guid.TryParse`` is used instead|
 
 ## Changelog
 

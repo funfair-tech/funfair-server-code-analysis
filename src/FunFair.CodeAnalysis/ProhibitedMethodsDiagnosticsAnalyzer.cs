@@ -60,7 +60,12 @@ namespace FunFair.CodeAnalysis
                 title: @"Use RemoteIpAddressRetriever instead of getting RemoteIpAddress directly from the HttpRequest",
                 message: "Use RemoteIpAddressRetriever",
                 sourceClass: "Microsoft.AspNetCore.Http.ConnectionInfo",
-                bannedMethod: "RemoteIpAddress")
+                bannedMethod: "RemoteIpAddress"),
+            new(ruleId: Rules.RuleDontUseGuidParse,
+                title: @"Use new Guid() with constant guids or Guid.TryParse everywhere else",
+                message: "Use new Guid() with constant guids or Guid.TryParse everywhere else",
+                sourceClass: "System.Guid",
+                bannedMethod: "Parse")
         };
 
         /// <inheritdoc />
@@ -90,10 +95,7 @@ namespace FunFair.CodeAnalysis
                     return;
                 }
 
-                ReportAnyBannedSymbols(cachedSymbols: cachedSymbols,
-                                       typeInfo: typeInfo,
-                                       invocation: memberAccessExpressionSyntax,
-                                       syntaxNodeAnalysisContext: syntaxNodeAnalysisContext);
+                ReportAnyBannedSymbols(cachedSymbols: cachedSymbols, typeInfo: typeInfo, invocation: memberAccessExpressionSyntax, syntaxNodeAnalysisContext: syntaxNodeAnalysisContext);
             }
 
             void LookForBannedMethods(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
