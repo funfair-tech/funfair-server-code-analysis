@@ -7,17 +7,20 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 
 ## [Unreleased]
 ### Added
-- Check that records have DebuggerDisplay attribute on them.
 ### Fixed
 ### Changed
-- FF-1429 - Updated SonarAnalyzer.CSharp to 8.28.0.36354
-- FF-1429 - Updated SonarAnalyzer.CSharp to 8.29.0.36737
 ### Removed
 ### Deployment Changes
 
 <!--
 Releases that have at least been deployed to staging, BUT NOT necessarily released to live.  Changes should be moved from [Unreleased] into here as they are merged into the appropriate release branch
 -->
+## [5.5.0] - 2021-09-15
+### Added
+- Check that records have DebuggerDisplay attribute on them.
+### Changed
+- FF-1429 - Updated SonarAnalyzer.CSharp to 8.29.0.36737
+
 ## [5.4.0] - 2021-08-25
 ### Added
 - Banned Guid.Parse as should use new Guid or Guid.TryParse instead
