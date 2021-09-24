@@ -43,7 +43,7 @@
         <PackageReference Include="coverlet.collector" Version="3.1.0" PrivateAssets="All" />
         <PackageReference Include="coverlet.msbuild" Version="3.1.0" PrivateAssets="All" />
         <PackageReference Include="DisableDateTimeNow" Version="1.0.5883.39470" PrivateAssets="All" />
-        <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="16.10.56" PrivateAssets="all" />
+        <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.0.63" PrivateAssets="all" />
         <PackageReference Include="NSubstitute.Analyzers.CSharp" Version="1.0.14" PrivateAssets="All" />
         <PackageReference Include="Roslynator.Analyzers" Version="3.2.2" PrivateAssets="All" />
         <PackageReference Include="SonarAnalyzer.CSharp" Version="8.29.0.36737" PrivateAssets="All" />
