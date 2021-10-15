@@ -63,7 +63,8 @@ namespace FunFair.CodeAnalysis
         {
             try
             {
-                return compilation.ReferencedAssemblyNames.SelectMany(collectionSelector: _ => TestAssemblies, resultSelector: (assembly, testAssemblyName) => new { assembly, testAssemblyName })
+                return compilation.ReferencedAssemblyNames.SelectMany(collectionSelector: _ => TestAssemblies,
+                                                                      resultSelector: (assembly, testAssemblyName) => new { assembly, testAssemblyName })
                                   .Where(t => StringComparer.InvariantCultureIgnoreCase.Equals(x: t.assembly.Name, y: t.testAssemblyName))
                                   .Select(t => t.assembly)
                                   .Any();
