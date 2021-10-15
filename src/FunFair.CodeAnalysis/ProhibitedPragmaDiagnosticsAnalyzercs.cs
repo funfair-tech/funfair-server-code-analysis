@@ -63,18 +63,10 @@ namespace FunFair.CodeAnalysis
         {
             try
             {
-                foreach (AssemblyIdentity assembly in compilation.ReferencedAssemblyNames)
-                {
-                    foreach (string testAssemblyName in TestAssemblies)
-                    {
-                        if (StringComparer.InvariantCultureIgnoreCase.Equals(x: assembly.Name, y: testAssemblyName))
-                        {
-                            return true;
-                        }
-                    }
-                }
-
-                return false;
+                return compilation.ReferencedAssemblyNames.SelectMany(collectionSelector: _ => TestAssemblies, resultSelector: (assembly, testAssemblyName) => new { assembly, testAssemblyName })
+                                  .Where(t => StringComparer.InvariantCultureIgnoreCase.Equals(x: t.assembly.Name, y: t.testAssemblyName))
+                                  .Select(t => t.assembly)
+                                  .Any();
             }
             catch
             {

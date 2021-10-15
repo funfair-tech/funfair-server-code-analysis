@@ -68,8 +68,7 @@ namespace FunFair.CodeAnalysis
         {
             foreach (INamedTypeSymbol typeSymbol in typeSymbols)
             {
-                ProhibitedClassSpec? bannedClass =
-                    BannedClasses.FirstOrDefault(rule => StringComparer.OrdinalIgnoreCase.Equals(typeSymbol.ToFullyQualifiedName(), y: rule.SourceClass));
+                ProhibitedClassSpec? bannedClass = BannedClasses.FirstOrDefault(rule => StringComparer.OrdinalIgnoreCase.Equals(typeSymbol.ToFullyQualifiedName(), y: rule.SourceClass));
 
                 if (bannedClass != null)
                 {
@@ -82,15 +81,15 @@ namespace FunFair.CodeAnalysis
         {
             Dictionary<string, INamedTypeSymbol> cachedSymbols = new();
 
-            foreach (ProhibitedClassSpec rule in BannedClasses)
+            foreach (string ruleSourceClass in BannedClasses.Select(rule => rule.SourceClass))
             {
-                if (!cachedSymbols.ContainsKey(rule.SourceClass))
+                if (!cachedSymbols.ContainsKey(ruleSourceClass))
                 {
-                    INamedTypeSymbol? item = compilation.GetTypeByMetadataName(rule.SourceClass);
+                    INamedTypeSymbol? item = compilation.GetTypeByMetadataName(ruleSourceClass);
 
                     if (item != null)
                     {
-                        cachedSymbols.Add(key: rule.SourceClass, value: item);
+                        cachedSymbols.Add(key: ruleSourceClass, value: item);
                     }
                 }
             }
@@ -98,8 +97,7 @@ namespace FunFair.CodeAnalysis
             return cachedSymbols;
         }
 
-        private static IEnumerable<INamedTypeSymbol>? LookForUsageOfBannedClasses(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext,
-                                                                                  Dictionary<string, INamedTypeSymbol> cachedSymbols)
+        private static IEnumerable<INamedTypeSymbol>? LookForUsageOfBannedClasses(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, Dictionary<string, INamedTypeSymbol> cachedSymbols)
         {
             ISymbol? symbol = syntaxNodeAnalysisContext.SemanticModel.GetDeclaredSymbol(syntaxNodeAnalysisContext.Node);
 
