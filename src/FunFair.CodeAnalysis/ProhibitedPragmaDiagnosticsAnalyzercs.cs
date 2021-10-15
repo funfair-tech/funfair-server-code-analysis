@@ -95,12 +95,9 @@ namespace FunFair.CodeAnalysis
                     return;
                 }
 
-                foreach (ExpressionSyntax invocation in pragmaWarningDirective.ErrorCodes)
+                foreach (ExpressionSyntax invocation in pragmaWarningDirective.ErrorCodes.Where(invocation => isBanned(invocation.ToString())))
                 {
-                    if (isBanned(invocation.ToString()))
-                    {
-                        syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(descriptor: Rule, invocation.GetLocation()));
-                    }
+                    syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(descriptor: Rule, invocation.GetLocation()));
                 }
             }
 
