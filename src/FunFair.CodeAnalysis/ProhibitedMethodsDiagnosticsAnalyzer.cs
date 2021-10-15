@@ -95,10 +95,7 @@ namespace FunFair.CodeAnalysis
                     return;
                 }
 
-                ReportAnyBannedSymbols(cachedSymbols: cachedSymbols,
-                                       typeInfo: typeInfo,
-                                       invocation: memberAccessExpressionSyntax,
-                                       syntaxNodeAnalysisContext: syntaxNodeAnalysisContext);
+                ReportAnyBannedSymbols(cachedSymbols: cachedSymbols, typeInfo: typeInfo, invocation: memberAccessExpressionSyntax, syntaxNodeAnalysisContext: syntaxNodeAnalysisContext);
             }
 
             void LookForBannedMethods(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
@@ -136,15 +133,15 @@ namespace FunFair.CodeAnalysis
         {
             Dictionary<string, INamedTypeSymbol> cachedSymbols = new();
 
-            foreach (ProhibitedMethodsSpec rule in BannedMethods)
+            foreach (string ruleSourceClass in BannedMethods.Select(rule => rule.SourceClass))
             {
-                if (!cachedSymbols.ContainsKey(rule.SourceClass))
+                if (!cachedSymbols.ContainsKey(ruleSourceClass))
                 {
-                    INamedTypeSymbol? item = compilation.GetTypeByMetadataName(rule.SourceClass);
+                    INamedTypeSymbol? item = compilation.GetTypeByMetadataName(ruleSourceClass);
 
                     if (item != null)
                     {
-                        cachedSymbols.Add(key: rule.SourceClass, value: item);
+                        cachedSymbols.Add(key: ruleSourceClass, value: item);
                     }
                 }
             }
