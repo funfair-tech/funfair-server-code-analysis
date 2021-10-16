@@ -95,7 +95,10 @@ namespace FunFair.CodeAnalysis
                     return;
                 }
 
-                ReportAnyBannedSymbols(cachedSymbols: cachedSymbols, typeInfo: typeInfo, invocation: memberAccessExpressionSyntax, syntaxNodeAnalysisContext: syntaxNodeAnalysisContext);
+                ReportAnyBannedSymbols(cachedSymbols: cachedSymbols,
+                                       typeInfo: typeInfo,
+                                       invocation: memberAccessExpressionSyntax,
+                                       syntaxNodeAnalysisContext: syntaxNodeAnalysisContext);
             }
 
             void LookForBannedMethods(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)

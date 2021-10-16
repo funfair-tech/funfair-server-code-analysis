@@ -68,7 +68,8 @@ namespace FunFair.CodeAnalysis
         {
             foreach (INamedTypeSymbol typeSymbol in typeSymbols)
             {
-                ProhibitedClassSpec? bannedClass = BannedClasses.FirstOrDefault(rule => StringComparer.OrdinalIgnoreCase.Equals(typeSymbol.ToFullyQualifiedName(), y: rule.SourceClass));
+                ProhibitedClassSpec? bannedClass =
+                    BannedClasses.FirstOrDefault(rule => StringComparer.OrdinalIgnoreCase.Equals(typeSymbol.ToFullyQualifiedName(), y: rule.SourceClass));
 
                 if (bannedClass != null)
                 {
@@ -97,7 +98,8 @@ namespace FunFair.CodeAnalysis
             return cachedSymbols;
         }
 
-        private static IEnumerable<INamedTypeSymbol>? LookForUsageOfBannedClasses(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, Dictionary<string, INamedTypeSymbol> cachedSymbols)
+        private static IEnumerable<INamedTypeSymbol>? LookForUsageOfBannedClasses(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext,
+                                                                                  Dictionary<string, INamedTypeSymbol> cachedSymbols)
         {
             ISymbol? symbol = syntaxNodeAnalysisContext.SemanticModel.GetDeclaredSymbol(syntaxNodeAnalysisContext.Node);
 
