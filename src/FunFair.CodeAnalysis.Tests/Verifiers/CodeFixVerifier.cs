@@ -103,7 +103,7 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
                 CodeFixContext context = new(document: document, analyzerDiagnostics[0], registerCodeFix: (a, _) => actions.Add(a), cancellationToken: CancellationToken.None);
                 await codeFixProvider.RegisterCodeFixesAsync(context);
 
-                if (!actions.Any())
+                if (actions.Count == 0)
                 {
                     break;
                 }
@@ -149,7 +149,7 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
                 }
 
                 //check if there are analyzer diagnostics left after the code fix
-                if (!analyzerDiagnostics.Any())
+                if (analyzerDiagnostics.Length == 0)
                 {
                     break;
                 }

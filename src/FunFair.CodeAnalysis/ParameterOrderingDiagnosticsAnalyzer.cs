@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using FunFair.CodeAnalysis.Helpers;
@@ -67,7 +68,7 @@ namespace FunFair.CodeAnalysis
 
             foreach (string parameterType in PreferredEndingOrdering.Reverse())
             {
-                var matchingParameter = parameters.FirstOrDefault(x => x.FullTypeName == parameterType);
+                var matchingParameter = Array.Find(array: parameters, match: x => x.FullTypeName == parameterType);
 
                 if (matchingParameter == null)
                 {

@@ -18,13 +18,13 @@ namespace FunFair.CodeAnalysis
     {
         private const string CATEGORY = "Illegal Class Usage";
 
-        private static readonly ProhibitedClassSpec[] BannedClasses =
-        {
-            new(ruleId: Rules.RuleDontUseConcurrentDictionary,
-                title: "Avoid use of System.Collections.Concurrent.ConcurrentDictionary class",
-                message: "Use NonBlocking.ConcurrentDictionary  rather than System.Collections.Concurrent.ConcurrentDictionary",
-                sourceClass: "System.Collections.Concurrent.ConcurrentDictionary`2")
-        };
+        private static readonly IReadOnlyList<ProhibitedClassSpec> BannedClasses = new ProhibitedClassSpec[]
+                                                                                   {
+                                                                                       new(ruleId: Rules.RuleDontUseConcurrentDictionary,
+                                                                                           title: "Avoid use of System.Collections.Concurrent.ConcurrentDictionary class",
+                                                                                           message: "Use NonBlocking.ConcurrentDictionary  rather than System.Collections.Concurrent.ConcurrentDictionary",
+                                                                                           sourceClass: "System.Collections.Concurrent.ConcurrentDictionary`2")
+                                                                                   };
 
         /// <inheritdoc />
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
