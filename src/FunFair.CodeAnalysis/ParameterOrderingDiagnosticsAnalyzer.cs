@@ -75,7 +75,7 @@ namespace FunFair.CodeAnalysis
                     continue;
                 }
 
-                if (matchingParameter.Parameter.Modifiers.Any(pm => pm.Kind() == SyntaxKind.ThisKeyword))
+                if (matchingParameter.Parameter.Modifiers.Any(pm => pm.IsKind(SyntaxKind.ThisKeyword)))
                 {
                     // Ignore parameters that are extension methods - they have to be the first parameter
                     continue;

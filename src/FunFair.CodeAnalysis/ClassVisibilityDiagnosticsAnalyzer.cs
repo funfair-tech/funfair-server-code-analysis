@@ -106,7 +106,7 @@ namespace FunFair.CodeAnalysis
             {
                 static bool MatchesVisibility(ConfiguredClass classDefinition, SyntaxToken syntaxToken)
                 {
-                    return syntaxToken.Kind() == classDefinition.Visibility;
+                    return syntaxToken.IsKind(classDefinition.Visibility);
                 }
 
                 return classDeclarationSyntax.Modifiers.Any(modifier => MatchesVisibility(this, syntaxToken: modifier));

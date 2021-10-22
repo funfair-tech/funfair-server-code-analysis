@@ -53,7 +53,7 @@ namespace FunFair.CodeAnalysis
 
         private static bool IsReadOnlyKeyword(SyntaxToken syntaxToken)
         {
-            return syntaxToken.Kind() == SyntaxKind.ReadOnlyKeyword;
+            return syntaxToken.IsKind(SyntaxKind.ReadOnlyKeyword);
         }
     }
 }
