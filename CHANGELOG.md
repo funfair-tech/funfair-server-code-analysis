@@ -7,6 +7,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 
 ## [Unreleased]
 ### Added
+- FFS0039 - Only one type name should be defined per file
 ### Fixed
 ### Changed
 - FF-1429 - Updated TeamCity.VSTest.TestAdapter to 1.0.27

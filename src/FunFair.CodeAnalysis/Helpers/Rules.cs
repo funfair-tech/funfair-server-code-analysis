@@ -40,5 +40,6 @@ namespace FunFair.CodeAnalysis.Helpers
         public const string RuleTestClassesShouldNotDefineMutableProperties = @"FFS0036";
         public const string RuleDontUseGuidParse = @"FFS0037";
         public const string RuleRecordsShouldSpecifyDebuggerDisplay = @"FFS0038";
+        public const string RuleOnlyOneTypeDefinedPerFile = @"FFS0039";
     }
 }
