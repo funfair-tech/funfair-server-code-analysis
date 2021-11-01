@@ -7,20 +7,24 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 
 ## [Unreleased]
 ### Added
-- FFS0039 - Only one type name should be defined per file
 ### Fixed
 ### Changed
-- FF-1429 - Updated TeamCity.VSTest.TestAdapter to 1.0.27
-- FF-1429 - Updated Microsoft.VisualStudio.Threading.Analyzers to 17.0.63
-- FF-1429 - Updated SonarAnalyzer.CSharp to 8.30.0.37606
-- FF-1429 - Updated Microsoft.CodeAnalysis to 3.3.3
-- FF-1429 - Updated Microsoft.NET.Test.Sdk to 17.0.0
 ### Removed
 ### Deployment Changes
 
 <!--
 Releases that have at least been deployed to staging, BUT NOT necessarily released to live.  Changes should be moved from [Unreleased] into here as they are merged into the appropriate release branch
 -->
+## [5.6.0] - 2021-11-01
+### Added
+- FFS0039 - Only one type name should be defined per file
+### Changed
+- FF-1429 - Updated TeamCity.VSTest.TestAdapter to 1.0.27
+- FF-1429 - Updated Microsoft.VisualStudio.Threading.Analyzers to 17.0.63
+- FF-1429 - Updated SonarAnalyzer.CSharp to 8.30.0.37606
+- FF-1429 - Updated Microsoft.CodeAnalysis to 3.3.3
+- FF-1429 - Updated Microsoft.NET.Test.Sdk to 17.0.0
+
 ## [5.5.0] - 2021-09-15
 ### Added
 - Check that records have DebuggerDisplay attribute on them.
