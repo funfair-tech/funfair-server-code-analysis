@@ -66,13 +66,38 @@ namespace FunFair.CodeAnalysis
         {
             return memberDeclarationSyntax switch
             {
-                ClassDeclarationSyntax classDeclarationSyntax => string.Concat(str0: "class:", classDeclarationSyntax.Identifier.ToString()),
-                RecordDeclarationSyntax recordDeclarationSyntax => string.Concat(str0: "record:", recordDeclarationSyntax.Identifier.ToString()),
-                StructDeclarationSyntax structDeclarationSyntax => string.Concat(str0: "struct:", structDeclarationSyntax.Identifier.ToString()),
-                InterfaceDeclarationSyntax interfaceDeclarationSyntax => string.Concat(str0: "interface:", interfaceDeclarationSyntax.Identifier.ToString()),
-                EnumDeclarationSyntax enumDeclarationSyntax => string.Concat(str0: "enum:", enumDeclarationSyntax.Identifier.ToString()),
+                ClassDeclarationSyntax classDeclarationSyntax => NormaliseClass(classDeclarationSyntax),
+                RecordDeclarationSyntax recordDeclarationSyntax => NormaliseStruct(recordDeclarationSyntax),
+                StructDeclarationSyntax structDeclarationSyntax => NormaliseRecord(structDeclarationSyntax),
+                InterfaceDeclarationSyntax interfaceDeclarationSyntax => NormaliseInterface(interfaceDeclarationSyntax),
+                EnumDeclarationSyntax enumDeclarationSyntax => NormaliseEnum(enumDeclarationSyntax),
                 _ => string.Empty
             };
+        }
+
+        private static string NormaliseEnum(EnumDeclarationSyntax enumDeclarationSyntax)
+        {
+            return string.Concat(str0: "enum:", enumDeclarationSyntax.Identifier.ToString());
+        }
+
+        private static string NormaliseInterface(InterfaceDeclarationSyntax interfaceDeclarationSyntax)
+        {
+            return string.Concat(str0: "interface:", interfaceDeclarationSyntax.Identifier.ToString());
+        }
+
+        private static string NormaliseRecord(StructDeclarationSyntax structDeclarationSyntax)
+        {
+            return string.Concat(str0: "struct:", structDeclarationSyntax.Identifier.ToString());
+        }
+
+        private static string NormaliseStruct(RecordDeclarationSyntax recordDeclarationSyntax)
+        {
+            return string.Concat(str0: "record:", recordDeclarationSyntax.Identifier.ToString());
+        }
+
+        private static string NormaliseClass(ClassDeclarationSyntax classDeclarationSyntax)
+        {
+            return string.Concat(str0: "class:", classDeclarationSyntax.Identifier.ToString());
         }
 
         private static IEnumerable<MemberDeclarationSyntax> GetNonNestedTypeDeclarations(CompilationUnitSyntax compilationUnit)
