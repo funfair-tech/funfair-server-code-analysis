@@ -36,6 +36,26 @@ public sealed class Test<T1, T2> {}
         }
 
         [Fact]
+        public Task ClassesOfSameNameDefinedInFileOneGenericOneStaticExplicitlyOkAsync()
+        {
+            const string test = @"public sealed class Test<T> {}
+
+public static class Test {}";
+
+            return this.VerifyCSharpDiagnosticAsync(test);
+        }
+
+        [Fact]
+        public Task GenericStructAndStaticClassOfSameNameDefinedInFileOneGenericOneStaticExplicitlyOkAsync()
+        {
+            const string test = @"public readonly struct Test<T> {}
+
+public static class Test {}";
+
+            return this.VerifyCSharpDiagnosticAsync(test);
+        }
+
+        [Fact]
         public Task RecordsOfSameNameDefinedInFileOkAsync()
         {
             const string test = @"public sealed record Test {}

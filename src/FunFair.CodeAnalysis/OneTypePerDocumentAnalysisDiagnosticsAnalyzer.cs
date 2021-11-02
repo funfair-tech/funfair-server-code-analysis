@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using FunFair.CodeAnalysis.Helpers;
@@ -16,6 +17,13 @@ namespace FunFair.CodeAnalysis
     public sealed class OneTypePerDocumentAnalysisDiagnosticsAnalyzer : DiagnosticAnalyzer
     {
         private const string CATEGORY = "Structs";
+
+        private const string ENUM_TYPE_PREFIX = @"enum:";
+        private const string INTERFACE_TYPE_PREFIX = @"interface:";
+        private const string STRUCT_TYPE_PREFIX = @"struct:";
+        private const string RECORD_TYPE_PREFIX = @"record:";
+        private const string STATIC_TYPE_PREFIX = @"static:";
+        private const string CLASS_TYPE_PREFIX = @"class:";
 
         private static readonly DiagnosticDescriptor Rule = RuleHelpers.CreateRule(code: Rules.RuleOnlyOneTypeDefinedPerFile,
                                                                                    category: CATEGORY,
@@ -55,10 +63,45 @@ namespace FunFair.CodeAnalysis
 
             if (grouped.Count > 1)
             {
-                foreach (MemberDeclarationSyntax member in members)
+                if (grouped.Count == 2)
                 {
-                    syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(descriptor: Rule, member.GetLocation()));
+                    IGrouping<string, MemberDeclarationSyntax>? staticGrouping = grouped.FirstOrDefault(g => IsStatic(g.Key));
+
+                    if (staticGrouping != null)
+                    {
+                        IGrouping<string, MemberDeclarationSyntax> otherGrouping = grouped.First(g => !IsStatic(g.Key));
+
+                        if (IsClass(otherGrouping.Key) || IsStruct(otherGrouping.Key))
+                        {
+                            return;
+                        }
+                    }
                 }
+
+                ReportAllMembersAsErrors(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, members: members);
+            }
+        }
+
+        private static bool IsStatic(string key)
+        {
+            return key.StartsWith(value: STATIC_TYPE_PREFIX, comparisonType: StringComparison.Ordinal);
+        }
+
+        private static bool IsClass(string key)
+        {
+            return key.StartsWith(value: CLASS_TYPE_PREFIX, comparisonType: StringComparison.Ordinal);
+        }
+
+        private static bool IsStruct(string key)
+        {
+            return key.StartsWith(value: STRUCT_TYPE_PREFIX, comparisonType: StringComparison.Ordinal);
+        }
+
+        private static void ReportAllMembersAsErrors(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, IReadOnlyList<MemberDeclarationSyntax> members)
+        {
+            foreach (MemberDeclarationSyntax member in members)
+            {
+                syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(descriptor: Rule, member.GetLocation()));
             }
         }
 
@@ -77,27 +120,32 @@ namespace FunFair.CodeAnalysis
 
         private static string NormaliseEnum(EnumDeclarationSyntax enumDeclarationSyntax)
         {
-            return string.Concat(str0: "enum:", enumDeclarationSyntax.Identifier.ToString());
+            return string.Concat(str0: ENUM_TYPE_PREFIX, enumDeclarationSyntax.Identifier.ToString());
         }
 
         private static string NormaliseInterface(InterfaceDeclarationSyntax interfaceDeclarationSyntax)
         {
-            return string.Concat(str0: "interface:", interfaceDeclarationSyntax.Identifier.ToString());
+            return string.Concat(str0: INTERFACE_TYPE_PREFIX, interfaceDeclarationSyntax.Identifier.ToString());
         }
 
         private static string NormaliseRecord(StructDeclarationSyntax structDeclarationSyntax)
         {
-            return string.Concat(str0: "struct:", structDeclarationSyntax.Identifier.ToString());
+            return string.Concat(str0: STRUCT_TYPE_PREFIX, structDeclarationSyntax.Identifier.ToString());
         }
 
         private static string NormaliseStruct(RecordDeclarationSyntax recordDeclarationSyntax)
         {
-            return string.Concat(str0: "record:", recordDeclarationSyntax.Identifier.ToString());
+            return string.Concat(str0: RECORD_TYPE_PREFIX, recordDeclarationSyntax.Identifier.ToString());
         }
 
         private static string NormaliseClass(ClassDeclarationSyntax classDeclarationSyntax)
         {
-            return string.Concat(str0: "class:", classDeclarationSyntax.Identifier.ToString());
+            if (classDeclarationSyntax.Modifiers.Any(m => m.IsKind(SyntaxKind.StaticKeyword)))
+            {
+                return string.Concat(str0: STATIC_TYPE_PREFIX, classDeclarationSyntax.Identifier.ToString());
+            }
+
+            return string.Concat(str0: CLASS_TYPE_PREFIX, classDeclarationSyntax.Identifier.ToString());
         }
 
         private static IEnumerable<MemberDeclarationSyntax> GetNonNestedTypeDeclarations(CompilationUnitSyntax compilationUnit)
