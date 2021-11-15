@@ -61,25 +61,27 @@ namespace FunFair.CodeAnalysis
                                                                                        .Where(x => !string.IsNullOrWhiteSpace(x.Key))
                                                                                        .ToArray();
 
-            if (grouped.Count > 1)
+            if (grouped.Count <= 1)
             {
-                if (grouped.Count == 2)
+                return;
+            }
+
+            if (grouped.Count == 2)
+            {
+                IGrouping<string, MemberDeclarationSyntax>? staticGrouping = grouped.FirstOrDefault(g => IsStatic(g.Key));
+
+                if (staticGrouping != null)
                 {
-                    IGrouping<string, MemberDeclarationSyntax>? staticGrouping = grouped.FirstOrDefault(g => IsStatic(g.Key));
+                    IGrouping<string, MemberDeclarationSyntax> otherGrouping = grouped.First(g => !IsStatic(g.Key));
 
-                    if (staticGrouping != null)
+                    if (IsClass(otherGrouping.Key) || IsStruct(otherGrouping.Key))
                     {
-                        IGrouping<string, MemberDeclarationSyntax> otherGrouping = grouped.First(g => !IsStatic(g.Key));
-
-                        if (IsClass(otherGrouping.Key) || IsStruct(otherGrouping.Key))
-                        {
-                            return;
-                        }
+                        return;
                     }
                 }
-
-                ReportAllMembersAsErrors(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, members: members);
             }
+
+            ReportAllMembersAsErrors(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, members: members);
         }
 
         private static bool IsStatic(string key)
