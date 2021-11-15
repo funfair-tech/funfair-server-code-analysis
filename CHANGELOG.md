@@ -13,7 +13,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 - FF-1429 - Updated FunFair.Test.Common to 5.6.2.1337
 - FF-1429 - Updated FunFair.Test.Common to 5.6.3.1339
 - FF-1429 - Updated Microsoft.VisualStudio.Threading.Analyzers to 17.0.64
-- FF-1429 - -
+- FF-1429 - Updated to Dotnet SDK 5.0.403
 - FF-1429 - Updated FunFair.Test.Common to 5.6.4.1351
 - FF-1429 - Updated Microsoft.CodeAnalysis.CSharp.Workspaces to 4.0.1
 - FF-1429 - Updated SonarAnalyzer.CSharp to 8.31.0.39249
