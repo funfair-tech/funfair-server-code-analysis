@@ -7,12 +7,18 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 
 ## [Unreleased]
 ### Added
-- FFS0040 - Type should be in a file with the same name as the type
 ### Fixed
 ### Changed
-- FF-1429 - Updated FunFair.Test.Common to 5.6.1.1333
-- FF-1429 - Updated FunFair.Test.Common to 5.6.2.1337
-- FF-1429 - Updated FunFair.Test.Common to 5.6.3.1339
+### Removed
+### Deployment Changes
+
+<!--
+Releases that have at least been deployed to staging, BUT NOT necessarily released to live.  Changes should be moved from [Unreleased] into here as they are merged into the appropriate release branch
+-->
+## [5.7.0] - 2021-11-15
+### Added
+- FFS0040 - Type should be in a file with the same name as the type
+### Changed
 - FF-1429 - Updated Microsoft.VisualStudio.Threading.Analyzers to 17.0.64
 - FF-1429 - Updated to Dotnet SDK 5.0.403
 - FF-1429 - Updated FunFair.Test.Common to 5.6.4.1351
@@ -21,11 +27,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 - FF-1429 - Updated NSubstitute.Analyzers.CSharp to 1.0.15
 ### Removed
 - Unused dependencies
-### Deployment Changes
 
-<!--
-Releases that have at least been deployed to staging, BUT NOT necessarily released to live.  Changes should be moved from [Unreleased] into here as they are merged into the appropriate release branch
--->
 ## [5.6.0] - 2021-11-01
 ### Added
 - FFS0039 - Only one type name should be defined per file
