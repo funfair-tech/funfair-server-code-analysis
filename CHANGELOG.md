@@ -17,6 +17,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 - FF-1429 - Updated FunFair.Test.Common to 5.6.4.1351
 - FF-1429 - Updated Microsoft.CodeAnalysis.CSharp.Workspaces to 4.0.1
 - FF-1429 - Updated SonarAnalyzer.CSharp to 8.31.0.39249
+- FF-1429 - Updated NSubstitute.Analyzers.CSharp to 1.0.15
 ### Removed
 - Unused dependencies
 ### Deployment Changes
