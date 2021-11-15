@@ -55,7 +55,7 @@ namespace FunFair.CodeAnalysis
         {
             SyntaxKind kind = syntaxToken.Kind();
 
-            return kind == SyntaxKind.StaticKeyword || kind == SyntaxKind.AbstractKeyword || kind == SyntaxKind.SealedKeyword;
+            return kind is SyntaxKind.StaticKeyword or SyntaxKind.AbstractKeyword or SyntaxKind.SealedKeyword;
         }
     }
 }
