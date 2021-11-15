@@ -61,20 +61,15 @@ namespace FunFair.CodeAnalysis
                                                                                        .Where(x => !string.IsNullOrWhiteSpace(x.Key))
                                                                                        .ToArray();
 
-            if (grouped.Count <= 1)
+            switch (grouped.Count)
             {
-                return;
-            }
+                case <= 1:
+                case 2 when IsSpecialCaseWhereNonGenericHelperClassExists(grouped): return;
+                default:
+                    ReportAllMembersAsErrors(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, members: members);
 
-            if (grouped.Count == 2)
-            {
-                if (IsSpecialCaseWhereNonGenericHelperClassExists(grouped))
-                {
-                    return;
-                }
+                    break;
             }
-
-            ReportAllMembersAsErrors(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, members: members);
         }
 
         private static bool IsSpecialCaseWhereNonGenericHelperClassExists(IReadOnlyList<IGrouping<string, MemberDeclarationSyntax>> grouped)
