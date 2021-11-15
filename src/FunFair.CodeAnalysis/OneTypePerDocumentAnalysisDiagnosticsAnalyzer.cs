@@ -68,20 +68,27 @@ namespace FunFair.CodeAnalysis
 
             if (grouped.Count == 2)
             {
-                IGrouping<string, MemberDeclarationSyntax>? staticGrouping = grouped.FirstOrDefault(g => IsStatic(g.Key));
-
-                if (staticGrouping != null)
+                if (IsSpecialCaseWhereNonGenericHelperClassExists(grouped))
                 {
-                    IGrouping<string, MemberDeclarationSyntax> otherGrouping = grouped.First(g => !IsStatic(g.Key));
-
-                    if (IsClass(otherGrouping.Key) || IsStruct(otherGrouping.Key))
-                    {
-                        return;
-                    }
+                    return;
                 }
             }
 
             ReportAllMembersAsErrors(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, members: members);
+        }
+
+        private static bool IsSpecialCaseWhereNonGenericHelperClassExists(IReadOnlyList<IGrouping<string, MemberDeclarationSyntax>> grouped)
+        {
+            IGrouping<string, MemberDeclarationSyntax>? staticGrouping = grouped.FirstOrDefault(g => IsStatic(g.Key));
+
+            if (staticGrouping == null)
+            {
+                return false;
+            }
+
+            IGrouping<string, MemberDeclarationSyntax> otherGrouping = grouped.First(g => !IsStatic(g.Key));
+
+            return IsClass(otherGrouping.Key) || IsStruct(otherGrouping.Key);
         }
 
         private static bool IsStatic(string key)
