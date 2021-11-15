@@ -42,7 +42,7 @@ Static Code analysis Repo for FunFair Server dotnet projects.
 |FFS0037|Checks that ``Guid.Parse`` is not used and that ``new Guid`` or ``Guid.TryParse`` is used instead|
 |FFS0038|Records should have ``DebuggerDisplay`` attribute on them.|
 |FFS0039|Only one type name should be defined per file. Note ``class T`` and ``class T<T1>`` are considered to be one type as they share the same name.|
-
+|FFS0040|Type should be in a file with the same name as the type.|
 ## Changelog
 
 View [changelog](CHANGELOG.md)

@@ -7,6 +7,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 
 ## [Unreleased]
 ### Added
+- FFS0040 - Type should be in a file with the same name as the type
 ### Fixed
 ### Changed
 - FF-1429 - Updated FunFair.Test.Common to 5.6.1.1333

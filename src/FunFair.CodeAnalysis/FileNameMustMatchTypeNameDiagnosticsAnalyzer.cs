@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.IO;
 using System.Linq;
 using FunFair.CodeAnalysis.Helpers;
 using Microsoft.CodeAnalysis;
@@ -14,21 +15,14 @@ namespace FunFair.CodeAnalysis
     ///     Looks for multiple classes being present in a file.
     /// </summary>
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    public sealed class OneTypePerDocumentAnalysisDiagnosticsAnalyzer : DiagnosticAnalyzer
+    public sealed class FileNameMustMatchTypeNameDiagnosticsAnalyzer : DiagnosticAnalyzer
     {
         private const string CATEGORY = "Files";
 
-        private const string ENUM_TYPE_PREFIX = @"enum:";
-        private const string INTERFACE_TYPE_PREFIX = @"interface:";
-        private const string STRUCT_TYPE_PREFIX = @"struct:";
-        private const string RECORD_TYPE_PREFIX = @"record:";
-        private const string STATIC_TYPE_PREFIX = @"static:";
-        private const string CLASS_TYPE_PREFIX = @"class:";
-
-        private static readonly DiagnosticDescriptor Rule = RuleHelpers.CreateRule(code: Rules.RuleOnlyOneTypeDefinedPerFile,
+        private static readonly DiagnosticDescriptor Rule = RuleHelpers.CreateRule(code: Rules.RuleTypeShouldBeInAFileWithSameName,
                                                                                    category: CATEGORY,
-                                                                                   title: "Should be only one type per file",
-                                                                                   message: "Should be only one type per file");
+                                                                                   title: "Should be in a file of the same name as the type",
+                                                                                   message: "Should be in a file of the same name as the type");
 
         /// <inheritdoc />
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => new[] { Rule }.ToImmutableArray();
@@ -44,65 +38,48 @@ namespace FunFair.CodeAnalysis
 
         private static void PerformCheck(CompilationStartAnalysisContext compilationStartContext)
         {
-            compilationStartContext.RegisterSyntaxNodeAction(action: MustContainOneType, SyntaxKind.CompilationUnit);
+            compilationStartContext.RegisterSyntaxNodeAction(action: CheckTypeNames, SyntaxKind.CompilationUnit);
         }
 
-        private static void MustContainOneType(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
+        private static void CheckTypeNames(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
         {
             if (syntaxNodeAnalysisContext.Node is not CompilationUnitSyntax compilationUnitSyntax)
             {
                 return;
             }
 
+            string fileName = GetDocumentFileName(compilationUnitSyntax);
+
             IReadOnlyList<MemberDeclarationSyntax> members = GetNonNestedTypeDeclarations(compilationUnitSyntax)
                 .ToArray();
 
-            IReadOnlyList<IGrouping<string, MemberDeclarationSyntax>> grouped = members.GroupBy(GetTypeName)
-                                                                                       .Where(x => !string.IsNullOrWhiteSpace(x.Key))
-                                                                                       .ToArray();
-
-            if (grouped.Count > 1)
-            {
-                if (grouped.Count == 2)
-                {
-                    IGrouping<string, MemberDeclarationSyntax>? staticGrouping = grouped.FirstOrDefault(g => IsStatic(g.Key));
-
-                    if (staticGrouping != null)
-                    {
-                        IGrouping<string, MemberDeclarationSyntax> otherGrouping = grouped.First(g => !IsStatic(g.Key));
-
-                        if (IsClass(otherGrouping.Key) || IsStruct(otherGrouping.Key))
-                        {
-                            return;
-                        }
-                    }
-                }
-
-                ReportAllMembersAsErrors(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, members: members);
-            }
-        }
-
-        private static bool IsStatic(string key)
-        {
-            return key.StartsWith(value: STATIC_TYPE_PREFIX, comparisonType: StringComparison.Ordinal);
-        }
-
-        private static bool IsClass(string key)
-        {
-            return key.StartsWith(value: CLASS_TYPE_PREFIX, comparisonType: StringComparison.Ordinal);
-        }
-
-        private static bool IsStruct(string key)
-        {
-            return key.StartsWith(value: STRUCT_TYPE_PREFIX, comparisonType: StringComparison.Ordinal);
-        }
-
-        private static void ReportAllMembersAsErrors(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, IReadOnlyList<MemberDeclarationSyntax> members)
-        {
             foreach (MemberDeclarationSyntax member in members)
             {
-                syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(descriptor: Rule, member.GetLocation()));
+                string name = GetTypeName(member);
+
+                if (string.IsNullOrWhiteSpace(name))
+                {
+                    continue;
+                }
+
+                if (!StringComparer.InvariantCultureIgnoreCase.Equals(x: fileName, y: name))
+                {
+                    syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(descriptor: Rule, member.GetLocation()));
+                }
             }
+        }
+
+        private static string GetDocumentFileName(CompilationUnitSyntax compilationUnitSyntax)
+        {
+            string fileName = Path.GetFileNameWithoutExtension(compilationUnitSyntax.SyntaxTree.FilePath);
+            int split = fileName.IndexOf('.');
+
+            if (split != -1)
+            {
+                return fileName.Substring(startIndex: 0, length: split);
+            }
+
+            return fileName;
         }
 
         private static string GetTypeName(MemberDeclarationSyntax memberDeclarationSyntax)
@@ -120,32 +97,27 @@ namespace FunFair.CodeAnalysis
 
         private static string NormaliseEnum(EnumDeclarationSyntax enumDeclarationSyntax)
         {
-            return string.Concat(str0: ENUM_TYPE_PREFIX, enumDeclarationSyntax.Identifier.ToString());
+            return enumDeclarationSyntax.Identifier.ToString();
         }
 
         private static string NormaliseInterface(InterfaceDeclarationSyntax interfaceDeclarationSyntax)
         {
-            return string.Concat(str0: INTERFACE_TYPE_PREFIX, interfaceDeclarationSyntax.Identifier.ToString());
+            return interfaceDeclarationSyntax.Identifier.ToString();
         }
 
         private static string NormaliseRecord(StructDeclarationSyntax structDeclarationSyntax)
         {
-            return string.Concat(str0: STRUCT_TYPE_PREFIX, structDeclarationSyntax.Identifier.ToString());
+            return structDeclarationSyntax.Identifier.ToString();
         }
 
         private static string NormaliseStruct(RecordDeclarationSyntax recordDeclarationSyntax)
         {
-            return string.Concat(str0: RECORD_TYPE_PREFIX, recordDeclarationSyntax.Identifier.ToString());
+            return recordDeclarationSyntax.Identifier.ToString();
         }
 
         private static string NormaliseClass(ClassDeclarationSyntax classDeclarationSyntax)
         {
-            if (classDeclarationSyntax.Modifiers.Any(m => m.IsKind(SyntaxKind.StaticKeyword)))
-            {
-                return string.Concat(str0: STATIC_TYPE_PREFIX, classDeclarationSyntax.Identifier.ToString());
-            }
-
-            return string.Concat(str0: CLASS_TYPE_PREFIX, classDeclarationSyntax.Identifier.ToString());
+            return classDeclarationSyntax.Identifier.ToString();
         }
 
         private static IEnumerable<MemberDeclarationSyntax> GetNonNestedTypeDeclarations(CompilationUnitSyntax compilationUnit)
