@@ -11,6 +11,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 ### Changed
 - FF-1429 - Updated SonarAnalyzer.CSharp to 8.32.0.39516
 - FF-1429 - Updated Microsoft.CodeAnalysis.CSharp.Workspaces to 4.0.1
+- FF-1429 - Updated TeamCity.VSTest.TestAdapter to 1.0.28
 ### Removed
 ### Deployment Changes
 
