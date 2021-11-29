@@ -65,7 +65,10 @@ namespace FunFair.CodeAnalysis.Tests
                                                         Id = "FFS0040",
                                                         Message = "Should be in a file of the same name as the type",
                                                         Severity = DiagnosticSeverity.Error,
-                                                        Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 1, column: 1) }
+                                                        Locations = new[]
+                                                                    {
+                                                                        new DiagnosticResultLocation(path: "Test0.cs", line: 1, column: 1)
+                                                                    }
                                                     });
         }
 
@@ -80,7 +83,10 @@ namespace FunFair.CodeAnalysis.Tests
                                                         Id = "FFS0040",
                                                         Message = "Should be in a file of the same name as the type",
                                                         Severity = DiagnosticSeverity.Error,
-                                                        Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 1, column: 1) }
+                                                        Locations = new[]
+                                                                    {
+                                                                        new DiagnosticResultLocation(path: "Test0.cs", line: 1, column: 1)
+                                                                    }
                                                     });
         }
 
@@ -95,7 +101,10 @@ namespace FunFair.CodeAnalysis.Tests
                                                         Id = "FFS0040",
                                                         Message = "Should be in a file of the same name as the type",
                                                         Severity = DiagnosticSeverity.Error,
-                                                        Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 1, column: 1) }
+                                                        Locations = new[]
+                                                                    {
+                                                                        new DiagnosticResultLocation(path: "Test0.cs", line: 1, column: 1)
+                                                                    }
                                                     });
         }
 
@@ -110,7 +119,10 @@ namespace FunFair.CodeAnalysis.Tests
                                                         Id = "FFS0040",
                                                         Message = "Should be in a file of the same name as the type",
                                                         Severity = DiagnosticSeverity.Error,
-                                                        Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 1, column: 1) }
+                                                        Locations = new[]
+                                                                    {
+                                                                        new DiagnosticResultLocation(path: "Test0.cs", line: 1, column: 1)
+                                                                    }
                                                     });
         }
 
@@ -125,7 +137,10 @@ namespace FunFair.CodeAnalysis.Tests
                                                         Id = "FFS0040",
                                                         Message = "Should be in a file of the same name as the type",
                                                         Severity = DiagnosticSeverity.Error,
-                                                        Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 1, column: 1) }
+                                                        Locations = new[]
+                                                                    {
+                                                                        new DiagnosticResultLocation(path: "Test0.cs", line: 1, column: 1)
+                                                                    }
                                                     });
         }
     }

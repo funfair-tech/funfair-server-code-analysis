@@ -25,7 +25,11 @@ namespace FunFair.CodeAnalysis
                                                                                    message: "Should be in a file of the same name as the type");
 
         /// <inheritdoc />
-        public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => new[] { Rule }.ToImmutableArray();
+        public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
+            new[]
+            {
+                Rule
+            }.ToImmutableArray();
 
         /// <inheritdoc />
         public override void Initialize(AnalysisContext context)

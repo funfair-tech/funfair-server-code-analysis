@@ -27,7 +27,11 @@ public sealed class Test {
     }
 }";
 
-            return this.VerifyCSharpDiagnosticAsync(source: test, new[] { WellKnownMetadataReferences.Logger });
+            return this.VerifyCSharpDiagnosticAsync(source: test,
+                                                    new[]
+                                                    {
+                                                        WellKnownMetadataReferences.Logger
+                                                    });
         }
 
         [Fact]
@@ -48,10 +52,18 @@ public sealed class Test {
                                             Id = "FFS0024",
                                             Message = "ILogger parameters on leaf classes should not be ILogger but ILogger<Test>",
                                             Severity = DiagnosticSeverity.Error,
-                                            Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 6, column: 17) }
+                                            Locations = new[]
+                                                        {
+                                                            new DiagnosticResultLocation(path: "Test0.cs", line: 6, column: 17)
+                                                        }
                                         };
 
-            return this.VerifyCSharpDiagnosticAsync(source: test, new[] { WellKnownMetadataReferences.Logger }, expected);
+            return this.VerifyCSharpDiagnosticAsync(source: test,
+                                                    new[]
+                                                    {
+                                                        WellKnownMetadataReferences.Logger
+                                                    },
+                                                    expected);
         }
 
         [Fact]
@@ -72,10 +84,18 @@ public abstract class Test {
                                             Id = "FFS0023",
                                             Message = "ILogger parameters on base classes should not be ILogger<Test> but ILogger",
                                             Severity = DiagnosticSeverity.Error,
-                                            Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 6, column: 20) }
+                                            Locations = new[]
+                                                        {
+                                                            new DiagnosticResultLocation(path: "Test0.cs", line: 6, column: 20)
+                                                        }
                                         };
 
-            return this.VerifyCSharpDiagnosticAsync(source: test, new[] { WellKnownMetadataReferences.Logger }, expected);
+            return this.VerifyCSharpDiagnosticAsync(source: test,
+                                                    new[]
+                                                    {
+                                                        WellKnownMetadataReferences.Logger
+                                                    },
+                                                    expected);
         }
 
         [Fact]
@@ -91,7 +111,11 @@ public abstract class Test {
     }
 }";
 
-            return this.VerifyCSharpDiagnosticAsync(source: test, new[] { WellKnownMetadataReferences.Logger });
+            return this.VerifyCSharpDiagnosticAsync(source: test,
+                                                    new[]
+                                                    {
+                                                        WellKnownMetadataReferences.Logger
+                                                    });
         }
 
         [Fact]
@@ -116,10 +140,18 @@ public sealed class Test {
                                             Id = "FFS0025",
                                             Message = "Should be using 'Test' rather than 'Banana' with Microsoft.Extensions.Logging.ILogger<TCategoryName>",
                                             Severity = DiagnosticSeverity.Error,
-                                            Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 10, column: 17) }
+                                            Locations = new[]
+                                                        {
+                                                            new DiagnosticResultLocation(path: "Test0.cs", line: 10, column: 17)
+                                                        }
                                         };
 
-            return this.VerifyCSharpDiagnosticAsync(source: test, new[] { WellKnownMetadataReferences.Logger }, expected);
+            return this.VerifyCSharpDiagnosticAsync(source: test,
+                                                    new[]
+                                                    {
+                                                        WellKnownMetadataReferences.Logger
+                                                    },
+                                                    expected);
         }
 
         [Fact]
@@ -135,7 +167,11 @@ internal sealed class Test {
     }
 }";
 
-            return this.VerifyCSharpDiagnosticAsync(source: test, new[] { WellKnownMetadataReferences.Logger });
+            return this.VerifyCSharpDiagnosticAsync(source: test,
+                                                    new[]
+                                                    {
+                                                        WellKnownMetadataReferences.Logger
+                                                    });
         }
 
         [Fact]
@@ -154,7 +190,11 @@ public sealed class Onion {
     }
 }";
 
-            return this.VerifyCSharpDiagnosticAsync(source: test, new[] { WellKnownMetadataReferences.Logger });
+            return this.VerifyCSharpDiagnosticAsync(source: test,
+                                                    new[]
+                                                    {
+                                                        WellKnownMetadataReferences.Logger
+                                                    });
         }
 
         [Fact]
@@ -173,7 +213,11 @@ public sealed class Onion {
     }
 }";
 
-            return this.VerifyCSharpDiagnosticAsync(source: test, new[] { WellKnownMetadataReferences.Logger });
+            return this.VerifyCSharpDiagnosticAsync(source: test,
+                                                    new[]
+                                                    {
+                                                        WellKnownMetadataReferences.Logger
+                                                    });
         }
 
         [Fact]
@@ -192,7 +236,11 @@ public class Onion {
     }
 }";
 
-            return this.VerifyCSharpDiagnosticAsync(source: test, new[] { WellKnownMetadataReferences.Logger });
+            return this.VerifyCSharpDiagnosticAsync(source: test,
+                                                    new[]
+                                                    {
+                                                        WellKnownMetadataReferences.Logger
+                                                    });
         }
     }
 }

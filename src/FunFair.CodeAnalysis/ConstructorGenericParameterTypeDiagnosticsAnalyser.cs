@@ -43,7 +43,10 @@ namespace FunFair.CodeAnalysis
         /// <inheritdoc />
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
             Specifications.Select(selector: r => r.Rule)
-                          .Concat(new[] { MissMatchTypes })
+                          .Concat(new[]
+                                  {
+                                      MissMatchTypes
+                                  })
                           .ToImmutableArray();
 
         /// <inheritdoc />

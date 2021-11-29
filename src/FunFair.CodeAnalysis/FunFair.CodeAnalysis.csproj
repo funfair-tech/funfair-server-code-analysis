@@ -1,56 +1,56 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-    <PropertyGroup>
-        <DisableImplicitNuGetFallbackFolder>true</DisableImplicitNuGetFallbackFolder>
-        <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(MSBuildProjectName).xml</DocumentationFile>
-        <EnablePackageValidation>true</EnablePackageValidation>
-        <Features>strict;flow-analysis</Features>
-        <GenerateNeutralResourcesLanguageAttribute>true</GenerateNeutralResourcesLanguageAttribute>
-        <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-        <ImplicitUsings>disable</ImplicitUsings>
-        <IncludeBuildOutput>false</IncludeBuildOutput>
-        <IncludeOpenAPIAnalyzers>true</IncludeOpenAPIAnalyzers>
-        <IsPackable>true</IsPackable>
-        <IsPublishable>false</IsPublishable>
-        <LangVersion>latest</LangVersion>
-        <NoWarn />
-        <Nullable>enable</Nullable>
-        <OutputType>Library</OutputType>
-        <PackAsTool>false</PackAsTool>
-        <TargetFramework>netstandard2.0</TargetFramework>
-        <TieredCompilation>true</TieredCompilation>
-        <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
-        <WarningsAsErrors />
-    </PropertyGroup>
-    <Import Project="$(SolutionDir)FunFair.props" />
-    <PropertyGroup>
-        <Description>Code analysis rules that are used throught FunFair dotnet packages to pick up common issues that are encountered.</Description>
-        <DevelopmentDependency>true</DevelopmentDependency>
-        <NeutralLanguage>en-GB</NeutralLanguage>
-        <NoPackageAnalysis>true</NoPackageAnalysis>
-        <PackageTags>FunFair CodeAnalysis, CSharp, Roslyn, analyzers</PackageTags>
-        <RepositoryUrl>https://github.com/funfair-tech/funfair-server-code-analysis</RepositoryUrl>
-    </PropertyGroup>
-    <PropertyGroup>
-        <AnalysisLevel>latest</AnalysisLevel>
-        <AnalysisMode>AllEnabledByDefault</AnalysisMode>
-        <CodeAnalysisRuleSet>$(SolutionDir)\CodeAnalysis.ruleset</CodeAnalysisRuleSet>
-        <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
-        <EnableNETAnalyzers>true</EnableNETAnalyzers>
-        <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
-    </PropertyGroup>
-    <ItemGroup>
-        <None Update="tools\*.ps1" CopyToOutputDirectory="Always" Pack="true" PackagePath="" />
-        <None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
-    </ItemGroup>
-    <ItemGroup>
-        <PackageReference Include="AsyncFixer" Version="1.5.1" PrivateAssets="All" />
-        <PackageReference Include="DisableDateTimeNow" Version="1.0.5883.39470" PrivateAssets="All" />
-        <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.3" PrivateAssets="all" />
-        <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.0.1" PrivateAssets="all" />
-        <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.0.64" PrivateAssets="All" />
-        <PackageReference Include="Roslynator.Analyzers" Version="3.3.0" PrivateAssets="All" />
-        <PackageReference Include="SonarAnalyzer.CSharp" Version="8.32.0.39516" PrivateAssets="All" />
-        <PackageReference Include="SourceLink.Create.CommandLine" Version="2.8.3" PrivateAssets="All" />
-        <PackageReference Include="ToStringWithoutOverrideAnalyzer" Version="0.6.0" PrivateAssets="All" />
-    </ItemGroup>
+  <PropertyGroup>
+    <DisableImplicitNuGetFallbackFolder>true</DisableImplicitNuGetFallbackFolder>
+    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(MSBuildProjectName).xml</DocumentationFile>
+    <EnablePackageValidation>true</EnablePackageValidation>
+    <Features>strict;flow-analysis</Features>
+    <GenerateNeutralResourcesLanguageAttribute>true</GenerateNeutralResourcesLanguageAttribute>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <IncludeOpenAPIAnalyzers>true</IncludeOpenAPIAnalyzers>
+    <IsPackable>true</IsPackable>
+    <IsPublishable>false</IsPublishable>
+    <LangVersion>latest</LangVersion>
+    <NoWarn />
+    <Nullable>enable</Nullable>
+    <OutputType>Library</OutputType>
+    <PackAsTool>false</PackAsTool>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <TieredCompilation>true</TieredCompilation>
+    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+    <WarningsAsErrors />
+  </PropertyGroup>
+  <Import Project="$(SolutionDir)FunFair.props" />
+  <PropertyGroup>
+    <Description>Code analysis rules that are used throught FunFair dotnet packages to pick up common issues that are encountered.</Description>
+    <DevelopmentDependency>true</DevelopmentDependency>
+    <NeutralLanguage>en-GB</NeutralLanguage>
+    <NoPackageAnalysis>true</NoPackageAnalysis>
+    <PackageTags>FunFair CodeAnalysis, CSharp, Roslyn, analyzers</PackageTags>
+    <RepositoryUrl>https://github.com/funfair-tech/funfair-server-code-analysis</RepositoryUrl>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AnalysisLevel>latest</AnalysisLevel>
+    <AnalysisMode>AllEnabledByDefault</AnalysisMode>
+    <CodeAnalysisRuleSet>$(SolutionDir)\CodeAnalysis.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Update="tools\*.ps1" CopyToOutputDirectory="Always" Pack="true" PackagePath="" />
+    <None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="AsyncFixer" Version="1.5.1" PrivateAssets="All" />
+    <PackageReference Include="DisableDateTimeNow" Version="1.0.5883.39470" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.3" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.0.1" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.0.64" PrivateAssets="All" />
+    <PackageReference Include="Roslynator.Analyzers" Version="3.3.0" PrivateAssets="All" />
+    <PackageReference Include="SonarAnalyzer.CSharp" Version="8.32.0.39516" PrivateAssets="All" />
+    <PackageReference Include="SourceLink.Create.CommandLine" Version="2.8.3" PrivateAssets="All" />
+    <PackageReference Include="ToStringWithoutOverrideAnalyzer" Version="0.6.0" PrivateAssets="All" />
+  </ItemGroup>
 </Project>

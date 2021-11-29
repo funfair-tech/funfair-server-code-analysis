@@ -50,10 +50,19 @@ public sealed class Test : TestBase{
                                             Id = "FFS0035",
                                             Message = "Fields in test classes should be read-only or const",
                                             Severity = DiagnosticSeverity.Error,
-                                            Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 5, column: 5) }
+                                            Locations = new[]
+                                                        {
+                                                            new DiagnosticResultLocation(path: "Test0.cs", line: 5, column: 5)
+                                                        }
                                         };
 
-            return this.VerifyCSharpDiagnosticAsync(source: test, new[] { WellKnownMetadataReferences.Xunit, WellKnownMetadataReferences.FunFairTestCommon }, expected);
+            return this.VerifyCSharpDiagnosticAsync(source: test,
+                                                    new[]
+                                                    {
+                                                        WellKnownMetadataReferences.Xunit,
+                                                        WellKnownMetadataReferences.FunFairTestCommon
+                                                    },
+                                                    expected);
         }
 
         [Fact]
@@ -71,7 +80,12 @@ public sealed class Test : TestBase{
     }
 }";
 
-            return this.VerifyCSharpDiagnosticAsync(source: test, new[] { WellKnownMetadataReferences.Xunit, WellKnownMetadataReferences.FunFairTestCommon });
+            return this.VerifyCSharpDiagnosticAsync(source: test,
+                                                    new[]
+                                                    {
+                                                        WellKnownMetadataReferences.Xunit,
+                                                        WellKnownMetadataReferences.FunFairTestCommon
+                                                    });
         }
 
         [Fact]
@@ -89,7 +103,12 @@ public sealed class Test : TestBase{
     }
 }";
 
-            return this.VerifyCSharpDiagnosticAsync(source: test, new[] { WellKnownMetadataReferences.Xunit, WellKnownMetadataReferences.FunFairTestCommon });
+            return this.VerifyCSharpDiagnosticAsync(source: test,
+                                                    new[]
+                                                    {
+                                                        WellKnownMetadataReferences.Xunit,
+                                                        WellKnownMetadataReferences.FunFairTestCommon
+                                                    });
         }
     }
 }

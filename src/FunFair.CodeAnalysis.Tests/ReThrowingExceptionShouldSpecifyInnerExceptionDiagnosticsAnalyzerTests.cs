@@ -91,7 +91,10 @@ public sealed class Test {
                                             Id = "FFS0017",
                                             Message = "Provide 'failingException' as a inner exception when throw from the catch clauses",
                                             Severity = DiagnosticSeverity.Error,
-                                            Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 14, column: 19) }
+                                            Locations = new[]
+                                                        {
+                                                            new DiagnosticResultLocation(path: "Test0.cs", line: 14, column: 19)
+                                                        }
                                         };
 
             return this.VerifyCSharpDiagnosticAsync(source: test, expected);
@@ -123,7 +126,10 @@ public sealed class Test {
                                             Id = "FFS0017",
                                             Message = "Provide 'failingException' as a inner exception when throw from the catch clauses",
                                             Severity = DiagnosticSeverity.Error,
-                                            Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 14, column: 19) }
+                                            Locations = new[]
+                                                        {
+                                                            new DiagnosticResultLocation(path: "Test0.cs", line: 14, column: 19)
+                                                        }
                                         };
 
             return this.VerifyCSharpDiagnosticAsync(source: test, expected);

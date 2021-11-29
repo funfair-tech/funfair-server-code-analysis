@@ -30,7 +30,11 @@ namespace FunFair.CodeAnalysis.Tests
          }
      }";
 
-            return this.VerifyCSharpDiagnosticAsync(source: test, new[] { WellKnownMetadataReferences.Assert });
+            return this.VerifyCSharpDiagnosticAsync(source: test,
+                                                    new[]
+                                                    {
+                                                        WellKnownMetadataReferences.Assert
+                                                    });
         }
 
         [Fact]
@@ -53,10 +57,18 @@ namespace FunFair.CodeAnalysis.Tests
                                             Id = "FFS0010",
                                             Message = @"Only use Assert.False with message parameter",
                                             Severity = DiagnosticSeverity.Error,
-                                            Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 9, column: 17) }
+                                            Locations = new[]
+                                                        {
+                                                            new DiagnosticResultLocation(path: "Test0.cs", line: 9, column: 17)
+                                                        }
                                         };
 
-            return this.VerifyCSharpDiagnosticAsync(source: test, new[] { WellKnownMetadataReferences.Assert }, expected);
+            return this.VerifyCSharpDiagnosticAsync(source: test,
+                                                    new[]
+                                                    {
+                                                        WellKnownMetadataReferences.Assert
+                                                    },
+                                                    expected);
         }
 
         [Fact]
@@ -75,7 +87,11 @@ namespace FunFair.CodeAnalysis.Tests
         }
     }";
 
-            return this.VerifyCSharpDiagnosticAsync(source: test, new[] { WellKnownMetadataReferences.Assert });
+            return this.VerifyCSharpDiagnosticAsync(source: test,
+                                                    new[]
+                                                    {
+                                                        WellKnownMetadataReferences.Assert
+                                                    });
         }
 
         [Fact]
@@ -98,10 +114,18 @@ namespace FunFair.CodeAnalysis.Tests
                                             Id = "FFS0009",
                                             Message = @"Only use Assert.True with message parameter",
                                             Severity = DiagnosticSeverity.Error,
-                                            Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 9, column: 18) }
+                                            Locations = new[]
+                                                        {
+                                                            new DiagnosticResultLocation(path: "Test0.cs", line: 9, column: 18)
+                                                        }
                                         };
 
-            return this.VerifyCSharpDiagnosticAsync(source: test, new[] { WellKnownMetadataReferences.Assert }, expected);
+            return this.VerifyCSharpDiagnosticAsync(source: test,
+                                                    new[]
+                                                    {
+                                                        WellKnownMetadataReferences.Assert
+                                                    },
+                                                    expected);
         }
 
         [Fact]
@@ -126,10 +150,18 @@ namespace FunFair.CodeAnalysis.Tests
                                             Message =
                                                 @"Don't use any of the built in AddOrUpdate methods, instead FunFair.Common.Extensions.ConcurrentDictionaryExtensions.AddOrUpdate can be used",
                                             Severity = DiagnosticSeverity.Error,
-                                            Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 10, column: 18) }
+                                            Locations = new[]
+                                                        {
+                                                            new DiagnosticResultLocation(path: "Test0.cs", line: 10, column: 18)
+                                                        }
                                         };
 
-            return this.VerifyCSharpDiagnosticAsync(source: test, new[] { WellKnownMetadataReferences.NonBlockingConcurrentDictionary }, expected: expected);
+            return this.VerifyCSharpDiagnosticAsync(source: test,
+                                                    new[]
+                                                    {
+                                                        WellKnownMetadataReferences.NonBlockingConcurrentDictionary
+                                                    },
+                                                    expected: expected);
         }
 
         [Fact]
@@ -154,10 +186,18 @@ namespace FunFair.CodeAnalysis.Tests
                                             Message =
                                                 @"Don't use any of the built in AddOrUpdate methods, instead FunFair.Common.Extensions.ConcurrentDictionaryExtensions.AddOrUpdate can be used",
                                             Severity = DiagnosticSeverity.Error,
-                                            Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 10, column: 18) }
+                                            Locations = new[]
+                                                        {
+                                                            new DiagnosticResultLocation(path: "Test0.cs", line: 10, column: 18)
+                                                        }
                                         };
 
-            return this.VerifyCSharpDiagnosticAsync(source: test, new[] { WellKnownMetadataReferences.NonBlockingConcurrentDictionary }, expected: expected);
+            return this.VerifyCSharpDiagnosticAsync(source: test,
+                                                    new[]
+                                                    {
+                                                        WellKnownMetadataReferences.NonBlockingConcurrentDictionary
+                                                    },
+                                                    expected: expected);
         }
 
         [Fact]
@@ -189,10 +229,18 @@ namespace FunFair.CodeAnalysis.Tests
                                             Message =
                                                 @"Don't use any of the built in AddOrUpdate methods, instead FunFair.Common.Extensions.ConcurrentDictionaryExtensions.AddOrUpdate can be used",
                                             Severity = DiagnosticSeverity.Error,
-                                            Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 16, column: 18) }
+                                            Locations = new[]
+                                                        {
+                                                            new DiagnosticResultLocation(path: "Test0.cs", line: 16, column: 18)
+                                                        }
                                         };
 
-            return this.VerifyCSharpDiagnosticAsync(source: test, new[] { WellKnownMetadataReferences.NonBlockingConcurrentDictionary }, expected: expected);
+            return this.VerifyCSharpDiagnosticAsync(source: test,
+                                                    new[]
+                                                    {
+                                                        WellKnownMetadataReferences.NonBlockingConcurrentDictionary
+                                                    },
+                                                    expected: expected);
         }
 
         [Fact]
@@ -221,10 +269,18 @@ namespace FunFair.CodeAnalysis.Tests
                                             Message =
                                                 @"Don't use any of the built in AddOrUpdate methods, instead FunFair.Common.Extensions.ConcurrentDictionaryExtensions.AddOrUpdate can be used",
                                             Severity = DiagnosticSeverity.Error,
-                                            Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 13, column: 18) }
+                                            Locations = new[]
+                                                        {
+                                                            new DiagnosticResultLocation(path: "Test0.cs", line: 13, column: 18)
+                                                        }
                                         };
 
-            return this.VerifyCSharpDiagnosticAsync(source: test, new[] { WellKnownMetadataReferences.NonBlockingConcurrentDictionary }, expected);
+            return this.VerifyCSharpDiagnosticAsync(source: test,
+                                                    new[]
+                                                    {
+                                                        WellKnownMetadataReferences.NonBlockingConcurrentDictionary
+                                                    },
+                                                    expected);
         }
 
         [Fact]
@@ -249,10 +305,18 @@ namespace FunFair.CodeAnalysis.Tests
                                             Message =
                                                 @"Don't use any of the built in GetOrAdd methods, instead FunFair.Common.Extensions.ConcurrentDictionaryExtensions.GetOrAdd can be used",
                                             Severity = DiagnosticSeverity.Error,
-                                            Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 10, column: 18) }
+                                            Locations = new[]
+                                                        {
+                                                            new DiagnosticResultLocation(path: "Test0.cs", line: 10, column: 18)
+                                                        }
                                         };
 
-            return this.VerifyCSharpDiagnosticAsync(source: test, new[] { WellKnownMetadataReferences.NonBlockingConcurrentDictionary }, expected);
+            return this.VerifyCSharpDiagnosticAsync(source: test,
+                                                    new[]
+                                                    {
+                                                        WellKnownMetadataReferences.NonBlockingConcurrentDictionary
+                                                    },
+                                                    expected);
         }
 
         [Fact]
@@ -280,10 +344,18 @@ namespace FunFair.CodeAnalysis.Tests
                                             Message =
                                                 @"Don't use any of the built in GetOrAdd methods, instead FunFair.Common.Extensions.ConcurrentDictionaryExtensions.GetOrAdd can be used",
                                             Severity = DiagnosticSeverity.Error,
-                                            Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 13, column: 18) }
+                                            Locations = new[]
+                                                        {
+                                                            new DiagnosticResultLocation(path: "Test0.cs", line: 13, column: 18)
+                                                        }
                                         };
 
-            return this.VerifyCSharpDiagnosticAsync(source: test, new[] { WellKnownMetadataReferences.NonBlockingConcurrentDictionary }, expected);
+            return this.VerifyCSharpDiagnosticAsync(source: test,
+                                                    new[]
+                                                    {
+                                                        WellKnownMetadataReferences.NonBlockingConcurrentDictionary
+                                                    },
+                                                    expected);
         }
 
         [Fact]
@@ -303,7 +375,11 @@ namespace FunFair.CodeAnalysis.Tests
          }
      }";
 
-            return this.VerifyCSharpDiagnosticAsync(source: test, new[] { WellKnownMetadataReferences.NonBlockingConcurrentDictionary });
+            return this.VerifyCSharpDiagnosticAsync(source: test,
+                                                    new[]
+                                                    {
+                                                        WellKnownMetadataReferences.NonBlockingConcurrentDictionary
+                                                    });
         }
     }
 }

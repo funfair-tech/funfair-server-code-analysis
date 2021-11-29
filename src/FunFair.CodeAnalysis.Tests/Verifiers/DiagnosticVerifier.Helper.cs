@@ -191,7 +191,12 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
         /// <returns>A Document created from the source string</returns>
         protected static Document CreateDocument(string source, MetadataReference[] references, string language = LanguageNames.CSharp)
         {
-            return CreateProject(new[] { source }, references: references, language: language)
+            return CreateProject(new[]
+                                 {
+                                     source
+                                 },
+                                 references: references,
+                                 language: language)
                    .Documents.First();
         }
 
@@ -206,7 +211,9 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
         private static Project CreateProject(string[] sources, MetadataReference[] references, string language = LanguageNames.CSharp)
         {
             const string fileNamePrefix = DEFAULT_FILE_PATH_PREFIX;
-            string fileExt = language == LanguageNames.CSharp ? C_SHARP_DEFAULT_FILE_EXT : VISUAL_BASIC_DEFAULT_EXT;
+            string fileExt = language == LanguageNames.CSharp
+                ? C_SHARP_DEFAULT_FILE_EXT
+                : VISUAL_BASIC_DEFAULT_EXT;
 
             ProjectId projectId = ProjectId.CreateNewId(TEST_PROJECT_NAME);
 
