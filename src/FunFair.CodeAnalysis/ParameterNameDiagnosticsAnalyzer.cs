@@ -74,7 +74,14 @@ namespace FunFair.CodeAnalysis
         private sealed class NameSanitationSpec
         {
             public NameSanitationSpec(string ruleId, string title, string message, string sourceClass, string whitelistedParameterName)
-                : this(ruleId: ruleId, title: title, message: message, sourceClass: sourceClass, new[] { whitelistedParameterName })
+                : this(ruleId: ruleId,
+                       title: title,
+                       message: message,
+                       sourceClass: sourceClass,
+                       new[]
+                       {
+                           whitelistedParameterName
+                       })
             {
             }
 

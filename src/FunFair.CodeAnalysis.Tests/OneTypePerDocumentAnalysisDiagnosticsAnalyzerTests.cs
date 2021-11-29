@@ -112,28 +112,40 @@ public interface Test<T1, T2, T3> {}
                                                         Id = "FFS0039",
                                                         Message = "Should be only one type per file",
                                                         Severity = DiagnosticSeverity.Error,
-                                                        Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 1, column: 1) }
+                                                        Locations = new[]
+                                                                    {
+                                                                        new DiagnosticResultLocation(path: "Test0.cs", line: 1, column: 1)
+                                                                    }
                                                     },
                                                     new DiagnosticResult
                                                     {
                                                         Id = "FFS0039",
                                                         Message = "Should be only one type per file",
                                                         Severity = DiagnosticSeverity.Error,
-                                                        Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 3, column: 1) }
+                                                        Locations = new[]
+                                                                    {
+                                                                        new DiagnosticResultLocation(path: "Test0.cs", line: 3, column: 1)
+                                                                    }
                                                     },
                                                     new DiagnosticResult
                                                     {
                                                         Id = "FFS0039",
                                                         Message = "Should be only one type per file",
                                                         Severity = DiagnosticSeverity.Error,
-                                                        Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 5, column: 1) }
+                                                        Locations = new[]
+                                                                    {
+                                                                        new DiagnosticResultLocation(path: "Test0.cs", line: 5, column: 1)
+                                                                    }
                                                     },
                                                     new DiagnosticResult
                                                     {
                                                         Id = "FFS0039",
                                                         Message = "Should be only one type per file",
                                                         Severity = DiagnosticSeverity.Error,
-                                                        Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 7, column: 1) }
+                                                        Locations = new[]
+                                                                    {
+                                                                        new DiagnosticResultLocation(path: "Test0.cs", line: 7, column: 1)
+                                                                    }
                                                     });
         }
 
@@ -151,14 +163,20 @@ public sealed class Test1 {}
                                                         Id = "FFS0039",
                                                         Message = "Should be only one type per file",
                                                         Severity = DiagnosticSeverity.Error,
-                                                        Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 1, column: 1) }
+                                                        Locations = new[]
+                                                                    {
+                                                                        new DiagnosticResultLocation(path: "Test0.cs", line: 1, column: 1)
+                                                                    }
                                                     },
                                                     new DiagnosticResult
                                                     {
                                                         Id = "FFS0039",
                                                         Message = "Should be only one type per file",
                                                         Severity = DiagnosticSeverity.Error,
-                                                        Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 3, column: 1) }
+                                                        Locations = new[]
+                                                                    {
+                                                                        new DiagnosticResultLocation(path: "Test0.cs", line: 3, column: 1)
+                                                                    }
                                                     });
         }
 
@@ -176,14 +194,20 @@ public readonly struct Test1 {}
                                                         Id = "FFS0039",
                                                         Message = "Should be only one type per file",
                                                         Severity = DiagnosticSeverity.Error,
-                                                        Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 1, column: 1) }
+                                                        Locations = new[]
+                                                                    {
+                                                                        new DiagnosticResultLocation(path: "Test0.cs", line: 1, column: 1)
+                                                                    }
                                                     },
                                                     new DiagnosticResult
                                                     {
                                                         Id = "FFS0039",
                                                         Message = "Should be only one type per file",
                                                         Severity = DiagnosticSeverity.Error,
-                                                        Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 3, column: 1) }
+                                                        Locations = new[]
+                                                                    {
+                                                                        new DiagnosticResultLocation(path: "Test0.cs", line: 3, column: 1)
+                                                                    }
                                                     });
         }
 
@@ -201,14 +225,20 @@ public sealed record Test1 {}
                                                         Id = "FFS0039",
                                                         Message = "Should be only one type per file",
                                                         Severity = DiagnosticSeverity.Error,
-                                                        Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 1, column: 1) }
+                                                        Locations = new[]
+                                                                    {
+                                                                        new DiagnosticResultLocation(path: "Test0.cs", line: 1, column: 1)
+                                                                    }
                                                     },
                                                     new DiagnosticResult
                                                     {
                                                         Id = "FFS0039",
                                                         Message = "Should be only one type per file",
                                                         Severity = DiagnosticSeverity.Error,
-                                                        Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 3, column: 1) }
+                                                        Locations = new[]
+                                                                    {
+                                                                        new DiagnosticResultLocation(path: "Test0.cs", line: 3, column: 1)
+                                                                    }
                                                     });
         }
 
@@ -226,14 +256,20 @@ public interface Test1 {}
                                                         Id = "FFS0039",
                                                         Message = "Should be only one type per file",
                                                         Severity = DiagnosticSeverity.Error,
-                                                        Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 1, column: 1) }
+                                                        Locations = new[]
+                                                                    {
+                                                                        new DiagnosticResultLocation(path: "Test0.cs", line: 1, column: 1)
+                                                                    }
                                                     },
                                                     new DiagnosticResult
                                                     {
                                                         Id = "FFS0039",
                                                         Message = "Should be only one type per file",
                                                         Severity = DiagnosticSeverity.Error,
-                                                        Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 3, column: 1) }
+                                                        Locations = new[]
+                                                                    {
+                                                                        new DiagnosticResultLocation(path: "Test0.cs", line: 3, column: 1)
+                                                                    }
                                                     });
         }
 

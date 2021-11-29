@@ -113,7 +113,9 @@ namespace FunFair.CodeAnalysis.Helpers
                 IParameterSymbol param => param.Type,
                 IFieldSymbol field => field.Type,
                 IPropertySymbol prop => prop.Type,
-                IMethodSymbol method => method.MethodKind == MethodKind.Constructor ? method.ReceiverType : method.ReturnType,
+                IMethodSymbol method => method.MethodKind == MethodKind.Constructor
+                    ? method.ReceiverType
+                    : method.ReturnType,
                 _ => null
             } as INamedTypeSymbol;
         }

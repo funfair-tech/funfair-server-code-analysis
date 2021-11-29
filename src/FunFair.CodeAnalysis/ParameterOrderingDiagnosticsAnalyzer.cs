@@ -31,7 +31,11 @@ namespace FunFair.CodeAnalysis
                                                                                    message: "Parameter '{0}' must be parameter {1}");
 
         /// <inheritdoc />
-        public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => new[] { Rule }.ToImmutableArray();
+        public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
+            new[]
+            {
+                Rule
+            }.ToImmutableArray();
 
         /// <inheritdoc />
         public override void Initialize(AnalysisContext context)

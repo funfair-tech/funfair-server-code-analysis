@@ -129,7 +129,14 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
                 throw new NotNullException();
             }
 
-            return VerifyDiagnosticsAsync(new[] { source }, references: references, language: LanguageNames.CSharp, analyzer: diagnostic, expected: expected);
+            return VerifyDiagnosticsAsync(new[]
+                                          {
+                                              source
+                                          },
+                                          references: references,
+                                          language: LanguageNames.CSharp,
+                                          analyzer: diagnostic,
+                                          expected: expected);
         }
 
         /// <summary>
@@ -202,7 +209,9 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
 
             if (expectedCount != actualCount)
             {
-                string diagnosticsOutput = results.Length != 0 ? FormatDiagnostics(analyzer: analyzer, results.ToArray()) : "    NONE.";
+                string diagnosticsOutput = results.Length != 0
+                    ? FormatDiagnostics(analyzer: analyzer, results.ToArray())
+                    : "    NONE.";
 
                 Assert.True(condition: false,
                             string.Format(format: "Mismatch between number of diagnostics returned, expected \"{0}\" actual \"{1}\"\r\n\r\nDiagnostics:\r\n{2}\r\n",

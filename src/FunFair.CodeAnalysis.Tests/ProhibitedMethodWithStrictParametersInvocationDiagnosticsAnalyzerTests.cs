@@ -36,7 +36,11 @@ namespace FunFair.CodeAnalysis.Tests
          }
      }";
 
-            return this.VerifyCSharpDiagnosticAsync(source: test, new[] { WellKnownMetadataReferences.Substitute });
+            return this.VerifyCSharpDiagnosticAsync(source: test,
+                                                    new[]
+                                                    {
+                                                        WellKnownMetadataReferences.Substitute
+                                                    });
         }
 
         [Fact]
@@ -65,10 +69,18 @@ namespace FunFair.CodeAnalysis.Tests
                                             Id = "FFS0021",
                                             Message = "Only use Received with expected call count greater than 0, use DidNotReceived instead if 0 call received expected",
                                             Severity = DiagnosticSeverity.Error,
-                                            Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 15, column: 18) }
+                                            Locations = new[]
+                                                        {
+                                                            new DiagnosticResultLocation(path: "Test0.cs", line: 15, column: 18)
+                                                        }
                                         };
 
-            return this.VerifyCSharpDiagnosticAsync(source: test, new[] { WellKnownMetadataReferences.Substitute }, expected);
+            return this.VerifyCSharpDiagnosticAsync(source: test,
+                                                    new[]
+                                                    {
+                                                        WellKnownMetadataReferences.Substitute
+                                                    },
+                                                    expected);
         }
 
         [Fact]
@@ -93,7 +105,11 @@ namespace FunFair.CodeAnalysis.Tests
          }
      }";
 
-            return this.VerifyCSharpDiagnosticAsync(source: test, new[] { WellKnownMetadataReferences.Substitute });
+            return this.VerifyCSharpDiagnosticAsync(source: test,
+                                                    new[]
+                                                    {
+                                                        WellKnownMetadataReferences.Substitute
+                                                    });
         }
 
         [Fact]
@@ -146,7 +162,10 @@ namespace FunFair.CodeAnalysis.Tests
                                             Id = "FFS0034",
                                             Message = "Only use AddJsonFile with reloadOnChange set to false",
                                             Severity = DiagnosticSeverity.Error,
-                                            Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 10, column: 50) }
+                                            Locations = new[]
+                                                        {
+                                                            new DiagnosticResultLocation(path: "Test0.cs", line: 10, column: 50)
+                                                        }
                                         };
 
             return this.VerifyCSharpDiagnosticAsync(source: test,
@@ -184,7 +203,10 @@ namespace FunFair.CodeAnalysis.Tests
                                             Id = "FFS0034",
                                             Message = "Only use AddJsonFile with reloadOnChange set to false",
                                             Severity = DiagnosticSeverity.Error,
-                                            Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 10, column: 50) }
+                                            Locations = new[]
+                                                        {
+                                                            new DiagnosticResultLocation(path: "Test0.cs", line: 10, column: 50)
+                                                        }
                                         };
 
             return this.VerifyCSharpDiagnosticAsync(source: test,

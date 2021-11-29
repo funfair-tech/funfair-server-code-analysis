@@ -108,8 +108,18 @@ namespace FunFair.CodeAnalysis
             {
                 switch (symbol.OriginalDefinition)
                 {
-                    case IPropertySymbol propertySymbol: return GetSymbol(new[] { propertySymbol.Type }, cachedSymbols: cachedSymbols);
-                    case IFieldSymbol fieldSymbol: return GetSymbol(new[] { fieldSymbol.Type }, cachedSymbols: cachedSymbols);
+                    case IPropertySymbol propertySymbol:
+                        return GetSymbol(new[]
+                                         {
+                                             propertySymbol.Type
+                                         },
+                                         cachedSymbols: cachedSymbols);
+                    case IFieldSymbol fieldSymbol:
+                        return GetSymbol(new[]
+                                         {
+                                             fieldSymbol.Type
+                                         },
+                                         cachedSymbols: cachedSymbols);
                     case IMethodSymbol parameterSymbol: return GetSymbol(parameterSymbol.Parameters.Select(x => x.Type), cachedSymbols: cachedSymbols);
                 }
             }
@@ -119,7 +129,11 @@ namespace FunFair.CodeAnalysis
 
             if (typeInfo != null)
             {
-                return GetSymbol(new[] { typeInfo }, cachedSymbols: cachedSymbols);
+                return GetSymbol(new[]
+                                 {
+                                     typeInfo
+                                 },
+                                 cachedSymbols: cachedSymbols);
             }
 
             return null;
@@ -146,7 +160,9 @@ namespace FunFair.CodeAnalysis
                 return null;
             }
 
-            return cachedSymbols.TryGetValue(key: fullyQualifiedSymbolName, out INamedTypeSymbol? symbol) ? symbol : null;
+            return cachedSymbols.TryGetValue(key: fullyQualifiedSymbolName, out INamedTypeSymbol? symbol)
+                ? symbol
+                : null;
         }
 
         private sealed class ProhibitedClassSpec

@@ -25,7 +25,12 @@ namespace FunFair.CodeAnalysis.Tests
             }
 }";
 
-            return this.VerifyCSharpDiagnosticAsync(source: test, new[] { WellKnownMetadataReferences.Xunit, WellKnownMetadataReferences.FunFairTestCommon });
+            return this.VerifyCSharpDiagnosticAsync(source: test,
+                                                    new[]
+                                                    {
+                                                        WellKnownMetadataReferences.Xunit,
+                                                        WellKnownMetadataReferences.FunFairTestCommon
+                                                    });
         }
 
         [Fact]
@@ -46,10 +51,18 @@ using Xunit;
                                             Id = "FFS0013",
                                             Message = "Test classes should be derived from TestBase",
                                             Severity = DiagnosticSeverity.Error,
-                                            Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 6, column: 13) }
+                                            Locations = new[]
+                                                        {
+                                                            new DiagnosticResultLocation(path: "Test0.cs", line: 6, column: 13)
+                                                        }
                                         };
 
-            return this.VerifyCSharpDiagnosticAsync(source: test, new[] { WellKnownMetadataReferences.Xunit }, expected);
+            return this.VerifyCSharpDiagnosticAsync(source: test,
+                                                    new[]
+                                                    {
+                                                        WellKnownMetadataReferences.Xunit
+                                                    },
+                                                    expected);
         }
 
         [Fact]
@@ -97,7 +110,12 @@ using Xunit;
             }
 }";
 
-            return this.VerifyCSharpDiagnosticAsync(source: test, new[] { WellKnownMetadataReferences.Xunit, WellKnownMetadataReferences.FunFairTestCommon });
+            return this.VerifyCSharpDiagnosticAsync(source: test,
+                                                    new[]
+                                                    {
+                                                        WellKnownMetadataReferences.Xunit,
+                                                        WellKnownMetadataReferences.FunFairTestCommon
+                                                    });
         }
 
         [Fact]
@@ -119,10 +137,18 @@ using Xunit;
                                             Id = "FFS0013",
                                             Message = "Test classes should be derived from TestBase",
                                             Severity = DiagnosticSeverity.Error,
-                                            Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 6, column: 13) }
+                                            Locations = new[]
+                                                        {
+                                                            new DiagnosticResultLocation(path: "Test0.cs", line: 6, column: 13)
+                                                        }
                                         };
 
-            return this.VerifyCSharpDiagnosticAsync(source: test, new[] { WellKnownMetadataReferences.Xunit }, expected);
+            return this.VerifyCSharpDiagnosticAsync(source: test,
+                                                    new[]
+                                                    {
+                                                        WellKnownMetadataReferences.Xunit
+                                                    },
+                                                    expected);
         }
 
         [Fact]
@@ -172,7 +198,12 @@ using Xunit;
             }
 }";
 
-            return this.VerifyCSharpDiagnosticAsync(source: test, new[] { WellKnownMetadataReferences.Xunit, WellKnownMetadataReferences.FunFairTestCommon });
+            return this.VerifyCSharpDiagnosticAsync(source: test,
+                                                    new[]
+                                                    {
+                                                        WellKnownMetadataReferences.Xunit,
+                                                        WellKnownMetadataReferences.FunFairTestCommon
+                                                    });
         }
     }
 }

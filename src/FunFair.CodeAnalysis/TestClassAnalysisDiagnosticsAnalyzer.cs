@@ -21,7 +21,11 @@ namespace FunFair.CodeAnalysis
                                                                                    message: "Test classes should be derived from TestBase");
 
         /// <inheritdoc />
-        public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => new[] { Rule }.ToImmutableArray();
+        public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
+            new[]
+            {
+                Rule
+            }.ToImmutableArray();
 
         /// <inheritdoc />
         public override void Initialize(AnalysisContext context)

@@ -31,7 +31,11 @@ namespace FunFair.CodeAnalysis
                                                                                    message: "Should be only one type per file");
 
         /// <inheritdoc />
-        public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => new[] { Rule }.ToImmutableArray();
+        public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
+            new[]
+            {
+                Rule
+            }.ToImmutableArray();
 
         /// <inheritdoc />
         public override void Initialize(AnalysisContext context)
