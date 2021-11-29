@@ -9,13 +9,13 @@ namespace FunFair.CodeAnalysis.Helpers
             LiteralString translatableTitle = new(title);
             LiteralString translatableMessage = new(message);
 
-            return new DiagnosticDescriptor(id: code,
-                                            title: translatableTitle,
-                                            messageFormat: translatableMessage,
-                                            category: category,
-                                            defaultSeverity: DiagnosticSeverity.Error,
-                                            isEnabledByDefault: true,
-                                            description: translatableMessage);
+            return new(id: code,
+                       title: translatableTitle,
+                       messageFormat: translatableMessage,
+                       category: category,
+                       defaultSeverity: DiagnosticSeverity.Error,
+                       isEnabledByDefault: true,
+                       description: translatableMessage);
         }
     }
 }
