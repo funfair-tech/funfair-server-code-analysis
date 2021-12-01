@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FunFair.CodeAnalysis.Helpers
 {
@@ -56,6 +57,7 @@ namespace FunFair.CodeAnalysis.Helpers
         }
 
         /// <inheritdoc />
+        [SuppressMessage(category: "Meziantou.Analyzer", checkId: "MA0021:Use String Comparer to compute hash codes", Justification = "Not in net stabdard 2.0")]
         public override int GetHashCode()
         {
             return (this.MethodName.GetHashCode() * 397) ^ this.ClassName.GetHashCode();

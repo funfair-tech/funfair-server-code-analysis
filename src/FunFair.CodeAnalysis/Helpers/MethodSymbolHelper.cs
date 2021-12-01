@@ -41,7 +41,6 @@ namespace FunFair.CodeAnalysis.Helpers
                                                                               SyntaxNodeAnalysisContext syntaxNodeAnalysisContext,
                                                                               MemberAccessExpressionSyntax memberAccessExpressionSyntax)
         {
-            // TODO: find a better and more reliable way of doing this - e.g. must be something built into roslyn already.
             INamedTypeSymbol? sourceType = GetSourceType(memberAccessExpressionSyntax: memberAccessExpressionSyntax, semanticModel: syntaxNodeAnalysisContext.SemanticModel);
 
             if (sourceType == null)
@@ -80,7 +79,7 @@ namespace FunFair.CodeAnalysis.Helpers
 
         private static bool HasMatchingArguments(InvocationExpressionSyntax invocation, IMethodSymbol arguments)
         {
-            // TODO: Match on something more than just the count of methods - i.e. match on types and argument names?
+            // Ideally: Match on something more than just the count of methods - i.e. match on types and argument names?
             // It is hard to make any match because we don't know for sure to which parameter argument is related.
             // Argument may or may not have argument name - this is optional
             // We can't compare lists by types user in parameters, order in invocation list can be different than in parameter list

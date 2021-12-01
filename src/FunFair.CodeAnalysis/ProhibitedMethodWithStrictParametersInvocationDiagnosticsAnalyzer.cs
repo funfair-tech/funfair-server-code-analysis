@@ -16,7 +16,7 @@ namespace FunFair.CodeAnalysis
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public sealed class ProhibitedMethodWithStrictParametersInvocationDiagnosticsAnalyzer : DiagnosticAnalyzer
     {
-        private const string CATEGORY = "Prohibited Method With Strict Invocations";
+        private const string CATEGORY = Categories.ProhibitedMethodWithStrictInvocations;
 
         private static readonly ProhibitedMethodsSpec[] ForcedMethods =
         {

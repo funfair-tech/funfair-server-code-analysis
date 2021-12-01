@@ -15,7 +15,7 @@ namespace FunFair.CodeAnalysis
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public sealed class ReThrowingExceptionShouldSpecifyInnerExceptionDiagnosticsAnalyzer : DiagnosticAnalyzer
     {
-        private const string CATEGORY = "Exceptions";
+        private const string CATEGORY = Categories.Exceptions;
 
         private static readonly DiagnosticDescriptor Rule = RuleHelpers.CreateRule(code: Rules.RuleMustPassInterExceptionToExceptionsThrownInCatchBlock,
                                                                                    category: CATEGORY,

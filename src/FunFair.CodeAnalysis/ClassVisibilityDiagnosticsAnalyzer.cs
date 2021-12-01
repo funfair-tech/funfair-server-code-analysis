@@ -15,7 +15,7 @@ namespace FunFair.CodeAnalysis
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public sealed class ClassVisibilityDiagnosticsAnalyzer : DiagnosticAnalyzer
     {
-        private const string CATEGORY = "Classes";
+        private const string CATEGORY = Categories.Classes;
 
         private static readonly IReadOnlyList<ConfiguredClass> Classes = new[]
                                                                          {

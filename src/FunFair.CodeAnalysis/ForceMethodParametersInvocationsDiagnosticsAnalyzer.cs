@@ -16,7 +16,7 @@ namespace FunFair.CodeAnalysis
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public sealed class ForceMethodParametersInvocationsDiagnosticsAnalyzer : DiagnosticAnalyzer
     {
-        private const string CATEGORY = "Forced Method Invocations";
+        private const string CATEGORY = Categories.ForcedMethodInvocations;
 
         private static readonly ForcedMethodsSpec[] ForcedMethods =
         {

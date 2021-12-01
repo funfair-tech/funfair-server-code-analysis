@@ -14,7 +14,7 @@ namespace FunFair.CodeAnalysis
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public sealed class StructAnalysisDiagnosticsAnalyzer : DiagnosticAnalyzer
     {
-        private const string CATEGORY = "Structs";
+        private const string CATEGORY = Categories.Structs;
 
         private static readonly DiagnosticDescriptor Rule = RuleHelpers.CreateRule(code: Rules.RuleStructsShouldBeReadOnly,
                                                                                    category: CATEGORY,

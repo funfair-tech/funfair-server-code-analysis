@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Diagnostics;
 using System.Linq;
 using FunFair.CodeAnalysis.Helpers;
 using Microsoft.CodeAnalysis;
@@ -16,7 +17,7 @@ namespace FunFair.CodeAnalysis
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public sealed class ProhibitedPragmasDiagnosticsAnalyzer : DiagnosticAnalyzer
     {
-        private const string CATEGORY = "Illegal Pragmas";
+        private const string CATEGORY = Categories.IllegalPragmas;
 
         private static readonly string[] AllowedWarnings =
         {
@@ -58,12 +59,12 @@ namespace FunFair.CodeAnalysis
 
         private static bool IsBanned(string code)
         {
-            return !AllowedWarnings.Contains(code);
+            return !AllowedWarnings.Contains(value: code, comparer: StringComparer.Ordinal);
         }
 
         private static bool IsBannedForTestAssemblies(string code)
         {
-            return AllowedInTestWarnings.Contains(code) || IsBanned(code);
+            return AllowedInTestWarnings.Contains(value: code, comparer: StringComparer.Ordinal) || IsBanned(code);
         }
 
         private static bool IsTestAssembly(Compilation compilation)
@@ -76,8 +77,10 @@ namespace FunFair.CodeAnalysis
                                   .Select(t => t.assembly)
                                   .Any();
             }
-            catch
+            catch (Exception exception)
             {
+                // note this shouldn't occur; Line here for debugging
+                Debug.WriteLine(exception.Message);
                 return false;
             }
         }

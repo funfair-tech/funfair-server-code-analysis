@@ -17,7 +17,7 @@ namespace FunFair.CodeAnalysis
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public sealed class ProhibitedMethodsDiagnosticsAnalyzer : DiagnosticAnalyzer
     {
-        private const string CATEGORY = "Illegal Method Calls";
+        private const string CATEGORY = Categories.IllegalMethodCalls;
 
         private static readonly ProhibitedMethodsSpec[] BannedMethods =
         {
@@ -134,7 +134,7 @@ namespace FunFair.CodeAnalysis
 
         private static Dictionary<string, INamedTypeSymbol> BuildCachedSymbols(Compilation compilation)
         {
-            Dictionary<string, INamedTypeSymbol> cachedSymbols = new();
+            Dictionary<string, INamedTypeSymbol> cachedSymbols = new(StringComparer.Ordinal);
 
             foreach (string ruleSourceClass in BannedMethods.Select(rule => rule.SourceClass))
             {

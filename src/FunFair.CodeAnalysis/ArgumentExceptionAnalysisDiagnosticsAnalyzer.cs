@@ -1,4 +1,5 @@
-﻿using System.Collections.Immutable;
+﻿using System;
+using System.Collections.Immutable;
 using System.Linq;
 using FunFair.CodeAnalysis.Helpers;
 using Microsoft.CodeAnalysis;
@@ -14,7 +15,7 @@ namespace FunFair.CodeAnalysis
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public sealed class ArgumentExceptionAnalysisDiagnosticsAnalyzer : DiagnosticAnalyzer
     {
-        private const string CATEGORY = "Exceptions";
+        private const string CATEGORY = Categories.Exceptions;
 
         private static readonly DiagnosticDescriptor Rule = RuleHelpers.CreateRule(code: Rules.RuleMustPassParameterNameToArgumentExceptions,
                                                                                    category: CATEGORY,
@@ -79,7 +80,7 @@ namespace FunFair.CodeAnalysis
 
             string typeName = SymbolDisplay.ToDisplayString(methodSymbolReceiverType);
 
-            return ArgumentExceptions.Contains(typeName);
+            return ArgumentExceptions.Contains(value: typeName, comparer: StringComparer.Ordinal);
         }
     }
 }

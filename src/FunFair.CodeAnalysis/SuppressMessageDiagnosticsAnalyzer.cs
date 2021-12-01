@@ -15,7 +15,7 @@ namespace FunFair.CodeAnalysis
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public sealed class SuppressMessageDiagnosticsAnalyzer : DiagnosticAnalyzer
     {
-        private const string CATEGORY = "Suppressions";
+        private const string CATEGORY = Categories.SuppressedErrors;
 
         private static readonly DiagnosticDescriptor Rule = RuleHelpers.CreateRule(code: Rules.RuleSuppressMessageMustHaveJustification,
                                                                                    category: CATEGORY,

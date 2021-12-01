@@ -111,9 +111,8 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers
                     }
                     else
                     {
-                        for (int i = 0; i < documents.Length; i++)
+                        foreach (Document document in documents)
                         {
-                            Document document = documents[i];
                             SyntaxTree? tree = await document.GetSyntaxTreeAsync();
 
                             if (tree != null && tree == diag.Location.SourceTree)

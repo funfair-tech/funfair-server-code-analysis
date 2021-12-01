@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using FunFair.CodeAnalysis.Helpers;
@@ -15,7 +16,7 @@ namespace FunFair.CodeAnalysis
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public sealed class ParameterNameDiagnosticsAnalyzer : DiagnosticAnalyzer
     {
-        private const string CATEGORY = "Naming";
+        private const string CATEGORY = Categories.Naming;
 
         private static readonly IReadOnlyList<NameSanitationSpec> NameSpecifications = new NameSanitationSpec[]
                                                                                        {
@@ -62,7 +63,7 @@ namespace FunFair.CodeAnalysis
 
                     if (rule != null)
                     {
-                        if (!rule.WhitelistedParameterNames.Contains(parameterSyntax.Identifier.Text))
+                        if (!rule.WhitelistedParameterNames.Contains(value: parameterSyntax.Identifier.Text, comparer: StringComparer.Ordinal))
                         {
                             syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(descriptor: rule.Rule, parameterSyntax.GetLocation()));
                         }

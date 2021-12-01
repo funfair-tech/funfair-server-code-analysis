@@ -15,7 +15,7 @@ namespace FunFair.CodeAnalysis
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public sealed class ConstructorGenericParameterTypeDiagnosticsAnalyser : DiagnosticAnalyzer
     {
-        private const string CATEGORY = "Naming";
+        private const string CATEGORY = Categories.Naming;
 
         private static readonly IReadOnlyList<TypeCheckSpec> Specifications = new TypeCheckSpec[]
                                                                               {

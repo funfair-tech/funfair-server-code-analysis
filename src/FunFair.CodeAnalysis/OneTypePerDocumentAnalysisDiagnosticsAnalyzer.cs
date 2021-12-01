@@ -16,7 +16,7 @@ namespace FunFair.CodeAnalysis
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public sealed class OneTypePerDocumentAnalysisDiagnosticsAnalyzer : DiagnosticAnalyzer
     {
-        private const string CATEGORY = "Files";
+        private const string CATEGORY = Categories.Files;
 
         private const string ENUM_TYPE_PREFIX = @"enum:";
         private const string INTERFACE_TYPE_PREFIX = @"interface:";
@@ -61,7 +61,7 @@ namespace FunFair.CodeAnalysis
             IReadOnlyList<MemberDeclarationSyntax> members = GetNonNestedTypeDeclarations(compilationUnitSyntax)
                 .ToArray();
 
-            IReadOnlyList<IGrouping<string, MemberDeclarationSyntax>> grouped = members.GroupBy(GetTypeName)
+            IReadOnlyList<IGrouping<string, MemberDeclarationSyntax>> grouped = members.GroupBy(keySelector: GetTypeName, comparer: StringComparer.Ordinal)
                                                                                        .Where(x => !string.IsNullOrWhiteSpace(x.Key))
                                                                                        .ToArray();
 

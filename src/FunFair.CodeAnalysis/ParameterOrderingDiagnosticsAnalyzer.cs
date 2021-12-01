@@ -16,7 +16,7 @@ namespace FunFair.CodeAnalysis
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public sealed class ParameterOrderingDiagnosticsAnalyzer : DiagnosticAnalyzer
     {
-        private const string CATEGORY = "Parameters";
+        private const string CATEGORY = Categories.Parameters;
 
         private static readonly IReadOnlyList<string> PreferredEndingOrdering = new[]
                                                                                 {

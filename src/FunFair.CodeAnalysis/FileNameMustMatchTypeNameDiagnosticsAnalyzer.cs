@@ -17,7 +17,7 @@ namespace FunFair.CodeAnalysis
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public sealed class FileNameMustMatchTypeNameDiagnosticsAnalyzer : DiagnosticAnalyzer
     {
-        private const string CATEGORY = "Files";
+        private const string CATEGORY = Categories.Files;
 
         private static readonly DiagnosticDescriptor Rule = RuleHelpers.CreateRule(code: Rules.RuleTypeShouldBeInAFileWithSameName,
                                                                                    category: CATEGORY,
