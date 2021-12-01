@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using FunFair.CodeAnalysis.Helpers;
 using Microsoft.CodeAnalysis;
@@ -158,16 +159,16 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzer : DiagnosticA
     /// <param name="methodSignatures">All signatures of one method</param>
     /// <param name="ruleSignatures">All banned signatures</param>
     /// <returns>Collection of allowed signatures.</returns>
-    private static IReadOnlyList<IMethodSymbol> RemoveAllowedSignaturesForMethod(IEnumerable<IMethodSymbol> methodSignatures, IEnumerable<IEnumerable<string>> ruleSignatures)
+    private static IReadOnlyList<IMethodSymbol> RemoveAllowedSignaturesForMethod(IEnumerable<IMethodSymbol>? methodSignatures, IEnumerable<IEnumerable<string>>? ruleSignatures)
     {
         if (methodSignatures == null)
         {
-            throw new ArgumentException(message: "Unknown method signature", nameof(methodSignatures));
+            return ThrowUnknownMethodSignatureException(methodSignatures);
         }
 
         if (ruleSignatures == null)
         {
-            throw new ArgumentException(message: "Unknown rule signature", nameof(methodSignatures));
+            return ThrowUnknownRuleSignature(ruleSignatures);
         }
 
         IEnumerable<IMethodSymbol> methodSymbols = methodSignatures.ToList();
@@ -184,6 +185,20 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzer : DiagnosticA
         }
 
         return methodSignatureList;
+    }
+
+    [SuppressMessage(category: "SonarAnalyzer.CSharp", checkId: "S1172: Parameter only used for name", Justification = "By Design")]
+    [SuppressMessage(category: "ReSharper", checkId: "EntityNameCapturedOnly.Local", Justification = "By Design")]
+    private static IReadOnlyList<IMethodSymbol> ThrowUnknownRuleSignature(IEnumerable<IEnumerable<string>>? ruleSignatures)
+    {
+        throw new ArgumentException(message: "Unknown rule signature", nameof(ruleSignatures));
+    }
+
+    [SuppressMessage(category: "SonarAnalyzer.CSharp", checkId: "S1172: Parameter only used for name", Justification = "By Design")]
+    [SuppressMessage(category: "ReSharper", checkId: "EntityNameCapturedOnly.Local", Justification = "By Design")]
+    private static IReadOnlyList<IMethodSymbol> ThrowUnknownMethodSignatureException(IEnumerable<IMethodSymbol>? methodSignatures)
+    {
+        throw new ArgumentException(message: "Unknown method signature", nameof(methodSignatures));
     }
 
     /// <summary>
