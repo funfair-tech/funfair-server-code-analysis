@@ -5,19 +5,19 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Xunit;
 
-namespace FunFair.CodeAnalysis.Tests
-{
-    public sealed class ParameterNameDiagnosticsAnalyzerTests : CodeFixVerifier
-    {
-        protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer()
-        {
-            return new ParameterNameDiagnosticsAnalyzer();
-        }
+namespace FunFair.CodeAnalysis.Tests;
 
-        [Fact]
-        public Task GenericLoggerParameterNameInvalidAsync()
-        {
-            const string test = @"
+public sealed class ParameterNameDiagnosticsAnalyzerTests : CodeFixVerifier
+{
+    protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer()
+    {
+        return new ParameterNameDiagnosticsAnalyzer();
+    }
+
+    [Fact]
+    public Task GenericLoggerParameterNameInvalidAsync()
+    {
+        const string test = @"
             using Microsoft.Extensions.Logging;
 
             public sealed class Test {
@@ -27,29 +27,21 @@ namespace FunFair.CodeAnalysis.Tests
             }
 }";
 
-            DiagnosticResult expected = new()
-                                        {
-                                            Id = "FFS0019",
-                                            Message = "ILogger parameters should be called 'logger'",
-                                            Severity = DiagnosticSeverity.Error,
-                                            Locations = new[]
-                                                        {
-                                                            new DiagnosticResultLocation(path: "Test0.cs", line: 6, column: 30)
-                                                        }
-                                        };
+        DiagnosticResult expected = new()
+                                    {
+                                        Id = "FFS0019",
+                                        Message = "ILogger parameters should be called 'logger'",
+                                        Severity = DiagnosticSeverity.Error,
+                                        Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 6, column: 30) }
+                                    };
 
-            return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                    new[]
-                                                    {
-                                                        WellKnownMetadataReferences.GenericLogger
-                                                    },
-                                                    expected);
-        }
+        return this.VerifyCSharpDiagnosticAsync(source: test, new[] { WellKnownMetadataReferences.GenericLogger }, expected);
+    }
 
-        [Fact]
-        public Task GenericLoggerParameterNameIsValidAsync()
-        {
-            const string test = @"
+    [Fact]
+    public Task GenericLoggerParameterNameIsValidAsync()
+    {
+        const string test = @"
             using Microsoft.Extensions.Logging;
 
             public sealed class Test {
@@ -59,17 +51,13 @@ namespace FunFair.CodeAnalysis.Tests
             }
 }";
 
-            return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                    new[]
-                                                    {
-                                                        WellKnownMetadataReferences.GenericLogger
-                                                    });
-        }
+        return this.VerifyCSharpDiagnosticAsync(source: test, new[] { WellKnownMetadataReferences.GenericLogger });
+    }
 
-        [Fact]
-        public Task LoggerParameterNameInvalidAsync()
-        {
-            const string test = @"
+    [Fact]
+    public Task LoggerParameterNameInvalidAsync()
+    {
+        const string test = @"
             using Microsoft.Extensions.Logging;
 
             public sealed class Test {
@@ -79,29 +67,21 @@ namespace FunFair.CodeAnalysis.Tests
             }
 }";
 
-            DiagnosticResult expected = new()
-                                        {
-                                            Id = "FFS0019",
-                                            Message = "ILogger parameters should be called 'logger'",
-                                            Severity = DiagnosticSeverity.Error,
-                                            Locations = new[]
-                                                        {
-                                                            new DiagnosticResultLocation(path: "Test0.cs", line: 6, column: 30)
-                                                        }
-                                        };
+        DiagnosticResult expected = new()
+                                    {
+                                        Id = "FFS0019",
+                                        Message = "ILogger parameters should be called 'logger'",
+                                        Severity = DiagnosticSeverity.Error,
+                                        Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 6, column: 30) }
+                                    };
 
-            return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                    new[]
-                                                    {
-                                                        WellKnownMetadataReferences.Logger
-                                                    },
-                                                    expected);
-        }
+        return this.VerifyCSharpDiagnosticAsync(source: test, new[] { WellKnownMetadataReferences.Logger }, expected);
+    }
 
-        [Fact]
-        public Task LoggerParameterNameIsValidAsync()
-        {
-            const string test = @"
+    [Fact]
+    public Task LoggerParameterNameIsValidAsync()
+    {
+        const string test = @"
             using Microsoft.Extensions.Logging;
 
             public sealed class Test {
@@ -111,11 +91,6 @@ namespace FunFair.CodeAnalysis.Tests
             }
 }";
 
-            return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                    new[]
-                                                    {
-                                                        WellKnownMetadataReferences.Logger
-                                                    });
-        }
+        return this.VerifyCSharpDiagnosticAsync(source: test, new[] { WellKnownMetadataReferences.Logger });
     }
 }

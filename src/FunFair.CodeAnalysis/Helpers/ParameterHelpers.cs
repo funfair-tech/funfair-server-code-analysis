@@ -3,34 +3,33 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 
-namespace FunFair.CodeAnalysis.Helpers
+namespace FunFair.CodeAnalysis.Helpers;
+
+internal static class ParameterHelpers
 {
-    internal static class ParameterHelpers
+    public static string? GetFullTypeName(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, ParameterSyntax parameterSyntax)
     {
-        public static string? GetFullTypeName(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, ParameterSyntax parameterSyntax)
+        IParameterSymbol? ds = syntaxNodeAnalysisContext.SemanticModel.GetDeclaredSymbol(parameterSyntax);
+
+        if (ds != null)
         {
-            IParameterSymbol? ds = syntaxNodeAnalysisContext.SemanticModel.GetDeclaredSymbol(parameterSyntax);
+            ITypeSymbol typeSymbol = GetTypeSymbol(ds);
 
-            if (ds != null)
-            {
-                ITypeSymbol typeSymbol = GetTypeSymbol(ds);
-
-                return typeSymbol.ToDisplayString();
-            }
-
-            return null;
+            return typeSymbol.ToDisplayString();
         }
 
-        private static ITypeSymbol GetTypeSymbol(IParameterSymbol ds)
+        return null;
+    }
+
+    private static ITypeSymbol GetTypeSymbol(IParameterSymbol ds)
+    {
+        ITypeSymbol dsType = ds.Type;
+
+        if (dsType is INamedTypeSymbol nts && nts.IsGenericType)
         {
-            ITypeSymbol dsType = ds.Type;
-
-            if (dsType is INamedTypeSymbol nts && nts.IsGenericType)
-            {
-                dsType = dsType.OriginalDefinition;
-            }
-
-            return dsType;
+            dsType = dsType.OriginalDefinition;
         }
+
+        return dsType;
     }
 }

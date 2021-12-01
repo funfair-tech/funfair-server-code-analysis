@@ -5,19 +5,19 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Xunit;
 
-namespace FunFair.CodeAnalysis.Tests
-{
-    public sealed class ProhibitedClassesDiagnosticsAnalyzerTests : CodeFixVerifier
-    {
-        protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer()
-        {
-            return new ProhibitedClassesDiagnosticsAnalyzer();
-        }
+namespace FunFair.CodeAnalysis.Tests;
 
-        [Fact]
-        public Task AssertFalseForNonBlockingConcurrentDictionaryAsync()
-        {
-            const string test = @"
+public sealed class ProhibitedClassesDiagnosticsAnalyzerTests : CodeFixVerifier
+{
+    protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer()
+    {
+        return new ProhibitedClassesDiagnosticsAnalyzer();
+    }
+
+    [Fact]
+    public Task AssertFalseForNonBlockingConcurrentDictionaryAsync()
+    {
+        const string test = @"
      using NonBlocking;
 
      namespace ConsoleApplication1
@@ -31,17 +31,13 @@ namespace FunFair.CodeAnalysis.Tests
          }
      }";
 
-            return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                    new[]
-                                                    {
-                                                        WellKnownMetadataReferences.NonBlockingConcurrentDictionary
-                                                    });
-        }
+        return this.VerifyCSharpDiagnosticAsync(source: test, new[] { WellKnownMetadataReferences.NonBlockingConcurrentDictionary });
+    }
 
-        [Fact]
-        public Task AssertTrueForCreationOfNewInstanceWithMessageIsBannedAsync()
-        {
-            const string test = @"
+    [Fact]
+    public Task AssertTrueForCreationOfNewInstanceWithMessageIsBannedAsync()
+    {
+        const string test = @"
      using System.Collections.Concurrent;
 
      namespace ConsoleApplication1
@@ -54,29 +50,21 @@ namespace FunFair.CodeAnalysis.Tests
              }
          }
      }";
-            DiagnosticResult expected = new()
-                                        {
-                                            Id = "FFS0031",
-                                            Message = @"Use NonBlocking.ConcurrentDictionary  rather than System.Collections.Concurrent.ConcurrentDictionary",
-                                            Severity = DiagnosticSeverity.Error,
-                                            Locations = new[]
-                                                        {
-                                                            new DiagnosticResultLocation(path: "Test0.cs", line: 10, column: 61)
-                                                        }
-                                        };
+        DiagnosticResult expected = new()
+                                    {
+                                        Id = "FFS0031",
+                                        Message = @"Use NonBlocking.ConcurrentDictionary  rather than System.Collections.Concurrent.ConcurrentDictionary",
+                                        Severity = DiagnosticSeverity.Error,
+                                        Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 10, column: 61) }
+                                    };
 
-            return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                    new[]
-                                                    {
-                                                        WellKnownMetadataReferences.ConcurrentDictionary
-                                                    },
-                                                    expected);
-        }
+        return this.VerifyCSharpDiagnosticAsync(source: test, new[] { WellKnownMetadataReferences.ConcurrentDictionary }, expected);
+    }
 
-        [Fact]
-        public Task AssertTrueForParameterInMethodDeclarationWithMessageIsBannedAsync()
-        {
-            const string test = @"
+    [Fact]
+    public Task AssertTrueForParameterInMethodDeclarationWithMessageIsBannedAsync()
+    {
+        const string test = @"
      using System.Collections.Concurrent;
 
      namespace ConsoleApplication1
@@ -89,29 +77,21 @@ namespace FunFair.CodeAnalysis.Tests
              }
          }
      }";
-            DiagnosticResult expected = new()
-                                        {
-                                            Id = "FFS0031",
-                                            Message = @"Use NonBlocking.ConcurrentDictionary  rather than System.Collections.Concurrent.ConcurrentDictionary",
-                                            Severity = DiagnosticSeverity.Error,
-                                            Locations = new[]
-                                                        {
-                                                            new DiagnosticResultLocation(path: "Test0.cs", line: 8, column: 14)
-                                                        }
-                                        };
+        DiagnosticResult expected = new()
+                                    {
+                                        Id = "FFS0031",
+                                        Message = @"Use NonBlocking.ConcurrentDictionary  rather than System.Collections.Concurrent.ConcurrentDictionary",
+                                        Severity = DiagnosticSeverity.Error,
+                                        Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 8, column: 14) }
+                                    };
 
-            return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                    new[]
-                                                    {
-                                                        WellKnownMetadataReferences.ConcurrentDictionary
-                                                    },
-                                                    expected);
-        }
+        return this.VerifyCSharpDiagnosticAsync(source: test, new[] { WellKnownMetadataReferences.ConcurrentDictionary }, expected);
+    }
 
-        [Fact]
-        public Task AssertTrueForFieldDeclarationMessageIsBannedAsync()
-        {
-            const string test = @"
+    [Fact]
+    public Task AssertTrueForFieldDeclarationMessageIsBannedAsync()
+    {
+        const string test = @"
      using System.Collections.Concurrent;
 
      namespace ConsoleApplication1
@@ -126,42 +106,31 @@ namespace FunFair.CodeAnalysis.Tests
              }
          }
      }";
-            DiagnosticResult[] expected =
-            {
-                new()
-                {
-                    Id = "FFS0031",
-                    Message = @"Use NonBlocking.ConcurrentDictionary  rather than System.Collections.Concurrent.ConcurrentDictionary",
-                    Severity = DiagnosticSeverity.Error,
-                    Locations = new[]
-                                {
-                                    new DiagnosticResultLocation(path: "Test0.cs", line: 8, column: 52)
-                                }
-                },
-                new()
-                {
-                    Id = "FFS0031",
-                    Message = @"Use NonBlocking.ConcurrentDictionary  rather than System.Collections.Concurrent.ConcurrentDictionary",
-                    Severity = DiagnosticSeverity.Error,
-                    Locations = new[]
-                                {
-                                    new DiagnosticResultLocation(path: "Test0.cs", line: 12, column: 35)
-                                }
-                }
-            };
-
-            return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                    new[]
-                                                    {
-                                                        WellKnownMetadataReferences.ConcurrentDictionary
-                                                    },
-                                                    expected: expected);
-        }
-
-        [Fact]
-        public Task AssertTrueForPropertyDeclarationMessageIsBannedAsync()
+        DiagnosticResult[] expected =
         {
-            const string test = @"
+            new()
+            {
+                Id = "FFS0031",
+                Message = @"Use NonBlocking.ConcurrentDictionary  rather than System.Collections.Concurrent.ConcurrentDictionary",
+                Severity = DiagnosticSeverity.Error,
+                Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 8, column: 52) }
+            },
+            new()
+            {
+                Id = "FFS0031",
+                Message = @"Use NonBlocking.ConcurrentDictionary  rather than System.Collections.Concurrent.ConcurrentDictionary",
+                Severity = DiagnosticSeverity.Error,
+                Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 12, column: 35) }
+            }
+        };
+
+        return this.VerifyCSharpDiagnosticAsync(source: test, new[] { WellKnownMetadataReferences.ConcurrentDictionary }, expected: expected);
+    }
+
+    [Fact]
+    public Task AssertTrueForPropertyDeclarationMessageIsBannedAsync()
+    {
+        const string test = @"
      using System.Collections.Concurrent;
 
      namespace ConsoleApplication1
@@ -176,29 +145,21 @@ namespace FunFair.CodeAnalysis.Tests
              }
          }
      }";
-            DiagnosticResult expected = new()
-                                        {
-                                            Id = "FFS0031",
-                                            Message = @"Use NonBlocking.ConcurrentDictionary  rather than System.Collections.Concurrent.ConcurrentDictionary",
-                                            Severity = DiagnosticSeverity.Error,
-                                            Locations = new[]
-                                                        {
-                                                            new DiagnosticResultLocation(path: "Test0.cs", line: 8, column: 13)
-                                                        }
-                                        };
+        DiagnosticResult expected = new()
+                                    {
+                                        Id = "FFS0031",
+                                        Message = @"Use NonBlocking.ConcurrentDictionary  rather than System.Collections.Concurrent.ConcurrentDictionary",
+                                        Severity = DiagnosticSeverity.Error,
+                                        Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 8, column: 13) }
+                                    };
 
-            return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                    new[]
-                                                    {
-                                                        WellKnownMetadataReferences.ConcurrentDictionary
-                                                    },
-                                                    expected);
-        }
+        return this.VerifyCSharpDiagnosticAsync(source: test, new[] { WellKnownMetadataReferences.ConcurrentDictionary }, expected);
+    }
 
-        [Fact]
-        public Task AssertTrueForParameterInConstructorDeclarationWithMessageIsBannedAsync()
-        {
-            const string test = @"
+    [Fact]
+    public Task AssertTrueForParameterInConstructorDeclarationWithMessageIsBannedAsync()
+    {
+        const string test = @"
      using System.Collections.Concurrent;
 
      namespace ConsoleApplication1
@@ -211,23 +172,14 @@ namespace FunFair.CodeAnalysis.Tests
              }
          }
      }";
-            DiagnosticResult expected = new()
-                                        {
-                                            Id = "FFS0031",
-                                            Message = @"Use NonBlocking.ConcurrentDictionary  rather than System.Collections.Concurrent.ConcurrentDictionary",
-                                            Severity = DiagnosticSeverity.Error,
-                                            Locations = new[]
-                                                        {
-                                                            new DiagnosticResultLocation(path: "Test0.cs", line: 8, column: 14)
-                                                        }
-                                        };
+        DiagnosticResult expected = new()
+                                    {
+                                        Id = "FFS0031",
+                                        Message = @"Use NonBlocking.ConcurrentDictionary  rather than System.Collections.Concurrent.ConcurrentDictionary",
+                                        Severity = DiagnosticSeverity.Error,
+                                        Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 8, column: 14) }
+                                    };
 
-            return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                    new[]
-                                                    {
-                                                        WellKnownMetadataReferences.ConcurrentDictionary
-                                                    },
-                                                    expected);
-        }
+        return this.VerifyCSharpDiagnosticAsync(source: test, new[] { WellKnownMetadataReferences.ConcurrentDictionary }, expected);
     }
 }

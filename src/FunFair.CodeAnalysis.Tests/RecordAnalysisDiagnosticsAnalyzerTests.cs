@@ -5,39 +5,35 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Xunit;
 
-namespace FunFair.CodeAnalysis.Tests
+namespace FunFair.CodeAnalysis.Tests;
+
+public sealed class RecordAnalysisDiagnosticsAnalyzerTests : CodeFixVerifier
 {
-    public sealed class RecordAnalysisDiagnosticsAnalyzerTests : CodeFixVerifier
+    protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer()
     {
-        protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer()
-        {
-            return new RecordAnalysisDiagnosticsAnalyzer();
-        }
+        return new RecordAnalysisDiagnosticsAnalyzer();
+    }
 
-        [Fact]
-        public Task RecordWithNoModifiersIsAnErrorAsync()
-        {
-            const string test = @"public record Test {}";
-            DiagnosticResult expected = new()
-                                        {
-                                            Id = "FFS0028",
-                                            Message = "Records should be sealed",
-                                            Severity = DiagnosticSeverity.Error,
-                                            Locations = new[]
-                                                        {
-                                                            new DiagnosticResultLocation(path: "Test0.cs", line: 12, column: 25)
-                                                        }
-                                        };
+    [Fact]
+    public Task RecordWithNoModifiersIsAnErrorAsync()
+    {
+        const string test = @"public record Test {}";
+        DiagnosticResult expected = new()
+                                    {
+                                        Id = "FFS0028",
+                                        Message = "Records should be sealed",
+                                        Severity = DiagnosticSeverity.Error,
+                                        Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 12, column: 25) }
+                                    };
 
-            return this.VerifyCSharpDiagnosticAsync(source: test, expected);
-        }
+        return this.VerifyCSharpDiagnosticAsync(source: test, expected);
+    }
 
-        [Fact]
-        public Task SealedRecordNotAnErrorAsync()
-        {
-            const string test = @"public sealed record Test {}";
+    [Fact]
+    public Task SealedRecordNotAnErrorAsync()
+    {
+        const string test = @"public sealed record Test {}";
 
-            return this.VerifyCSharpDiagnosticAsync(test);
-        }
+        return this.VerifyCSharpDiagnosticAsync(test);
     }
 }

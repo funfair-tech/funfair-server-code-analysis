@@ -5,19 +5,19 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Xunit;
 
-namespace FunFair.CodeAnalysis.Tests
-{
-    public sealed class ReThrowingExceptionShouldSpecifyInnerExceptionDiagnosticsAnalyzerTests : CodeFixVerifier
-    {
-        protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer()
-        {
-            return new ReThrowingExceptionShouldSpecifyInnerExceptionDiagnosticsAnalyzer();
-        }
+namespace FunFair.CodeAnalysis.Tests;
 
-        [Fact]
-        public Task ReThrowingExceptionShouldNotTriggerErrorAsync()
-        {
-            const string test = @"
+public sealed class ReThrowingExceptionShouldSpecifyInnerExceptionDiagnosticsAnalyzerTests : CodeFixVerifier
+{
+    protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer()
+    {
+        return new ReThrowingExceptionShouldSpecifyInnerExceptionDiagnosticsAnalyzer();
+    }
+
+    [Fact]
+    public Task ReThrowingExceptionShouldNotTriggerErrorAsync()
+    {
+        const string test = @"
     using System;
 
     namespace ConsoleApplication1
@@ -38,13 +38,13 @@ namespace FunFair.CodeAnalysis.Tests
          }
     }";
 
-            return this.VerifyCSharpDiagnosticAsync(source: test);
-        }
+        return this.VerifyCSharpDiagnosticAsync(source: test);
+    }
 
-        [Fact]
-        public Task ThrowingNewExceptionPassingInnerExceptionShouldNotBeAnErrorAsync()
-        {
-            const string test = @"
+    [Fact]
+    public Task ThrowingNewExceptionPassingInnerExceptionShouldNotBeAnErrorAsync()
+    {
+        const string test = @"
 using System;
 
 public sealed class Test {
@@ -62,13 +62,13 @@ public sealed class Test {
     }
 }";
 
-            return this.VerifyCSharpDiagnosticAsync(source: test);
-        }
+        return this.VerifyCSharpDiagnosticAsync(source: test);
+    }
 
-        [Fact]
-        public Task ThrowingNewExceptionWithoutPassingInnerExceptionShouldBeAnErrorAsync()
-        {
-            const string test = @"
+    [Fact]
+    public Task ThrowingNewExceptionWithoutPassingInnerExceptionShouldBeAnErrorAsync()
+    {
+        const string test = @"
 using System;
 
 public sealed class Test {
@@ -86,24 +86,21 @@ public sealed class Test {
     }
 }";
 
-            DiagnosticResult expected = new()
-                                        {
-                                            Id = "FFS0017",
-                                            Message = "Provide 'failingException' as a inner exception when throw from the catch clauses",
-                                            Severity = DiagnosticSeverity.Error,
-                                            Locations = new[]
-                                                        {
-                                                            new DiagnosticResultLocation(path: "Test0.cs", line: 14, column: 19)
-                                                        }
-                                        };
+        DiagnosticResult expected = new()
+                                    {
+                                        Id = "FFS0017",
+                                        Message = "Provide 'failingException' as a inner exception when throw from the catch clauses",
+                                        Severity = DiagnosticSeverity.Error,
+                                        Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 14, column: 19) }
+                                    };
 
-            return this.VerifyCSharpDiagnosticAsync(source: test, expected);
-        }
+        return this.VerifyCSharpDiagnosticAsync(source: test, expected);
+    }
 
-        [Fact]
-        public Task ThrowingNewExceptionWithoutPassingRandomExceptionShouldBeAnErrorAsync()
-        {
-            const string test = @"
+    [Fact]
+    public Task ThrowingNewExceptionWithoutPassingRandomExceptionShouldBeAnErrorAsync()
+    {
+        const string test = @"
 using System;
 
 public sealed class Test {
@@ -121,18 +118,14 @@ public sealed class Test {
     }
 }";
 
-            DiagnosticResult expected = new()
-                                        {
-                                            Id = "FFS0017",
-                                            Message = "Provide 'failingException' as a inner exception when throw from the catch clauses",
-                                            Severity = DiagnosticSeverity.Error,
-                                            Locations = new[]
-                                                        {
-                                                            new DiagnosticResultLocation(path: "Test0.cs", line: 14, column: 19)
-                                                        }
-                                        };
+        DiagnosticResult expected = new()
+                                    {
+                                        Id = "FFS0017",
+                                        Message = "Provide 'failingException' as a inner exception when throw from the catch clauses",
+                                        Severity = DiagnosticSeverity.Error,
+                                        Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 14, column: 19) }
+                                    };
 
-            return this.VerifyCSharpDiagnosticAsync(source: test, expected);
-        }
+        return this.VerifyCSharpDiagnosticAsync(source: test, expected);
     }
 }

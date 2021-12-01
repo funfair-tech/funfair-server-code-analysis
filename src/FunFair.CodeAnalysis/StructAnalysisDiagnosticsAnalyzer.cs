@@ -6,56 +6,51 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 
-namespace FunFair.CodeAnalysis
+namespace FunFair.CodeAnalysis;
+
+/// <summary>
+///     Looks for problems with structs.
+/// </summary>
+[DiagnosticAnalyzer(LanguageNames.CSharp)]
+public sealed class StructAnalysisDiagnosticsAnalyzer : DiagnosticAnalyzer
 {
-    /// <summary>
-    ///     Looks for problems with structs.
-    /// </summary>
-    [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    public sealed class StructAnalysisDiagnosticsAnalyzer : DiagnosticAnalyzer
+    private static readonly DiagnosticDescriptor Rule = RuleHelpers.CreateRule(code: Rules.RuleStructsShouldBeReadOnly,
+                                                                               category: Categories.Structs,
+                                                                               title: "Structs should be read-only",
+                                                                               message: "Structs should be read-only");
+
+    /// <inheritdoc />
+    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => new[] { Rule }.ToImmutableArray();
+
+    /// <inheritdoc />
+    public override void Initialize(AnalysisContext context)
     {
-        private static readonly DiagnosticDescriptor Rule = RuleHelpers.CreateRule(code: Rules.RuleStructsShouldBeReadOnly,
-                                                                                   category: Categories.Structs,
-                                                                                   title: "Structs should be read-only",
-                                                                                   message: "Structs should be read-only");
+        context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.None);
+        context.EnableConcurrentExecution();
 
-        /// <inheritdoc />
-        public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
-            new[]
-            {
-                Rule
-            }.ToImmutableArray();
+        context.RegisterCompilationStartAction(PerformCheck);
+    }
 
-        /// <inheritdoc />
-        public override void Initialize(AnalysisContext context)
+    private static void PerformCheck(CompilationStartAnalysisContext compilationStartContext)
+    {
+        compilationStartContext.RegisterSyntaxNodeAction(action: MustBeReadOnly, SyntaxKind.StructDeclaration);
+    }
+
+    private static void MustBeReadOnly(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
+    {
+        if (syntaxNodeAnalysisContext.Node is not StructDeclarationSyntax structDeclarationSyntax)
         {
-            context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.None);
-            context.EnableConcurrentExecution();
-
-            context.RegisterCompilationStartAction(PerformCheck);
+            return;
         }
 
-        private static void PerformCheck(CompilationStartAnalysisContext compilationStartContext)
+        if (!structDeclarationSyntax.Modifiers.Any(IsReadOnlyKeyword))
         {
-            compilationStartContext.RegisterSyntaxNodeAction(action: MustBeReadOnly, SyntaxKind.StructDeclaration);
+            syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(descriptor: Rule, structDeclarationSyntax.GetLocation()));
         }
+    }
 
-        private static void MustBeReadOnly(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
-        {
-            if (syntaxNodeAnalysisContext.Node is not StructDeclarationSyntax structDeclarationSyntax)
-            {
-                return;
-            }
-
-            if (!structDeclarationSyntax.Modifiers.Any(IsReadOnlyKeyword))
-            {
-                syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(descriptor: Rule, structDeclarationSyntax.GetLocation()));
-            }
-        }
-
-        private static bool IsReadOnlyKeyword(SyntaxToken syntaxToken)
-        {
-            return syntaxToken.IsKind(SyntaxKind.ReadOnlyKeyword);
-        }
+    private static bool IsReadOnlyKeyword(SyntaxToken syntaxToken)
+    {
+        return syntaxToken.IsKind(SyntaxKind.ReadOnlyKeyword);
     }
 }

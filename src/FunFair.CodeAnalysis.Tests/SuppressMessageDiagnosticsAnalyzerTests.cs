@@ -5,19 +5,19 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Xunit;
 
-namespace FunFair.CodeAnalysis.Tests
-{
-    public sealed class SuppressMessageDiagnosticsAnalyzerTests : CodeFixVerifier
-    {
-        protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer()
-        {
-            return new SuppressMessageDiagnosticsAnalyzer();
-        }
+namespace FunFair.CodeAnalysis.Tests;
 
-        [Fact]
-        public Task SuppressMessageWithJustificationIsOkAsync()
-        {
-            const string test = @"
+public sealed class SuppressMessageDiagnosticsAnalyzerTests : CodeFixVerifier
+{
+    protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer()
+    {
+        return new SuppressMessageDiagnosticsAnalyzer();
+    }
+
+    [Fact]
+    public Task SuppressMessageWithJustificationIsOkAsync()
+    {
+        const string test = @"
             using System.Diagnostics.CodeAnalysis;
 
             public sealed class Test {
@@ -28,17 +28,13 @@ namespace FunFair.CodeAnalysis.Tests
             }
 }";
 
-            return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                    new[]
-                                                    {
-                                                        WellKnownMetadataReferences.SuppressMessage
-                                                    });
-        }
+        return this.VerifyCSharpDiagnosticAsync(source: test, new[] { WellKnownMetadataReferences.SuppressMessage });
+    }
 
-        [Fact]
-        public Task SuppressMessageWithoutJustificationIsErrorAsync()
-        {
-            const string test = @"
+    [Fact]
+    public Task SuppressMessageWithoutJustificationIsErrorAsync()
+    {
+        const string test = @"
             using System.Diagnostics.CodeAnalysis;
 
             public sealed class Test {
@@ -48,29 +44,21 @@ namespace FunFair.CodeAnalysis.Tests
             {
             }
 }";
-            DiagnosticResult expected = new()
-                                        {
-                                            Id = "FFS0027",
-                                            Message = "SuppressMessage must specify a Justification",
-                                            Severity = DiagnosticSeverity.Error,
-                                            Locations = new[]
-                                                        {
-                                                            new DiagnosticResultLocation(path: "Test0.cs", line: 6, column: 14)
-                                                        }
-                                        };
+        DiagnosticResult expected = new()
+                                    {
+                                        Id = "FFS0027",
+                                        Message = "SuppressMessage must specify a Justification",
+                                        Severity = DiagnosticSeverity.Error,
+                                        Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 6, column: 14) }
+                                    };
 
-            return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                    new[]
-                                                    {
-                                                        WellKnownMetadataReferences.SuppressMessage
-                                                    },
-                                                    expected);
-        }
+        return this.VerifyCSharpDiagnosticAsync(source: test, new[] { WellKnownMetadataReferences.SuppressMessage }, expected);
+    }
 
-        [Fact]
-        public Task SuppressMessageWithBlankJustificationIsErrorAsync()
-        {
-            const string test = @"
+    [Fact]
+    public Task SuppressMessageWithBlankJustificationIsErrorAsync()
+    {
+        const string test = @"
             using System.Diagnostics.CodeAnalysis;
 
             public sealed class Test {
@@ -81,23 +69,14 @@ namespace FunFair.CodeAnalysis.Tests
             }
 }";
 
-            DiagnosticResult expected = new()
-                                        {
-                                            Id = "FFS0027",
-                                            Message = "SuppressMessage must specify a Justification",
-                                            Severity = DiagnosticSeverity.Error,
-                                            Locations = new[]
-                                                        {
-                                                            new DiagnosticResultLocation(path: "Test0.cs", line: 6, column: 75)
-                                                        }
-                                        };
+        DiagnosticResult expected = new()
+                                    {
+                                        Id = "FFS0027",
+                                        Message = "SuppressMessage must specify a Justification",
+                                        Severity = DiagnosticSeverity.Error,
+                                        Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 6, column: 75) }
+                                    };
 
-            return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                    new[]
-                                                    {
-                                                        WellKnownMetadataReferences.SuppressMessage
-                                                    },
-                                                    expected);
-        }
+        return this.VerifyCSharpDiagnosticAsync(source: test, new[] { WellKnownMetadataReferences.SuppressMessage }, expected);
     }
 }

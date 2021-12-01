@@ -5,19 +5,19 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Xunit;
 
-namespace FunFair.CodeAnalysis.Tests
-{
-    public sealed class ProhibitedMethodWithStrictParametersInvocationDiagnosticsAnalyzerTests : CodeFixVerifier
-    {
-        protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer()
-        {
-            return new ProhibitedMethodWithStrictParametersInvocationDiagnosticsAnalyzer();
-        }
+namespace FunFair.CodeAnalysis.Tests;
 
-        [Fact]
-        public Task NSubstituteExtensionsReceivedWithExpectedCallCountIsPassingAsync()
-        {
-            const string test = @"
+public sealed class ProhibitedMethodWithStrictParametersInvocationDiagnosticsAnalyzerTests : CodeFixVerifier
+{
+    protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer()
+    {
+        return new ProhibitedMethodWithStrictParametersInvocationDiagnosticsAnalyzer();
+    }
+
+    [Fact]
+    public Task NSubstituteExtensionsReceivedWithExpectedCallCountIsPassingAsync()
+    {
+        const string test = @"
      using NSubstitute;
 
      namespace ConsoleApplication1
@@ -36,17 +36,13 @@ namespace FunFair.CodeAnalysis.Tests
          }
      }";
 
-            return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                    new[]
-                                                    {
-                                                        WellKnownMetadataReferences.Substitute
-                                                    });
-        }
+        return this.VerifyCSharpDiagnosticAsync(source: test, new[] { WellKnownMetadataReferences.Substitute });
+    }
 
-        [Fact]
-        public Task NSubstituteExtensionsReceivedWithZeroExpectedCallCountIsFailingAsync()
-        {
-            const string test = @"
+    [Fact]
+    public Task NSubstituteExtensionsReceivedWithZeroExpectedCallCountIsFailingAsync()
+    {
+        const string test = @"
      using NSubstitute;
 
      namespace ConsoleApplication1
@@ -64,29 +60,21 @@ namespace FunFair.CodeAnalysis.Tests
              }
          }
      }";
-            DiagnosticResult expected = new()
-                                        {
-                                            Id = "FFS0021",
-                                            Message = "Only use Received with expected call count greater than 0, use DidNotReceived instead if 0 call received expected",
-                                            Severity = DiagnosticSeverity.Error,
-                                            Locations = new[]
-                                                        {
-                                                            new DiagnosticResultLocation(path: "Test0.cs", line: 15, column: 18)
-                                                        }
-                                        };
+        DiagnosticResult expected = new()
+                                    {
+                                        Id = "FFS0021",
+                                        Message = "Only use Received with expected call count greater than 0, use DidNotReceived instead if 0 call received expected",
+                                        Severity = DiagnosticSeverity.Error,
+                                        Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 15, column: 18) }
+                                    };
 
-            return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                    new[]
-                                                    {
-                                                        WellKnownMetadataReferences.Substitute
-                                                    },
-                                                    expected);
-        }
+        return this.VerifyCSharpDiagnosticAsync(source: test, new[] { WellKnownMetadataReferences.Substitute }, expected);
+    }
 
-        [Fact]
-        public Task NSubstituteExtensionsReceivedWithoutExpectedCallCountIsBannedAsync()
-        {
-            const string test = @"
+    [Fact]
+    public Task NSubstituteExtensionsReceivedWithoutExpectedCallCountIsBannedAsync()
+    {
+        const string test = @"
      using NSubstitute;
 
      namespace ConsoleApplication1
@@ -105,17 +93,13 @@ namespace FunFair.CodeAnalysis.Tests
          }
      }";
 
-            return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                    new[]
-                                                    {
-                                                        WellKnownMetadataReferences.Substitute
-                                                    });
-        }
+        return this.VerifyCSharpDiagnosticAsync(source: test, new[] { WellKnownMetadataReferences.Substitute });
+    }
 
-        [Fact]
-        public Task AddJsonFileWithReloadOnChangeSetToFalseIsPassingAsync()
-        {
-            const string test = @"
+    [Fact]
+    public Task AddJsonFileWithReloadOnChangeSetToFalseIsPassingAsync()
+    {
+        const string test = @"
      using Microsoft.Extensions.Configuration;
 
      namespace ConsoleApplication1
@@ -129,19 +113,19 @@ namespace FunFair.CodeAnalysis.Tests
          }
      }";
 
-            return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                    new[]
-                                                    {
-                                                        WellKnownMetadataReferences.MicrosoftExtensionsIConfigurationBuilder,
-                                                        WellKnownMetadataReferences.ConfigurationBuilder,
-                                                        WellKnownMetadataReferences.JsonConfigurationExtensions
-                                                    });
-        }
+        return this.VerifyCSharpDiagnosticAsync(source: test,
+                                                new[]
+                                                {
+                                                    WellKnownMetadataReferences.MicrosoftExtensionsIConfigurationBuilder,
+                                                    WellKnownMetadataReferences.ConfigurationBuilder,
+                                                    WellKnownMetadataReferences.JsonConfigurationExtensions
+                                                });
+    }
 
-        [Fact]
-        public Task AddJsonFileWithReloadOnChangeSetToTrueIsBannedConstructorAsync()
-        {
-            const string test = @"
+    [Fact]
+    public Task AddJsonFileWithReloadOnChangeSetToTrueIsBannedConstructorAsync()
+    {
+        const string test = @"
      using Microsoft.Extensions.Configuration;
 
      namespace ConsoleApplication1
@@ -157,31 +141,28 @@ namespace FunFair.CodeAnalysis.Tests
          }
      }";
 
-            DiagnosticResult expected = new()
-                                        {
-                                            Id = "FFS0034",
-                                            Message = "Only use AddJsonFile with reloadOnChange set to false",
-                                            Severity = DiagnosticSeverity.Error,
-                                            Locations = new[]
-                                                        {
-                                                            new DiagnosticResultLocation(path: "Test0.cs", line: 10, column: 50)
-                                                        }
-                                        };
+        DiagnosticResult expected = new()
+                                    {
+                                        Id = "FFS0034",
+                                        Message = "Only use AddJsonFile with reloadOnChange set to false",
+                                        Severity = DiagnosticSeverity.Error,
+                                        Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 10, column: 50) }
+                                    };
 
-            return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                    new[]
-                                                    {
-                                                        WellKnownMetadataReferences.MicrosoftExtensionsIConfigurationBuilder,
-                                                        WellKnownMetadataReferences.ConfigurationBuilder,
-                                                        WellKnownMetadataReferences.JsonConfigurationExtensions
-                                                    },
-                                                    expected);
-        }
+        return this.VerifyCSharpDiagnosticAsync(source: test,
+                                                new[]
+                                                {
+                                                    WellKnownMetadataReferences.MicrosoftExtensionsIConfigurationBuilder,
+                                                    WellKnownMetadataReferences.ConfigurationBuilder,
+                                                    WellKnownMetadataReferences.JsonConfigurationExtensions
+                                                },
+                                                expected);
+    }
 
-        [Fact]
-        public Task AddJsonFileWithReloadOnChangeSetToTrueIsBannedNonConstructorAsync()
-        {
-            const string test = @"
+    [Fact]
+    public Task AddJsonFileWithReloadOnChangeSetToTrueIsBannedNonConstructorAsync()
+    {
+        const string test = @"
      using Microsoft.Extensions.Configuration;
 
      namespace ConsoleApplication1
@@ -198,25 +179,21 @@ namespace FunFair.CodeAnalysis.Tests
          }
      }";
 
-            DiagnosticResult expected = new()
-                                        {
-                                            Id = "FFS0034",
-                                            Message = "Only use AddJsonFile with reloadOnChange set to false",
-                                            Severity = DiagnosticSeverity.Error,
-                                            Locations = new[]
-                                                        {
-                                                            new DiagnosticResultLocation(path: "Test0.cs", line: 10, column: 50)
-                                                        }
-                                        };
+        DiagnosticResult expected = new()
+                                    {
+                                        Id = "FFS0034",
+                                        Message = "Only use AddJsonFile with reloadOnChange set to false",
+                                        Severity = DiagnosticSeverity.Error,
+                                        Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 10, column: 50) }
+                                    };
 
-            return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                    new[]
-                                                    {
-                                                        WellKnownMetadataReferences.MicrosoftExtensionsIConfigurationBuilder,
-                                                        WellKnownMetadataReferences.ConfigurationBuilder,
-                                                        WellKnownMetadataReferences.JsonConfigurationExtensions
-                                                    },
-                                                    expected);
-        }
+        return this.VerifyCSharpDiagnosticAsync(source: test,
+                                                new[]
+                                                {
+                                                    WellKnownMetadataReferences.MicrosoftExtensionsIConfigurationBuilder,
+                                                    WellKnownMetadataReferences.ConfigurationBuilder,
+                                                    WellKnownMetadataReferences.JsonConfigurationExtensions
+                                                },
+                                                expected);
     }
 }

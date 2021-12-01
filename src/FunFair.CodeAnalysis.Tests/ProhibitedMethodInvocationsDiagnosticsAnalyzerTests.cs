@@ -5,19 +5,19 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Xunit;
 
-namespace FunFair.CodeAnalysis.Tests
-{
-    public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzerTests : CodeFixVerifier
-    {
-        protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer()
-        {
-            return new ProhibitedMethodInvocationsDiagnosticsAnalyzer();
-        }
+namespace FunFair.CodeAnalysis.Tests;
 
-        [Fact]
-        public Task AssertFalseWithMessageIsAllowedAsync()
-        {
-            const string test = @"
+public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzerTests : CodeFixVerifier
+{
+    protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer()
+    {
+        return new ProhibitedMethodInvocationsDiagnosticsAnalyzer();
+    }
+
+    [Fact]
+    public Task AssertFalseWithMessageIsAllowedAsync()
+    {
+        const string test = @"
      using Xunit;
      namespace ConsoleApplication1
      {
@@ -30,17 +30,13 @@ namespace FunFair.CodeAnalysis.Tests
          }
      }";
 
-            return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                    new[]
-                                                    {
-                                                        WellKnownMetadataReferences.Assert
-                                                    });
-        }
+        return this.VerifyCSharpDiagnosticAsync(source: test, new[] { WellKnownMetadataReferences.Assert });
+    }
 
-        [Fact]
-        public Task AssertFalseWithoutMessageIsBannedAsync()
-        {
-            const string test = @"
+    [Fact]
+    public Task AssertFalseWithoutMessageIsBannedAsync()
+    {
+        const string test = @"
     using Xunit;
     namespace ConsoleApplication1
     {
@@ -52,29 +48,21 @@ namespace FunFair.CodeAnalysis.Tests
             }
         }
     }";
-            DiagnosticResult expected = new()
-                                        {
-                                            Id = "FFS0010",
-                                            Message = @"Only use Assert.False with message parameter",
-                                            Severity = DiagnosticSeverity.Error,
-                                            Locations = new[]
-                                                        {
-                                                            new DiagnosticResultLocation(path: "Test0.cs", line: 9, column: 17)
-                                                        }
-                                        };
+        DiagnosticResult expected = new()
+                                    {
+                                        Id = "FFS0010",
+                                        Message = @"Only use Assert.False with message parameter",
+                                        Severity = DiagnosticSeverity.Error,
+                                        Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 9, column: 17) }
+                                    };
 
-            return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                    new[]
-                                                    {
-                                                        WellKnownMetadataReferences.Assert
-                                                    },
-                                                    expected);
-        }
+        return this.VerifyCSharpDiagnosticAsync(source: test, new[] { WellKnownMetadataReferences.Assert }, expected);
+    }
 
-        [Fact]
-        public Task AssertTrueWithMessageIsAllowedAsync()
-        {
-            const string test = @"
+    [Fact]
+    public Task AssertTrueWithMessageIsAllowedAsync()
+    {
+        const string test = @"
     using Xunit;
     namespace ConsoleApplication1
     {
@@ -87,17 +75,13 @@ namespace FunFair.CodeAnalysis.Tests
         }
     }";
 
-            return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                    new[]
-                                                    {
-                                                        WellKnownMetadataReferences.Assert
-                                                    });
-        }
+        return this.VerifyCSharpDiagnosticAsync(source: test, new[] { WellKnownMetadataReferences.Assert });
+    }
 
-        [Fact]
-        public Task AssertTrueWithoutMessageIsBannedAsync()
-        {
-            const string test = @"
+    [Fact]
+    public Task AssertTrueWithoutMessageIsBannedAsync()
+    {
+        const string test = @"
      using Xunit;
      namespace ConsoleApplication1
      {
@@ -109,29 +93,21 @@ namespace FunFair.CodeAnalysis.Tests
              }
          }
      }";
-            DiagnosticResult expected = new()
-                                        {
-                                            Id = "FFS0009",
-                                            Message = @"Only use Assert.True with message parameter",
-                                            Severity = DiagnosticSeverity.Error,
-                                            Locations = new[]
-                                                        {
-                                                            new DiagnosticResultLocation(path: "Test0.cs", line: 9, column: 18)
-                                                        }
-                                        };
+        DiagnosticResult expected = new()
+                                    {
+                                        Id = "FFS0009",
+                                        Message = @"Only use Assert.True with message parameter",
+                                        Severity = DiagnosticSeverity.Error,
+                                        Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 9, column: 18) }
+                                    };
 
-            return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                    new[]
-                                                    {
-                                                        WellKnownMetadataReferences.Assert
-                                                    },
-                                                    expected);
-        }
+        return this.VerifyCSharpDiagnosticAsync(source: test, new[] { WellKnownMetadataReferences.Assert }, expected);
+    }
 
-        [Fact]
-        public Task ShouldRaiseErrorForAddOrUpdateAsync()
-        {
-            const string test = @"
+    [Fact]
+    public Task ShouldRaiseErrorForAddOrUpdateAsync()
+    {
+        const string test = @"
      using NonBlocking;
      namespace ConsoleApplication1
      {
@@ -144,30 +120,21 @@ namespace FunFair.CodeAnalysis.Tests
              }
          }
      }";
-            DiagnosticResult expected = new()
-                                        {
-                                            Id = "FFS0032",
-                                            Message =
-                                                @"Don't use any of the built in AddOrUpdate methods, instead FunFair.Common.Extensions.ConcurrentDictionaryExtensions.AddOrUpdate can be used",
-                                            Severity = DiagnosticSeverity.Error,
-                                            Locations = new[]
-                                                        {
-                                                            new DiagnosticResultLocation(path: "Test0.cs", line: 10, column: 18)
-                                                        }
-                                        };
+        DiagnosticResult expected = new()
+                                    {
+                                        Id = "FFS0032",
+                                        Message = @"Don't use any of the built in AddOrUpdate methods, instead FunFair.Common.Extensions.ConcurrentDictionaryExtensions.AddOrUpdate can be used",
+                                        Severity = DiagnosticSeverity.Error,
+                                        Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 10, column: 18) }
+                                    };
 
-            return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                    new[]
-                                                    {
-                                                        WellKnownMetadataReferences.NonBlockingConcurrentDictionary
-                                                    },
-                                                    expected: expected);
-        }
+        return this.VerifyCSharpDiagnosticAsync(source: test, new[] { WellKnownMetadataReferences.NonBlockingConcurrentDictionary }, expected: expected);
+    }
 
-        [Fact]
-        public Task ShouldRaiseErrorForAddOrUpdateWithOutAddValueFactoryAsync()
-        {
-            const string test = @"
+    [Fact]
+    public Task ShouldRaiseErrorForAddOrUpdateWithOutAddValueFactoryAsync()
+    {
+        const string test = @"
      using NonBlocking;
      namespace ConsoleApplication1
      {
@@ -180,30 +147,21 @@ namespace FunFair.CodeAnalysis.Tests
              }
          }
      }";
-            DiagnosticResult expected = new()
-                                        {
-                                            Id = "FFS0032",
-                                            Message =
-                                                @"Don't use any of the built in AddOrUpdate methods, instead FunFair.Common.Extensions.ConcurrentDictionaryExtensions.AddOrUpdate can be used",
-                                            Severity = DiagnosticSeverity.Error,
-                                            Locations = new[]
-                                                        {
-                                                            new DiagnosticResultLocation(path: "Test0.cs", line: 10, column: 18)
-                                                        }
-                                        };
+        DiagnosticResult expected = new()
+                                    {
+                                        Id = "FFS0032",
+                                        Message = @"Don't use any of the built in AddOrUpdate methods, instead FunFair.Common.Extensions.ConcurrentDictionaryExtensions.AddOrUpdate can be used",
+                                        Severity = DiagnosticSeverity.Error,
+                                        Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 10, column: 18) }
+                                    };
 
-            return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                    new[]
-                                                    {
-                                                        WellKnownMetadataReferences.NonBlockingConcurrentDictionary
-                                                    },
-                                                    expected: expected);
-        }
+        return this.VerifyCSharpDiagnosticAsync(source: test, new[] { WellKnownMetadataReferences.NonBlockingConcurrentDictionary }, expected: expected);
+    }
 
-        [Fact]
-        public Task ShouldRaiseForAddOrUpdateAsync()
-        {
-            const string test = @"
+    [Fact]
+    public Task ShouldRaiseForAddOrUpdateAsync()
+    {
+        const string test = @"
      using NonBlocking;
      namespace ConsoleApplication1
      {
@@ -223,30 +181,21 @@ namespace FunFair.CodeAnalysis.Tests
          }
      }";
 
-            DiagnosticResult expected = new()
-                                        {
-                                            Id = "FFS0032",
-                                            Message =
-                                                @"Don't use any of the built in AddOrUpdate methods, instead FunFair.Common.Extensions.ConcurrentDictionaryExtensions.AddOrUpdate can be used",
-                                            Severity = DiagnosticSeverity.Error,
-                                            Locations = new[]
-                                                        {
-                                                            new DiagnosticResultLocation(path: "Test0.cs", line: 16, column: 18)
-                                                        }
-                                        };
+        DiagnosticResult expected = new()
+                                    {
+                                        Id = "FFS0032",
+                                        Message = @"Don't use any of the built in AddOrUpdate methods, instead FunFair.Common.Extensions.ConcurrentDictionaryExtensions.AddOrUpdate can be used",
+                                        Severity = DiagnosticSeverity.Error,
+                                        Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 16, column: 18) }
+                                    };
 
-            return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                    new[]
-                                                    {
-                                                        WellKnownMetadataReferences.NonBlockingConcurrentDictionary
-                                                    },
-                                                    expected: expected);
-        }
+        return this.VerifyCSharpDiagnosticAsync(source: test, new[] { WellKnownMetadataReferences.NonBlockingConcurrentDictionary }, expected: expected);
+    }
 
-        [Fact]
-        public Task ShouldRaiseForAddOrUpdateWithAddValueFactoryAsync()
-        {
-            const string test = @"
+    [Fact]
+    public Task ShouldRaiseForAddOrUpdateWithAddValueFactoryAsync()
+    {
+        const string test = @"
      using NonBlocking;
      namespace ConsoleApplication1
      {
@@ -263,30 +212,21 @@ namespace FunFair.CodeAnalysis.Tests
          }
      }";
 
-            DiagnosticResult expected = new()
-                                        {
-                                            Id = "FFS0032",
-                                            Message =
-                                                @"Don't use any of the built in AddOrUpdate methods, instead FunFair.Common.Extensions.ConcurrentDictionaryExtensions.AddOrUpdate can be used",
-                                            Severity = DiagnosticSeverity.Error,
-                                            Locations = new[]
-                                                        {
-                                                            new DiagnosticResultLocation(path: "Test0.cs", line: 13, column: 18)
-                                                        }
-                                        };
+        DiagnosticResult expected = new()
+                                    {
+                                        Id = "FFS0032",
+                                        Message = @"Don't use any of the built in AddOrUpdate methods, instead FunFair.Common.Extensions.ConcurrentDictionaryExtensions.AddOrUpdate can be used",
+                                        Severity = DiagnosticSeverity.Error,
+                                        Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 13, column: 18) }
+                                    };
 
-            return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                    new[]
-                                                    {
-                                                        WellKnownMetadataReferences.NonBlockingConcurrentDictionary
-                                                    },
-                                                    expected);
-        }
+        return this.VerifyCSharpDiagnosticAsync(source: test, new[] { WellKnownMetadataReferences.NonBlockingConcurrentDictionary }, expected);
+    }
 
-        [Fact]
-        public Task ShouldRaiseErrorForGetOrAddAsync()
-        {
-            const string test = @"
+    [Fact]
+    public Task ShouldRaiseErrorForGetOrAddAsync()
+    {
+        const string test = @"
      using NonBlocking;
      namespace ConsoleApplication1
      {
@@ -299,30 +239,21 @@ namespace FunFair.CodeAnalysis.Tests
              }
          }
      }";
-            DiagnosticResult expected = new()
-                                        {
-                                            Id = "FFS0033",
-                                            Message =
-                                                @"Don't use any of the built in GetOrAdd methods, instead FunFair.Common.Extensions.ConcurrentDictionaryExtensions.GetOrAdd can be used",
-                                            Severity = DiagnosticSeverity.Error,
-                                            Locations = new[]
-                                                        {
-                                                            new DiagnosticResultLocation(path: "Test0.cs", line: 10, column: 18)
-                                                        }
-                                        };
+        DiagnosticResult expected = new()
+                                    {
+                                        Id = "FFS0033",
+                                        Message = @"Don't use any of the built in GetOrAdd methods, instead FunFair.Common.Extensions.ConcurrentDictionaryExtensions.GetOrAdd can be used",
+                                        Severity = DiagnosticSeverity.Error,
+                                        Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 10, column: 18) }
+                                    };
 
-            return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                    new[]
-                                                    {
-                                                        WellKnownMetadataReferences.NonBlockingConcurrentDictionary
-                                                    },
-                                                    expected);
-        }
+        return this.VerifyCSharpDiagnosticAsync(source: test, new[] { WellKnownMetadataReferences.NonBlockingConcurrentDictionary }, expected);
+    }
 
-        [Fact]
-        public Task ShouldRaiseForGetOrAddWithValueFactoryAsync()
-        {
-            const string test = @"
+    [Fact]
+    public Task ShouldRaiseForGetOrAddWithValueFactoryAsync()
+    {
+        const string test = @"
      using NonBlocking;
      namespace ConsoleApplication1
      {
@@ -338,30 +269,21 @@ namespace FunFair.CodeAnalysis.Tests
              }
          }
      }";
-            DiagnosticResult expected = new()
-                                        {
-                                            Id = "FFS0033",
-                                            Message =
-                                                @"Don't use any of the built in GetOrAdd methods, instead FunFair.Common.Extensions.ConcurrentDictionaryExtensions.GetOrAdd can be used",
-                                            Severity = DiagnosticSeverity.Error,
-                                            Locations = new[]
-                                                        {
-                                                            new DiagnosticResultLocation(path: "Test0.cs", line: 13, column: 18)
-                                                        }
-                                        };
+        DiagnosticResult expected = new()
+                                    {
+                                        Id = "FFS0033",
+                                        Message = @"Don't use any of the built in GetOrAdd methods, instead FunFair.Common.Extensions.ConcurrentDictionaryExtensions.GetOrAdd can be used",
+                                        Severity = DiagnosticSeverity.Error,
+                                        Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 13, column: 18) }
+                                    };
 
-            return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                    new[]
-                                                    {
-                                                        WellKnownMetadataReferences.NonBlockingConcurrentDictionary
-                                                    },
-                                                    expected);
-        }
+        return this.VerifyCSharpDiagnosticAsync(source: test, new[] { WellKnownMetadataReferences.NonBlockingConcurrentDictionary }, expected);
+    }
 
-        [Fact]
-        public Task ShouldAllowGetOrAddAsync()
-        {
-            const string test = @"
+    [Fact]
+    public Task ShouldAllowGetOrAddAsync()
+    {
+        const string test = @"
      using NonBlocking;
      namespace ConsoleApplication1
      {
@@ -375,11 +297,6 @@ namespace FunFair.CodeAnalysis.Tests
          }
      }";
 
-            return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                    new[]
-                                                    {
-                                                        WellKnownMetadataReferences.NonBlockingConcurrentDictionary
-                                                    });
-        }
+        return this.VerifyCSharpDiagnosticAsync(source: test, new[] { WellKnownMetadataReferences.NonBlockingConcurrentDictionary });
     }
 }

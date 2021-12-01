@@ -8,93 +8,88 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 
-namespace FunFair.CodeAnalysis
+namespace FunFair.CodeAnalysis;
+
+/// <summary>
+///     Looks for issues with parameter ordering
+/// </summary>
+[DiagnosticAnalyzer(LanguageNames.CSharp)]
+public sealed class ParameterOrderingDiagnosticsAnalyzer : DiagnosticAnalyzer
 {
-    /// <summary>
-    ///     Looks for issues with parameter ordering
-    /// </summary>
-    [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    public sealed class ParameterOrderingDiagnosticsAnalyzer : DiagnosticAnalyzer
+    private static readonly IReadOnlyList<string> PreferredEndingOrdering = new[]
+                                                                            {
+                                                                                "Microsoft.Extensions.Logging.ILogger<TCategoryName>",
+                                                                                "Microsoft.Extensions.Logging.ILogger",
+                                                                                "System.Threading.CancellationToken"
+                                                                            };
+
+    private static readonly DiagnosticDescriptor Rule = RuleHelpers.CreateRule(code: Rules.RuleParametersShouldBeInOrder,
+                                                                               category: Categories.Parameters,
+                                                                               title: "Parameters are out of order",
+                                                                               message: "Parameter '{0}' must be parameter {1}");
+
+    /// <inheritdoc />
+    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => new[] { Rule }.ToImmutableArray();
+
+    /// <inheritdoc />
+    public override void Initialize(AnalysisContext context)
     {
-        private static readonly IReadOnlyList<string> PreferredEndingOrdering = new[]
-                                                                                {
-                                                                                    "Microsoft.Extensions.Logging.ILogger<TCategoryName>",
-                                                                                    "Microsoft.Extensions.Logging.ILogger",
-                                                                                    "System.Threading.CancellationToken"
-                                                                                };
+        context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.None);
+        context.EnableConcurrentExecution();
 
-        private static readonly DiagnosticDescriptor Rule = RuleHelpers.CreateRule(code: Rules.RuleParametersShouldBeInOrder,
-                                                                                   category: Categories.Parameters,
-                                                                                   title: "Parameters are out of order",
-                                                                                   message: "Parameter '{0}' must be parameter {1}");
+        context.RegisterCompilationStartAction(PerformCheck);
+    }
 
-        /// <inheritdoc />
-        public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
-            new[]
-            {
-                Rule
-            }.ToImmutableArray();
+    private static void PerformCheck(CompilationStartAnalysisContext compilationStartContext)
+    {
+        compilationStartContext.RegisterSyntaxNodeAction(action: MustBeInASaneOrder, SyntaxKind.ParameterList);
+    }
 
-        /// <inheritdoc />
-        public override void Initialize(AnalysisContext context)
+    private static void MustBeInASaneOrder(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
+    {
+        if (syntaxNodeAnalysisContext.Node is not ParameterListSyntax parameterList)
         {
-            context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.None);
-            context.EnableConcurrentExecution();
-
-            context.RegisterCompilationStartAction(PerformCheck);
+            return;
         }
 
-        private static void PerformCheck(CompilationStartAnalysisContext compilationStartContext)
-        {
-            compilationStartContext.RegisterSyntaxNodeAction(action: MustBeInASaneOrder, SyntaxKind.ParameterList);
-        }
+        var parameters = parameterList.Parameters.Select((parameter, index) => new
+                                                                               {
+                                                                                   Parameter = parameter,
+                                                                                   Index = index,
+                                                                                   FullTypeName = ParameterHelpers.GetFullTypeName(
+                                                                                       syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
+                                                                                       parameterSyntax: parameter)
+                                                                               })
+                                      .ToArray();
 
-        private static void MustBeInASaneOrder(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
+        List<string> matchedEndings = new();
+
+        foreach (string parameterType in PreferredEndingOrdering.Reverse())
         {
-            if (syntaxNodeAnalysisContext.Node is not ParameterListSyntax parameterList)
+            var matchingParameter = Array.Find(array: parameters, match: x => x.FullTypeName == parameterType);
+
+            if (matchingParameter == null)
             {
-                return;
+                continue;
             }
 
-            var parameters = parameterList.Parameters.Select((parameter, index) => new
-                                                                                   {
-                                                                                       Parameter = parameter,
-                                                                                       Index = index,
-                                                                                       FullTypeName = ParameterHelpers.GetFullTypeName(
-                                                                                           syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
-                                                                                           parameterSyntax: parameter)
-                                                                                   })
-                                          .ToArray();
-
-            List<string> matchedEndings = new();
-
-            foreach (string parameterType in PreferredEndingOrdering.Reverse())
+            if (matchingParameter.Parameter.Modifiers.Any(pm => pm.IsKind(SyntaxKind.ThisKeyword)))
             {
-                var matchingParameter = Array.Find(array: parameters, match: x => x.FullTypeName == parameterType);
+                // Ignore parameters that are extension methods - they have to be the first parameter
+                continue;
+            }
 
-                if (matchingParameter == null)
-                {
-                    continue;
-                }
+            matchedEndings.Add(parameterType);
 
-                if (matchingParameter.Parameter.Modifiers.Any(pm => pm.IsKind(SyntaxKind.ThisKeyword)))
-                {
-                    // Ignore parameters that are extension methods - they have to be the first parameter
-                    continue;
-                }
+            int parameterIndex = matchingParameter.Index;
+            int requiredParameterIndex = parameters.Length - matchedEndings.Count;
 
-                matchedEndings.Add(parameterType);
-
-                int parameterIndex = matchingParameter.Index;
-                int requiredParameterIndex = parameters.Length - matchedEndings.Count;
-
-                if (parameterIndex != requiredParameterIndex)
-                {
-                    syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(descriptor: Rule,
-                                                                                 matchingParameter.Parameter.GetLocation(),
-                                                                                 matchingParameter.Parameter.Identifier.Text,
-                                                                                 requiredParameterIndex + 1));
-                }
+            if (parameterIndex != requiredParameterIndex)
+            {
+                syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(descriptor: Rule,
+                                                                             matchingParameter.Parameter.GetLocation(),
+                                                                             matchingParameter.Parameter.Identifier.Text,
+                                                                             requiredParameterIndex + 1));
             }
         }
     }

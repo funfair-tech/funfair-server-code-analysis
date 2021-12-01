@@ -5,19 +5,19 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Xunit;
 
-namespace FunFair.CodeAnalysis.Tests
-{
-    public sealed class ClassVisibilityDiagnosticsAnalyzerTests : CodeFixVerifier
-    {
-        protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer()
-        {
-            return new ClassVisibilityDiagnosticsAnalyzer();
-        }
+namespace FunFair.CodeAnalysis.Tests;
 
-        [Fact]
-        public Task ClassThatHasNothingToDoWithTestsIsNotAnErrorAsync()
-        {
-            const string test = @"
+public sealed class ClassVisibilityDiagnosticsAnalyzerTests : CodeFixVerifier
+{
+    protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer()
+    {
+        return new ClassVisibilityDiagnosticsAnalyzer();
+    }
+
+    [Fact]
+    public Task ClassThatHasNothingToDoWithTestsIsNotAnErrorAsync()
+    {
+        const string test = @"
 public sealed class Test
 {
 
@@ -26,17 +26,13 @@ public sealed class Test
     }
 }";
 
-            return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                    new[]
-                                                    {
-                                                        WellKnownMetadataReferences.FunFairTestCommon
-                                                    });
-        }
+        return this.VerifyCSharpDiagnosticAsync(source: test, new[] { WellKnownMetadataReferences.FunFairTestCommon });
+    }
 
-        [Fact]
-        public Task PublicMockBaseIsAnErrorAsync()
-        {
-            const string test = @"
+    [Fact]
+    public Task PublicMockBaseIsAnErrorAsync()
+    {
+        const string test = @"
 using FunFair.Test.Common.Mocks;
 
 public sealed class Test : MockBase<string>
@@ -52,29 +48,21 @@ public sealed class Test : MockBase<string>
     }
 }";
 
-            DiagnosticResult expected = new()
-                                        {
-                                            Id = "FFS0029",
-                                            Message = "MockBase<T> instances must be internal",
-                                            Severity = DiagnosticSeverity.Error,
-                                            Locations = new[]
-                                                        {
-                                                            new DiagnosticResultLocation(path: "Test0.cs", line: 4, column: 1)
-                                                        }
-                                        };
+        DiagnosticResult expected = new()
+                                    {
+                                        Id = "FFS0029",
+                                        Message = "MockBase<T> instances must be internal",
+                                        Severity = DiagnosticSeverity.Error,
+                                        Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 4, column: 1) }
+                                    };
 
-            return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                    new[]
-                                                    {
-                                                        WellKnownMetadataReferences.FunFairTestCommon
-                                                    },
-                                                    expected);
-        }
+        return this.VerifyCSharpDiagnosticAsync(source: test, new[] { WellKnownMetadataReferences.FunFairTestCommon }, expected);
+    }
 
-        [Fact]
-        public Task InternalMockBaseNotAnErrorAsync()
-        {
-            const string test = @"
+    [Fact]
+    public Task InternalMockBaseNotAnErrorAsync()
+    {
+        const string test = @"
 using FunFair.Test.Common.Mocks;
 
 internal sealed class Test : MockBase<string>
@@ -91,17 +79,13 @@ internal sealed class Test : MockBase<string>
     }
 }";
 
-            return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                    new[]
-                                                    {
-                                                        WellKnownMetadataReferences.FunFairTestCommon
-                                                    });
-        }
+        return this.VerifyCSharpDiagnosticAsync(source: test, new[] { WellKnownMetadataReferences.FunFairTestCommon });
+    }
 
-        [Fact]
-        public Task AbstractMockBaseIsAnErrorAsync()
-        {
-            const string test = @"
+    [Fact]
+    public Task AbstractMockBaseIsAnErrorAsync()
+    {
+        const string test = @"
 using FunFair.Test.Common.Mocks;
 
 internal abstract class Test : MockBase<string>
@@ -118,23 +102,14 @@ internal abstract class Test : MockBase<string>
     }
 }";
 
-            DiagnosticResult expected = new()
-                                        {
-                                            Id = "FFS0030",
-                                            Message = "MockBase<T> instances must be sealed",
-                                            Severity = DiagnosticSeverity.Error,
-                                            Locations = new[]
-                                                        {
-                                                            new DiagnosticResultLocation(path: "Test0.cs", line: 4, column: 1)
-                                                        }
-                                        };
+        DiagnosticResult expected = new()
+                                    {
+                                        Id = "FFS0030",
+                                        Message = "MockBase<T> instances must be sealed",
+                                        Severity = DiagnosticSeverity.Error,
+                                        Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 4, column: 1) }
+                                    };
 
-            return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                    new[]
-                                                    {
-                                                        WellKnownMetadataReferences.FunFairTestCommon
-                                                    },
-                                                    expected);
-        }
+        return this.VerifyCSharpDiagnosticAsync(source: test, new[] { WellKnownMetadataReferences.FunFairTestCommon }, expected);
     }
 }

@@ -1,16 +1,15 @@
 ﻿using System.Collections.Generic;
 using Microsoft.CodeAnalysis;
 
-namespace FunFair.CodeAnalysis.Helpers
+namespace FunFair.CodeAnalysis.Helpers;
+
+internal static class TypeHelpers
 {
-    internal static class TypeHelpers
+    public static IEnumerable<INamedTypeSymbol> BaseClasses(this INamedTypeSymbol sourceType)
     {
-        public static IEnumerable<INamedTypeSymbol> BaseClasses(this INamedTypeSymbol sourceType)
+        for (INamedTypeSymbol? parent = sourceType; parent != null; parent = parent.BaseType)
         {
-            for (INamedTypeSymbol? parent = sourceType; parent != null; parent = parent.BaseType)
-            {
-                yield return parent;
-            }
+            yield return parent;
         }
     }
 }

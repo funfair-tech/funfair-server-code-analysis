@@ -5,19 +5,19 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Xunit;
 
-namespace FunFair.CodeAnalysis.Tests
-{
-    public sealed class ArgumentExceptionAnalysisDiagnosticsAnalyzerTest : CodeFixVerifier
-    {
-        protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer()
-        {
-            return new ArgumentExceptionAnalysisDiagnosticsAnalyzer();
-        }
+namespace FunFair.CodeAnalysis.Tests;
 
-        [Fact]
-        public Task ArgumentExceptionWhenParameterLessConstructorUsedCausesErrorAsync()
-        {
-            const string test = @"
+public sealed class ArgumentExceptionAnalysisDiagnosticsAnalyzerTest : CodeFixVerifier
+{
+    protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer()
+    {
+        return new ArgumentExceptionAnalysisDiagnosticsAnalyzer();
+    }
+
+    [Fact]
+    public Task ArgumentExceptionWhenParameterLessConstructorUsedCausesErrorAsync()
+    {
+        const string test = @"
 using System;
 
 public sealed class Test {
@@ -28,24 +28,21 @@ public sealed class Test {
     }
 }";
 
-            DiagnosticResult expected = new()
-                                        {
-                                            Id = "FFS0016",
-                                            Message = "Argument Exceptions should pass parameter name",
-                                            Severity = DiagnosticSeverity.Error,
-                                            Locations = new[]
-                                                        {
-                                                            new DiagnosticResultLocation(path: "Test0.cs", line: 8, column: 17)
-                                                        }
-                                        };
+        DiagnosticResult expected = new()
+                                    {
+                                        Id = "FFS0016",
+                                        Message = "Argument Exceptions should pass parameter name",
+                                        Severity = DiagnosticSeverity.Error,
+                                        Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 8, column: 17) }
+                                    };
 
-            return this.VerifyCSharpDiagnosticAsync(source: test, expected);
-        }
+        return this.VerifyCSharpDiagnosticAsync(source: test, expected);
+    }
 
-        [Fact]
-        public Task ArgumentExceptionWhenParameterNameNotPassedCausesErrorAsync()
-        {
-            const string test = @"
+    [Fact]
+    public Task ArgumentExceptionWhenParameterNameNotPassedCausesErrorAsync()
+    {
+        const string test = @"
 using System;
 
 public sealed class Test {
@@ -56,24 +53,21 @@ public sealed class Test {
     }
 }";
 
-            DiagnosticResult expected = new()
-                                        {
-                                            Id = "FFS0016",
-                                            Message = "Argument Exceptions should pass parameter name",
-                                            Severity = DiagnosticSeverity.Error,
-                                            Locations = new[]
-                                                        {
-                                                            new DiagnosticResultLocation(path: "Test0.cs", line: 8, column: 17)
-                                                        }
-                                        };
+        DiagnosticResult expected = new()
+                                    {
+                                        Id = "FFS0016",
+                                        Message = "Argument Exceptions should pass parameter name",
+                                        Severity = DiagnosticSeverity.Error,
+                                        Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 8, column: 17) }
+                                    };
 
-            return this.VerifyCSharpDiagnosticAsync(source: test, expected);
-        }
+        return this.VerifyCSharpDiagnosticAsync(source: test, expected);
+    }
 
-        [Fact]
-        public Task ArgumentExceptionWhenParameterNamePassedByNameOfIsValidAsync()
-        {
-            const string test = @"
+    [Fact]
+    public Task ArgumentExceptionWhenParameterNamePassedByNameOfIsValidAsync()
+    {
+        const string test = @"
 using System;
 
 public sealed class Test {
@@ -85,13 +79,13 @@ public sealed class Test {
     }
 }";
 
-            return this.VerifyCSharpDiagnosticAsync(source: test);
-        }
+        return this.VerifyCSharpDiagnosticAsync(source: test);
+    }
 
-        [Fact]
-        public Task ArgumentExceptionWhenParameterNamePassedByStringIsValidAsync()
-        {
-            const string test = @"
+    [Fact]
+    public Task ArgumentExceptionWhenParameterNamePassedByStringIsValidAsync()
+    {
+        const string test = @"
 using System;
 
 public sealed class Test {
@@ -103,13 +97,13 @@ public sealed class Test {
     }
 }";
 
-            return this.VerifyCSharpDiagnosticAsync(source: test);
-        }
+        return this.VerifyCSharpDiagnosticAsync(source: test);
+    }
 
-        [Fact]
-        public Task ArgumentNullExceptionWhenParameterLessConstructorUsedCausesErrorAsync()
-        {
-            const string test = @"
+    [Fact]
+    public Task ArgumentNullExceptionWhenParameterLessConstructorUsedCausesErrorAsync()
+    {
+        const string test = @"
 using System;
 
 public sealed class Test {
@@ -120,24 +114,21 @@ public sealed class Test {
     }
 }";
 
-            DiagnosticResult expected = new()
-                                        {
-                                            Id = "FFS0016",
-                                            Message = "Argument Exceptions should pass parameter name",
-                                            Severity = DiagnosticSeverity.Error,
-                                            Locations = new[]
-                                                        {
-                                                            new DiagnosticResultLocation(path: "Test0.cs", line: 8, column: 17)
-                                                        }
-                                        };
+        DiagnosticResult expected = new()
+                                    {
+                                        Id = "FFS0016",
+                                        Message = "Argument Exceptions should pass parameter name",
+                                        Severity = DiagnosticSeverity.Error,
+                                        Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 8, column: 17) }
+                                    };
 
-            return this.VerifyCSharpDiagnosticAsync(source: test, expected);
-        }
+        return this.VerifyCSharpDiagnosticAsync(source: test, expected);
+    }
 
-        [Fact]
-        public Task ArgumentNullExceptionWhenParameterNameNotPassedCausesErrorAsync()
-        {
-            const string test = @"
+    [Fact]
+    public Task ArgumentNullExceptionWhenParameterNameNotPassedCausesErrorAsync()
+    {
+        const string test = @"
 using System;
 
 public sealed class Test {
@@ -148,24 +139,21 @@ public sealed class Test {
     }
 }";
 
-            DiagnosticResult expected = new()
-                                        {
-                                            Id = "FFS0016",
-                                            Message = "Argument Exceptions should pass parameter name",
-                                            Severity = DiagnosticSeverity.Error,
-                                            Locations = new[]
-                                                        {
-                                                            new DiagnosticResultLocation(path: "Test0.cs", line: 8, column: 17)
-                                                        }
-                                        };
+        DiagnosticResult expected = new()
+                                    {
+                                        Id = "FFS0016",
+                                        Message = "Argument Exceptions should pass parameter name",
+                                        Severity = DiagnosticSeverity.Error,
+                                        Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 8, column: 17) }
+                                    };
 
-            return this.VerifyCSharpDiagnosticAsync(source: test, expected);
-        }
+        return this.VerifyCSharpDiagnosticAsync(source: test, expected);
+    }
 
-        [Fact]
-        public Task ArgumentNullExceptionWhenParameterNamePassedByNameOfIsValidAsync()
-        {
-            const string test = @"
+    [Fact]
+    public Task ArgumentNullExceptionWhenParameterNamePassedByNameOfIsValidAsync()
+    {
+        const string test = @"
 using System;
 
 public sealed class Test {
@@ -177,13 +165,13 @@ public sealed class Test {
     }
 }";
 
-            return this.VerifyCSharpDiagnosticAsync(source: test);
-        }
+        return this.VerifyCSharpDiagnosticAsync(source: test);
+    }
 
-        [Fact]
-        public Task ArgumentNullExceptionWhenParameterNamePassedByStringIsValidAsync()
-        {
-            const string test = @"
+    [Fact]
+    public Task ArgumentNullExceptionWhenParameterNamePassedByStringIsValidAsync()
+    {
+        const string test = @"
 using System;
 
 public sealed class Test {
@@ -195,13 +183,13 @@ public sealed class Test {
     }
 }";
 
-            return this.VerifyCSharpDiagnosticAsync(source: test);
-        }
+        return this.VerifyCSharpDiagnosticAsync(source: test);
+    }
 
-        [Fact]
-        public Task ArgumentOutOfRangeExceptionWhenParameterLessConstructorUsedCausesErrorAsync()
-        {
-            const string test = @"
+    [Fact]
+    public Task ArgumentOutOfRangeExceptionWhenParameterLessConstructorUsedCausesErrorAsync()
+    {
+        const string test = @"
 using System;
 
 public sealed class Test {
@@ -212,24 +200,21 @@ public sealed class Test {
     }
 }";
 
-            DiagnosticResult expected = new()
-                                        {
-                                            Id = "FFS0016",
-                                            Message = "Argument Exceptions should pass parameter name",
-                                            Severity = DiagnosticSeverity.Error,
-                                            Locations = new[]
-                                                        {
-                                                            new DiagnosticResultLocation(path: "Test0.cs", line: 8, column: 17)
-                                                        }
-                                        };
+        DiagnosticResult expected = new()
+                                    {
+                                        Id = "FFS0016",
+                                        Message = "Argument Exceptions should pass parameter name",
+                                        Severity = DiagnosticSeverity.Error,
+                                        Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 8, column: 17) }
+                                    };
 
-            return this.VerifyCSharpDiagnosticAsync(source: test, expected);
-        }
+        return this.VerifyCSharpDiagnosticAsync(source: test, expected);
+    }
 
-        [Fact]
-        public Task ArgumentOutOfRangeExceptionWhenParameterNameNotPassedCausesErrorAsync()
-        {
-            const string test = @"
+    [Fact]
+    public Task ArgumentOutOfRangeExceptionWhenParameterNameNotPassedCausesErrorAsync()
+    {
+        const string test = @"
 using System;
 
 public sealed class Test {
@@ -240,24 +225,21 @@ public sealed class Test {
     }
 }";
 
-            DiagnosticResult expected = new()
-                                        {
-                                            Id = "FFS0016",
-                                            Message = "Argument Exceptions should pass parameter name",
-                                            Severity = DiagnosticSeverity.Error,
-                                            Locations = new[]
-                                                        {
-                                                            new DiagnosticResultLocation(path: "Test0.cs", line: 8, column: 17)
-                                                        }
-                                        };
+        DiagnosticResult expected = new()
+                                    {
+                                        Id = "FFS0016",
+                                        Message = "Argument Exceptions should pass parameter name",
+                                        Severity = DiagnosticSeverity.Error,
+                                        Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 8, column: 17) }
+                                    };
 
-            return this.VerifyCSharpDiagnosticAsync(source: test, expected);
-        }
+        return this.VerifyCSharpDiagnosticAsync(source: test, expected);
+    }
 
-        [Fact]
-        public Task ArgumentOutOfRangeExceptionWhenParameterNamePassedByNameOfIsValidAsync()
-        {
-            const string test = @"
+    [Fact]
+    public Task ArgumentOutOfRangeExceptionWhenParameterNamePassedByNameOfIsValidAsync()
+    {
+        const string test = @"
 using System;
 
 public sealed class Test {
@@ -269,13 +251,13 @@ public sealed class Test {
     }
 }";
 
-            return this.VerifyCSharpDiagnosticAsync(source: test);
-        }
+        return this.VerifyCSharpDiagnosticAsync(source: test);
+    }
 
-        [Fact]
-        public Task ArgumentOutOfRangeExceptionWhenParameterNamePassedByStringIsValidAsync()
-        {
-            const string test = @"
+    [Fact]
+    public Task ArgumentOutOfRangeExceptionWhenParameterNamePassedByStringIsValidAsync()
+    {
+        const string test = @"
 using System;
 
 public sealed class Test {
@@ -287,13 +269,13 @@ public sealed class Test {
     }
 }";
 
-            return this.VerifyCSharpDiagnosticAsync(source: test);
-        }
+        return this.VerifyCSharpDiagnosticAsync(source: test);
+    }
 
-        [Fact]
-        public Task DoesNotTriggerOnNonExceptionsAsync()
-        {
-            const string test = @"
+    [Fact]
+    public Task DoesNotTriggerOnNonExceptionsAsync()
+    {
+        const string test = @"
 public sealed class Test {
 
     public void DoIt(string value)
@@ -302,7 +284,6 @@ public sealed class Test {
     }
 }";
 
-            return this.VerifyCSharpDiagnosticAsync(source: test);
-        }
+        return this.VerifyCSharpDiagnosticAsync(source: test);
     }
 }
