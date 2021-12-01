@@ -14,10 +14,8 @@ namespace FunFair.CodeAnalysis
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public sealed class TestClassPropertyAnalysisDiagnosticsAnalyzer : DiagnosticAnalyzer
     {
-        private const string CATEGORY = Categories.Classes;
-
         private static readonly DiagnosticDescriptor Rule = RuleHelpers.CreateRule(code: Rules.RuleTestClassesShouldNotDefineMutableProperties,
-                                                                                   category: CATEGORY,
+                                                                                   category: Categories.Classes,
                                                                                    title: "Properties in test classes should be read-only or const",
                                                                                    message: "Properties in test classes should be read-only or const");
 

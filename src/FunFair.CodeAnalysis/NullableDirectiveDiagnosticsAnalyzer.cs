@@ -13,10 +13,8 @@ namespace FunFair.CodeAnalysis
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public sealed class NullableDirectiveDiagnosticsAnalyzer : DiagnosticAnalyzer
     {
-        private const string CATEGORY = Categories.IllegalDirectives;
-
         private static readonly DiagnosticDescriptor Rule = RuleHelpers.CreateRule(code: Rules.RuleDontConfigureNullableInCode,
-                                                                                   category: CATEGORY,
+                                                                                   category: Categories.IllegalDirectives,
                                                                                    title: "Don't use #nulllable directive, make the change globally for the project",
                                                                                    message: "Don't use #nulllable directive, make the change globally for the project");
 

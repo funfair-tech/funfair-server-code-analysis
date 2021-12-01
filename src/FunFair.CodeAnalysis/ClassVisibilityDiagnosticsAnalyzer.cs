@@ -15,8 +15,6 @@ namespace FunFair.CodeAnalysis
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public sealed class ClassVisibilityDiagnosticsAnalyzer : DiagnosticAnalyzer
     {
-        private const string CATEGORY = Categories.Classes;
-
         private static readonly IReadOnlyList<ConfiguredClass> Classes = new[]
                                                                          {
                                                                              new ConfiguredClass(ruleId: Rules.MockBaseClassInstancesMustBeInternal,
@@ -73,7 +71,7 @@ namespace FunFair.CodeAnalysis
             {
                 this.ClassName = className;
                 this.Visibility = visibility;
-                this.Rule = RuleHelpers.CreateRule(code: ruleId, category: CATEGORY, title: title, message: message);
+                this.Rule = RuleHelpers.CreateRule(code: ruleId, category: Categories.Classes, title: title, message: message);
             }
 
             public DiagnosticDescriptor Rule { get; }

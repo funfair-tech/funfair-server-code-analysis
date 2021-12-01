@@ -17,8 +17,6 @@ namespace FunFair.CodeAnalysis
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public sealed class ProhibitedMethodsDiagnosticsAnalyzer : DiagnosticAnalyzer
     {
-        private const string CATEGORY = Categories.IllegalMethodCalls;
-
         private static readonly ProhibitedMethodsSpec[] BannedMethods =
         {
             new(ruleId: Rules.RuleDontUseDateTimeNow,
@@ -186,7 +184,7 @@ namespace FunFair.CodeAnalysis
             {
                 this.SourceClass = sourceClass;
                 this.BannedMethod = bannedMethod;
-                this.Rule = RuleHelpers.CreateRule(code: ruleId, category: CATEGORY, title: title, message: message);
+                this.Rule = RuleHelpers.CreateRule(code: ruleId, category: Categories.IllegalMethodCalls, title: title, message: message);
             }
 
             public string SourceClass { get; }

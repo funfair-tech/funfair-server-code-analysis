@@ -16,8 +16,6 @@ namespace FunFair.CodeAnalysis
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public sealed class ParameterNameDiagnosticsAnalyzer : DiagnosticAnalyzer
     {
-        private const string CATEGORY = Categories.Naming;
-
         private static readonly IReadOnlyList<NameSanitationSpec> NameSpecifications = new NameSanitationSpec[]
                                                                                        {
                                                                                            new(ruleId: Rules.RuleLoggerParametersShouldBeCalledLogger,
@@ -91,7 +89,7 @@ namespace FunFair.CodeAnalysis
                 this.SourceClass = sourceClass;
                 this.WhitelistedParameterNames = whitelistedParameterNames;
 
-                this.Rule = RuleHelpers.CreateRule(code: ruleId, category: CATEGORY, title: title, message: message);
+                this.Rule = RuleHelpers.CreateRule(code: ruleId, category: Categories.Naming, title: title, message: message);
             }
 
             public string SourceClass { get; }

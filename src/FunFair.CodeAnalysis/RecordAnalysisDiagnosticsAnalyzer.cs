@@ -14,10 +14,8 @@ namespace FunFair.CodeAnalysis
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public sealed class RecordAnalysisDiagnosticsAnalyzer : DiagnosticAnalyzer
     {
-        private const string CATEGORY = Categories.Records;
-
         private static readonly DiagnosticDescriptor Rule = RuleHelpers.CreateRule(code: Rules.RuleRecordsShouldBeSealed,
-                                                                                   category: CATEGORY,
+                                                                                   category: Categories.Records,
                                                                                    title: "Records should be sealed",
                                                                                    message: "Records should be sealed");
 

@@ -19,8 +19,6 @@ namespace FunFair.CodeAnalysis
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public sealed class ProhibitedClassesDiagnosticsAnalyzer : DiagnosticAnalyzer
     {
-        private const string CATEGORY = Categories.IllegalClassUsage;
-
         private static readonly IReadOnlyList<ProhibitedClassSpec> BannedClasses = new ProhibitedClassSpec[]
                                                                                    {
                                                                                        new(ruleId: Rules.RuleDontUseConcurrentDictionary,
@@ -163,7 +161,7 @@ namespace FunFair.CodeAnalysis
             public ProhibitedClassSpec(string ruleId, string title, string message, string sourceClass)
             {
                 this.SourceClass = sourceClass;
-                this.Rule = RuleHelpers.CreateRule(code: ruleId, category: CATEGORY, title: title, message: message);
+                this.Rule = RuleHelpers.CreateRule(code: ruleId, category: Categories.IllegalClassUsage, title: title, message: message);
             }
 
             public string SourceClass { get; }

@@ -16,8 +16,6 @@ namespace FunFair.CodeAnalysis
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public sealed class ParameterOrderingDiagnosticsAnalyzer : DiagnosticAnalyzer
     {
-        private const string CATEGORY = Categories.Parameters;
-
         private static readonly IReadOnlyList<string> PreferredEndingOrdering = new[]
                                                                                 {
                                                                                     "Microsoft.Extensions.Logging.ILogger<TCategoryName>",
@@ -26,7 +24,7 @@ namespace FunFair.CodeAnalysis
                                                                                 };
 
         private static readonly DiagnosticDescriptor Rule = RuleHelpers.CreateRule(code: Rules.RuleParametersShouldBeInOrder,
-                                                                                   category: CATEGORY,
+                                                                                   category: Categories.Parameters,
                                                                                    title: "Parameters are out of order",
                                                                                    message: "Parameter '{0}' must be parameter {1}");
 

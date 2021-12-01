@@ -14,10 +14,8 @@ namespace FunFair.CodeAnalysis
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public sealed class DebuggerDisplayAnalysisDiagnosticsAnalyzer : DiagnosticAnalyzer
     {
-        private const string CATEGORY = Categories.Debugging;
-
         private static readonly DiagnosticDescriptor Rule = RuleHelpers.CreateRule(code: Rules.RuleRecordsShouldSpecifyDebuggerDisplay,
-                                                                                   category: CATEGORY,
+                                                                                   category: Categories.Debugging,
                                                                                    title: "Should have DebuggerDisplay attribute",
                                                                                    message: "Should have DebuggerDisplay attribute");
 

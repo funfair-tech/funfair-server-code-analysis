@@ -16,8 +16,6 @@ namespace FunFair.CodeAnalysis
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public sealed class ProhibitedMethodWithStrictParametersInvocationDiagnosticsAnalyzer : DiagnosticAnalyzer
     {
-        private const string CATEGORY = Categories.ProhibitedMethodWithStrictInvocations;
-
         private static readonly ProhibitedMethodsSpec[] ForcedMethods =
         {
             new(ruleId: Rules.RuleDontUseSubstituteReceivedWithZeroNumberOfCalls,
@@ -146,7 +144,7 @@ namespace FunFair.CodeAnalysis
             {
                 this.SourceClass = sourceClass;
                 this.ForcedMethod = forcedMethod;
-                this.Rule = RuleHelpers.CreateRule(code: ruleId, category: CATEGORY, title: title, message: message);
+                this.Rule = RuleHelpers.CreateRule(code: ruleId, category: Categories.ProhibitedMethodWithStrictInvocations, title: title, message: message);
                 this.BannedSignatures = bannedSignatures;
             }
 

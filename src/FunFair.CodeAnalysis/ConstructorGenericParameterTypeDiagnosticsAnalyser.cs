@@ -15,8 +15,6 @@ namespace FunFair.CodeAnalysis
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public sealed class ConstructorGenericParameterTypeDiagnosticsAnalyser : DiagnosticAnalyzer
     {
-        private const string CATEGORY = Categories.Naming;
-
         private static readonly IReadOnlyList<TypeCheckSpec> Specifications = new TypeCheckSpec[]
                                                                               {
                                                                                   new(ruleId: Rules.LoggerParametersOnBaseClassesShouldNotUseGenericLoggerCategory,
@@ -36,7 +34,7 @@ namespace FunFair.CodeAnalysis
                                                                               };
 
         private static readonly DiagnosticDescriptor MissMatchTypes = RuleHelpers.CreateRule(code: Rules.GenericTypeMissMatch,
-                                                                                             category: CATEGORY,
+                                                                                             category: Categories.Naming,
                                                                                              title: "Should be using '{0}' rather than '{1}' with {2}",
                                                                                              message: "Should be using '{0}' rather than '{1}' with {2}");
 
@@ -169,7 +167,7 @@ namespace FunFair.CodeAnalysis
                 this.IsProtected = isProtected;
                 this.MatchTypeOnGenericParameters = matchTypeOnGenericParameters;
 
-                this.Rule = RuleHelpers.CreateRule(code: ruleId, category: CATEGORY, title: title, message: message);
+                this.Rule = RuleHelpers.CreateRule(code: ruleId, category: Categories.Naming, title: title, message: message);
             }
 
             public string AllowedSourceClass { get; }

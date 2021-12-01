@@ -14,10 +14,8 @@ namespace FunFair.CodeAnalysis
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public sealed class StructAnalysisDiagnosticsAnalyzer : DiagnosticAnalyzer
     {
-        private const string CATEGORY = Categories.Structs;
-
         private static readonly DiagnosticDescriptor Rule = RuleHelpers.CreateRule(code: Rules.RuleStructsShouldBeReadOnly,
-                                                                                   category: CATEGORY,
+                                                                                   category: Categories.Structs,
                                                                                    title: "Structs should be read-only",
                                                                                    message: "Structs should be read-only");
 

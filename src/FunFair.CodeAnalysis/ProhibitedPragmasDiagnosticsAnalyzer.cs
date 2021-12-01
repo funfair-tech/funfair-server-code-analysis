@@ -17,8 +17,6 @@ namespace FunFair.CodeAnalysis
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public sealed class ProhibitedPragmasDiagnosticsAnalyzer : DiagnosticAnalyzer
     {
-        private const string CATEGORY = Categories.IllegalPragmas;
-
         private static readonly string[] AllowedWarnings =
         {
             // Xml Docs
@@ -32,7 +30,7 @@ namespace FunFair.CodeAnalysis
         };
 
         private static readonly DiagnosticDescriptor Rule = RuleHelpers.CreateRule(code: Rules.RuleDontDisableWarnings,
-                                                                                   category: CATEGORY,
+                                                                                   category: Categories.IllegalPragmas,
                                                                                    title: "Don't disable warnings with #pragma warning disable",
                                                                                    message: "Don't disable warnings using #pragma warning disable");
 

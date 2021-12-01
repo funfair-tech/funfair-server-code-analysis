@@ -15,10 +15,8 @@ namespace FunFair.CodeAnalysis
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public sealed class ReThrowingExceptionShouldSpecifyInnerExceptionDiagnosticsAnalyzer : DiagnosticAnalyzer
     {
-        private const string CATEGORY = Categories.Exceptions;
-
         private static readonly DiagnosticDescriptor Rule = RuleHelpers.CreateRule(code: Rules.RuleMustPassInterExceptionToExceptionsThrownInCatchBlock,
-                                                                                   category: CATEGORY,
+                                                                                   category: Categories.Exceptions,
                                                                                    title: "Pass an a inner exception when thrown from a catch clause",
                                                                                    message: "Provide '{0}' as a inner exception when throw from the catch clauses");
 

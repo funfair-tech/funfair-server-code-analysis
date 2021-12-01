@@ -15,10 +15,8 @@ namespace FunFair.CodeAnalysis
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public sealed class SuppressMessageDiagnosticsAnalyzer : DiagnosticAnalyzer
     {
-        private const string CATEGORY = Categories.SuppressedErrors;
-
         private static readonly DiagnosticDescriptor Rule = RuleHelpers.CreateRule(code: Rules.RuleSuppressMessageMustHaveJustification,
-                                                                                   category: CATEGORY,
+                                                                                   category: Categories.SuppressedErrors,
                                                                                    title: "SuppressMessage must specify a Justification",
                                                                                    message: "SuppressMessage must specify a Justification");
 

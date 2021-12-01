@@ -13,10 +13,8 @@ namespace FunFair.CodeAnalysis
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public sealed class TestClassFieldsAnalysisDiagnosticsAnalyzer : DiagnosticAnalyzer
     {
-        private const string CATEGORY = Categories.Classes;
-
         private static readonly DiagnosticDescriptor Rule = RuleHelpers.CreateRule(code: Rules.RuleTestClassesShouldNotDefineMutableFields,
-                                                                                   category: CATEGORY,
+                                                                                   category: Categories.Classes,
                                                                                    title: "Fields in test classes should be read-only or const",
                                                                                    message: "Fields in test classes should be read-only or const");
 

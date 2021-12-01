@@ -13,10 +13,8 @@ namespace FunFair.CodeAnalysis
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public sealed class TestClassAnalysisDiagnosticsAnalyzer : DiagnosticAnalyzer
     {
-        private const string CATEGORY = Categories.Classes;
-
         private static readonly DiagnosticDescriptor Rule = RuleHelpers.CreateRule(code: Rules.RuleTestClassesShouldBeStaticSealedOrAbstractDerivedFromTestBase,
-                                                                                   category: CATEGORY,
+                                                                                   category: Categories.Classes,
                                                                                    title: "Test classes should be derived from TestBase",
                                                                                    message: "Test classes should be derived from TestBase");
 

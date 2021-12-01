@@ -16,8 +16,6 @@ namespace FunFair.CodeAnalysis
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public sealed class OneTypePerDocumentAnalysisDiagnosticsAnalyzer : DiagnosticAnalyzer
     {
-        private const string CATEGORY = Categories.Files;
-
         private const string ENUM_TYPE_PREFIX = @"enum:";
         private const string INTERFACE_TYPE_PREFIX = @"interface:";
         private const string STRUCT_TYPE_PREFIX = @"struct:";
@@ -26,7 +24,7 @@ namespace FunFair.CodeAnalysis
         private const string CLASS_TYPE_PREFIX = @"class:";
 
         private static readonly DiagnosticDescriptor Rule = RuleHelpers.CreateRule(code: Rules.RuleOnlyOneTypeDefinedPerFile,
-                                                                                   category: CATEGORY,
+                                                                                   category: Categories.Files,
                                                                                    title: "Should be only one type per file",
                                                                                    message: "Should be only one type per file");
 

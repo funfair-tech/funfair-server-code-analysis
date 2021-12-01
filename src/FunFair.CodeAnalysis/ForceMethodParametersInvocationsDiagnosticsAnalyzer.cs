@@ -16,8 +16,6 @@ namespace FunFair.CodeAnalysis
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public sealed class ForceMethodParametersInvocationsDiagnosticsAnalyzer : DiagnosticAnalyzer
     {
-        private const string CATEGORY = Categories.ForcedMethodInvocations;
-
         private static readonly ForcedMethodsSpec[] ForcedMethods =
         {
             new(ruleId: Rules.RuleDontUseJsonSerializerWithoutJsonOptions,
@@ -126,7 +124,7 @@ namespace FunFair.CodeAnalysis
             {
                 this.SourceClass = sourceClass;
                 this.ForcedMethod = forcedMethod;
-                this.Rule = RuleHelpers.CreateRule(code: ruleId, category: CATEGORY, title: title, message: message);
+                this.Rule = RuleHelpers.CreateRule(code: ruleId, category: Categories.ForcedMethodInvocations, title: title, message: message);
                 this.RequiredArgumentCount = requiredArgumentCount;
             }
 
