@@ -19,6 +19,7 @@ namespace FunFair.CodeAnalysis.Tests
         {
             const string test = @"
     using System.Text.Json;
+    using System.Text.Json.Serialization;
 
     namespace ConsoleApplication1
     {
@@ -31,7 +32,7 @@ namespace FunFair.CodeAnalysis.Tests
         {
             void Test()
             {
-                JsonSerializerOptions jsonSerializerOptions = new JsonSerializerOptions {IgnoreNullValues = true, PropertyNamingPolicy = JsonNamingPolicy.CamelCase};
+                JsonSerializerOptions jsonSerializerOptions = new JsonSerializerOptions {DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull, PropertyNamingPolicy = JsonNamingPolicy.CamelCase};
                 Test test = JsonSerializer.Deserialize<Test>(""{'Id': 108}"", jsonSerializerOptions);
             }
         }
@@ -159,6 +160,7 @@ namespace FunFair.CodeAnalysis.Tests
         {
             const string test = @"
     using System.Text.Json;
+    using System.Text.Json.Serialization
 
     namespace ConsoleApplication1
     {
@@ -171,7 +173,7 @@ namespace FunFair.CodeAnalysis.Tests
         {
             void Test()
             {
-                JsonSerializerOptions jsonSerializerOptions = new JsonSerializerOptions {IgnoreNullValues = true, PropertyNamingPolicy = JsonNamingPolicy.CamelCase};
+                JsonSerializerOptions jsonSerializerOptions = new JsonSerializerOptions {DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull, PropertyNamingPolicy = JsonNamingPolicy.CamelCase};
                 string content = JsonSerializer.Serialize(new Test { Id = 108 }, jsonSerializerOptions);
             }
         }

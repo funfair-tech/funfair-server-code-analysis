@@ -11,161 +11,169 @@ using Microsoft.CodeAnalysis.Formatting;
 using Xunit;
 using Xunit.Sdk;
 
-namespace FunFair.CodeAnalysis.Tests.Verifiers
+namespace FunFair.CodeAnalysis.Tests.Verifiers;
+
+/// <summary>
+///     Superclass of all Unit tests made for diagnostics with codefixes.
+///     Contains methods used to verify correctness of codefixes
+/// </summary>
+public abstract partial class CodeFixVerifier : DiagnosticVerifier
 {
     /// <summary>
-    ///     Superclass of all Unit tests made for diagnostics with codefixes.
-    ///     Contains methods used to verify correctness of codefixes
+    ///     Returns the codefix being tested (C#) - to be implemented in non-abstract class
     /// </summary>
-    public abstract partial class CodeFixVerifier : DiagnosticVerifier
+    /// <returns>The CodeFixProvider to be used for CSharp code</returns>
+    protected virtual CodeFixProvider? GetCSharpCodeFixProvider()
     {
-        /// <summary>
-        ///     Returns the codefix being tested (C#) - to be implemented in non-abstract class
-        /// </summary>
-        /// <returns>The CodeFixProvider to be used for CSharp code</returns>
-        protected virtual CodeFixProvider? GetCSharpCodeFixProvider()
+        return null;
+    }
+
+    /// <summary>
+    ///     Returns the codefix being tested (VB) - to be implemented in non-abstract class
+    /// </summary>
+    /// <returns>The CodeFixProvider to be used for VisualBasic code</returns>
+    [SuppressMessage(category: "ReSharper", checkId: "UnusedMember.Global", Justification = "TODO: Review")]
+    protected virtual CodeFixProvider? GetBasicCodeFixProvider()
+    {
+        return null;
+    }
+
+    /// <summary>
+    ///     Called to test a C# codefix when applied on the inputted string as a source
+    /// </summary>
+    /// <param name="oldSource">A class in the form of a string before the CodeFix was applied to it</param>
+    /// <param name="newSource">A class in the form of a string after the CodeFix was applied to it</param>
+    /// <param name="codeFixIndex">Index determining which codefix to apply if there are multiple</param>
+    /// <param name="allowNewCompilerDiagnostics">A bool controlling whether or not the test will fail if the CodeFix introduces other warnings after being applied</param>
+    [SuppressMessage(category: "ReSharper", checkId: "UnusedMember.Global", Justification = "TODO: Review")]
+    protected Task VerifyCSharpFixAsync(string oldSource, string newSource, int? codeFixIndex = null, bool allowNewCompilerDiagnostics = false)
+    {
+        DiagnosticAnalyzer? analyzer = this.GetCSharpDiagnosticAnalyzer();
+
+        if (analyzer == null)
         {
-            return null;
+            throw new NotNullException();
         }
 
-        /// <summary>
-        ///     Returns the codefix being tested (VB) - to be implemented in non-abstract class
-        /// </summary>
-        /// <returns>The CodeFixProvider to be used for VisualBasic code</returns>
-        [SuppressMessage(category: "ReSharper", checkId: "UnusedMember.Global", Justification = "TODO: Review")]
-        protected virtual CodeFixProvider? GetBasicCodeFixProvider()
+        CodeFixProvider? codeFixProvider = this.GetCSharpCodeFixProvider();
+
+        if (codeFixProvider == null)
         {
-            return null;
+            throw new NotNullException();
         }
 
-        /// <summary>
-        ///     Called to test a C# codefix when applied on the inputted string as a source
-        /// </summary>
-        /// <param name="oldSource">A class in the form of a string before the CodeFix was applied to it</param>
-        /// <param name="newSource">A class in the form of a string after the CodeFix was applied to it</param>
-        /// <param name="codeFixIndex">Index determining which codefix to apply if there are multiple</param>
-        /// <param name="allowNewCompilerDiagnostics">A bool controlling whether or not the test will fail if the CodeFix introduces other warnings after being applied</param>
-        [SuppressMessage(category: "ReSharper", checkId: "UnusedMember.Global", Justification = "TODO: Review")]
-        protected Task VerifyCSharpFixAsync(string oldSource, string newSource, int? codeFixIndex = null, bool allowNewCompilerDiagnostics = false)
-        {
-            DiagnosticAnalyzer? analyzer = this.GetCSharpDiagnosticAnalyzer();
+        return VerifyFixAsync(language: LanguageNames.CSharp,
+                              analyzer: analyzer,
+                              codeFixProvider: codeFixProvider,
+                              oldSource: oldSource,
+                              newSource: newSource,
+                              codeFixIndex: codeFixIndex,
+                              allowNewCompilerDiagnostics: allowNewCompilerDiagnostics);
+    }
 
-            if (analyzer == null)
+    /// <summary>
+    ///     General verifier for codefixes.
+    ///     Creates a Document from the source string, then gets diagnostics on it and applies the relevant codefixes.
+    ///     Then gets the string after the codefix is applied and compares it with the expected result.
+    ///     Note: If any codefix causes new diagnostics to show up, the test fails unless allowNewCompilerDiagnostics is set to true.
+    /// </summary>
+    /// <param name="language">The language the source code is in</param>
+    /// <param name="analyzer">The analyzer to be applied to the source code</param>
+    /// <param name="codeFixProvider">The codefix to be applied to the code wherever the relevant Diagnostic is found</param>
+    /// <param name="oldSource">A class in the form of a string before the CodeFix was applied to it</param>
+    /// <param name="newSource">A class in the form of a string after the CodeFix was applied to it</param>
+    /// <param name="codeFixIndex">Index determining which codefix to apply if there are multiple</param>
+    /// <param name="allowNewCompilerDiagnostics">A bool controlling whether or not the test will fail if the CodeFix introduces other warnings after being applied</param>
+    private static async Task VerifyFixAsync(string language,
+                                             DiagnosticAnalyzer analyzer,
+                                             CodeFixProvider codeFixProvider,
+                                             string oldSource,
+                                             string newSource,
+                                             int? codeFixIndex,
+                                             bool allowNewCompilerDiagnostics)
+    {
+        Document document = CreateDocument(source: oldSource, language: language);
+        Diagnostic[] analyzerDiagnostics = await GetSortedDiagnosticsFromDocumentsAsync(analyzer: analyzer, new[] { document });
+        Diagnostic[] compilerDiagnostics = await GetCompilerDiagnosticsAsync(document);
+        document = await ProcessAttemptsAsync(analyzer: analyzer,
+                                              codeFixProvider: codeFixProvider,
+                                              codeFixIndex: codeFixIndex,
+                                              allowNewCompilerDiagnostics: allowNewCompilerDiagnostics,
+                                              analyzerDiagnostics: analyzerDiagnostics,
+                                              compilerDiagnostics: compilerDiagnostics,
+                                              document: document);
+
+        //after applying all of the code fixes, compare the resulting string to the inputted one
+        string actual = await GetStringFromDocumentAsync(document);
+        Assert.Equal(expected: newSource, actual: actual);
+    }
+
+    private static async Task<Document> ProcessAttemptsAsync(DiagnosticAnalyzer analyzer,
+                                                             CodeFixProvider codeFixProvider,
+                                                             int? codeFixIndex,
+                                                             bool allowNewCompilerDiagnostics,
+                                                             Diagnostic[] analyzerDiagnostics,
+                                                             Diagnostic[] compilerDiagnostics,
+                                                             Document document)
+    {
+        int attempts = analyzerDiagnostics.Length;
+
+        for (int i = 0; i < attempts; ++i)
+        {
+            List<CodeAction> actions = new();
+            CodeFixContext context = new(document: document, analyzerDiagnostics[0], registerCodeFix: (a, _) => actions.Add(a), cancellationToken: CancellationToken.None);
+            await codeFixProvider.RegisterCodeFixesAsync(context);
+
+            if (actions.Count == 0)
             {
-                throw new NotNullException();
+                break;
             }
 
-            CodeFixProvider? codeFixProvider = this.GetCSharpCodeFixProvider();
-
-            if (codeFixProvider == null)
+            if (codeFixIndex != null)
             {
-                throw new NotNullException();
+                document = await ApplyFixAsync(document: document, actions.ElementAt((int)codeFixIndex));
+
+                break;
             }
 
-            return VerifyFixAsync(language: LanguageNames.CSharp,
-                                  analyzer: analyzer,
-                                  codeFixProvider: codeFixProvider,
-                                  oldSource: oldSource,
-                                  newSource: newSource,
-                                  codeFixIndex: codeFixIndex,
-                                  allowNewCompilerDiagnostics: allowNewCompilerDiagnostics);
-        }
+            document = await ApplyFixAsync(document: document, actions.ElementAt(index: 0));
+            analyzerDiagnostics = await GetSortedDiagnosticsFromDocumentsAsync(analyzer: analyzer, new[] { document });
 
-        /// <summary>
-        ///     General verifier for codefixes.
-        ///     Creates a Document from the source string, then gets diagnostics on it and applies the relevant codefixes.
-        ///     Then gets the string after the codefix is applied and compares it with the expected result.
-        ///     Note: If any codefix causes new diagnostics to show up, the test fails unless allowNewCompilerDiagnostics is set to true.
-        /// </summary>
-        /// <param name="language">The language the source code is in</param>
-        /// <param name="analyzer">The analyzer to be applied to the source code</param>
-        /// <param name="codeFixProvider">The codefix to be applied to the code wherever the relevant Diagnostic is found</param>
-        /// <param name="oldSource">A class in the form of a string before the CodeFix was applied to it</param>
-        /// <param name="newSource">A class in the form of a string after the CodeFix was applied to it</param>
-        /// <param name="codeFixIndex">Index determining which codefix to apply if there are multiple</param>
-        /// <param name="allowNewCompilerDiagnostics">A bool controlling whether or not the test will fail if the CodeFix introduces other warnings after being applied</param>
-        private static async Task VerifyFixAsync(string language,
-                                                 DiagnosticAnalyzer analyzer,
-                                                 CodeFixProvider codeFixProvider,
-                                                 string oldSource,
-                                                 string newSource,
-                                                 int? codeFixIndex,
-                                                 bool allowNewCompilerDiagnostics)
-        {
-            Document document = CreateDocument(source: oldSource, language: language);
-            Diagnostic[] analyzerDiagnostics = await GetSortedDiagnosticsFromDocumentsAsync(analyzer: analyzer,
-                                                                                            new[]
-                                                                                            {
-                                                                                                document
-                                                                                            });
-            Diagnostic[] compilerDiagnostics = await GetCompilerDiagnosticsAsync(document);
-            int attempts = analyzerDiagnostics.Length;
+            IEnumerable<Diagnostic> newCompilerDiagnostics = GetNewDiagnostics(diagnostics: compilerDiagnostics, await GetCompilerDiagnosticsAsync(document));
 
-            for (int i = 0; i < attempts; ++i)
+            //check if applying the code fix introduced any new compiler diagnostics
+            if (!allowNewCompilerDiagnostics && newCompilerDiagnostics.Any())
             {
-                List<CodeAction> actions = new();
-                CodeFixContext context = new(document: document, analyzerDiagnostics[0], registerCodeFix: (a, _) => actions.Add(a), cancellationToken: CancellationToken.None);
-                await codeFixProvider.RegisterCodeFixesAsync(context);
+                SyntaxNode? syntaxRoot = await document.GetSyntaxRootAsync();
 
-                if (actions.Count == 0)
+                if (syntaxRoot == null)
                 {
-                    break;
+                    throw new NotNullException();
                 }
 
-                if (codeFixIndex != null)
-                {
-                    document = await ApplyFixAsync(document: document, actions.ElementAt((int)codeFixIndex));
+                // Format and get the compiler diagnostics again so that the locations make sense in the output
+                document = document.WithSyntaxRoot(Formatter.Format(node: syntaxRoot, annotation: Formatter.Annotation, workspace: document.Project.Solution.Workspace));
 
-                    break;
+                newCompilerDiagnostics = GetNewDiagnostics(diagnostics: compilerDiagnostics, await GetCompilerDiagnosticsAsync(document));
+
+                SyntaxNode? sr = await document.GetSyntaxRootAsync();
+
+                if (sr == null)
+                {
+                    throw new NotNullException();
                 }
 
-                document = await ApplyFixAsync(document: document, actions.ElementAt(index: 0));
-                analyzerDiagnostics = await GetSortedDiagnosticsFromDocumentsAsync(analyzer: analyzer,
-                                                                                   new[]
-                                                                                   {
-                                                                                       document
-                                                                                   });
-
-                IEnumerable<Diagnostic> newCompilerDiagnostics = GetNewDiagnostics(diagnostics: compilerDiagnostics, await GetCompilerDiagnosticsAsync(document));
-
-                //check if applying the code fix introduced any new compiler diagnostics
-                if (!allowNewCompilerDiagnostics && newCompilerDiagnostics.Any())
-                {
-                    SyntaxNode? syntaxRoot = await document.GetSyntaxRootAsync();
-
-                    if (syntaxRoot == null)
-                    {
-                        throw new NotNullException();
-                    }
-
-                    // Format and get the compiler diagnostics again so that the locations make sense in the output
-                    document = document.WithSyntaxRoot(Formatter.Format(node: syntaxRoot, annotation: Formatter.Annotation, workspace: document.Project.Solution.Workspace));
-
-                    newCompilerDiagnostics = GetNewDiagnostics(diagnostics: compilerDiagnostics, await GetCompilerDiagnosticsAsync(document));
-
-                    SyntaxNode? sr = await document.GetSyntaxRootAsync();
-
-                    if (sr == null)
-                    {
-                        throw new NotNullException();
-                    }
-
-                    Assert.True(condition: false,
-                                string.Format(format: "Fix introduced new compiler diagnostics:\r\n{0}\r\n\r\nNew document:\r\n{1}\r\n",
-                                              string.Join(separator: "\r\n", newCompilerDiagnostics.Select(selector: d => d.ToString())),
-                                              sr.ToFullString()));
-                }
-
-                //check if there are analyzer diagnostics left after the code fix
-                if (analyzerDiagnostics.Length == 0)
-                {
-                    break;
-                }
+                Assert.True(condition: false,
+                            $"Fix introduced new compiler diagnostics:\r\n{string.Join(separator: "\r\n", newCompilerDiagnostics.Select(selector: d => d.ToString()))}\r\n\r\nNew document:\r\n{sr.ToFullString()}\r\n");
             }
 
-            //after applying all of the code fixes, compare the resulting string to the inputted one
-            string actual = await GetStringFromDocumentAsync(document);
-            Assert.Equal(expected: newSource, actual: actual);
+            //check if there are analyzer diagnostics left after the code fix
+            if (analyzerDiagnostics.Length == 0)
+            {
+                break;
+            }
         }
+
+        return document;
     }
 }
