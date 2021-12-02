@@ -14,6 +14,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 - FF-1429 - Updated TeamCity.VSTest.TestAdapter to 1.0.28
 - FF-1429 - Updated Roslynator.Analyzers to 3.3.0
 - FF-3856 - Updated to dotnet 6.0
+- FF-1429 - Updated TeamCity.VSTest.TestAdapter to 1.0.29
 ### Removed
 ### Deployment Changes
 
