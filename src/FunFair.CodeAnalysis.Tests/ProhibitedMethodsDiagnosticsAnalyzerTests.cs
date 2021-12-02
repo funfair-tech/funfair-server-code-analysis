@@ -37,7 +37,10 @@ public sealed class ProhibitedMethodsDiagnosticsAnalyzerTests : CodeFixVerifier
                                         Id = "FFS0001",
                                         Message = @"Call IDateTimeSource.UtcNow() rather than DateTime.Now",
                                         Severity = DiagnosticSeverity.Error,
-                                        Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 12, column: 25) }
+                                        Locations = new[]
+                                                    {
+                                                        new DiagnosticResultLocation(path: "Test0.cs", line: 12, column: 25)
+                                                    }
                                     };
 
         return this.VerifyCSharpDiagnosticAsync(source: test, expected);
@@ -66,7 +69,10 @@ public sealed class ProhibitedMethodsDiagnosticsAnalyzerTests : CodeFixVerifier
                                         Id = "FFS0001",
                                         Message = @"Call IDateTimeSource.UtcNow() rather than DateTime.Now",
                                         Severity = DiagnosticSeverity.Error,
-                                        Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 12, column: 25) }
+                                        Locations = new[]
+                                                    {
+                                                        new DiagnosticResultLocation(path: "Test0.cs", line: 12, column: 25)
+                                                    }
                                     };
 
         return this.VerifyCSharpDiagnosticAsync(source: test, expected);
@@ -93,7 +99,10 @@ public sealed class ProhibitedMethodsDiagnosticsAnalyzerTests : CodeFixVerifier
                                         Id = "FFS0001",
                                         Message = @"Call IDateTimeSource.UtcNow() rather than DateTime.Now",
                                         Severity = DiagnosticSeverity.Error,
-                                        Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 10, column: 28) }
+                                        Locations = new[]
+                                                    {
+                                                        new DiagnosticResultLocation(path: "Test0.cs", line: 10, column: 28)
+                                                    }
                                     };
 
         return this.VerifyCSharpDiagnosticAsync(source: test, expected);
@@ -139,7 +148,10 @@ public sealed class ProhibitedMethodsDiagnosticsAnalyzerTests : CodeFixVerifier
                                         Id = "FFS0001",
                                         Message = @"Call IDateTimeSource.UtcNow() rather than DateTime.Now",
                                         Severity = DiagnosticSeverity.Error,
-                                        Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 13, column: 29) }
+                                        Locations = new[]
+                                                    {
+                                                        new DiagnosticResultLocation(path: "Test0.cs", line: 13, column: 29)
+                                                    }
                                     };
 
         return this.VerifyCSharpDiagnosticAsync(source: test, expected);
@@ -169,7 +181,10 @@ public sealed class ProhibitedMethodsDiagnosticsAnalyzerTests : CodeFixVerifier
                                         Id = "FFS0001",
                                         Message = @"Call IDateTimeSource.UtcNow() rather than DateTime.Now",
                                         Severity = DiagnosticSeverity.Error,
-                                        Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 12, column: 28) }
+                                        Locations = new[]
+                                                    {
+                                                        new DiagnosticResultLocation(path: "Test0.cs", line: 12, column: 28)
+                                                    }
                                     };
 
         return this.VerifyCSharpDiagnosticAsync(source: test, expected);
@@ -196,7 +211,10 @@ public sealed class ProhibitedMethodsDiagnosticsAnalyzerTests : CodeFixVerifier
                                         Id = "FFS0004",
                                         Message = @"Call IDateTimeSource.UtcNow() rather than DateTimeOffset.Now",
                                         Severity = DiagnosticSeverity.Error,
-                                        Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 10, column: 28) }
+                                        Locations = new[]
+                                                    {
+                                                        new DiagnosticResultLocation(path: "Test0.cs", line: 10, column: 28)
+                                                    }
                                     };
 
         return this.VerifyCSharpDiagnosticAsync(source: test, expected);
@@ -223,7 +241,10 @@ public sealed class ProhibitedMethodsDiagnosticsAnalyzerTests : CodeFixVerifier
                                         Id = "FFS0005",
                                         Message = @"Call IDateTimeSource.UtcNow() rather than DateTimeOffset.UtcNow",
                                         Severity = DiagnosticSeverity.Error,
-                                        Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 10, column: 28) }
+                                        Locations = new[]
+                                                    {
+                                                        new DiagnosticResultLocation(path: "Test0.cs", line: 10, column: 28)
+                                                    }
                                     };
 
         return this.VerifyCSharpDiagnosticAsync(source: test, expected);
@@ -250,7 +271,10 @@ public sealed class ProhibitedMethodsDiagnosticsAnalyzerTests : CodeFixVerifier
                                         Id = "FFS0003",
                                         Message = @"Call IDateTimeSource.UtcNow().Date rather than DateTime.Today",
                                         Severity = DiagnosticSeverity.Error,
-                                        Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 10, column: 28) }
+                                        Locations = new[]
+                                                    {
+                                                        new DiagnosticResultLocation(path: "Test0.cs", line: 10, column: 28)
+                                                    }
                                     };
 
         return this.VerifyCSharpDiagnosticAsync(source: test, expected);
@@ -277,7 +301,10 @@ public sealed class ProhibitedMethodsDiagnosticsAnalyzerTests : CodeFixVerifier
                                         Id = "FFS0002",
                                         Message = @"Call IDateTimeSource.UtcNow() rather than DateTime.UtcNow",
                                         Severity = DiagnosticSeverity.Error,
-                                        Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 10, column: 28) }
+                                        Locations = new[]
+                                                    {
+                                                        new DiagnosticResultLocation(path: "Test0.cs", line: 10, column: 28)
+                                                    }
                                     };
 
         return this.VerifyCSharpDiagnosticAsync(source: test, expected);
@@ -312,7 +339,10 @@ public sealed class ProhibitedMethodsDiagnosticsAnalyzerTests : CodeFixVerifier
                                         Id = "FFS0006",
                                         Message = @"Only use ISqlServerDatabase.ExecuteArbitrarySqlAsync in integration tests",
                                         Severity = DiagnosticSeverity.Error,
-                                        Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 18, column: 17) }
+                                        Locations = new[]
+                                                    {
+                                                        new DiagnosticResultLocation(path: "Test0.cs", line: 18, column: 17)
+                                                    }
                                     };
 
         return this.VerifyCSharpDiagnosticAsync(source: test, expected);
@@ -361,7 +391,10 @@ public sealed class ProhibitedMethodsDiagnosticsAnalyzerTests : CodeFixVerifier
                                         Id = "FFS0007",
                                         Message = @"Only use ISqlServerDatabase.QueryArbitrarySqlAsync in integration tests",
                                         Severity = DiagnosticSeverity.Error,
-                                        Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 24, column: 17) }
+                                        Locations = new[]
+                                                    {
+                                                        new DiagnosticResultLocation(path: "Test0.cs", line: 24, column: 17)
+                                                    }
                                     };
 
         return this.VerifyCSharpDiagnosticAsync(source: test, expected);
@@ -396,7 +429,10 @@ public sealed class ProhibitedMethodsDiagnosticsAnalyzerTests : CodeFixVerifier
                                         Id = "FFS0007",
                                         Message = @"Only use ISqlServerDatabase.QueryArbitrarySqlAsync in integration tests",
                                         Severity = DiagnosticSeverity.Error,
-                                        Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 18, column: 17) }
+                                        Locations = new[]
+                                                    {
+                                                        new DiagnosticResultLocation(path: "Test0.cs", line: 18, column: 17)
+                                                    }
                                     };
 
         return this.VerifyCSharpDiagnosticAsync(source: test, expected);
@@ -422,11 +458,19 @@ public sealed class ProhibitedMethodsDiagnosticsAnalyzerTests : CodeFixVerifier
                                         Id = "FFS0026",
                                         Message = @"Use RemoteIpAddressRetriever",
                                         Severity = DiagnosticSeverity.Error,
-                                        Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 8, column: 66) }
+                                        Locations = new[]
+                                                    {
+                                                        new DiagnosticResultLocation(path: "Test0.cs", line: 8, column: 66)
+                                                    }
                                     };
 
         return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                new[] { WellKnownMetadataReferences.IpAddress, WellKnownMetadataReferences.ConnectionInfo, WellKnownMetadataReferences.HttpContext },
+                                                new[]
+                                                {
+                                                    WellKnownMetadataReferences.IpAddress,
+                                                    WellKnownMetadataReferences.ConnectionInfo,
+                                                    WellKnownMetadataReferences.HttpContext
+                                                },
                                                 expected);
     }
 
@@ -453,11 +497,19 @@ public sealed class ProhibitedMethodsDiagnosticsAnalyzerTests : CodeFixVerifier
                                         Id = "FFS0026",
                                         Message = @"Use RemoteIpAddressRetriever",
                                         Severity = DiagnosticSeverity.Error,
-                                        Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 11, column: 55) }
+                                        Locations = new[]
+                                                    {
+                                                        new DiagnosticResultLocation(path: "Test0.cs", line: 11, column: 55)
+                                                    }
                                     };
 
         return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                new[] { WellKnownMetadataReferences.IpAddress, WellKnownMetadataReferences.ConnectionInfo, WellKnownMetadataReferences.HttpContext },
+                                                new[]
+                                                {
+                                                    WellKnownMetadataReferences.IpAddress,
+                                                    WellKnownMetadataReferences.ConnectionInfo,
+                                                    WellKnownMetadataReferences.HttpContext
+                                                },
                                                 expected);
     }
 
@@ -482,7 +534,10 @@ public sealed class ProhibitedMethodsDiagnosticsAnalyzerTests : CodeFixVerifier
                                         Id = "FFS0037",
                                         Message = @"Use new Guid() with constant guids or Guid.TryParse everywhere else",
                                         Severity = DiagnosticSeverity.Error,
-                                        Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 10, column: 28) }
+                                        Locations = new[]
+                                                    {
+                                                        new DiagnosticResultLocation(path: "Test0.cs", line: 10, column: 28)
+                                                    }
                                     };
 
         return this.VerifyCSharpDiagnosticAsync(source: test, expected);

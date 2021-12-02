@@ -125,10 +125,11 @@ public abstract partial class DiagnosticVerifier
     {
         return !compilerError.ToString()
                              .Contains(value: "netstandard", comparisonType: StringComparison.Ordinal) && !compilerError.ToString()
-                                                                                                                        .Contains(value: "static 'Main' method",
-                                                                                                                                  comparisonType: StringComparison.Ordinal) && !compilerError.ToString()
-            .Contains(value: "CS1002", comparisonType: StringComparison.Ordinal) && !compilerError.ToString()
-                                                                                                  .Contains(value: "CS1702", comparisonType: StringComparison.Ordinal);
+            .Contains(value: "static 'Main' method", comparisonType: StringComparison.Ordinal) && !compilerError.ToString()
+                                                                                                                .Contains(value: "CS1002",
+                                                                                                                    comparisonType: StringComparison.Ordinal) && !compilerError
+            .ToString()
+            .Contains(value: "CS1702", comparisonType: StringComparison.Ordinal);
     }
 
     /// <summary>
@@ -191,7 +192,12 @@ public abstract partial class DiagnosticVerifier
     /// <returns>A Document created from the source string</returns>
     protected static Document CreateDocument(string source, MetadataReference[] references, string language = LanguageNames.CSharp)
     {
-        return CreateProject(new[] { source }, references: references, language: language)
+        return CreateProject(new[]
+                             {
+                                 source
+                             },
+                             references: references,
+                             language: language)
                .Documents.First();
     }
 

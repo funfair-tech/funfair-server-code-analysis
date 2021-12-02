@@ -21,7 +21,11 @@ public sealed class SuppressMessageDiagnosticsAnalyzer : DiagnosticAnalyzer
                                                                                message: "SuppressMessage must specify a Justification");
 
     /// <inheritdoc />
-    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => new[] { Rule }.ToImmutableArray();
+    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
+        new[]
+        {
+            Rule
+        }.ToImmutableArray();
 
     /// <inheritdoc />
     public override void Initialize(AnalysisContext context)

@@ -21,7 +21,11 @@ public sealed class ReThrowingExceptionShouldSpecifyInnerExceptionDiagnosticsAna
                                                                                message: "Provide '{0}' as a inner exception when throw from the catch clauses");
 
     /// <inheritdoc />
-    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => new[] { Rule }.ToImmutableArray();
+    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
+        new[]
+        {
+            Rule
+        }.ToImmutableArray();
 
     /// <inheritdoc />
     public override void Initialize(AnalysisContext context)
@@ -77,7 +81,10 @@ public sealed class ReThrowingExceptionShouldSpecifyInnerExceptionDiagnosticsAna
         }
     }
 
-    private static void TryToReportDiagnostic(ArgumentListSyntax? argumentListSyntax, string exceptionVariable, SyntaxNodeAnalysisContext syntaxNodeContext, ExpressionSyntax objectCreationExpression)
+    private static void TryToReportDiagnostic(ArgumentListSyntax? argumentListSyntax,
+                                              string exceptionVariable,
+                                              SyntaxNodeAnalysisContext syntaxNodeContext,
+                                              ExpressionSyntax objectCreationExpression)
     {
         if (argumentListSyntax == null || argumentListSyntax.Arguments.Count == 0)
         {

@@ -41,7 +41,10 @@ public sealed class ConstructorGenericParameterTypeDiagnosticsAnalyser : Diagnos
     /// <inheritdoc />
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
         Specifications.Select(selector: r => r.Rule)
-                      .Concat(new[] { MissMatchTypes })
+                      .Concat(new[]
+                              {
+                                  MissMatchTypes
+                              })
                       .ToImmutableArray();
 
     /// <inheritdoc />
@@ -103,7 +106,10 @@ public sealed class ConstructorGenericParameterTypeDiagnosticsAnalyser : Diagnos
         {
             if (rule.MatchTypeOnGenericParameters)
             {
-                CheckGenericParameterTypeMatch(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, parameterSyntax: parameterSyntax, className: className, fullTypeName: fullTypeName);
+                CheckGenericParameterTypeMatch(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
+                                               parameterSyntax: parameterSyntax,
+                                               className: className,
+                                               fullTypeName: fullTypeName);
             }
 
             return;

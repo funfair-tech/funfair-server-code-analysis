@@ -34,10 +34,17 @@ public sealed class ProhibitedPragmasDiagnosticsAnalyzer : DiagnosticAnalyzer
                                                                                title: "Don't disable warnings with #pragma warning disable",
                                                                                message: "Don't disable warnings using #pragma warning disable");
 
-    private static readonly IReadOnlyList<string> TestAssemblies = new[] { @"Microsoft.NET.Test.Sdk" };
+    private static readonly IReadOnlyList<string> TestAssemblies = new[]
+                                                                   {
+                                                                       @"Microsoft.NET.Test.Sdk"
+                                                                   };
 
     /// <inheritdoc />
-    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => new[] { Rule }.ToImmutableArray();
+    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
+        new[]
+        {
+            Rule
+        }.ToImmutableArray();
 
     /// <inheritdoc />
     public override void Initialize(AnalysisContext context)
@@ -62,7 +69,8 @@ public sealed class ProhibitedPragmasDiagnosticsAnalyzer : DiagnosticAnalyzer
     {
         try
         {
-            return compilation.ReferencedAssemblyNames.SelectMany(collectionSelector: _ => TestAssemblies, resultSelector: (assembly, testAssemblyName) => new { assembly, testAssemblyName })
+            return compilation.ReferencedAssemblyNames
+                              .SelectMany(collectionSelector: _ => TestAssemblies, resultSelector: (assembly, testAssemblyName) => new { assembly, testAssemblyName })
                               .Where(t => StringComparer.InvariantCultureIgnoreCase.Equals(x: t.assembly.Name, y: t.testAssemblyName))
                               .Select(t => t.assembly)
                               .Any();
