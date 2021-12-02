@@ -9,18 +9,21 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 ### Added
 ### Fixed
 ### Changed
-- FF-1429 - Updated SonarAnalyzer.CSharp to 8.32.0.39516
-- FF-1429 - Updated Microsoft.CodeAnalysis.CSharp.Workspaces to 4.0.1
-- FF-1429 - Updated TeamCity.VSTest.TestAdapter to 1.0.28
-- FF-1429 - Updated Roslynator.Analyzers to 3.3.0
-- FF-3856 - Updated to dotnet 6.0
-- FF-1429 - Updated TeamCity.VSTest.TestAdapter to 1.0.29
 ### Removed
 ### Deployment Changes
 
 <!--
 Releases that have at least been deployed to staging, BUT NOT necessarily released to live.  Changes should be moved from [Unreleased] into here as they are merged into the appropriate release branch
 -->
+## [5.7.3] - 2021-12-02
+### Changed
+- FF-1429 - Updated SonarAnalyzer.CSharp to 8.32.0.39516
+- FF-1429 - Updated Microsoft.CodeAnalysis.CSharp.Workspaces to 4.0.1
+- FF-1429 - Updated TeamCity.VSTest.TestAdapter to 1.0.28
+- FF-1429 - Updated Roslynator.Analyzers to 3.3.0
+- FF-3856 - Updated to dotnet 6.0
+- FF-1429 - Updated TeamCity.VSTest.TestAdapter to 1.0.29
+
 ## [5.7.0] - 2021-11-15
 ### Added
 - FFS0040 - Type should be in a file with the same name as the type
