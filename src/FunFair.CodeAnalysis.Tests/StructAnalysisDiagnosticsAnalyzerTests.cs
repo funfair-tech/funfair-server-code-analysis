@@ -23,7 +23,10 @@ public sealed class StructAnalysisDiagnosticsAnalyzerTests : CodeFixVerifier
                                         Id = "FFS0011",
                                         Message = "Structs should be read-only",
                                         Severity = DiagnosticSeverity.Error,
-                                        Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 12, column: 25) }
+                                        Locations = new[]
+                                                    {
+                                                        new DiagnosticResultLocation(path: "Test0.cs", line: 12, column: 25)
+                                                    }
                                     };
 
         return this.VerifyCSharpDiagnosticAsync(source: test, expected);

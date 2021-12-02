@@ -93,7 +93,10 @@ public sealed class ProhibitedMethodsDiagnosticsAnalyzer : DiagnosticAnalyzer
                 return;
             }
 
-            ReportAnyBannedSymbols(cachedSymbols: cachedSymbols, typeInfo: typeInfo, invocation: memberAccessExpressionSyntax, syntaxNodeAnalysisContext: syntaxNodeAnalysisContext);
+            ReportAnyBannedSymbols(cachedSymbols: cachedSymbols,
+                                   typeInfo: typeInfo,
+                                   invocation: memberAccessExpressionSyntax,
+                                   syntaxNodeAnalysisContext: syntaxNodeAnalysisContext);
         }
 
         void LookForBannedMethods(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)

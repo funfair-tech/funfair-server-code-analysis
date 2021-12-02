@@ -26,7 +26,11 @@ public sealed class Test
     }
 }";
 
-        return this.VerifyCSharpDiagnosticAsync(source: test, new[] { WellKnownMetadataReferences.FunFairTestCommon });
+        return this.VerifyCSharpDiagnosticAsync(source: test,
+                                                new[]
+                                                {
+                                                    WellKnownMetadataReferences.FunFairTestCommon
+                                                });
     }
 
     [Fact]
@@ -53,10 +57,18 @@ public sealed class Test : MockBase<string>
                                         Id = "FFS0029",
                                         Message = "MockBase<T> instances must be internal",
                                         Severity = DiagnosticSeverity.Error,
-                                        Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 4, column: 1) }
+                                        Locations = new[]
+                                                    {
+                                                        new DiagnosticResultLocation(path: "Test0.cs", line: 4, column: 1)
+                                                    }
                                     };
 
-        return this.VerifyCSharpDiagnosticAsync(source: test, new[] { WellKnownMetadataReferences.FunFairTestCommon }, expected);
+        return this.VerifyCSharpDiagnosticAsync(source: test,
+                                                new[]
+                                                {
+                                                    WellKnownMetadataReferences.FunFairTestCommon
+                                                },
+                                                expected);
     }
 
     [Fact]
@@ -79,7 +91,11 @@ internal sealed class Test : MockBase<string>
     }
 }";
 
-        return this.VerifyCSharpDiagnosticAsync(source: test, new[] { WellKnownMetadataReferences.FunFairTestCommon });
+        return this.VerifyCSharpDiagnosticAsync(source: test,
+                                                new[]
+                                                {
+                                                    WellKnownMetadataReferences.FunFairTestCommon
+                                                });
     }
 
     [Fact]
@@ -107,9 +123,17 @@ internal abstract class Test : MockBase<string>
                                         Id = "FFS0030",
                                         Message = "MockBase<T> instances must be sealed",
                                         Severity = DiagnosticSeverity.Error,
-                                        Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 4, column: 1) }
+                                        Locations = new[]
+                                                    {
+                                                        new DiagnosticResultLocation(path: "Test0.cs", line: 4, column: 1)
+                                                    }
                                     };
 
-        return this.VerifyCSharpDiagnosticAsync(source: test, new[] { WellKnownMetadataReferences.FunFairTestCommon }, expected);
+        return this.VerifyCSharpDiagnosticAsync(source: test,
+                                                new[]
+                                                {
+                                                    WellKnownMetadataReferences.FunFairTestCommon
+                                                },
+                                                expected);
     }
 }

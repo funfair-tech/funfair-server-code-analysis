@@ -28,7 +28,11 @@ public sealed class SuppressMessageDiagnosticsAnalyzerTests : CodeFixVerifier
             }
 }";
 
-        return this.VerifyCSharpDiagnosticAsync(source: test, new[] { WellKnownMetadataReferences.SuppressMessage });
+        return this.VerifyCSharpDiagnosticAsync(source: test,
+                                                new[]
+                                                {
+                                                    WellKnownMetadataReferences.SuppressMessage
+                                                });
     }
 
     [Fact]
@@ -49,10 +53,18 @@ public sealed class SuppressMessageDiagnosticsAnalyzerTests : CodeFixVerifier
                                         Id = "FFS0027",
                                         Message = "SuppressMessage must specify a Justification",
                                         Severity = DiagnosticSeverity.Error,
-                                        Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 6, column: 14) }
+                                        Locations = new[]
+                                                    {
+                                                        new DiagnosticResultLocation(path: "Test0.cs", line: 6, column: 14)
+                                                    }
                                     };
 
-        return this.VerifyCSharpDiagnosticAsync(source: test, new[] { WellKnownMetadataReferences.SuppressMessage }, expected);
+        return this.VerifyCSharpDiagnosticAsync(source: test,
+                                                new[]
+                                                {
+                                                    WellKnownMetadataReferences.SuppressMessage
+                                                },
+                                                expected);
     }
 
     [Fact]
@@ -74,9 +86,17 @@ public sealed class SuppressMessageDiagnosticsAnalyzerTests : CodeFixVerifier
                                         Id = "FFS0027",
                                         Message = "SuppressMessage must specify a Justification",
                                         Severity = DiagnosticSeverity.Error,
-                                        Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 6, column: 75) }
+                                        Locations = new[]
+                                                    {
+                                                        new DiagnosticResultLocation(path: "Test0.cs", line: 6, column: 75)
+                                                    }
                                     };
 
-        return this.VerifyCSharpDiagnosticAsync(source: test, new[] { WellKnownMetadataReferences.SuppressMessage }, expected);
+        return this.VerifyCSharpDiagnosticAsync(source: test,
+                                                new[]
+                                                {
+                                                    WellKnownMetadataReferences.SuppressMessage
+                                                },
+                                                expected);
     }
 }

@@ -62,8 +62,8 @@ public abstract partial class CodeFixVerifier
         while (newIndex < newArray.Length)
         {
             if (oldIndex < oldArray.Length && oldArray[oldIndex]
-                    .Id == newArray[newIndex]
-                    .Id)
+                .Id == newArray[newIndex]
+                .Id)
             {
                 ++oldIndex;
                 ++newIndex;

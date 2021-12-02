@@ -33,7 +33,10 @@ public sealed class Test {
                                         Id = "FFS0016",
                                         Message = "Argument Exceptions should pass parameter name",
                                         Severity = DiagnosticSeverity.Error,
-                                        Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 8, column: 17) }
+                                        Locations = new[]
+                                                    {
+                                                        new DiagnosticResultLocation(path: "Test0.cs", line: 8, column: 17)
+                                                    }
                                     };
 
         return this.VerifyCSharpDiagnosticAsync(source: test, expected);
@@ -58,7 +61,10 @@ public sealed class Test {
                                         Id = "FFS0016",
                                         Message = "Argument Exceptions should pass parameter name",
                                         Severity = DiagnosticSeverity.Error,
-                                        Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 8, column: 17) }
+                                        Locations = new[]
+                                                    {
+                                                        new DiagnosticResultLocation(path: "Test0.cs", line: 8, column: 17)
+                                                    }
                                     };
 
         return this.VerifyCSharpDiagnosticAsync(source: test, expected);
@@ -119,7 +125,10 @@ public sealed class Test {
                                         Id = "FFS0016",
                                         Message = "Argument Exceptions should pass parameter name",
                                         Severity = DiagnosticSeverity.Error,
-                                        Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 8, column: 17) }
+                                        Locations = new[]
+                                                    {
+                                                        new DiagnosticResultLocation(path: "Test0.cs", line: 8, column: 17)
+                                                    }
                                     };
 
         return this.VerifyCSharpDiagnosticAsync(source: test, expected);
@@ -144,7 +153,10 @@ public sealed class Test {
                                         Id = "FFS0016",
                                         Message = "Argument Exceptions should pass parameter name",
                                         Severity = DiagnosticSeverity.Error,
-                                        Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 8, column: 17) }
+                                        Locations = new[]
+                                                    {
+                                                        new DiagnosticResultLocation(path: "Test0.cs", line: 8, column: 17)
+                                                    }
                                     };
 
         return this.VerifyCSharpDiagnosticAsync(source: test, expected);
@@ -205,7 +217,10 @@ public sealed class Test {
                                         Id = "FFS0016",
                                         Message = "Argument Exceptions should pass parameter name",
                                         Severity = DiagnosticSeverity.Error,
-                                        Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 8, column: 17) }
+                                        Locations = new[]
+                                                    {
+                                                        new DiagnosticResultLocation(path: "Test0.cs", line: 8, column: 17)
+                                                    }
                                     };
 
         return this.VerifyCSharpDiagnosticAsync(source: test, expected);
@@ -230,7 +245,10 @@ public sealed class Test {
                                         Id = "FFS0016",
                                         Message = "Argument Exceptions should pass parameter name",
                                         Severity = DiagnosticSeverity.Error,
-                                        Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 8, column: 17) }
+                                        Locations = new[]
+                                                    {
+                                                        new DiagnosticResultLocation(path: "Test0.cs", line: 8, column: 17)
+                                                    }
                                     };
 
         return this.VerifyCSharpDiagnosticAsync(source: test, expected);
