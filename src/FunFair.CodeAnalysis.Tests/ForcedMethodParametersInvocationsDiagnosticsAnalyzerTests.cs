@@ -38,7 +38,11 @@ public sealed class ForcedMethodParametersInvocationsDiagnosticsAnalyzerTests : 
         }
     }";
 
-        return this.VerifyCSharpDiagnosticAsync(source: test, new[] { WellKnownMetadataReferences.JsonSerializer });
+        return this.VerifyCSharpDiagnosticAsync(source: test,
+                                                new[]
+                                                {
+                                                    WellKnownMetadataReferences.JsonSerializer
+                                                });
     }
 
     [Fact]
@@ -68,10 +72,18 @@ public sealed class ForcedMethodParametersInvocationsDiagnosticsAnalyzerTests : 
                                         Id = "FFS0015",
                                         Message = @"Only use JsonSerializer.Deserialize with own JsonSerializerOptions",
                                         Severity = DiagnosticSeverity.Error,
-                                        Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 15, column: 29) }
+                                        Locations = new[]
+                                                    {
+                                                        new DiagnosticResultLocation(path: "Test0.cs", line: 15, column: 29)
+                                                    }
                                     };
 
-        return this.VerifyCSharpDiagnosticAsync(source: test, new[] { WellKnownMetadataReferences.JsonSerializer }, expected);
+        return this.VerifyCSharpDiagnosticAsync(source: test,
+                                                new[]
+                                                {
+                                                    WellKnownMetadataReferences.JsonSerializer
+                                                },
+                                                expected);
     }
 
     [Fact]
@@ -96,7 +108,11 @@ public sealed class ForcedMethodParametersInvocationsDiagnosticsAnalyzerTests : 
          }
      }";
 
-        return this.VerifyCSharpDiagnosticAsync(source: test, new[] { WellKnownMetadataReferences.Substitute });
+        return this.VerifyCSharpDiagnosticAsync(source: test,
+                                                new[]
+                                                {
+                                                    WellKnownMetadataReferences.Substitute
+                                                });
     }
 
     [Fact]
@@ -125,10 +141,18 @@ public sealed class ForcedMethodParametersInvocationsDiagnosticsAnalyzerTests : 
                                         Id = "FFS0018",
                                         Message = @"Only use Received with expected call count",
                                         Severity = DiagnosticSeverity.Error,
-                                        Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 15, column: 18) }
+                                        Locations = new[]
+                                                    {
+                                                        new DiagnosticResultLocation(path: "Test0.cs", line: 15, column: 18)
+                                                    }
                                     };
 
-        return this.VerifyCSharpDiagnosticAsync(source: test, new[] { WellKnownMetadataReferences.Substitute }, expected);
+        return this.VerifyCSharpDiagnosticAsync(source: test,
+                                                new[]
+                                                {
+                                                    WellKnownMetadataReferences.Substitute
+                                                },
+                                                expected);
     }
 
     [Fact]
@@ -155,7 +179,11 @@ public sealed class ForcedMethodParametersInvocationsDiagnosticsAnalyzerTests : 
         }
     }";
 
-        return this.VerifyCSharpDiagnosticAsync(source: test, new[] { WellKnownMetadataReferences.JsonSerializer });
+        return this.VerifyCSharpDiagnosticAsync(source: test,
+                                                new[]
+                                                {
+                                                    WellKnownMetadataReferences.JsonSerializer
+                                                });
     }
 
     [Fact]
@@ -184,9 +212,17 @@ public sealed class ForcedMethodParametersInvocationsDiagnosticsAnalyzerTests : 
                                         Id = "FFS0014",
                                         Message = @"Only use JsonSerializer.Serialize with own JsonSerializerOptions",
                                         Severity = DiagnosticSeverity.Error,
-                                        Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 15, column: 34) }
+                                        Locations = new[]
+                                                    {
+                                                        new DiagnosticResultLocation(path: "Test0.cs", line: 15, column: 34)
+                                                    }
                                     };
 
-        return this.VerifyCSharpDiagnosticAsync(source: test, new[] { WellKnownMetadataReferences.JsonSerializer }, expected);
+        return this.VerifyCSharpDiagnosticAsync(source: test,
+                                                new[]
+                                                {
+                                                    WellKnownMetadataReferences.JsonSerializer
+                                                },
+                                                expected);
     }
 }

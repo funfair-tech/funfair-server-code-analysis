@@ -31,7 +31,11 @@ public sealed class ProhibitedClassesDiagnosticsAnalyzerTests : CodeFixVerifier
          }
      }";
 
-        return this.VerifyCSharpDiagnosticAsync(source: test, new[] { WellKnownMetadataReferences.NonBlockingConcurrentDictionary });
+        return this.VerifyCSharpDiagnosticAsync(source: test,
+                                                new[]
+                                                {
+                                                    WellKnownMetadataReferences.NonBlockingConcurrentDictionary
+                                                });
     }
 
     [Fact]
@@ -55,10 +59,18 @@ public sealed class ProhibitedClassesDiagnosticsAnalyzerTests : CodeFixVerifier
                                         Id = "FFS0031",
                                         Message = @"Use NonBlocking.ConcurrentDictionary  rather than System.Collections.Concurrent.ConcurrentDictionary",
                                         Severity = DiagnosticSeverity.Error,
-                                        Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 10, column: 61) }
+                                        Locations = new[]
+                                                    {
+                                                        new DiagnosticResultLocation(path: "Test0.cs", line: 10, column: 61)
+                                                    }
                                     };
 
-        return this.VerifyCSharpDiagnosticAsync(source: test, new[] { WellKnownMetadataReferences.ConcurrentDictionary }, expected);
+        return this.VerifyCSharpDiagnosticAsync(source: test,
+                                                new[]
+                                                {
+                                                    WellKnownMetadataReferences.ConcurrentDictionary
+                                                },
+                                                expected);
     }
 
     [Fact]
@@ -82,10 +94,18 @@ public sealed class ProhibitedClassesDiagnosticsAnalyzerTests : CodeFixVerifier
                                         Id = "FFS0031",
                                         Message = @"Use NonBlocking.ConcurrentDictionary  rather than System.Collections.Concurrent.ConcurrentDictionary",
                                         Severity = DiagnosticSeverity.Error,
-                                        Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 8, column: 14) }
+                                        Locations = new[]
+                                                    {
+                                                        new DiagnosticResultLocation(path: "Test0.cs", line: 8, column: 14)
+                                                    }
                                     };
 
-        return this.VerifyCSharpDiagnosticAsync(source: test, new[] { WellKnownMetadataReferences.ConcurrentDictionary }, expected);
+        return this.VerifyCSharpDiagnosticAsync(source: test,
+                                                new[]
+                                                {
+                                                    WellKnownMetadataReferences.ConcurrentDictionary
+                                                },
+                                                expected);
     }
 
     [Fact]
@@ -113,18 +133,29 @@ public sealed class ProhibitedClassesDiagnosticsAnalyzerTests : CodeFixVerifier
                 Id = "FFS0031",
                 Message = @"Use NonBlocking.ConcurrentDictionary  rather than System.Collections.Concurrent.ConcurrentDictionary",
                 Severity = DiagnosticSeverity.Error,
-                Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 8, column: 52) }
+                Locations = new[]
+                            {
+                                new DiagnosticResultLocation(path: "Test0.cs", line: 8, column: 52)
+                            }
             },
             new()
             {
                 Id = "FFS0031",
                 Message = @"Use NonBlocking.ConcurrentDictionary  rather than System.Collections.Concurrent.ConcurrentDictionary",
                 Severity = DiagnosticSeverity.Error,
-                Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 12, column: 35) }
+                Locations = new[]
+                            {
+                                new DiagnosticResultLocation(path: "Test0.cs", line: 12, column: 35)
+                            }
             }
         };
 
-        return this.VerifyCSharpDiagnosticAsync(source: test, new[] { WellKnownMetadataReferences.ConcurrentDictionary }, expected: expected);
+        return this.VerifyCSharpDiagnosticAsync(source: test,
+                                                new[]
+                                                {
+                                                    WellKnownMetadataReferences.ConcurrentDictionary
+                                                },
+                                                expected: expected);
     }
 
     [Fact]
@@ -150,10 +181,18 @@ public sealed class ProhibitedClassesDiagnosticsAnalyzerTests : CodeFixVerifier
                                         Id = "FFS0031",
                                         Message = @"Use NonBlocking.ConcurrentDictionary  rather than System.Collections.Concurrent.ConcurrentDictionary",
                                         Severity = DiagnosticSeverity.Error,
-                                        Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 8, column: 13) }
+                                        Locations = new[]
+                                                    {
+                                                        new DiagnosticResultLocation(path: "Test0.cs", line: 8, column: 13)
+                                                    }
                                     };
 
-        return this.VerifyCSharpDiagnosticAsync(source: test, new[] { WellKnownMetadataReferences.ConcurrentDictionary }, expected);
+        return this.VerifyCSharpDiagnosticAsync(source: test,
+                                                new[]
+                                                {
+                                                    WellKnownMetadataReferences.ConcurrentDictionary
+                                                },
+                                                expected);
     }
 
     [Fact]
@@ -177,9 +216,17 @@ public sealed class ProhibitedClassesDiagnosticsAnalyzerTests : CodeFixVerifier
                                         Id = "FFS0031",
                                         Message = @"Use NonBlocking.ConcurrentDictionary  rather than System.Collections.Concurrent.ConcurrentDictionary",
                                         Severity = DiagnosticSeverity.Error,
-                                        Locations = new[] { new DiagnosticResultLocation(path: "Test0.cs", line: 8, column: 14) }
+                                        Locations = new[]
+                                                    {
+                                                        new DiagnosticResultLocation(path: "Test0.cs", line: 8, column: 14)
+                                                    }
                                     };
 
-        return this.VerifyCSharpDiagnosticAsync(source: test, new[] { WellKnownMetadataReferences.ConcurrentDictionary }, expected);
+        return this.VerifyCSharpDiagnosticAsync(source: test,
+                                                new[]
+                                                {
+                                                    WellKnownMetadataReferences.ConcurrentDictionary
+                                                },
+                                                expected);
     }
 }
