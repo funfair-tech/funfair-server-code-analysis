@@ -7,7 +7,7 @@ using Xunit;
 
 namespace FunFair.CodeAnalysis.Tests;
 
-public sealed class ParameterNameDiagnosticsAnalyzerTests : CodeFixVerifier
+public sealed class ParameterNameDiagnosticsAnalyzerTests : DiagnosticVerifier
 {
     protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer()
     {

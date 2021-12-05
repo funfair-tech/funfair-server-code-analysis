@@ -93,11 +93,7 @@ public abstract partial class CodeFixVerifier : DiagnosticVerifier
                                              bool allowNewCompilerDiagnostics)
     {
         Document document = CreateDocument(source: oldSource, language: language);
-        Diagnostic[] analyzerDiagnostics = await GetSortedDiagnosticsFromDocumentsAsync(analyzer: analyzer,
-                                                                                        new[]
-                                                                                        {
-                                                                                            document
-                                                                                        });
+        Diagnostic[] analyzerDiagnostics = await GetSortedDiagnosticsFromDocumentsAsync(analyzer: analyzer, new[] { document });
         Diagnostic[] compilerDiagnostics = await GetCompilerDiagnosticsAsync(document);
         document = await ProcessAttemptsAsync(analyzer: analyzer,
                                               codeFixProvider: codeFixProvider,
@@ -141,35 +137,21 @@ public abstract partial class CodeFixVerifier : DiagnosticVerifier
             }
 
             document = await ApplyFixAsync(document: document, actions.ElementAt(index: 0));
-            analyzerDiagnostics = await GetSortedDiagnosticsFromDocumentsAsync(analyzer: analyzer,
-                                                                               new[]
-                                                                               {
-                                                                                   document
-                                                                               });
+            analyzerDiagnostics = await GetSortedDiagnosticsFromDocumentsAsync(analyzer: analyzer, new[] { document });
 
             IEnumerable<Diagnostic> newCompilerDiagnostics = GetNewDiagnostics(diagnostics: compilerDiagnostics, await GetCompilerDiagnosticsAsync(document));
 
             //check if applying the code fix introduced any new compiler diagnostics
             if (!allowNewCompilerDiagnostics && newCompilerDiagnostics.Any())
             {
-                SyntaxNode? syntaxRoot = await document.GetSyntaxRootAsync();
-
-                if (syntaxRoot == null)
-                {
-                    throw new NotNullException();
-                }
+                SyntaxNode syntaxRoot = AssertReallyNotNull(await document.GetSyntaxRootAsync());
 
                 // Format and get the compiler diagnostics again so that the locations make sense in the output
                 document = document.WithSyntaxRoot(Formatter.Format(node: syntaxRoot, annotation: Formatter.Annotation, workspace: document.Project.Solution.Workspace));
 
                 newCompilerDiagnostics = GetNewDiagnostics(diagnostics: compilerDiagnostics, await GetCompilerDiagnosticsAsync(document));
 
-                SyntaxNode? sr = await document.GetSyntaxRootAsync();
-
-                if (sr == null)
-                {
-                    throw new NotNullException();
-                }
+                SyntaxNode sr = AssertReallyNotNull(await document.GetSyntaxRootAsync());
 
                 Assert.True(condition: false,
                             $"Fix introduced new compiler diagnostics:\r\n{string.Join(separator: "\r\n", newCompilerDiagnostics.Select(selector: d => d.ToString()))}\r\n\r\nNew document:\r\n{sr.ToFullString()}\r\n");
