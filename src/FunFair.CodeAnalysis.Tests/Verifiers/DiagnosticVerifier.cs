@@ -33,59 +33,52 @@ public abstract partial class DiagnosticVerifier : TestBase
     {
         StringBuilder builder = new();
 
-        for (int i = 0; i < diagnostics.Length; ++i)
+        foreach (Diagnostic diagnostic in diagnostics)
         {
-            builder.Append("// ")
-                   .AppendLine(diagnostics[i]
-                                   .ToString());
+            builder = builder.Append("// ")
+                             .AppendLine(diagnostic.ToString());
 
             Type analyzerType = analyzer.GetType();
             ImmutableArray<DiagnosticDescriptor> rules = analyzer.SupportedDiagnostics;
 
-            foreach (DiagnosticDescriptor rule in rules)
+            DiagnosticDescriptor? rule = rules.FirstOrDefault(rule => rule.Id == diagnostic.Id);
+
+            if (rule == null)
             {
-                if (rule.Id != diagnostics[i]
-                    .Id)
-                {
-                    continue;
-                }
-
-                Location location = diagnostics[i]
-                    .Location;
-
-                if (location == Location.None)
-                {
-                    builder = builder.Append(provider: CultureInfo.InvariantCulture, $"GetGlobalResult({analyzerType.Name}.{rule.Id})");
-                }
-                else
-                {
-                    Assert.True(condition: location.IsInSource,
-                                $"Test base does not currently handle diagnostics in metadata locations. Diagnostic in metadata: {diagnostics[i]}\r\n");
-
-                    string resultMethodName = diagnostics[i]
-                                              .Location.SourceTree!.FilePath.EndsWith(value: ".cs", comparisonType: StringComparison.OrdinalIgnoreCase)
-                        ? "GetCSharpResultAt"
-                        : "GetBasicResultAt";
-                    LinePosition linePosition = diagnostics[i]
-                                                .Location.GetLineSpan()
-                                                .StartLinePosition;
-
-                    builder = builder.Append(provider: CultureInfo.InvariantCulture,
-                                             $"{resultMethodName}({linePosition.Line + 1}, {linePosition.Character + 1}, {analyzerType.Name}.{rule.Id})");
-                }
-
-                if (i != diagnostics.Length - 1)
-                {
-                    builder.Append(value: ',');
-                }
-
-                builder.AppendLine();
-
-                break;
+                continue;
             }
+
+            Location location = diagnostic.Location;
+
+            if (location == Location.None)
+            {
+                builder = builder.Append(provider: CultureInfo.InvariantCulture, $"GetGlobalResult({analyzerType.Name}.{rule.Id})");
+            }
+            else
+            {
+                Assert.True(condition: location.IsInSource, $"Test base does not currently handle diagnostics in metadata locations. Diagnostic in metadata: {diagnostic}\r\n");
+
+                string resultMethodName = GetResultMethodName(diagnostic);
+                LinePosition linePosition = diagnostic.Location.GetLineSpan()
+                                                      .StartLinePosition;
+
+                builder = builder.Append(provider: CultureInfo.InvariantCulture, $"{resultMethodName}({linePosition.Line + 1}, {linePosition.Character + 1}, {analyzerType.Name}.{rule.Id})");
+            }
+
+            builder = builder.Append(value: ',')
+                             .AppendLine();
         }
 
-        return builder.ToString();
+        return builder.ToString()
+                      .TrimEnd()
+                      .TrimEnd(',') + Environment.NewLine;
+    }
+
+    private static string GetResultMethodName(Diagnostic diagnostic)
+    {
+        return diagnostic.Location.SourceTree!.FilePath.EndsWith(value: ".cs", comparisonType: StringComparison.OrdinalIgnoreCase)
+            ? "GetCSharpResultAt"
+            : "GetBasicResultAt";
     }
 
     #endregion
@@ -160,7 +153,7 @@ public abstract partial class DiagnosticVerifier : TestBase
     /// <param name="sources">An array of strings to create source documents from to run the analyzers on</param>
     /// <param name="references">The project/assemblies that are referenced by the code.</param>
     /// <param name="expected">DiagnosticResults that should appear after the analyzer is run on the sources</param>
-    protected Task VerifyCSharpDiagnosticAsync(string[] sources, MetadataReference[] references, params DiagnosticResult[] expected)
+    private Task VerifyCSharpDiagnosticAsync(string[] sources, MetadataReference[] references, params DiagnosticResult[] expected)
     {
         DiagnosticAnalyzer? diagnostic = this.GetCSharpDiagnosticAnalyzer();
 
@@ -187,7 +180,7 @@ public abstract partial class DiagnosticVerifier : TestBase
                                                      DiagnosticAnalyzer analyzer,
                                                      params DiagnosticResult[] expected)
     {
-        Diagnostic[] diagnostics = await GetSortedDiagnosticsAsync(sources: sources, references: references, language: language, analyzer: analyzer);
+        IReadOnlyList<Diagnostic> diagnostics = await GetSortedDiagnosticsAsync(sources: sources, references: references, language: language, analyzer: analyzer);
 
         VerifyDiagnosticResults(actualResults: diagnostics, analyzer: analyzer, expectedResults: expected);
     }
@@ -221,28 +214,32 @@ public abstract partial class DiagnosticVerifier : TestBase
 
         for (int i = 0; i < expectedResults.Length; i++)
         {
-            Diagnostic actual = results.ElementAt(i);
+            Diagnostic actual = results[i];
             DiagnosticResult expected = expectedResults[i];
 
-            if (expected.Line == -1 && expected.Column == -1)
-            {
-                Assert.True(actual.Location == Location.None, $"Expected:\nA project diagnostic with No location\nActual:\n{FormatDiagnostics(analyzer: analyzer, actual)}");
-            }
-            else
-            {
-                VerifyDiagnosticLocation(analyzer: analyzer, diagnostic: actual, actual: actual.Location, expected.Locations.First());
-                VerifyAdditionalDiagnosticLocations(analyzer: analyzer, actual: actual, expected: expected);
-            }
-
-            Assert.True(actual.Id == expected.Id,
-                        $"Expected diagnostic id to be \"{expected.Id}\" was \"{actual.Id}\"\r\n\r\nDiagnostic:\r\n    {FormatDiagnostics(analyzer: analyzer, actual)}\r\n");
-
-            Assert.True(actual.Severity == expected.Severity,
-                        $"Expected diagnostic severity to be \"{expected.Severity}\" was \"{actual.Severity}\"\r\n\r\nDiagnostic:\r\n    {FormatDiagnostics(analyzer: analyzer, actual)}\r\n");
-
-            Assert.True(actual.GetMessage() == expected.Message,
-                        $"Expected diagnostic message to be \"{expected.Message}\" was \"{actual.GetMessage()}\"\r\n\r\nDiagnostic:\r\n    {FormatDiagnostics(analyzer: analyzer, actual)}\r\n");
+            VerifyOneResult(analyzer: analyzer, expected: expected, actual: actual);
         }
+    }
+
+    private static void VerifyOneResult(DiagnosticAnalyzer analyzer, DiagnosticResult expected, Diagnostic actual)
+    {
+        if (expected.Line == -1 && expected.Column == -1)
+        {
+            Assert.True(actual.Location == Location.None, $"Expected:\nA project diagnostic with No location\nActual:\n{FormatDiagnostics(analyzer: analyzer, actual)}");
+        }
+        else
+        {
+            VerifyDiagnosticLocation(analyzer: analyzer, diagnostic: actual, actual: actual.Location, expected.Locations[0]);
+            VerifyAdditionalDiagnosticLocations(analyzer: analyzer, actual: actual, expected: expected);
+        }
+
+        Assert.True(actual.Id == expected.Id, $"Expected diagnostic id to be \"{expected.Id}\" was \"{actual.Id}\"\r\n\r\nDiagnostic:\r\n    {FormatDiagnostics(analyzer: analyzer, actual)}\r\n");
+
+        Assert.True(actual.Severity == expected.Severity,
+                    $"Expected diagnostic severity to be \"{expected.Severity}\" was \"{actual.Severity}\"\r\n\r\nDiagnostic:\r\n    {FormatDiagnostics(analyzer: analyzer, actual)}\r\n");
+
+        Assert.True(actual.GetMessage() == expected.Message,
+                    $"Expected diagnostic message to be \"{expected.Message}\" was \"{actual.GetMessage()}\"\r\n\r\nDiagnostic:\r\n    {FormatDiagnostics(analyzer: analyzer, actual)}\r\n");
     }
 
     private static void VerifyAdditionalDiagnosticLocations(DiagnosticAnalyzer analyzer, Diagnostic actual, DiagnosticResult expected)
