@@ -11,7 +11,6 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.Text;
-using Xunit.Sdk;
 
 namespace FunFair.CodeAnalysis.Tests.Verifiers;
 
@@ -46,7 +45,7 @@ public abstract partial class DiagnosticVerifier
     /// <param name="language">The language the source classes are in</param>
     /// <param name="analyzer">The analyzer to be run on the sources</param>
     /// <returns>An IEnumerable of Diagnostics that surfaced in the source code, sorted by Location</returns>
-    private static Task<Diagnostic[]> GetSortedDiagnosticsAsync(string[] sources, MetadataReference[] references, string language, DiagnosticAnalyzer analyzer)
+    private static Task<IReadOnlyList<Diagnostic>> GetSortedDiagnosticsAsync(string[] sources, MetadataReference[] references, string language, DiagnosticAnalyzer analyzer)
     {
         return GetSortedDiagnosticsFromDocumentsAsync(analyzer: analyzer, GetDocuments(sources: sources, references: references, language: language));
     }
@@ -58,7 +57,7 @@ public abstract partial class DiagnosticVerifier
     /// <param name="analyzer">The analyzer to run on the documents</param>
     /// <param name="documents">The Documents that the analyzer will be run on</param>
     /// <returns>An IEnumerable of Diagnostics that surfaced in the source code, sorted by Location</returns>
-    protected static async Task<Diagnostic[]> GetSortedDiagnosticsFromDocumentsAsync(DiagnosticAnalyzer analyzer, Document[] documents)
+    protected static async Task<IReadOnlyList<Diagnostic>> GetSortedDiagnosticsFromDocumentsAsync(DiagnosticAnalyzer analyzer, Document[] documents)
     {
         HashSet<Project> projects = new();
 
@@ -115,7 +114,7 @@ public abstract partial class DiagnosticVerifier
             }
         }
 
-        Diagnostic[] results = SortDiagnostics(diagnostics);
+        IReadOnlyList<Diagnostic> results = SortDiagnostics(diagnostics);
         diagnostics.Clear();
 
         return results;
@@ -137,7 +136,7 @@ public abstract partial class DiagnosticVerifier
     /// </summary>
     /// <param name="diagnostics">The list of Diagnostics to be sorted</param>
     /// <returns>An IEnumerable containing the Diagnostics in order of Location</returns>
-    private static Diagnostic[] SortDiagnostics(IEnumerable<Diagnostic> diagnostics)
+    private static IReadOnlyList<Diagnostic> SortDiagnostics(IEnumerable<Diagnostic> diagnostics)
     {
         return diagnostics.OrderBy(keySelector: d => d.Location.SourceSpan.Start)
                           .ToArray();
@@ -173,35 +172,6 @@ public abstract partial class DiagnosticVerifier
     }
 
     /// <summary>
-    ///     Create a Document from a string through creating a project that contains it.
-    /// </summary>
-    /// <param name="source">Classes in the form of a string</param>
-    /// <param name="language">The language the source code is in</param>
-    /// <returns>A Document created from the source string</returns>
-    protected static Document CreateDocument(string source, string language = LanguageNames.CSharp)
-    {
-        return CreateDocument(source: source, Array.Empty<MetadataReference>(), language: language);
-    }
-
-    /// <summary>
-    ///     Create a Document from a string through creating a project that contains it.
-    /// </summary>
-    /// <param name="source">Classes in the form of a string</param>
-    /// <param name="references">Metadata References.</param>
-    /// <param name="language">The language the source code is in</param>
-    /// <returns>A Document created from the source string</returns>
-    protected static Document CreateDocument(string source, MetadataReference[] references, string language = LanguageNames.CSharp)
-    {
-        return CreateProject(new[]
-                             {
-                                 source
-                             },
-                             references: references,
-                             language: language)
-               .Documents.First();
-    }
-
-    /// <summary>
     ///     Create a project using the inputted strings as sources.
     /// </summary>
     /// <param name="sources">Classes in the form of strings</param>
@@ -230,14 +200,7 @@ public abstract partial class DiagnosticVerifier
             count++;
         }
 
-        Project? project = solution.GetProject(projectId);
-
-        if (project == null)
-        {
-            throw new NotNullException();
-        }
-
-        return project;
+        return AssertReallyNotNull(solution.GetProject(projectId));
     }
 
     [SuppressMessage(category: "codecracker.CSharp", checkId: "CC0022:DisposeObjectsBeforeLosingScope", Justification = "Test code")]
