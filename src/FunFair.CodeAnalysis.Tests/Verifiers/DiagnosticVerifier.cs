@@ -12,7 +12,6 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.Text;
 using Xunit;
-using Xunit.Sdk;
 
 namespace FunFair.CodeAnalysis.Tests.Verifiers;
 
@@ -117,12 +116,7 @@ public abstract partial class DiagnosticVerifier : TestBase
     /// <param name="expected"> DiagnosticResults that should appear after the analyzer is run on the source</param>
     protected Task VerifyCSharpDiagnosticAsync(string source, MetadataReference[] references, params DiagnosticResult[] expected)
     {
-        DiagnosticAnalyzer? diagnostic = this.GetCSharpDiagnosticAnalyzer();
-
-        if (diagnostic == null)
-        {
-            throw new NotNullException();
-        }
+        DiagnosticAnalyzer diagnostic = AssertReallyNotNull(this.GetCSharpDiagnosticAnalyzer());
 
         return VerifyDiagnosticsAsync(new[]
                                       {
@@ -155,12 +149,7 @@ public abstract partial class DiagnosticVerifier : TestBase
     /// <param name="expected">DiagnosticResults that should appear after the analyzer is run on the sources</param>
     private Task VerifyCSharpDiagnosticAsync(string[] sources, MetadataReference[] references, params DiagnosticResult[] expected)
     {
-        DiagnosticAnalyzer? diagnostic = this.GetCSharpDiagnosticAnalyzer();
-
-        if (diagnostic == null)
-        {
-            throw new NotNullException();
-        }
+        DiagnosticAnalyzer diagnostic = AssertReallyNotNull(this.GetCSharpDiagnosticAnalyzer());
 
         return VerifyDiagnosticsAsync(sources: sources, references: references, language: LanguageNames.CSharp, analyzer: diagnostic, expected: expected);
     }

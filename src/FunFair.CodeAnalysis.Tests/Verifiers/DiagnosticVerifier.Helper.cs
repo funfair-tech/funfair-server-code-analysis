@@ -11,7 +11,6 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.Text;
-using Xunit.Sdk;
 
 namespace FunFair.CodeAnalysis.Tests.Verifiers;
 
@@ -201,14 +200,7 @@ public abstract partial class DiagnosticVerifier
             count++;
         }
 
-        Project? project = solution.GetProject(projectId);
-
-        if (project == null)
-        {
-            throw new NotNullException();
-        }
-
-        return project;
+        return AssertReallyNotNull(solution.GetProject(projectId));
     }
 
     [SuppressMessage(category: "codecracker.CSharp", checkId: "CC0022:DisposeObjectsBeforeLosingScope", Justification = "Test code")]
