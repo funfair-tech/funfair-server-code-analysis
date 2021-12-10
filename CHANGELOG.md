@@ -21,6 +21,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 - FF-1429 - Updated Cryptography.ECDSA.Secp256K1 to False
 - FF-1429 - Updated Dapper to False
 - FF-1429 - Updated Discord.Net to False
+- FF-1429 - Updated dotnetstandard-bip39 to False
 ### Removed
 ### Deployment Changes
 
