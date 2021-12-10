@@ -19,6 +19,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 - FF-1429 - Updated Castle.Core to False
 - FF-1429 - Updated coverlet to False
 - FF-1429 - Updated Cryptography.ECDSA.Secp256K1 to False
+- FF-1429 - Updated Dapper to False
 ### Removed
 ### Deployment Changes
 
