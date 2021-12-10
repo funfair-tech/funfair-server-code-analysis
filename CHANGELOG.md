@@ -12,31 +12,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 ### Changed
 - FF-1429 - Updated FunFair.Test.Common to 5.7.0.1478
 - FF-1429 - Updated SonarAnalyzer.CSharp to 8.33.0.40503
-- FF-1429 - Updated SmartAnalyzers.CSharpExtensions.Annotations to 4.2.0
 - FF-1429 - Updated SmartAnalyzers.CSharpExtensions.Annotations to 4.2.1
-- FF-1429 - Updated AspNetCoreRateLimit to False
-- FF-1429 - Updated AWSSDK to False
-- FF-1429 - Updated Castle.Core to False
-- FF-1429 - Updated coverlet to False
-- FF-1429 - Updated Cryptography.ECDSA.Secp256K1 to False
-- FF-1429 - Updated Dapper to False
-- FF-1429 - Updated Discord.Net to False
-- FF-1429 - Updated dotnetstandard-bip39 to False
-- FF-1429 - Updated FluentValidation.AspNetCore to False
-- FF-1429 - Updated FunFair.Alerts.Dispatching to False
-- FF-1429 - Updated FunFair.Balance.Bot.Client to False
-- FF-1429 - Updated FunFair.Common to False
-- FF-1429 - Updated FunFair.Content.Package.Management to False
-- FF-1429 - Updated FunFair.Ethereum.Proxy.Client to False
-- FF-1429 - Updated FunFair.Ethereum.Balance.Client to False
-- FF-1429 - Updated FunFair.Ethereum.Shared.Networks to False
-- FF-1429 - Updated FunFair.Ethereum.TokenTransfer.Client to False
-- FF-1429 - Updated FunFair.Ethereum.Faucet to False
-- FF-1429 - Updated FunFair.Ethereum to False
-- FF-1429 - Updated FunFair.Game.Metadata to False
-- FF-1429 - Updated AspNetCoreRateLimit to 
-- FF-1429 - Updated AWSSDK to 
-- FF-1429 - Updated Castle.Core to 
 ### Removed
 ### Deployment Changes
 
