@@ -16,6 +16,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 - FF-1429 - Updated SmartAnalyzers.CSharpExtensions.Annotations to 4.2.1
 - FF-1429 - Updated AspNetCoreRateLimit to False
 - FF-1429 - Updated AWSSDK to False
+- FF-1429 - Updated Castle.Core to False
 ### Removed
 ### Deployment Changes
 
