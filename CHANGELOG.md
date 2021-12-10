@@ -30,6 +30,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 - FF-1429 - Updated FunFair.Ethereum.Proxy.Client to False
 - FF-1429 - Updated FunFair.Ethereum.Balance.Client to False
 - FF-1429 - Updated FunFair.Ethereum.Shared.Networks to False
+- FF-1429 - Updated FunFair.Ethereum.TokenTransfer.Client to False
 ### Removed
 ### Deployment Changes
 
