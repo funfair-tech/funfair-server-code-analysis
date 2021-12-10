@@ -26,6 +26,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 - FF-1429 - Updated FunFair.Alerts.Dispatching to False
 - FF-1429 - Updated FunFair.Balance.Bot.Client to False
 - FF-1429 - Updated FunFair.Common to False
+- FF-1429 - Updated FunFair.Content.Package.Management to False
 ### Removed
 ### Deployment Changes
 
