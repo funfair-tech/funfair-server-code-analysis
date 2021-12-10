@@ -33,6 +33,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 - FF-1429 - Updated FunFair.Ethereum.TokenTransfer.Client to False
 - FF-1429 - Updated FunFair.Ethereum.Faucet to False
 - FF-1429 - Updated FunFair.Ethereum to False
+- FF-1429 - Updated FunFair.Game.Metadata to False
 ### Removed
 ### Deployment Changes
 
