@@ -36,6 +36,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 - FF-1429 - Updated FunFair.Game.Metadata to False
 - FF-1429 - Updated AspNetCoreRateLimit to 
 - FF-1429 - Updated AWSSDK to 
+- FF-1429 - Updated Castle.Core to 
 ### Removed
 ### Deployment Changes
 
