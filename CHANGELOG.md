@@ -24,6 +24,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 - FF-1429 - Updated dotnetstandard-bip39 to False
 - FF-1429 - Updated FluentValidation.AspNetCore to False
 - FF-1429 - Updated FunFair.Alerts.Dispatching to False
+- FF-1429 - Updated FunFair.Balance.Bot.Client to False
 ### Removed
 ### Deployment Changes
 
