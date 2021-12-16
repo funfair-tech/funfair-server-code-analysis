@@ -20,6 +20,18 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers;
 /// </summary>
 public abstract partial class DiagnosticVerifier : TestBase
 {
+    #region To be implemented by Test classes
+
+    /// <summary>
+    ///     Get the CSharp analyzer being tested - to be implemented in non-abstract class
+    /// </summary>
+    protected virtual DiagnosticAnalyzer? GetCSharpDiagnosticAnalyzer()
+    {
+        return null;
+    }
+
+    #endregion
+
     #region Formatting Diagnostics
 
     /// <summary>
@@ -61,7 +73,8 @@ public abstract partial class DiagnosticVerifier : TestBase
                 LinePosition linePosition = diagnostic.Location.GetLineSpan()
                                                       .StartLinePosition;
 
-                builder = builder.Append(provider: CultureInfo.InvariantCulture, $"{resultMethodName}({linePosition.Line + 1}, {linePosition.Character + 1}, {analyzerType.Name}.{rule.Id})");
+                builder = builder.Append(provider: CultureInfo.InvariantCulture,
+                                         $"{resultMethodName}({linePosition.Line + 1}, {linePosition.Character + 1}, {analyzerType.Name}.{rule.Id})");
             }
 
             builder = builder.Append(value: ',')
@@ -78,18 +91,6 @@ public abstract partial class DiagnosticVerifier : TestBase
         return diagnostic.Location.SourceTree!.FilePath.EndsWith(value: ".cs", comparisonType: StringComparison.OrdinalIgnoreCase)
             ? "GetCSharpResultAt"
             : "GetBasicResultAt";
-    }
-
-    #endregion
-
-    #region To be implemented by Test classes
-
-    /// <summary>
-    ///     Get the CSharp analyzer being tested - to be implemented in non-abstract class
-    /// </summary>
-    protected virtual DiagnosticAnalyzer? GetCSharpDiagnosticAnalyzer()
-    {
-        return null;
     }
 
     #endregion
@@ -222,7 +223,8 @@ public abstract partial class DiagnosticVerifier : TestBase
             VerifyAdditionalDiagnosticLocations(analyzer: analyzer, actual: actual, expected: expected);
         }
 
-        Assert.True(actual.Id == expected.Id, $"Expected diagnostic id to be \"{expected.Id}\" was \"{actual.Id}\"\r\n\r\nDiagnostic:\r\n    {FormatDiagnostics(analyzer: analyzer, actual)}\r\n");
+        Assert.True(actual.Id == expected.Id,
+                    $"Expected diagnostic id to be \"{expected.Id}\" was \"{actual.Id}\"\r\n\r\nDiagnostic:\r\n    {FormatDiagnostics(analyzer: analyzer, actual)}\r\n");
 
         Assert.True(actual.Severity == expected.Severity,
                     $"Expected diagnostic severity to be \"{expected.Severity}\" was \"{actual.Severity}\"\r\n\r\nDiagnostic:\r\n    {FormatDiagnostics(analyzer: analyzer, actual)}\r\n");
