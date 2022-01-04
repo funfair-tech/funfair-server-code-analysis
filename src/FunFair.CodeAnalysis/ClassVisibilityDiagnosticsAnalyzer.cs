@@ -82,9 +82,7 @@ public sealed class ClassVisibilityDiagnosticsAnalyzer : DiagnosticAnalyzer
 
         public bool TypeMatchesClass(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
         {
-            INamedTypeSymbol? containingType = syntaxNodeAnalysisContext.ContainingSymbol as INamedTypeSymbol;
-
-            if (containingType == null)
+            if (syntaxNodeAnalysisContext.ContainingSymbol is not INamedTypeSymbol containingType)
             {
                 return false;
             }
