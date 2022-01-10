@@ -22,6 +22,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 - FF-1429 - Updated TeamCity.VSTest.TestAdapter to 1.0.32
 - FF-1429 - Updated Meziantou.Analyzer to 1.0.687
 - FF-1429 - Updated Meziantou.Analyzer to 1.0.688
+- FF-1429 - Updated Philips.CodeAnalysis.DuplicateCodeAnalyzer to 1.1.5
 ### Removed
 ### Deployment Changes
 
