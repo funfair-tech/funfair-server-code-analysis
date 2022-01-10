@@ -73,8 +73,7 @@ public abstract partial class DiagnosticVerifier : TestBase
                 LinePosition linePosition = diagnostic.Location.GetLineSpan()
                                                       .StartLinePosition;
 
-                builder = builder.Append(provider: CultureInfo.InvariantCulture,
-                                         $"{resultMethodName}({linePosition.Line + 1}, {linePosition.Character + 1}, {analyzerType.Name}.{rule.Id})");
+                builder = builder.Append(provider: CultureInfo.InvariantCulture, $"{resultMethodName}({linePosition.Line + 1}, {linePosition.Character + 1}, {analyzerType.Name}.{rule.Id})");
             }
 
             builder = builder.Append(value: ',')
@@ -119,14 +118,7 @@ public abstract partial class DiagnosticVerifier : TestBase
     {
         DiagnosticAnalyzer diagnostic = AssertReallyNotNull(this.GetCSharpDiagnosticAnalyzer());
 
-        return VerifyDiagnosticsAsync(new[]
-                                      {
-                                          source
-                                      },
-                                      references: references,
-                                      language: LanguageNames.CSharp,
-                                      analyzer: diagnostic,
-                                      expected: expected);
+        return VerifyDiagnosticsAsync(new[] { source }, references: references, language: LanguageNames.CSharp, analyzer: diagnostic, expected: expected);
     }
 
     /// <summary>
@@ -164,11 +156,7 @@ public abstract partial class DiagnosticVerifier : TestBase
     /// <param name="language">The language of the classes represented by the source strings</param>
     /// <param name="analyzer">The analyzer to be run on the source code</param>
     /// <param name="expected">DiagnosticResults that should appear after the analyzer is run on the sources</param>
-    private static async Task VerifyDiagnosticsAsync(string[] sources,
-                                                     MetadataReference[] references,
-                                                     string language,
-                                                     DiagnosticAnalyzer analyzer,
-                                                     params DiagnosticResult[] expected)
+    private static async Task VerifyDiagnosticsAsync(string[] sources, MetadataReference[] references, string language, DiagnosticAnalyzer analyzer, params DiagnosticResult[] expected)
     {
         IReadOnlyList<Diagnostic> diagnostics = await GetSortedDiagnosticsAsync(sources: sources, references: references, language: language, analyzer: analyzer);
 
@@ -198,8 +186,7 @@ public abstract partial class DiagnosticVerifier : TestBase
                 ? FormatDiagnostics(analyzer: analyzer, results.ToArray())
                 : "    NONE.";
 
-            Assert.True(condition: false,
-                        $"Mismatch between number of diagnostics returned, expected \"{expectedCount}\" actual \"{actualCount}\"\r\n\r\nDiagnostics:\r\n{diagnosticsOutput}\r\n");
+            Assert.True(condition: false, $"Mismatch between number of diagnostics returned, expected \"{expectedCount}\" actual \"{actualCount}\"\r\n\r\nDiagnostics:\r\n{diagnosticsOutput}\r\n");
         }
 
         for (int i = 0; i < expectedResults.Length; i++)
@@ -211,7 +198,7 @@ public abstract partial class DiagnosticVerifier : TestBase
         }
     }
 
-    private static void VerifyOneResult(DiagnosticAnalyzer analyzer, DiagnosticResult expected, Diagnostic actual)
+    private static void VerifyOneResult(DiagnosticAnalyzer analyzer, in DiagnosticResult expected, Diagnostic actual)
     {
         if (expected.Line == -1 && expected.Column == -1)
         {
@@ -223,8 +210,7 @@ public abstract partial class DiagnosticVerifier : TestBase
             VerifyAdditionalDiagnosticLocations(analyzer: analyzer, actual: actual, expected: expected);
         }
 
-        Assert.True(actual.Id == expected.Id,
-                    $"Expected diagnostic id to be \"{expected.Id}\" was \"{actual.Id}\"\r\n\r\nDiagnostic:\r\n    {FormatDiagnostics(analyzer: analyzer, actual)}\r\n");
+        Assert.True(actual.Id == expected.Id, $"Expected diagnostic id to be \"{expected.Id}\" was \"{actual.Id}\"\r\n\r\nDiagnostic:\r\n    {FormatDiagnostics(analyzer: analyzer, actual)}\r\n");
 
         Assert.True(actual.Severity == expected.Severity,
                     $"Expected diagnostic severity to be \"{expected.Severity}\" was \"{actual.Severity}\"\r\n\r\nDiagnostic:\r\n    {FormatDiagnostics(analyzer: analyzer, actual)}\r\n");
@@ -233,7 +219,7 @@ public abstract partial class DiagnosticVerifier : TestBase
                     $"Expected diagnostic message to be \"{expected.Message}\" was \"{actual.GetMessage()}\"\r\n\r\nDiagnostic:\r\n    {FormatDiagnostics(analyzer: analyzer, actual)}\r\n");
     }
 
-    private static void VerifyAdditionalDiagnosticLocations(DiagnosticAnalyzer analyzer, Diagnostic actual, DiagnosticResult expected)
+    private static void VerifyAdditionalDiagnosticLocations(DiagnosticAnalyzer analyzer, Diagnostic actual, in DiagnosticResult expected)
     {
         Location[] additionalLocations = actual.AdditionalLocations.ToArray();
 
@@ -256,7 +242,7 @@ public abstract partial class DiagnosticVerifier : TestBase
     /// <param name="diagnostic">The diagnostic that was found in the code</param>
     /// <param name="actual">The Location of the Diagnostic found in the code</param>
     /// <param name="expected">The DiagnosticResultLocation that should have been found</param>
-    private static void VerifyDiagnosticLocation(DiagnosticAnalyzer analyzer, Diagnostic diagnostic, Location actual, DiagnosticResultLocation expected)
+    private static void VerifyDiagnosticLocation(DiagnosticAnalyzer analyzer, Diagnostic diagnostic, Location actual, in DiagnosticResultLocation expected)
     {
         FileLinePositionSpan actualSpan = actual.GetLineSpan();
 

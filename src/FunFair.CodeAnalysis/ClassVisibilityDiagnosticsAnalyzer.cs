@@ -57,8 +57,7 @@ public sealed class ClassVisibilityDiagnosticsAnalyzer : DiagnosticAnalyzer
 
         foreach (ConfiguredClass classDefinition in Classes)
         {
-            if (classDefinition.TypeMatchesClass(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext) &&
-                !classDefinition.HasCorrectClassModifier(classDeclarationSyntax: classDeclarationSyntax))
+            if (classDefinition.TypeMatchesClass(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext) && !classDefinition.HasCorrectClassModifier(classDeclarationSyntax: classDeclarationSyntax))
             {
                 syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(descriptor: classDefinition.Rule, classDeclarationSyntax.GetLocation()));
             }
@@ -100,7 +99,7 @@ public sealed class ClassVisibilityDiagnosticsAnalyzer : DiagnosticAnalyzer
 
         public bool HasCorrectClassModifier(ClassDeclarationSyntax classDeclarationSyntax)
         {
-            static bool MatchesVisibility(ConfiguredClass classDefinition, SyntaxToken syntaxToken)
+            static bool MatchesVisibility(ConfiguredClass classDefinition, in SyntaxToken syntaxToken)
             {
                 return syntaxToken.IsKind(classDefinition.Visibility);
             }
