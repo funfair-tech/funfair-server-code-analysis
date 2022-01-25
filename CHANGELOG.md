@@ -28,6 +28,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 - FF-1429 - Updated SonarAnalyzer.CSharp to 8.34.0.42011
 - FF-1429 - Updated FunFair.Test.Common to 5.8.1.1593
 - FF-1429 - Updated FunFair.Test.Common to 5.8.1.1595
+- FF-1429 - Updated Roslynator.Analyzers to 4.0.0
 ### Removed
 ### Deployment Changes
 
