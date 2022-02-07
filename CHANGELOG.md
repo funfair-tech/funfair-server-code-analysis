@@ -7,9 +7,18 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 
 ## [Unreleased]
 ### Added
+### Fixed
+### Changed
+### Removed
+### Deployment Changes
+
+<!--
+Releases that have at least been deployed to staging, BUT NOT necessarily released to live.  Changes should be moved from [Unreleased] into here as they are merged into the appropriate release branch
+-->
+## [5.8.0] - 2022-02-07
+### Added
 - Dotnet 6.0 Fixes
 - Added FFS0041 - Do not use System.Console in test assemblies.
-### Fixed
 ### Changed
 - FF-1429 - Updated SmartAnalyzers.CSharpExtensions.Annotations to 4.2.1
 - FF-1429 - Updated TeamCity.VSTest.TestAdapter to 1.0.30
@@ -25,12 +34,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 - FF-1429 - Updated FunFair.Test.Common to 5.8.4.1638
 - FF-1429 - Updated coverlet to 3.1.2
 - FF-1429 - Updated FunFair.Test.Common to 5.8.5.1649
-### Removed
-### Deployment Changes
 
-<!--
-Releases that have at least been deployed to staging, BUT NOT necessarily released to live.  Changes should be moved from [Unreleased] into here as they are merged into the appropriate release branch
--->
 ## [5.7.3] - 2021-12-02
 ### Changed
 - FF-1429 - Updated SonarAnalyzer.CSharp to 8.32.0.39516
