@@ -42,4 +42,5 @@ internal static class Rules
     public const string RuleRecordsShouldSpecifyDebuggerDisplay = @"FFS0038";
     public const string RuleOnlyOneTypeDefinedPerFile = @"FFS0039";
     public const string RuleTypeShouldBeInAFileWithSameName = @"FFS0040";
+    public const string RuleDontUseSystemConsoleInTestProjects = @"FFS0041";
 }
