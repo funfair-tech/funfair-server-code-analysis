@@ -8,39 +8,19 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 ## [Unreleased]
 ### Added
 - Dotnet 6.0 Fixes
+- Added FFS0041 - Do not use System.Console in test assemblies.
 ### Fixed
 ### Changed
-- FF-1429 - Updated FunFair.Test.Common to 5.7.0.1478
-- FF-1429 - Updated SonarAnalyzer.CSharp to 8.33.0.40503
 - FF-1429 - Updated SmartAnalyzers.CSharpExtensions.Annotations to 4.2.1
 - FF-1429 - Updated TeamCity.VSTest.TestAdapter to 1.0.30
 - FF-1429 - Updated SecurityCodeScan.VS2019 to 5.6.0
 - FF-1429 - Updated FunFair.Test.Common to 5.7.2.1514
-- FF-1429 - Updated Meziantou.Analyzer to 1.0.681
 - FF-3881 - Updated DotNet SDK to 6.0.101
-- FF-1429 - Updated TeamCity.VSTest.TestAdapter to 1.0.31
-- FF-1429 - Updated TeamCity.VSTest.TestAdapter to 1.0.32
-- FF-1429 - Updated Meziantou.Analyzer to 1.0.687
-- FF-1429 - Updated Meziantou.Analyzer to 1.0.688
-- FF-1429 - Updated Philips.CodeAnalysis.DuplicateCodeAnalyzer to 1.1.5
 - FF-1429 - Updated Philips.CodeAnalysis.DuplicateCodeAnalyzer to 1.1.6
-- FF-1429 - Updated FunFair.Test.Common to 5.8.0.1567
-- FF-1429 - Updated SonarAnalyzer.CSharp to 8.34.0.42011
-- FF-1429 - Updated FunFair.Test.Common to 5.8.1.1593
-- FF-1429 - Updated FunFair.Test.Common to 5.8.1.1595
-- FF-1429 - Updated Roslynator.Analyzers to 4.0.0
-- FF-1429 - Updated FunFair.Test.Common to 5.8.2.1613
 - FF-1429 - Updated Roslynator.Analyzers to 4.0.2
 - FF-1429 - Updated coverlet to 3.1.1
 - FF-1429 - Updated SonarAnalyzer.CSharp to 8.35.0.42613
-- FF-1429 - Updated FunFair.Test.Common to 5.8.3.1625
-- FF-1429 - Updated TeamCity.VSTest.TestAdapter to 1.0.33
-- FF-1429 - Updated Meziantou.Analyzer to 1.0.689
-- FF-1429 - Updated Meziantou.Analyzer to 1.0.690
-- FF-1429 - Updated Meziantou.Analyzer to 1.0.691
-- FF-1429 - Updated Meziantou.Analyzer to 1.0.692
 - FF-1429 - Updated TeamCity.VSTest.TestAdapter to 1.0.34
-- FF-1429 - Updated Meziantou.Analyzer to 1.0.693
 - FF-1429 - Updated Meziantou.Analyzer to 1.0.694
 - FF-1429 - Updated FunFair.Test.Common to 5.8.4.1638
 - FF-1429 - Updated coverlet to 3.1.2
