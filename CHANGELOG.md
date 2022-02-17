@@ -13,6 +13,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 - FF-1429 - Updated Microsoft.NET.Test.Sdk to 17.1.0
 - FF-1429 - Updated Meziantou.Analyzer to 1.0.695
 - FF-1429 - Updated Microsoft.CodeAnalysis.CSharp.Workspaces to 4.1.0
+- FF-1429 - Updated Microsoft.VisualStudio.Threading.Analyzers to 17.1.46
 ### Removed
 ### Deployment Changes
 
