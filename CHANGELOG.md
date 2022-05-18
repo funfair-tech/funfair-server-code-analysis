@@ -7,8 +7,17 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 
 ## [Unreleased]
 ### Added
-- Enabled AOT Compilation.
 ### Fixed
+### Changed
+### Removed
+### Deployment Changes
+
+<!--
+Releases that have at least been deployed to staging, BUT NOT necessarily released to live.  Changes should be moved from [Unreleased] into here as they are merged into the appropriate release branch
+-->
+## [5.8.2] - 2022-05-18
+### Added
+- Enabled AOT Compilation.
 ### Changed
 - FF-1429 - Updated TeamCity.VSTest.TestAdapter to 1.0.36
 - FF-1429 - Updated SecurityCodeScan.VS2019 to 5.6.2
@@ -25,12 +34,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 - FF-1429 - Updated Meziantou.Analyzer to 1.0.702
 - FF-1429 - Updated Microsoft.CodeAnalysis.CSharp.Workspaces to 4.2.0
 - FF-1429 - Updated SmartAnalyzers.CSharpExtensions.Annotations to 4.2.5
-### Removed
-### Deployment Changes
 
-<!--
-Releases that have at least been deployed to staging, BUT NOT necessarily released to live.  Changes should be moved from [Unreleased] into here as they are merged into the appropriate release branch
--->
 ## [5.8.1] - 2022-02-09
 ### Changed
 - FF-1429 - Updated FunFair.Test.Common to 5.9.0.1658
