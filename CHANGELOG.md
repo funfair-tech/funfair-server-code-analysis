@@ -7,41 +7,20 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 
 ## [Unreleased]
 ### Added
+- Enabled AOT Compilation.
 ### Fixed
 ### Changed
-- FF-1429 - Updated FunFair.Test.Common to 5.9.1.1665
-- FF-1429 - Updated Microsoft.NET.Test.Sdk to 17.1.0
-- FF-1429 - Updated Meziantou.Analyzer to 1.0.695
-- FF-1429 - Updated Microsoft.CodeAnalysis.CSharp.Workspaces to 4.1.0
-- FF-1429 - Updated Microsoft.VisualStudio.Threading.Analyzers to 17.1.46
-- FF-1429 - Updated FunFair.Test.Common to 5.9.2.1676
-- FF-1429 - Updated SonarAnalyzer.CSharp to 8.36.0.43782
-- FF-1429 - Updated TeamCity.VSTest.TestAdapter to 1.0.35
-- FF-1429 - Updated SecurityCodeScan.VS2019 to 5.6.1
 - FF-1429 - Updated TeamCity.VSTest.TestAdapter to 1.0.36
 - FF-1429 - Updated SecurityCodeScan.VS2019 to 5.6.2
-- FF-1429 - Updated SmartAnalyzers.CSharpExtensions.Annotations to 4.2.2
-- FF-1429 - Updated Meziantou.Analyzer to 1.0.696
-- FF-1429 - Updated SonarAnalyzer.CSharp to 8.36.1.44192
-- FF-1429 - Updated Meziantou.Analyzer to 1.0.697
-- FF-1429 - Updated FunFair.Test.Common to 5.9.3.1699
 - FF-3881 - Updated DotNet SDK to 6.0.201
-- FF-1429 - Updated Meziantou.Analyzer to 1.0.698
 - FF-1429 - Updated FunFair.Test.Common to 5.9.4.1729
 - FF-1429 - Updated Roslynator.Analyzers to 4.1.0
 - FF-1429 - Updated SonarAnalyzer.CSharp to 8.37.0.45539
-- FF-1429 - Updated Meziantou.Analyzer to 1.0.699
-- FF-1429 - Updated Meziantou.Analyzer to 1.0.700
-- FF-3881 - Updated DotNet SDK to 6.0.202
-- FF-1429 - Updated Meziantou.Analyzer to 1.0.701
-- FF-1429 - Updated SonarAnalyzer.CSharp to 8.38.0.46746
-- FF-1429 - Updated xunit.runner.visualstudio to 2.4.4
 - FF-1429 - Updated xunit.runner.visualstudio to 2.4.5
 - FF-1429 - Updated Microsoft.VisualStudio.Threading.Analyzers to 17.2.32
 - FF-1429 - Updated AsyncFixer to 1.6.0
 - FF-1429 - Updated Microsoft.NET.Test.Sdk to 17.2.0
 - FF-3881 - Updated DotNet SDK to 6.0.300
-- FF-1429 - Updated SmartAnalyzers.CSharpExtensions.Annotations to 4.2.3
 - FF-1429 - Updated SonarAnalyzer.CSharp to 8.39.0.47922
 - FF-1429 - Updated Meziantou.Analyzer to 1.0.702
 - FF-1429 - Updated Microsoft.CodeAnalysis.CSharp.Workspaces to 4.2.0
