@@ -9,6 +9,7 @@
     <IsPublishable>false</IsPublishable>
     <LangVersion>latest</LangVersion>
     <NoWarn />
+    <RunAOTCompilation>true</RunAOTCompilation>
     <Nullable>enable</Nullable>
     <OutputType>Library</OutputType>
     <TargetFramework>net6.0</TargetFramework>
