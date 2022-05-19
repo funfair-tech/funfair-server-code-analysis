@@ -1,7 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <DisableImplicitNuGetFallbackFolder>true</DisableImplicitNuGetFallbackFolder>
-    <RunAOTCompilation>true</RunAOTCompilation>
     <EnablePackageValidation>true</EnablePackageValidation>
     <Features>strict;flow-analysis</Features>
     <GenerateNeutralResourcesLanguageAttribute>true</GenerateNeutralResourcesLanguageAttribute>
@@ -16,6 +15,7 @@
     <Nullable>enable</Nullable>
     <OutputType>Library</OutputType>
     <PackAsTool>false</PackAsTool>
+    <RunAOTCompilation>true</RunAOTCompilation>
     <TargetFramework>netstandard2.0</TargetFramework>
     <TieredCompilation>true</TieredCompilation>
     <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
@@ -43,12 +43,14 @@
     <None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
   </ItemGroup>
   <ItemGroup>
+    <!--    <PackageReference Include="Microsoft.CodeAnalysis.VersionCheckAnalyzer" Version="3.3.2" PrivateAssets="All" />-->
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="AsyncFixer" Version="1.6.0" PrivateAssets="All" />
     <PackageReference Include="codecracker.CSharp" Version="1.1.0" PrivateAssets="All" />
     <PackageReference Include="DisableDateTimeNow" Version="1.0.5883.39470" PrivateAssets="All" />
     <PackageReference Include="Meziantou.Analyzer" Version="1.0.702" PrivateAssets="All" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.2.0" PrivateAssets="all" />
-<!--    <PackageReference Include="Microsoft.CodeAnalysis.VersionCheckAnalyzer" Version="3.3.2" PrivateAssets="All" />-->
     <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.2.32" PrivateAssets="All" />
     <PackageReference Include="Nullable.Extended.Analyzer" Version="1.10.4539" PrivateAssets="All" />
     <PackageReference Include="Philips.CodeAnalysis.DuplicateCodeAnalyzer" Version="1.1.6" PrivateAssets="All" />
