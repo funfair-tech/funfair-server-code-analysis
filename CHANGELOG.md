@@ -10,6 +10,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 ### Fixed
 ### Changed
 - FF-1429 - Updated FunFair.Test.Common to 5.9.5.1833
+- FF-1429 - Updated Roslynator.Analyzers to 4.1.1
 ### Removed
 ### Deployment Changes
 
