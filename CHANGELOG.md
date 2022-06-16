@@ -9,18 +9,21 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 ### Added
 ### Fixed
 ### Changed
-- FF-1429 - Updated FunFair.Test.Common to 5.9.5.1833
-- FF-1429 - Updated Roslynator.Analyzers to 4.1.1
-- FF-1429 - Updated SonarAnalyzer.CSharp to 8.40.0.48530
-- FF-1429 - Updated SecurityCodeScan.VS2019 to 5.6.3
-- FF-1429 - Updated FunFair.Test.Common to 5.9.6.1865
-- FF-3881 - Updated DotNet SDK to 6.0.301
 ### Removed
 ### Deployment Changes
 
 <!--
 Releases that have at least been deployed to staging, BUT NOT necessarily released to live.  Changes should be moved from [Unreleased] into here as they are merged into the appropriate release branch
 -->
+## [5.8.3] - 2022-06-16
+### Changed
+- FF-1429 - Updated FunFair.Test.Common to 5.9.5.1833
+- FF-1429 - Updated Roslynator.Analyzers to 4.1.1
+- FF-1429 - Updated SonarAnalyzer.CSharp to 8.40.0.48530
+- FF-1429 - Updated SecurityCodeScan.VS2019 to 5.6.3
+- FF-1429 - Updated FunFair.Test.Common to 5.9.6.1865
+- FF-3881 - Updated DotNet SDK to 6.0.301
+
 ## [5.8.2] - 2022-05-18
 ### Added
 - Enabled AOT Compilation.
