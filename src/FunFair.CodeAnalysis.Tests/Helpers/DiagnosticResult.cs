@@ -17,13 +17,6 @@ public readonly struct DiagnosticResult
 
     public string Message { get; init; }
 
-    [SuppressMessage(category: "ReSharper", checkId: "UnusedMember.Global", Justification = "TODO: Review")]
-    public string Path =>
-        this.Locations.Length > 0
-            ? this.Locations[0]
-                  .Path
-            : string.Empty;
-
     public int Line =>
         this.Locations.Length > 0
             ? this.Locations[0]

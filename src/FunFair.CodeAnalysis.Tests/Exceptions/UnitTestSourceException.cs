@@ -11,7 +11,7 @@ public sealed class UnitTestSourceException : Exception
     /// <summary>
     ///     Constructor.
     /// </summary>
-    [SuppressMessage(category: "ReSharper", checkId: "UnusedMember.Global", Justification = "TODO: Review")]
+    [SuppressMessage(category: "ReSharper", checkId: "UnusedMember.Global", Justification = "Standard exception constructor")]
     public UnitTestSourceException()
         : this(message: "House not ready")
     {
@@ -31,7 +31,7 @@ public sealed class UnitTestSourceException : Exception
     /// </summary>
     /// <param name="message">The message to return.</param>
     /// <param name="innerException">The inner exception.</param>
-    [SuppressMessage(category: "ReSharper", checkId: "UnusedMember.Global", Justification = "TODO: Review")]
+    [SuppressMessage(category: "ReSharper", checkId: "UnusedMember.Global", Justification = "Standard exception constructor")]
     public UnitTestSourceException(string message, Exception innerException)
         : base(message: message, innerException: innerException)
     {
