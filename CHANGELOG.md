@@ -9,6 +9,14 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 ### Added
 ### Fixed
 ### Changed
+### Removed
+### Deployment Changes
+
+<!--
+Releases that have at least been deployed to staging, BUT NOT necessarily released to live.  Changes should be moved from [Unreleased] into here as they are merged into the appropriate release branch
+-->
+## [5.8.4] - 2022-07-13
+### Changed
 - FF-1429 - Updated FunFair.Test.Common to 5.9.7.1871
 - FF-1429 - Updated FunFair.Test.Common to 5.9.8.1897
 - FF-1429 - Updated FunFair.Test.Common to 5.9.9.1903
@@ -18,12 +26,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 - FF-1429 - Updated SonarAnalyzer.CSharp to 8.41.0.50478
 - FF-1429 - Updated FunFair.Test.Common to 6.0.0.1932
 - FF-3881 - Updated DotNet SDK to 6.0.302
-### Removed
-### Deployment Changes
 
-<!--
-Releases that have at least been deployed to staging, BUT NOT necessarily released to live.  Changes should be moved from [Unreleased] into here as they are merged into the appropriate release branch
--->
 ## [5.8.3] - 2022-06-16
 ### Changed
 - FF-1429 - Updated FunFair.Test.Common to 5.9.5.1833
