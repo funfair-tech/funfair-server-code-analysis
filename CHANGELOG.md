@@ -26,9 +26,9 @@ Releases that have at least been deployed to staging, BUT NOT necessarily releas
 ### Changed
 - FF-1429 - Updated Microsoft.VisualStudio.Threading.Analyzers to 17.3.44
 - FF-1429 - Updated SonarAnalyzer.CSharp to 8.44.0.52574
-- FF-1429 - Updated SecurityCodeScan.VS2019 to 5.6.6
 - FF-1429 - Updated Microsoft.NET.Test.Sdk to 17.3.1
 - FF-1429 - Updated SecurityCodeScan.VS2019 to 5.6.7
+- FF-1429 - Updated FunFair.Test.Common to 6.0.4.1998
 
 ## [5.8.5] - 2022-08-09
 ### Changed
