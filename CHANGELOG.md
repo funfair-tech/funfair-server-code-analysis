@@ -10,7 +10,6 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 ### Fixed
 ### Changed
 - FF-1429 - Updated Microsoft.VisualStudio.Threading.Analyzers to 17.3.44
-- FF-1429 - Updated Meziantou.Analyzer to 1.0.709
 - FF-1429 - Updated Meziantou.Analyzer to 1.0.710
 - FF-1429 - Updated Meziantou.Analyzer to 1.0.711
 - FF-1429 - Updated SecurityCodeScan.VS2019 to 5.6.4
@@ -26,6 +25,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 - FF-1429 - Updated Meziantou.Analyzer to 1.0.719
 - FF-1429 - Updated Meziantou.Analyzer to 1.0.720
 - FF-1429 - Updated Microsoft.NET.Test.Sdk to 17.3.1
+- FF-1429 - Updated Meziantou.Analyzer to 1.0.721
 ### Removed
 ### Deployment Changes
 
