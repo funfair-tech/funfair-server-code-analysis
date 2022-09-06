@@ -29,12 +29,7 @@ Releases that have at least been deployed to staging, BUT NOT necessarily releas
 ## [5.8.5] - 2022-08-09
 ### Changed
 - FF-1429 - Updated FunFair.Test.Common to 6.0.1.1951
-- FF-1429 - Updated Meziantou.Analyzer to 1.0.705
-- FF-1429 - Updated SonarAnalyzer.CSharp to 8.42.0.51121
-- FF-1429 - Updated Meziantou.Analyzer to 1.0.706
-- FF-1429 - Updated Meziantou.Analyzer to 1.0.707
 - FF-1429 - Updated Meziantou.Analyzer to 1.0.708
-- FF-1429 - Updated SmartAnalyzers.CSharpExtensions.Annotations to 4.2.6
 - FF-1429 - Updated SmartAnalyzers.CSharpExtensions.Annotations to 4.2.7
 - FF-1429 - Updated xunit.analyzers to 1.0.0
 - FF-1429 - Updated SonarAnalyzer.CSharp to 8.43.0.51858
@@ -42,10 +37,6 @@ Releases that have at least been deployed to staging, BUT NOT necessarily releas
 
 ## [5.8.4] - 2022-07-13
 ### Changed
-- FF-1429 - Updated FunFair.Test.Common to 5.9.7.1871
-- FF-1429 - Updated FunFair.Test.Common to 5.9.8.1897
-- FF-1429 - Updated FunFair.Test.Common to 5.9.9.1903
-- FF-1429 - Updated Meziantou.Analyzer to 1.0.703
 - FF-1429 - Updated Meziantou.Analyzer to 1.0.704
 - FF-1429 - Updated FunFair.Test.Common to 5.9.10.1914
 - FF-1429 - Updated SonarAnalyzer.CSharp to 8.41.0.50478
