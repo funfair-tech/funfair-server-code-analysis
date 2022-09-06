@@ -43,4 +43,5 @@ internal static class Rules
     public const string RuleOnlyOneTypeDefinedPerFile = @"FFS0039";
     public const string RuleTypeShouldBeInAFileWithSameName = @"FFS0040";
     public const string RuleDontUseSystemConsoleInTestProjects = @"FFS0041";
+    public const string RuleSuppressMessageMustNotHaveTodoJustification = @"FFS0042";
 }

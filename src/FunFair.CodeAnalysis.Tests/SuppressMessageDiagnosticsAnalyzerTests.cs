@@ -99,4 +99,37 @@ public sealed class SuppressMessageDiagnosticsAnalyzerTests : DiagnosticVerifier
                                                 },
                                                 expected);
     }
+
+    [Fact]
+    public Task SuppressMessageWithTodoJustificationIsErrorAsync()
+    {
+        const string test = @"
+            using System.Diagnostics.CodeAnalysis;
+
+            public sealed class Test {
+
+            [SuppressMessage(""Example"", ""ExampleCheckId"", Justification = ""TODO: Write some tests"")]
+            public void DoIt()
+            {
+            }
+}";
+
+        DiagnosticResult expected = new()
+                                    {
+                                        Id = "FFS0042",
+                                        Message = "SuppressMessage must not have a TODO Justification",
+                                        Severity = DiagnosticSeverity.Error,
+                                        Locations = new[]
+                                                    {
+                                                        new DiagnosticResultLocation(path: "Test0.cs", line: 6, column: 75)
+                                                    }
+                                    };
+
+        return this.VerifyCSharpDiagnosticAsync(source: test,
+                                                new[]
+                                                {
+                                                    WellKnownMetadataReferences.SuppressMessage
+                                                },
+                                                expected);
+    }
 }

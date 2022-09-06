@@ -1,4 +1,5 @@
-﻿using System.Collections.Immutable;
+﻿using System;
+using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using FunFair.CodeAnalysis.Helpers;
@@ -15,16 +16,22 @@ namespace FunFair.CodeAnalysis;
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public sealed class SuppressMessageDiagnosticsAnalyzer : DiagnosticAnalyzer
 {
-    private static readonly DiagnosticDescriptor Rule = RuleHelpers.CreateRule(code: Rules.RuleSuppressMessageMustHaveJustification,
-                                                                               category: Categories.SuppressedErrors,
-                                                                               title: "SuppressMessage must specify a Justification",
-                                                                               message: "SuppressMessage must specify a Justification");
+    private static readonly DiagnosticDescriptor RuleMustHaveJustification = RuleHelpers.CreateRule(code: Rules.RuleSuppressMessageMustHaveJustification,
+                                                                                                    category: Categories.SuppressedErrors,
+                                                                                                    title: "SuppressMessage must specify a Justification",
+                                                                                                    message: "SuppressMessage must specify a Justification");
+
+    private static readonly DiagnosticDescriptor RuleMustNotHaveTodoJustification = RuleHelpers.CreateRule(code: Rules.RuleSuppressMessageMustNotHaveTodoJustification,
+                                                                                                           category: Categories.SuppressedErrors,
+                                                                                                           title: "SuppressMessage must not have a TODO Justification",
+                                                                                                           message: "SuppressMessage must not have a TODO Justification");
 
     /// <inheritdoc />
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
         new[]
         {
-            Rule
+            RuleMustHaveJustification,
+            RuleMustNotHaveTodoJustification
         }.ToImmutableArray();
 
     /// <inheritdoc />
@@ -68,19 +75,33 @@ public sealed class SuppressMessageDiagnosticsAnalyzer : DiagnosticAnalyzer
 
         if (justification == null)
         {
-            syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(descriptor: Rule, methodDeclarationSyntax.GetLocation()));
+            syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(descriptor: RuleMustHaveJustification, methodDeclarationSyntax.GetLocation()));
 
             return;
         }
 
-        if (justification.Expression is LiteralExpressionSyntax l)
+        if (justification.Expression is not LiteralExpressionSyntax l)
         {
-            string text = l.Token.ValueText;
+            return;
+        }
 
-            if (string.IsNullOrWhiteSpace(text))
-            {
-                syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(descriptor: Rule, l.GetLocation()));
-            }
+        string text = l.Token.ValueText;
+
+        CheckJustification(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, text: text, l: l);
+    }
+
+    private static void CheckJustification(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, string text, LiteralExpressionSyntax l)
+    {
+        if (string.IsNullOrWhiteSpace(text))
+        {
+            syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(descriptor: RuleMustHaveJustification, l.GetLocation()));
+
+            return;
+        }
+
+        if (text.StartsWith(value: "TODO", comparisonType: StringComparison.OrdinalIgnoreCase))
+        {
+            syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(descriptor: RuleMustNotHaveTodoJustification, l.GetLocation()));
         }
     }
 }

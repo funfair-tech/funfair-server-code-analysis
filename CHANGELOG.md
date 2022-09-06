@@ -7,6 +7,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 
 ## [Unreleased]
 ### Added
+- Added FFS0042 - SuppressMessage must not have a TODO Justification
 ### Fixed
 ### Changed
 - FF-1429 - Updated Microsoft.VisualStudio.Threading.Analyzers to 17.3.44

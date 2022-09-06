@@ -45,6 +45,7 @@ Static Code analysis Repo for FunFair Server dotnet projects.
 | FFS0039 | Only one type name should be defined per file. Note ``class T`` and ``class T<T1>`` are considered to be one type as they share the same name. |
 | FFS0040 | Type should be in a file with the same name as the type.                                                                                       |
 | FFS0041 | Do not use System.Console in test assemblies.                                                                                                  |
+| FFS0042 | Do not have TODO's in ``SuppressMessage`` justifications.                                                                                      |
 
 ## Changelog
 
