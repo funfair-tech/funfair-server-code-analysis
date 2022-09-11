@@ -11,7 +11,7 @@
     <IsPackable>true</IsPackable>
     <IsPublishable>false</IsPublishable>
     <LangVersion>latest</LangVersion>
-    <NoWarn />
+    <NoWarn/>
     <Nullable>enable</Nullable>
     <OutputType>Library</OutputType>
     <PackAsTool>false</PackAsTool>
@@ -19,7 +19,13 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <TieredCompilation>true</TieredCompilation>
     <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
-    <WarningsAsErrors />
+    <WarningsAsErrors/>
+    <!-- Dotnet 7 features -->
+    <TieredPGO>true</TieredPGO>
+    <UseSystemResourceKeys>true</UseSystemResourceKeys>
+    <IlcOptimizationPreference>Size</IlcOptimizationPreference>
+    <IlcGenerateStackTraceData>false</IlcGenerateStackTraceData>
+    <DebuggerSupport>true</DebuggerSupport>
   </PropertyGroup>
   <Import Project="$(SolutionDir)FunFair.props" />
   <PropertyGroup>
