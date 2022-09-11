@@ -150,7 +150,7 @@ public sealed class ProhibitedMethodWithStrictParametersInvocationDiagnosticsAna
          {
              void Test()
              {
-                 IConfigurationBuilder builder = new ConfigurationBuilder()
+                 IConfigurationRoot builder = new ConfigurationBuilder()
                                     .AddJsonFile(path: ""appsettings.json"", optional: false, reloadOnChange: true)
                                     .Build();
            }
@@ -164,7 +164,7 @@ public sealed class ProhibitedMethodWithStrictParametersInvocationDiagnosticsAna
                                         Severity = DiagnosticSeverity.Error,
                                         Locations = new[]
                                                     {
-                                                        new DiagnosticResultLocation(path: "Test0.cs", line: 10, column: 50)
+                                                        new DiagnosticResultLocation(path: "Test0.cs", line: 10, column: 47)
                                                     }
                                     };
 
@@ -190,7 +190,7 @@ public sealed class ProhibitedMethodWithStrictParametersInvocationDiagnosticsAna
          {
              void Test()
              {
-                 IConfigurationBuilder builder = new ConfigurationBuilder()
+                 IConfigurationRoot builder = new ConfigurationBuilder()
                                     .AddJsonFile(path: ""appsettings.json"", optional: false, reloadOnChange: false)
                                     .AddJsonFile(path: ""appsettings1.json"", optional: true, reloadOnChange: true)
                                     .Build();
@@ -205,7 +205,7 @@ public sealed class ProhibitedMethodWithStrictParametersInvocationDiagnosticsAna
                                         Severity = DiagnosticSeverity.Error,
                                         Locations = new[]
                                                     {
-                                                        new DiagnosticResultLocation(path: "Test0.cs", line: 10, column: 50)
+                                                        new DiagnosticResultLocation(path: "Test0.cs", line: 10, column: 47)
                                                     }
                                     };
 
