@@ -15,7 +15,7 @@
     <Nullable>enable</Nullable>
     <OutputType>Library</OutputType>
     <PackAsTool>false</PackAsTool>
-    <RunAOTCompilation>true</RunAOTCompilation>
+    <RunAOTCompilation>false</RunAOTCompilation>
     <TargetFramework>netstandard2.0</TargetFramework>
     <TieredCompilation>true</TieredCompilation>
     <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
