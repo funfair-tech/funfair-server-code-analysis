@@ -14,6 +14,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 - FF-1429 - Updated SonarAnalyzer.CSharp to 8.46.0.54807
 - FF-1429 - Updated Meziantou.Analyzer to 1.0.734
 - FF-1429 - Updated xunit to 2.4.2
+- FF-1429 - Updated Microsoft.CodeAnalysis.CSharp.Workspaces to 4.3.1
 ### Removed
 ### Deployment Changes
 
