@@ -77,18 +77,7 @@ public abstract partial class DiagnosticVerifier
                 continue;
             }
 
-            ImmutableArray<Diagnostic> compilerErrors = compilation.GetDiagnostics();
-
-            if (compilerErrors.Length != 0)
-            {
-                StringBuilder errors = compilerErrors.Where(IsReportableCSharpError)
-                                                     .Aggregate(new StringBuilder(), func: (current, compilerError) => current.Append(compilerError));
-
-                if (errors.Length != 0)
-                {
-                    throw new UnitTestSourceException("Please correct following compiler errors in your unit test source:" + errors);
-                }
-            }
+            EnsureNoCompilationErrors(compilation);
 
             CompilationWithAnalyzers compilationWithAnalyzers = compilation.WithAnalyzers(ImmutableArray.Create(analyzer));
             ImmutableArray<Diagnostic> diags = await compilationWithAnalyzers.GetAnalyzerDiagnosticsAsync();
@@ -120,15 +109,30 @@ public abstract partial class DiagnosticVerifier
         return results;
     }
 
+    private static void EnsureNoCompilationErrors(Compilation compilation)
+    {
+        ImmutableArray<Diagnostic> compilerErrors = compilation.GetDiagnostics();
+
+        if (compilerErrors.Length != 0)
+        {
+            StringBuilder errors = compilerErrors.Where(IsReportableCSharpError)
+                                                 .Aggregate(new StringBuilder(), func: (current, compilerError) => current.Append(compilerError));
+
+            if (errors.Length != 0)
+            {
+                throw new UnitTestSourceException("Please correct following compiler errors in your unit test source:" + errors);
+            }
+        }
+    }
+
     private static bool IsReportableCSharpError(Diagnostic compilerError)
     {
         return !compilerError.ToString()
                              .Contains(value: "netstandard", comparisonType: StringComparison.Ordinal) && !compilerError.ToString()
-            .Contains(value: "static 'Main' method", comparisonType: StringComparison.Ordinal) && !compilerError.ToString()
-                                                                                                                .Contains(value: "CS1002",
-                                                                                                                    comparisonType: StringComparison.Ordinal) && !compilerError
-            .ToString()
-            .Contains(value: "CS1702", comparisonType: StringComparison.Ordinal);
+                                                                                                                        .Contains(value: "static 'Main' method",
+                                                                                                                                  comparisonType: StringComparison.Ordinal) && !compilerError.ToString()
+            .Contains(value: "CS1002", comparisonType: StringComparison.Ordinal) && !compilerError.ToString()
+                                                                                                  .Contains(value: "CS1702", comparisonType: StringComparison.Ordinal);
     }
 
     /// <summary>
