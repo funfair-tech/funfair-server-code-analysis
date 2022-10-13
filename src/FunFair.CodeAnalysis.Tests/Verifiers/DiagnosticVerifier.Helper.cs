@@ -57,7 +57,7 @@ public abstract partial class DiagnosticVerifier
     /// <param name="analyzer">The analyzer to run on the documents</param>
     /// <param name="documents">The Documents that the analyzer will be run on</param>
     /// <returns>An IEnumerable of Diagnostics that surfaced in the source code, sorted by Location</returns>
-    protected static async Task<IReadOnlyList<Diagnostic>> GetSortedDiagnosticsFromDocumentsAsync(DiagnosticAnalyzer analyzer, Document[] documents)
+    protected static async Task<IReadOnlyList<Diagnostic>> GetSortedDiagnosticsFromDocumentsAsync(DiagnosticAnalyzer analyzer, IReadOnlyList<Document> documents)
     {
         HashSet<Project> projects = new();
 
@@ -66,7 +66,7 @@ public abstract partial class DiagnosticVerifier
             projects.Add(document.Project);
         }
 
-        List<Diagnostic> diagnostics = new();
+        IReadOnlyList<Diagnostic> diagnostics = Array.Empty<Diagnostic>();
 
         foreach (Project project in projects)
         {
@@ -77,58 +77,86 @@ public abstract partial class DiagnosticVerifier
                 continue;
             }
 
-            ImmutableArray<Diagnostic> compilerErrors = compilation.GetDiagnostics();
-
-            if (compilerErrors.Length != 0)
-            {
-                StringBuilder errors = compilerErrors.Where(IsReportableCSharpError)
-                                                     .Aggregate(new StringBuilder(), func: (current, compilerError) => current.Append(compilerError));
-
-                if (errors.Length != 0)
-                {
-                    throw new UnitTestSourceException("Please correct following compiler errors in your unit test source:" + errors);
-                }
-            }
+            EnsureNoCompilationErrors(compilation);
 
             CompilationWithAnalyzers compilationWithAnalyzers = compilation.WithAnalyzers(ImmutableArray.Create(analyzer));
-            ImmutableArray<Diagnostic> diags = await compilationWithAnalyzers.GetAnalyzerDiagnosticsAsync();
+            diagnostics = await CollectDiagnosticsAsync(documents: documents, compilationWithAnalyzers: compilationWithAnalyzers);
+        }
 
-            foreach (Diagnostic diag in diags)
+        return SortDiagnostics(diagnostics);
+    }
+
+    private static async Task<IReadOnlyList<Diagnostic>> CollectDiagnosticsAsync(IReadOnlyList<Document> documents, CompilationWithAnalyzers compilationWithAnalyzers)
+    {
+        ImmutableArray<Diagnostic> diags = await compilationWithAnalyzers.GetAnalyzerDiagnosticsAsync();
+
+        return await ExtractDiagnosticsAsync(documents: documents, diags: diags);
+    }
+
+    private static async Task<IReadOnlyList<Diagnostic>> ExtractDiagnosticsAsync(IReadOnlyList<Document> documents, IReadOnlyList<Diagnostic> diags)
+    {
+        List<Diagnostic> diagnostics = new();
+
+        foreach (Diagnostic diag in diags)
+        {
+            bool add = diag.Location == Location.None || diag.Location.IsInMetadata || await ShouldAddDocumentDiagnosticAsync(documents: documents, diag: diag);
+
+            if (add)
             {
-                if (diag.Location == Location.None || diag.Location.IsInMetadata)
-                {
-                    diagnostics.Add(diag);
-                }
-                else
-                {
-                    foreach (Document document in documents)
-                    {
-                        SyntaxTree? tree = await document.GetSyntaxTreeAsync();
-
-                        if (tree != null && tree == diag.Location.SourceTree)
-                        {
-                            diagnostics.Add(diag);
-                        }
-                    }
-                }
+                diagnostics.Add(diag);
             }
         }
 
-        IReadOnlyList<Diagnostic> results = SortDiagnostics(diagnostics);
-        diagnostics.Clear();
+        return diagnostics;
+    }
 
-        return results;
+    private static async Task<bool> ShouldAddDocumentDiagnosticAsync(IReadOnlyList<Document> documents, Diagnostic diag)
+    {
+        foreach (Document document in documents)
+        {
+            bool add = await ShouldAddDiagnosticAsync(document: document, diag: diag);
+
+            if (add)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private static async Task<bool> ShouldAddDiagnosticAsync(Document document, Diagnostic diag)
+    {
+        SyntaxTree? tree = await document.GetSyntaxTreeAsync();
+        bool add = tree != null && tree == diag.Location.SourceTree;
+
+        return add;
+    }
+
+    private static void EnsureNoCompilationErrors(Compilation compilation)
+    {
+        ImmutableArray<Diagnostic> compilerErrors = compilation.GetDiagnostics();
+
+        if (compilerErrors.Length != 0)
+        {
+            StringBuilder errors = compilerErrors.Where(IsReportableCSharpError)
+                                                 .Aggregate(new StringBuilder(), func: (current, compilerError) => current.Append(compilerError));
+
+            if (errors.Length != 0)
+            {
+                throw new UnitTestSourceException("Please correct following compiler errors in your unit test source:" + errors);
+            }
+        }
     }
 
     private static bool IsReportableCSharpError(Diagnostic compilerError)
     {
         return !compilerError.ToString()
                              .Contains(value: "netstandard", comparisonType: StringComparison.Ordinal) && !compilerError.ToString()
-            .Contains(value: "static 'Main' method", comparisonType: StringComparison.Ordinal) && !compilerError.ToString()
-                                                                                                                .Contains(value: "CS1002",
-                                                                                                                    comparisonType: StringComparison.Ordinal) && !compilerError
-            .ToString()
-            .Contains(value: "CS1702", comparisonType: StringComparison.Ordinal);
+                                                                                                                        .Contains(value: "static 'Main' method",
+                                                                                                                                  comparisonType: StringComparison.Ordinal) && !compilerError.ToString()
+            .Contains(value: "CS1002", comparisonType: StringComparison.Ordinal) && !compilerError.ToString()
+                                                                                                  .Contains(value: "CS1702", comparisonType: StringComparison.Ordinal);
     }
 
     /// <summary>
