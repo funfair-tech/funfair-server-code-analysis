@@ -40,7 +40,7 @@
     <ProjectReference Include="..\FunFair.CodeAnalysis\FunFair.CodeAnalysis.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="FunFair.Test.Common" Version="6.0.1.1951" />
+    <PackageReference Include="FunFair.Test.Common" Version="6.0.4.1998" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.2.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.3.2" />
     <PackageReference Include="TeamCity.VSTest.TestAdapter" Version="1.0.36" />
