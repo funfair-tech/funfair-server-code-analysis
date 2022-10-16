@@ -100,7 +100,7 @@ public sealed class ProhibitedMethodWithStrictParametersInvocationDiagnosticsAna
     /// <param name="parameters">Method parameters</param>
     /// <param name="prohibitedMethod">Prohibited method rule</param>
     /// <returns></returns>
-    private static bool IsInvocationAllowed(BaseArgumentListSyntax arguments, ImmutableArray<IParameterSymbol> parameters, ProhibitedMethodsSpec prohibitedMethod)
+    private static bool IsInvocationAllowed(BaseArgumentListSyntax arguments, IReadOnlyList<IParameterSymbol> parameters, ProhibitedMethodsSpec prohibitedMethod)
     {
         if (!prohibitedMethod.BannedSignatures.Any())
         {
