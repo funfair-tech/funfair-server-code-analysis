@@ -153,10 +153,11 @@ public abstract partial class DiagnosticVerifier
     {
         return !compilerError.ToString()
                              .Contains(value: "netstandard", comparisonType: StringComparison.Ordinal) && !compilerError.ToString()
-                                                                                                                        .Contains(value: "static 'Main' method",
-                                                                                                                                  comparisonType: StringComparison.Ordinal) && !compilerError.ToString()
-            .Contains(value: "CS1002", comparisonType: StringComparison.Ordinal) && !compilerError.ToString()
-                                                                                                  .Contains(value: "CS1702", comparisonType: StringComparison.Ordinal);
+            .Contains(value: "static 'Main' method", comparisonType: StringComparison.Ordinal) && !compilerError.ToString()
+                                                                                                                .Contains(value: "CS1002",
+                                                                                                                    comparisonType: StringComparison.Ordinal) && !compilerError
+            .ToString()
+            .Contains(value: "CS1702", comparisonType: StringComparison.Ordinal);
     }
 
     /// <summary>

@@ -24,7 +24,9 @@ internal static class MethodSymbolHelper
         if (invocation.Expression is MemberAccessExpressionSyntax memberAccessExpressionSyntax)
         {
             return GetSimpleMemberSymbol(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, memberAccessExpressionSyntax: memberAccessExpressionSyntax) ??
-                   ResolveExtensionMethodUsedByConstructor(invocation: invocation, syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, memberAccessExpressionSyntax: memberAccessExpressionSyntax);
+                   ResolveExtensionMethodUsedByConstructor(invocation: invocation,
+                                                           syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
+                                                           memberAccessExpressionSyntax: memberAccessExpressionSyntax);
         }
 
         return null;
@@ -55,16 +57,19 @@ internal static class MethodSymbolHelper
 
     private static ImmutableArray<ISymbol> BuildSymbols(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, INamedTypeSymbol sourceType, string fullName)
     {
-        ImmutableArray<ISymbol> symbols = syntaxNodeAnalysisContext.SemanticModel.LookupSymbols(position: 0, container: sourceType, name: fullName, includeReducedExtensionMethods: true);
+        ImmutableArray<ISymbol> symbols =
+            syntaxNodeAnalysisContext.SemanticModel.LookupSymbols(position: 0, container: sourceType, name: fullName, includeReducedExtensionMethods: true);
 
         foreach (INamedTypeSymbol? baseType in sourceType.BaseClasses())
         {
-            symbols = symbols.AddRange(syntaxNodeAnalysisContext.SemanticModel.LookupSymbols(position: 0, container: baseType, name: fullName, includeReducedExtensionMethods: true));
+            symbols = symbols.AddRange(
+                syntaxNodeAnalysisContext.SemanticModel.LookupSymbols(position: 0, container: baseType, name: fullName, includeReducedExtensionMethods: true));
         }
 
         foreach (INamedTypeSymbol interfaceType in sourceType.AllInterfaces)
         {
-            symbols = symbols.AddRange(syntaxNodeAnalysisContext.SemanticModel.LookupSymbols(position: 0, container: interfaceType, name: fullName, includeReducedExtensionMethods: true));
+            symbols = symbols.AddRange(
+                syntaxNodeAnalysisContext.SemanticModel.LookupSymbols(position: 0, container: interfaceType, name: fullName, includeReducedExtensionMethods: true));
         }
 
         Dump(symbols);
