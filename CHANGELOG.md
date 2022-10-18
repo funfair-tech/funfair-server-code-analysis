@@ -11,10 +11,10 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 ### Changed
 - FF-1429 - Updated Microsoft.NET.Test.Sdk to 17.3.2
 - FF-1429 - Updated Philips.CodeAnalysis.DuplicateCodeAnalyzer to 1.1.7
-- FF-1429 - Updated SonarAnalyzer.CSharp to 8.46.0.54807
 - FF-1429 - Updated Meziantou.Analyzer to 1.0.734
 - FF-1429 - Updated xunit to 2.4.2
 - FF-1429 - Updated Microsoft.CodeAnalysis.CSharp.Workspaces to 4.3.1
+- FF-1429 - Updated SonarAnalyzer.CSharp to 8.47.0.55603
 ### Removed
 ### Deployment Changes
 
