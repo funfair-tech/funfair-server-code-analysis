@@ -38,7 +38,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Credfeto.Enumeration.Source.Generation.Attributes" Version="0.0.4.6" />
-    <PackageReference Include="FunFair.Test.Common" Version="6.0.5.2217" />
+    <PackageReference Include="FunFair.Test.Common" Version="6.0.6.2271" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.3.1" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.3.2" />
     <PackageReference Include="TeamCity.VSTest.TestAdapter" Version="1.0.36" />
