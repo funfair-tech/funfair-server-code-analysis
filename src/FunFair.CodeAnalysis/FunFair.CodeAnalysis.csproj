@@ -55,7 +55,7 @@
   <ItemGroup>
     <PackageReference Include="AsyncFixer" Version="1.6.0" PrivateAssets="All" />
     <PackageReference Include="codecracker.CSharp" Version="1.1.0" PrivateAssets="All" />
-    <PackageReference Include="Credfeto.Enumeration.Source.Generation" Version="0.0.2.3" PrivateAssets="All" />
+    <PackageReference Include="Credfeto.Enumeration.Source.Generation" Version="0.0.4.6" PrivateAssets="All" />
     <PackageReference Include="DisableDateTimeNow" Version="1.0.5883.39470" PrivateAssets="All" />
     <PackageReference Include="Meziantou.Analyzer" Version="1.0.745" PrivateAssets="All" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.3.1" PrivateAssets="all" />

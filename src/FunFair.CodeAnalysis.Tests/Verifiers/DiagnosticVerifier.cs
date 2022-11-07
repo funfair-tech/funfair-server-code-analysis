@@ -227,7 +227,7 @@ public abstract partial class DiagnosticVerifier : TestBase
                     $"Expected diagnostic id to be \"{expected.Id}\" was \"{actual.Id}\"\r\n\r\nDiagnostic:\r\n    {FormatDiagnostics(analyzer: analyzer, actual)}\r\n");
 
         Assert.True(actual.Severity == expected.Severity,
-                    $"Expected diagnostic severity to be \"{expected.Severity}\" was \"{actual.Severity}\"\r\n\r\nDiagnostic:\r\n    {FormatDiagnostics(analyzer: analyzer, actual)}\r\n");
+                    $"Expected diagnostic severity to be \"{expected.Severity.GetName()}\" was \"{actual.Severity.GetName()}\"\r\n\r\nDiagnostic:\r\n    {FormatDiagnostics(analyzer: analyzer, actual)}\r\n");
 
         Assert.True(actual.GetMessage() == expected.Message,
                     $"Expected diagnostic message to be \"{expected.Message}\" was \"{actual.GetMessage()}\"\r\n\r\nDiagnostic:\r\n    {FormatDiagnostics(analyzer: analyzer, actual)}\r\n");
