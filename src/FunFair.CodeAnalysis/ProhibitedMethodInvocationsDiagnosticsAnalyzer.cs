@@ -109,7 +109,7 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzer : DiagnosticA
     {
         IReadOnlyDictionary<ProhibitedMethodsSpec, IReadOnlyList<IMethodSymbol>> cachedSymbols = BuildCachedSymbols(compilationStartContext.Compilation);
 
-        void LookForBannedInvocation(InvocationExpressionSyntax invocation, SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
+        void LookForBannedInvocation(InvocationExpressionSyntax invocation, in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
         {
             IMethodSymbol? memberSymbol = MethodSymbolHelper.FindInvokedMemberSymbol(invocation: invocation, syntaxNodeAnalysisContext: syntaxNodeAnalysisContext);
 
@@ -211,9 +211,7 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzer : DiagnosticA
         foreach (IEnumerable<string> ruleSignature in ruleSignatures)
         {
             IEnumerable<IMethodSymbol> bannedMethodSymbols = methodSymbols.Where(methodSymbol => methodSymbol
-                                                                                                 .Parameters.Select(
-                                                                                                     selector: parameterSymbol =>
-                                                                                                                   SymbolDisplay.ToDisplayString(parameterSymbol.Type))
+                                                                                                 .Parameters.Select(selector: parameterSymbol => SymbolDisplay.ToDisplayString(parameterSymbol.Type))
                                                                                                  .SequenceEqual(second: ruleSignature, comparer: StringComparer.Ordinal));
 
             methodSignatureList.AddRange(bannedMethodSymbols);

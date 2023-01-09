@@ -83,7 +83,7 @@ public sealed class ReThrowingExceptionShouldSpecifyInnerExceptionDiagnosticsAna
 
     private static void TryToReportDiagnostic(ArgumentListSyntax? argumentListSyntax,
                                               string exceptionVariable,
-                                              SyntaxNodeAnalysisContext syntaxNodeContext,
+                                              in SyntaxNodeAnalysisContext syntaxNodeContext,
                                               ExpressionSyntax objectCreationExpression)
     {
         if (argumentListSyntax == null || argumentListSyntax.Arguments.Count == 0)
@@ -99,7 +99,7 @@ public sealed class ReThrowingExceptionShouldSpecifyInnerExceptionDiagnosticsAna
         }
     }
 
-    private static void ReportDiagnostic(string exceptionVariable, SyntaxNodeAnalysisContext syntaxNodeContext, Location location)
+    private static void ReportDiagnostic(string exceptionVariable, in SyntaxNodeAnalysisContext syntaxNodeContext, Location location)
     {
         syntaxNodeContext.ReportDiagnostic(Diagnostic.Create(descriptor: Rule, location: location, exceptionVariable));
     }

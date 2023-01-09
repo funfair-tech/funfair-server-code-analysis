@@ -57,7 +57,7 @@ public sealed class SuppressMessageDiagnosticsAnalyzer : DiagnosticAnalyzer
                                                          SyntaxKind.Attribute);
     }
 
-    private static void MustDeriveFromTestBase(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, INamedTypeSymbol sourceClassType)
+    private static void MustDeriveFromTestBase(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, INamedTypeSymbol sourceClassType)
     {
         if (syntaxNodeAnalysisContext.Node is not AttributeSyntax methodDeclarationSyntax)
         {
@@ -90,7 +90,7 @@ public sealed class SuppressMessageDiagnosticsAnalyzer : DiagnosticAnalyzer
         CheckJustification(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, text: text, l: l);
     }
 
-    private static void CheckJustification(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, string text, LiteralExpressionSyntax l)
+    private static void CheckJustification(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, string text, LiteralExpressionSyntax l)
     {
         if (string.IsNullOrWhiteSpace(text))
         {

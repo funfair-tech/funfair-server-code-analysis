@@ -84,7 +84,7 @@ public sealed class ProhibitedMethodsDiagnosticsAnalyzer : DiagnosticAnalyzer
     {
         Dictionary<string, INamedTypeSymbol> cachedSymbols = BuildCachedSymbols(compilationStartContext.Compilation);
 
-        void LookForBannedMethod(MemberAccessExpressionSyntax memberAccessExpressionSyntax, SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
+        void LookForBannedMethod(MemberAccessExpressionSyntax memberAccessExpressionSyntax, in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
         {
             INamedTypeSymbol? typeInfo = ExtractExpressionSyntax(invocation: memberAccessExpressionSyntax, syntaxNodeAnalysisContext: syntaxNodeAnalysisContext);
 
@@ -93,10 +93,7 @@ public sealed class ProhibitedMethodsDiagnosticsAnalyzer : DiagnosticAnalyzer
                 return;
             }
 
-            ReportAnyBannedSymbols(cachedSymbols: cachedSymbols,
-                                   typeInfo: typeInfo,
-                                   invocation: memberAccessExpressionSyntax,
-                                   syntaxNodeAnalysisContext: syntaxNodeAnalysisContext);
+            ReportAnyBannedSymbols(cachedSymbols: cachedSymbols, typeInfo: typeInfo, invocation: memberAccessExpressionSyntax, syntaxNodeAnalysisContext: syntaxNodeAnalysisContext);
         }
 
         void LookForBannedMethods(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
@@ -113,7 +110,7 @@ public sealed class ProhibitedMethodsDiagnosticsAnalyzer : DiagnosticAnalyzer
     private static void ReportAnyBannedSymbols(Dictionary<string, INamedTypeSymbol> cachedSymbols,
                                                INamedTypeSymbol typeInfo,
                                                MemberAccessExpressionSyntax invocation,
-                                               SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
+                                               in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
     {
         foreach (ProhibitedMethodsSpec item in BannedMethods)
         {
@@ -150,7 +147,7 @@ public sealed class ProhibitedMethodsDiagnosticsAnalyzer : DiagnosticAnalyzer
         return cachedSymbols;
     }
 
-    private static INamedTypeSymbol? ExtractExpressionSyntax(MemberAccessExpressionSyntax invocation, SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
+    private static INamedTypeSymbol? ExtractExpressionSyntax(MemberAccessExpressionSyntax invocation, in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
     {
         ExpressionSyntax e;
 

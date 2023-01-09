@@ -20,8 +20,7 @@ public sealed class ProhibitedClassesDiagnosticsAnalyzer : DiagnosticAnalyzer
                                                                                {
                                                                                    new(ruleId: Rules.RuleDontUseConcurrentDictionary,
                                                                                        title: "Avoid use of System.Collections.Concurrent.ConcurrentDictionary class",
-                                                                                       message:
-                                                                                       "Use NonBlocking.ConcurrentDictionary  rather than System.Collections.Concurrent.ConcurrentDictionary",
+                                                                                       message: "Use NonBlocking.ConcurrentDictionary  rather than System.Collections.Concurrent.ConcurrentDictionary",
                                                                                        sourceClass: "System.Collections.Concurrent.ConcurrentDictionary`2")
                                                                                };
 
@@ -63,12 +62,11 @@ public sealed class ProhibitedClassesDiagnosticsAnalyzer : DiagnosticAnalyzer
                                                          SyntaxKind.ConstructorDeclaration);
     }
 
-    private static void ReportAnyBannedSymbols(IReadOnlyCollection<INamedTypeSymbol> typeSymbols, SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
+    private static void ReportAnyBannedSymbols(IReadOnlyCollection<INamedTypeSymbol> typeSymbols, in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
     {
         foreach (INamedTypeSymbol typeSymbol in typeSymbols)
         {
-            ProhibitedClassSpec? bannedClass =
-                BannedClasses.FirstOrDefault(rule => StringComparer.OrdinalIgnoreCase.Equals(typeSymbol.ToFullyQualifiedName(), y: rule.SourceClass));
+            ProhibitedClassSpec? bannedClass = BannedClasses.FirstOrDefault(rule => StringComparer.OrdinalIgnoreCase.Equals(typeSymbol.ToFullyQualifiedName(), y: rule.SourceClass));
 
             if (bannedClass != null)
             {
@@ -97,8 +95,7 @@ public sealed class ProhibitedClassesDiagnosticsAnalyzer : DiagnosticAnalyzer
         return cachedSymbols;
     }
 
-    private static IEnumerable<INamedTypeSymbol>? LookForUsageOfBannedClasses(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext,
-                                                                              Dictionary<string, INamedTypeSymbol> cachedSymbols)
+    private static IEnumerable<INamedTypeSymbol>? LookForUsageOfBannedClasses(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, Dictionary<string, INamedTypeSymbol> cachedSymbols)
     {
         ISymbol? symbol = syntaxNodeAnalysisContext.SemanticModel.GetDeclaredSymbol(syntaxNodeAnalysisContext.Node);
 
@@ -124,7 +121,7 @@ public sealed class ProhibitedClassesDiagnosticsAnalyzer : DiagnosticAnalyzer
         };
     }
 
-    private static IEnumerable<INamedTypeSymbol>? LookupSymbolInContext(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, Dictionary<string, INamedTypeSymbol> cachedSymbols)
+    private static IEnumerable<INamedTypeSymbol>? LookupSymbolInContext(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, Dictionary<string, INamedTypeSymbol> cachedSymbols)
     {
         ITypeSymbol? typeInfo = syntaxNodeAnalysisContext.SemanticModel.GetTypeInfo(syntaxNodeAnalysisContext.Node)
                                                          .Type;

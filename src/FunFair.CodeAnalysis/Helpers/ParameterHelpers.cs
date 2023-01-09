@@ -7,7 +7,7 @@ namespace FunFair.CodeAnalysis.Helpers;
 
 internal static class ParameterHelpers
 {
-    public static string? GetFullTypeName(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, ParameterSyntax parameterSyntax)
+    public static string? GetFullTypeName(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, ParameterSyntax parameterSyntax)
     {
         IParameterSymbol? ds = syntaxNodeAnalysisContext.SemanticModel.GetDeclaredSymbol(parameterSyntax);
 

@@ -97,7 +97,7 @@ public sealed class ProhibitedClassesInTestAssembliesDiagnosticsAnalyzer : Diagn
         return cachedSymbols;
     }
 
-    private static string? GetNameIfBanned(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, Dictionary<string, INamedTypeSymbol> cachedSymbols)
+    private static string? GetNameIfBanned(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, Dictionary<string, INamedTypeSymbol> cachedSymbols)
     {
         if (syntaxNodeAnalysisContext.Node is not InvocationExpressionSyntax invocation)
         {

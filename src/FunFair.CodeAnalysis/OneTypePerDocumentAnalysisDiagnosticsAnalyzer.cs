@@ -103,7 +103,7 @@ public sealed class OneTypePerDocumentAnalysisDiagnosticsAnalyzer : DiagnosticAn
         return key.StartsWith(value: STRUCT_TYPE_PREFIX, comparisonType: StringComparison.Ordinal);
     }
 
-    private static void ReportAllMembersAsErrors(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, IReadOnlyList<MemberDeclarationSyntax> members)
+    private static void ReportAllMembersAsErrors(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, IReadOnlyList<MemberDeclarationSyntax> members)
     {
         foreach (MemberDeclarationSyntax member in members)
         {

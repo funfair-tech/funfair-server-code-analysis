@@ -19,26 +19,24 @@ internal static class MethodSymbolHelper
     /// <param name="invocation">Invocation expression syntax</param>
     /// <param name="syntaxNodeAnalysisContext">Syntax node analysis context</param>
     /// <returns></returns>
-    public static IMethodSymbol? FindInvokedMemberSymbol(InvocationExpressionSyntax invocation, SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
+    public static IMethodSymbol? FindInvokedMemberSymbol(InvocationExpressionSyntax invocation, in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
     {
         if (invocation.Expression is MemberAccessExpressionSyntax memberAccessExpressionSyntax)
         {
             return GetSimpleMemberSymbol(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, memberAccessExpressionSyntax: memberAccessExpressionSyntax) ??
-                   ResolveExtensionMethodUsedByConstructor(invocation: invocation,
-                                                           syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
-                                                           memberAccessExpressionSyntax: memberAccessExpressionSyntax);
+                   ResolveExtensionMethodUsedByConstructor(invocation: invocation, syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, memberAccessExpressionSyntax: memberAccessExpressionSyntax);
         }
 
         return null;
     }
 
-    private static IMethodSymbol? GetSimpleMemberSymbol(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, MemberAccessExpressionSyntax memberAccessExpressionSyntax)
+    private static IMethodSymbol? GetSimpleMemberSymbol(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, MemberAccessExpressionSyntax memberAccessExpressionSyntax)
     {
         return GetSymbol(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, expression: memberAccessExpressionSyntax) as IMethodSymbol;
     }
 
     private static IMethodSymbol? ResolveExtensionMethodUsedByConstructor(InvocationExpressionSyntax invocation,
-                                                                          SyntaxNodeAnalysisContext syntaxNodeAnalysisContext,
+                                                                          in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext,
                                                                           MemberAccessExpressionSyntax memberAccessExpressionSyntax)
     {
         INamedTypeSymbol? sourceType = GetSourceType(memberAccessExpressionSyntax: memberAccessExpressionSyntax, semanticModel: syntaxNodeAnalysisContext.SemanticModel);
@@ -55,21 +53,18 @@ internal static class MethodSymbolHelper
                       .FirstOrDefault(sym => HasMatchingArguments(invocation: invocation, arguments: sym));
     }
 
-    private static ImmutableArray<ISymbol> BuildSymbols(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, INamedTypeSymbol sourceType, string fullName)
+    private static ImmutableArray<ISymbol> BuildSymbols(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, INamedTypeSymbol sourceType, string fullName)
     {
-        ImmutableArray<ISymbol> symbols =
-            syntaxNodeAnalysisContext.SemanticModel.LookupSymbols(position: 0, container: sourceType, name: fullName, includeReducedExtensionMethods: true);
+        ImmutableArray<ISymbol> symbols = syntaxNodeAnalysisContext.SemanticModel.LookupSymbols(position: 0, container: sourceType, name: fullName, includeReducedExtensionMethods: true);
 
         foreach (INamedTypeSymbol? baseType in sourceType.BaseClasses())
         {
-            symbols = symbols.AddRange(
-                syntaxNodeAnalysisContext.SemanticModel.LookupSymbols(position: 0, container: baseType, name: fullName, includeReducedExtensionMethods: true));
+            symbols = symbols.AddRange(syntaxNodeAnalysisContext.SemanticModel.LookupSymbols(position: 0, container: baseType, name: fullName, includeReducedExtensionMethods: true));
         }
 
         foreach (INamedTypeSymbol interfaceType in sourceType.AllInterfaces)
         {
-            symbols = symbols.AddRange(
-                syntaxNodeAnalysisContext.SemanticModel.LookupSymbols(position: 0, container: interfaceType, name: fullName, includeReducedExtensionMethods: true));
+            symbols = symbols.AddRange(syntaxNodeAnalysisContext.SemanticModel.LookupSymbols(position: 0, container: interfaceType, name: fullName, includeReducedExtensionMethods: true));
         }
 
         Dump(symbols);
@@ -95,7 +90,7 @@ internal static class MethodSymbolHelper
         }
     }
 
-    private static ISymbol? GetSymbol(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, SyntaxNode expression)
+    private static ISymbol? GetSymbol(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, SyntaxNode expression)
     {
         return syntaxNodeAnalysisContext.SemanticModel.GetSymbolInfo(node: expression)
                                         .Symbol;

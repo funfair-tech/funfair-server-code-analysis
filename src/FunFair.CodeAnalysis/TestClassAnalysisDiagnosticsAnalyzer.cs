@@ -52,7 +52,7 @@ public sealed class TestClassAnalysisDiagnosticsAnalyzer : DiagnosticAnalyzer
         }
     }
 
-    private static bool IsTestMethodInClassNotDerivedFromTestBase(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, MethodDeclarationSyntax methodDeclarationSyntax)
+    private static bool IsTestMethodInClassNotDerivedFromTestBase(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, MethodDeclarationSyntax methodDeclarationSyntax)
     {
         return TestDetection.IsTestMethod(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, methodDeclarationSyntax: methodDeclarationSyntax) &&
                !TestDetection.IsDerivedFromTestBase(syntaxNodeAnalysisContext);

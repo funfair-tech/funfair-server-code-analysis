@@ -18,7 +18,7 @@ internal static class TestDetection
                                       .Any(ti => IsTestMethodAttribute(ti.ToDisplayString()));
     }
 
-    public static bool IsDerivedFromTestBase(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
+    public static bool IsDerivedFromTestBase(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
     {
         ISymbol? containingType = syntaxNodeAnalysisContext.ContainingSymbol;
 
