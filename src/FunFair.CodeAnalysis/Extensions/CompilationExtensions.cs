@@ -6,21 +6,42 @@ using Microsoft.CodeAnalysis;
 
 namespace FunFair.CodeAnalysis.Extensions;
 
-public static class CompilationExtensions
+internal static class CompilationExtensions
 {
-    private static readonly IReadOnlyList<string> TestAssemblies = new[]
-                                                                   {
-                                                                       @"Microsoft.NET.Test.Sdk"
-                                                                   };
+    private static readonly HashSet<string> TestAssemblies = new(new[]
+                                                                 {
+                                                                     @"Microsoft.NET.Test.Sdk"
+                                                                 },
+                                                                 comparer: StringComparer.OrdinalIgnoreCase);
+
+    private static readonly HashSet<string> UnitTestAssemblies = new(new[]
+                                                                     {
+                                                                         "Microsoft.NET.Test.Sdk",
+                                                                         "xunit",
+                                                                         "xunit.core"
+                                                                     },
+                                                                     comparer: StringComparer.OrdinalIgnoreCase);
 
     public static bool IsTestAssembly(this Compilation compilation)
     {
         try
         {
-            return compilation.ReferencedAssemblyNames.SelectMany(collectionSelector: _ => TestAssemblies, resultSelector: (assembly, testAssemblyName) => new { assembly, testAssemblyName })
-                              .Where(t => StringComparer.InvariantCultureIgnoreCase.Equals(x: t.assembly.Name, y: t.testAssemblyName))
-                              .Select(t => t.assembly)
-                              .Any();
+            return compilation.ReferencedAssemblyNames.Any(assemblyName => TestAssemblies.Contains(assemblyName.Name));
+        }
+        catch (Exception exception)
+        {
+            // note this shouldn't occur; Line here for debugging
+            Debug.WriteLine(exception.Message);
+
+            return false;
+        }
+    }
+
+    public static bool IsUnitTestAssembly(this Compilation compilation)
+    {
+        try
+        {
+            return compilation.ReferencedAssemblyNames.Any(assemblyName => UnitTestAssemblies.Contains(assemblyName.Name));
         }
         catch (Exception exception)
         {

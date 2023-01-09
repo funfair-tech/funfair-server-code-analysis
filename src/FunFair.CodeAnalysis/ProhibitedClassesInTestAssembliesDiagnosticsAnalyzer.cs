@@ -26,13 +26,6 @@ public sealed class ProhibitedClassesInTestAssembliesDiagnosticsAnalyzer : Diagn
                                                                                        sourceClass: "System.Console")
                                                                                };
 
-    private static readonly string[] TestAssemblies =
-    {
-        "Microsoft.NET.Test.Sdk",
-        "xunit",
-        "xunit.core"
-    };
-
     /// <inheritdoc />
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
         BannedClasses.Select(selector: r => r.Rule)
@@ -67,15 +60,10 @@ public sealed class ProhibitedClassesInTestAssembliesDiagnosticsAnalyzer : Diagn
             }
         }
 
-        if (compilationStartContext.Compilation.ReferencedAssemblyNames.Any(IsTestAssembly))
+        if (compilationStartContext.Compilation.IsUnitTestAssembly())
         {
             compilationStartContext.RegisterSyntaxNodeAction(action: LookForBannedClasses, SyntaxKind.InvocationExpression);
         }
-    }
-
-    private static bool IsTestAssembly(AssemblyIdentity r)
-    {
-        return TestAssemblies.Any(a => StringComparer.InvariantCultureIgnoreCase.Equals(x: a, y: r.Name));
     }
 
     private static Dictionary<string, INamedTypeSymbol> BuildCachedSymbols(Compilation compilation)
