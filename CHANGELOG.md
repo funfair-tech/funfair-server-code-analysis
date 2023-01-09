@@ -22,6 +22,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 - FF-1429 - Updated Philips.CodeAnalysis.MaintainabilityAnalyzers to 1.2.32
 - FF-1429 - Updated Roslynator.Analyzers to 4.2.0
 - FF-1429 - Updated SonarAnalyzer.CSharp to 8.51.0.59060
+- FF-1429 - Updated xunit.analyzers to 1.1.0
 ### Removed
 ### Deployment Changes
 
