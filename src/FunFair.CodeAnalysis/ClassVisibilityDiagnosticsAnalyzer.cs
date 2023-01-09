@@ -100,12 +100,12 @@ public sealed class ClassVisibilityDiagnosticsAnalyzer : DiagnosticAnalyzer
 
         public bool HasCorrectClassModifier(ClassDeclarationSyntax classDeclarationSyntax)
         {
-            static bool MatchesVisibility(ConfiguredClass classDefinition, in SyntaxToken syntaxToken)
-            {
-                return syntaxToken.IsKind(classDefinition.Visibility);
-            }
-
             return classDeclarationSyntax.Modifiers.Any(modifier => MatchesVisibility(this, syntaxToken: modifier));
+        }
+
+        private static bool MatchesVisibility(ConfiguredClass classDefinition, in SyntaxToken syntaxToken)
+        {
+            return syntaxToken.IsKind(classDefinition.Visibility);
         }
     }
 }

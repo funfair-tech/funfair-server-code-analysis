@@ -71,13 +71,9 @@ public sealed class ConstructorGenericParameterTypeDiagnosticsAnalyser : Diagnos
                 ISymbol classForConstructor = syntaxNodeAnalysisContext.SemanticModel.GetDeclaredSymbol(parentSymbolForClassForConstructor)!;
                 string className = classForConstructor.ToDisplayString();
 
-                bool classIsPublic = parentSymbolForClassForConstructor.Modifiers.Any(x => x.IsKind(SyntaxKind.PublicKeyword));
-
-                bool classIsNested = classForConstructor.ContainingType != null;
-
-                bool isProtected = constructorDeclarationSyntax.Modifiers.Any(x => x.IsKind(SyntaxKind.ProtectedKeyword));
-
-                bool needed = isProtected || !classIsPublic || classIsNested;
+                bool needed = IsClassNeeded(parentSymbolForClassForConstructor: parentSymbolForClassForConstructor,
+                                            classForConstructor: classForConstructor,
+                                            constructorDeclarationSyntax: constructorDeclarationSyntax);
 
                 foreach (ParameterSyntax parameterSyntax in constructorDeclarationSyntax.ParameterList.Parameters)
                 {
@@ -85,6 +81,17 @@ public sealed class ConstructorGenericParameterTypeDiagnosticsAnalyser : Diagnos
                 }
             }
         }
+    }
+
+    private static bool IsClassNeeded(ClassDeclarationSyntax parentSymbolForClassForConstructor, ISymbol classForConstructor, ConstructorDeclarationSyntax constructorDeclarationSyntax)
+    {
+        bool classIsPublic = parentSymbolForClassForConstructor.Modifiers.Any(x => x.IsKind(SyntaxKind.PublicKeyword));
+
+        bool classIsNested = classForConstructor.ContainingType != null;
+
+        bool isProtected = constructorDeclarationSyntax.Modifiers.Any(x => x.IsKind(SyntaxKind.ProtectedKeyword));
+
+        return isProtected || !classIsPublic || classIsNested;
     }
 
     private static void CheckParameter(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, ParameterSyntax parameterSyntax, bool isProtected, string className)
@@ -96,7 +103,7 @@ public sealed class ConstructorGenericParameterTypeDiagnosticsAnalyser : Diagnos
             return;
         }
 
-        TypeCheckSpec? rule = Specifications.FirstOrDefault(ns => ns.IsProtected == isProtected && (ns.AllowedSourceClass == fullTypeName || ns.ProhibitedClass == fullTypeName));
+        TypeCheckSpec? rule = GetTypeSpec(isProtected: isProtected, fullTypeName: fullTypeName);
 
         if (rule == null)
         {
@@ -117,6 +124,11 @@ public sealed class ConstructorGenericParameterTypeDiagnosticsAnalyser : Diagnos
         {
             parameterSyntax.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: rule.Rule, className);
         }
+    }
+
+    private static TypeCheckSpec? GetTypeSpec(bool isProtected, string fullTypeName)
+    {
+        return Specifications.FirstOrDefault(ns => ns.IsProtected == isProtected && (ns.AllowedSourceClass == fullTypeName || ns.ProhibitedClass == fullTypeName));
     }
 
     private static void CheckGenericParameterTypeMatch(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, ParameterSyntax parameterSyntax, string className, string fullTypeName)
