@@ -52,23 +52,34 @@ public sealed class ArgumentExceptionAnalysisDiagnosticsAnalyzer : DiagnosticAna
 
     private static void ArgumentExceptionsMustPassParameterName(SyntaxNodeAnalysisContext syntaxNodeContext)
     {
-        if (syntaxNodeContext.Node is ObjectCreationExpressionSyntax objectCreation)
+        if (syntaxNodeContext.Node is not ObjectCreationExpressionSyntax objectCreation)
         {
-            SymbolInfo symbolInfo = syntaxNodeContext.SemanticModel.GetSymbolInfo(objectCreation);
-
-            if (symbolInfo.Symbol is IMethodSymbol methodSymbol)
-            {
-                if (IsArgumentException(methodSymbol.ReceiverType))
-                {
-                    IParameterSymbol? parameterNameParameter = methodSymbol.Parameters.FirstOrDefault(parameter => parameter.Name == "paramName");
-
-                    if (parameterNameParameter == null)
-                    {
-                        syntaxNodeContext.ReportDiagnostic(Diagnostic.Create(descriptor: Rule, objectCreation.GetLocation()));
-                    }
-                }
-            }
+            return;
         }
+
+        SymbolInfo symbolInfo = syntaxNodeContext.SemanticModel.GetSymbolInfo(objectCreation);
+
+        if (symbolInfo.Symbol is not IMethodSymbol methodSymbol)
+        {
+            return;
+        }
+
+        if (!IsArgumentException(methodSymbol.ReceiverType))
+        {
+            return;
+        }
+
+        if (HasParamNameParameter(methodSymbol))
+        {
+            return;
+        }
+
+        syntaxNodeContext.ReportDiagnostic(Diagnostic.Create(descriptor: Rule, objectCreation.GetLocation()));
+    }
+
+    private static bool HasParamNameParameter(IMethodSymbol methodSymbol)
+    {
+        return methodSymbol.Parameters.Any(parameter => parameter.Name == "paramName");
     }
 
     private static bool IsArgumentException(ITypeSymbol? methodSymbolReceiverType)
