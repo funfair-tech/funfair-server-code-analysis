@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Linq;
+using FunFair.CodeAnalysis.Extensions;
 using FunFair.CodeAnalysis.Helpers;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -115,6 +116,6 @@ public sealed class ProhibitedPragmasDiagnosticsAnalyzer : DiagnosticAnalyzer
 
     private static void ReportDiagnostics(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, ExpressionSyntax invocation)
     {
-        syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(descriptor: Rule, invocation.GetLocation()));
+        invocation.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: Rule);
     }
 }

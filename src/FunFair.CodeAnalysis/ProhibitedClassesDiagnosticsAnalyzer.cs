@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using FunFair.CodeAnalysis.Extensions;
 using FunFair.CodeAnalysis.Helpers;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -77,7 +78,7 @@ public sealed class ProhibitedClassesDiagnosticsAnalyzer : DiagnosticAnalyzer
 
     private static void ReportDiagnostics(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, ProhibitedClassSpec bannedClass)
     {
-        syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(descriptor: bannedClass.Rule, syntaxNodeAnalysisContext.Node.GetLocation()));
+        syntaxNodeAnalysisContext.Node.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: bannedClass.Rule);
     }
 
     private static Dictionary<string, INamedTypeSymbol> BuildCachedSymbols(Compilation compilation)

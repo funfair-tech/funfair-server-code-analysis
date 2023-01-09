@@ -1,5 +1,6 @@
 ﻿using System.Collections.Immutable;
 using System.Linq;
+using FunFair.CodeAnalysis.Extensions;
 using FunFair.CodeAnalysis.Helpers;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -61,7 +62,7 @@ public sealed class TestClassPropertyAnalysisDiagnosticsAnalyzer : DiagnosticAna
 
     private static void ReportDiagnostics(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, PropertyDeclarationSyntax propertyDeclarationSyntax)
     {
-        syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(descriptor: Rule, propertyDeclarationSyntax.GetLocation()));
+        propertyDeclarationSyntax.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: Rule);
     }
 
     private static bool IsMutable(AccessorDeclarationSyntax a)

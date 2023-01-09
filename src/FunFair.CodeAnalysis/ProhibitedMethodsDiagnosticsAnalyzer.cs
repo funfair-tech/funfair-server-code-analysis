@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using FunFair.CodeAnalysis.Extensions;
 using FunFair.CodeAnalysis.Helpers;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -129,7 +130,7 @@ public sealed class ProhibitedMethodsDiagnosticsAnalyzer : DiagnosticAnalyzer
 
     private static void ReportDiagnostics(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, MemberAccessExpressionSyntax invocation, ProhibitedMethodsSpec item)
     {
-        syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(descriptor: item.Rule, invocation.GetLocation()));
+        invocation.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: item.Rule);
     }
 
     private static Dictionary<string, INamedTypeSymbol> BuildCachedSymbols(Compilation compilation)

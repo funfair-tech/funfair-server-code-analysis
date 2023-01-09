@@ -93,26 +93,21 @@ public sealed class SuppressMessageDiagnosticsAnalyzer : DiagnosticAnalyzer
 
     private static void ReportDiagnostics(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, AttributeSyntax methodDeclarationSyntax)
     {
-        syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(descriptor: RuleMustHaveJustification, methodDeclarationSyntax.GetLocation()));
+        methodDeclarationSyntax.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: RuleMustHaveJustification);
     }
 
     private static void CheckJustification(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, string text, LiteralExpressionSyntax l)
     {
         if (string.IsNullOrWhiteSpace(text))
         {
-            ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, l: l, rule: RuleMustHaveJustification);
+            l.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: RuleMustHaveJustification);
 
             return;
         }
 
         if (text.StartsWith(value: "TODO", comparisonType: StringComparison.OrdinalIgnoreCase))
         {
-            ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, l: l, rule: RuleMustNotHaveTodoJustification);
+            l.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: RuleMustNotHaveTodoJustification);
         }
-    }
-
-    private static void ReportDiagnostics(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, LiteralExpressionSyntax l, DiagnosticDescriptor rule)
-    {
-        l.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: rule);
     }
 }

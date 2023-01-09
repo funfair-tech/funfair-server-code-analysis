@@ -1,4 +1,5 @@
 using System.Collections.Immutable;
+using FunFair.CodeAnalysis.Extensions;
 using FunFair.CodeAnalysis.Helpers;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -51,6 +52,6 @@ public sealed class NullableDirectiveDiagnosticsAnalyzer : DiagnosticAnalyzer
 
     private static void ReportDiagnostics(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, NullableDirectiveTriviaSyntax pragmaWarningDirective)
     {
-        syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(descriptor: Rule, pragmaWarningDirective.GetLocation()));
+        pragmaWarningDirective.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: Rule);
     }
 }

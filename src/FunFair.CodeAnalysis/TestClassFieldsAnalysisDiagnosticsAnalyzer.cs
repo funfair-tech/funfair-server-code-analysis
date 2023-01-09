@@ -1,4 +1,5 @@
 ﻿using System.Collections.Immutable;
+using FunFair.CodeAnalysis.Extensions;
 using FunFair.CodeAnalysis.Helpers;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -62,6 +63,6 @@ public sealed class TestClassFieldsAnalysisDiagnosticsAnalyzer : DiagnosticAnaly
 
     private static void ReportDiagnostics(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, FieldDeclarationSyntax fieldDeclarationSyntax)
     {
-        syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(descriptor: Rule, fieldDeclarationSyntax.GetLocation()));
+        fieldDeclarationSyntax.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: Rule);
     }
 }
