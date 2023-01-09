@@ -85,18 +85,13 @@ public sealed class ProhibitedMethodWithStrictParametersInvocationDiagnosticsAna
                 {
                     if (!IsInvocationAllowed(arguments: invocation.ArgumentList, parameters: memberSymbol.Parameters, prohibitedMethod: prohibitedMethod))
                     {
-                        ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, prohibitedMethod: prohibitedMethod, invocation: invocation);
+                        invocation.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: prohibitedMethod.Rule);
                     }
                 }
             }
         }
 
         compilationStartContext.RegisterSyntaxNodeAction(action: LookForForcedMethods, SyntaxKind.InvocationExpression);
-    }
-
-    private static void ReportDiagnostics(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, ProhibitedMethodsSpec prohibitedMethod, InvocationExpressionSyntax invocation)
-    {
-        invocation.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: prohibitedMethod.Rule);
     }
 
     /// <summary>

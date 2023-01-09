@@ -63,7 +63,7 @@ public sealed class ProhibitedClassesInTestAssembliesDiagnosticsAnalyzer : Diagn
 
             if (bannedClass != null)
             {
-                ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, bannedClass: bannedClass);
+                syntaxNodeAnalysisContext.Node.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: bannedClass.Rule);
             }
         }
 
@@ -71,11 +71,6 @@ public sealed class ProhibitedClassesInTestAssembliesDiagnosticsAnalyzer : Diagn
         {
             compilationStartContext.RegisterSyntaxNodeAction(action: LookForBannedClasses, SyntaxKind.InvocationExpression);
         }
-    }
-
-    private static void ReportDiagnostics(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, ProhibitedClassSpec bannedClass)
-    {
-        syntaxNodeAnalysisContext.Node.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: bannedClass.Rule);
     }
 
     private static bool IsTestAssembly(AssemblyIdentity r)

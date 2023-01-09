@@ -58,11 +58,6 @@ public sealed class TestClassFieldsAnalysisDiagnosticsAnalyzer : DiagnosticAnaly
             return;
         }
 
-        ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, fieldDeclarationSyntax: fieldDeclarationSyntax);
-    }
-
-    private static void ReportDiagnostics(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, FieldDeclarationSyntax fieldDeclarationSyntax)
-    {
         fieldDeclarationSyntax.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: Rule);
     }
 }

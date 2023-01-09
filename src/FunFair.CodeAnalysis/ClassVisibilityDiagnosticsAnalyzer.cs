@@ -60,14 +60,9 @@ public sealed class ClassVisibilityDiagnosticsAnalyzer : DiagnosticAnalyzer
         {
             if (classDefinition.TypeMatchesClass(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext) && !classDefinition.HasCorrectClassModifier(classDeclarationSyntax: classDeclarationSyntax))
             {
-                ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, classDefinition: classDefinition, classDeclarationSyntax: classDeclarationSyntax);
+                classDeclarationSyntax.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: classDefinition.Rule);
             }
         }
-    }
-
-    private static void ReportDiagnostics(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, ConfiguredClass classDefinition, ClassDeclarationSyntax classDeclarationSyntax)
-    {
-        classDeclarationSyntax.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: classDefinition.Rule);
     }
 
     private sealed class ConfiguredClass

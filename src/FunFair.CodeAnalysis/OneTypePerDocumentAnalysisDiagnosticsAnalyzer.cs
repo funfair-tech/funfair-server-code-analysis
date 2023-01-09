@@ -108,13 +108,8 @@ public sealed class OneTypePerDocumentAnalysisDiagnosticsAnalyzer : DiagnosticAn
     {
         foreach (MemberDeclarationSyntax member in members)
         {
-            ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, member: member);
+            member.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: Rule);
         }
-    }
-
-    private static void ReportDiagnostics(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, MemberDeclarationSyntax member)
-    {
-        member.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: Rule);
     }
 
     private static string GetTypeName(MemberDeclarationSyntax memberDeclarationSyntax)

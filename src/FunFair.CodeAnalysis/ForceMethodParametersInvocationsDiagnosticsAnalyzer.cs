@@ -97,14 +97,9 @@ public sealed class ForceMethodParametersInvocationsDiagnosticsAnalyzer : Diagno
         {
             if (!IsInvocationAllowed(invocationArguments: memberSymbol, argumentsInvokedCount: invocation.ArgumentList.Arguments.Count, requiredArgumentsCount: prohibitedMethod.RequiredArgumentCount))
             {
-                ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, prohibitedMethod: prohibitedMethod, invocation: invocation);
+                invocation.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: prohibitedMethod.Rule);
             }
         }
-    }
-
-    private static void ReportDiagnostics(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, ForcedMethodsSpec prohibitedMethod, InvocationExpressionSyntax invocation)
-    {
-        invocation.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: prohibitedMethod.Rule);
     }
 
     /// <summary>

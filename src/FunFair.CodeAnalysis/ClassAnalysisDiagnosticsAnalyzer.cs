@@ -50,13 +50,8 @@ public sealed class ClassAnalysisDiagnosticsAnalyzer : DiagnosticAnalyzer
 
         if (!classDeclarationSyntax.Modifiers.Any(IsWhiteListedClassModifier))
         {
-            ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, classDeclarationSyntax: classDeclarationSyntax);
+            classDeclarationSyntax.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: Rule);
         }
-    }
-
-    private static void ReportDiagnostics(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, ClassDeclarationSyntax classDeclarationSyntax)
-    {
-        classDeclarationSyntax.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: Rule);
     }
 
     private static bool IsWhiteListedClassModifier(SyntaxToken syntaxToken)

@@ -44,14 +44,9 @@ public sealed class NullableDirectiveDiagnosticsAnalyzer : DiagnosticAnalyzer
                 return;
             }
 
-            ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, pragmaWarningDirective: pragmaWarningDirective);
+            pragmaWarningDirective.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: Rule);
         }
 
         compilationStartContext.RegisterSyntaxNodeAction(action: LookForProhibition, SyntaxKind.NullableDirectiveTrivia);
-    }
-
-    private static void ReportDiagnostics(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, NullableDirectiveTriviaSyntax pragmaWarningDirective)
-    {
-        pragmaWarningDirective.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: Rule);
     }
 }

@@ -50,13 +50,8 @@ public sealed class StructAnalysisDiagnosticsAnalyzer : DiagnosticAnalyzer
 
         if (!structDeclarationSyntax.Modifiers.Any(IsReadOnlyKeyword))
         {
-            ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, structDeclarationSyntax: structDeclarationSyntax);
+            structDeclarationSyntax.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: Rule);
         }
-    }
-
-    private static void ReportDiagnostics(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, StructDeclarationSyntax structDeclarationSyntax)
-    {
-        structDeclarationSyntax.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: Rule);
     }
 
     private static bool IsReadOnlyKeyword(SyntaxToken syntaxToken)
