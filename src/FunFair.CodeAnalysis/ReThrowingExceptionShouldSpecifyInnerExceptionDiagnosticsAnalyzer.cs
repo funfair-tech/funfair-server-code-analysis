@@ -93,10 +93,15 @@ public sealed class ReThrowingExceptionShouldSpecifyInnerExceptionDiagnosticsAna
             return;
         }
 
-        if (!argumentListSyntax.Arguments.Any(x => x.Expression is IdentifierNameSyntax identifier && identifier.Identifier.Text == exceptionVariable))
+        if (!argumentListSyntax.Arguments.Any(x => IsNamedIdentifier(exceptionVariable: exceptionVariable, x: x)))
         {
             ReportDiagnostic(exceptionVariable: exceptionVariable, syntaxNodeContext: syntaxNodeContext, objectCreationExpression.GetLocation());
         }
+    }
+
+    private static bool IsNamedIdentifier(string exceptionVariable, ArgumentSyntax x)
+    {
+        return x.Expression is IdentifierNameSyntax identifier && identifier.Identifier.Text == exceptionVariable;
     }
 
     private static void ReportDiagnostic(string exceptionVariable, in SyntaxNodeAnalysisContext syntaxNodeContext, Location location)
@@ -106,15 +111,25 @@ public sealed class ReThrowingExceptionShouldSpecifyInnerExceptionDiagnosticsAna
 
     private static IReadOnlyList<ExpressionSyntax> GetAllThrowExpressions(BlockSyntax codeBlock)
     {
-        IEnumerable<ExpressionSyntax> expressionFromThrowStatements = codeBlock.DescendantNodes()
-                                                                               .OfType<ThrowStatementSyntax>()
-                                                                               .Select(x => x.Expression)
-                                                                               .RemoveNulls();
-        IEnumerable<ExpressionSyntax> expressionFromThrowExpressions = codeBlock.DescendantNodes()
-                                                                                .OfType<ThrowExpressionSyntax>()
-                                                                                .Select(x => x.Expression);
+        IEnumerable<ExpressionSyntax> expressionFromThrowStatements = ThrowStatements(codeBlock);
+        IEnumerable<ExpressionSyntax> expressionFromThrowExpressions = ThrowExpressions(codeBlock);
 
         return expressionFromThrowStatements.Concat(expressionFromThrowExpressions)
                                             .ToArray();
+    }
+
+    private static IEnumerable<ExpressionSyntax> ThrowExpressions(BlockSyntax codeBlock)
+    {
+        return codeBlock.DescendantNodes()
+                        .OfType<ThrowExpressionSyntax>()
+                        .Select(x => x.Expression);
+    }
+
+    private static IEnumerable<ExpressionSyntax> ThrowStatements(BlockSyntax codeBlock)
+    {
+        return codeBlock.DescendantNodes()
+                        .OfType<ThrowStatementSyntax>()
+                        .Select(x => x.Expression)
+                        .RemoveNulls();
     }
 }
