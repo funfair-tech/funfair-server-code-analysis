@@ -13,7 +13,6 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 - FF-1429 - Updated xunit to 2.4.2
 - FF-1429 - Updated Microsoft.CodeAnalysis.CSharp.Workspaces to 4.3.1
 - FF-1429 - Updated coverlet to 3.2.0
-- FF-1429 - Updated Microsoft.NET.Test.Sdk to 17.4.0
 - FF-3881 - Updated DotNet SDK to 7.0.101
 - FF-1429 - Updated Credfeto.Enumeration.Source.Generation to 1.0.4.16
 - FF-1429 - Updated Meziantou.Analyzer to 2.0.4
@@ -23,6 +22,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 - FF-1429 - Updated SonarAnalyzer.CSharp to 8.51.0.59060
 - FF-1429 - Updated xunit.analyzers to 1.1.0
 - FF-1429 - Updated FunFair.Test.Common to 6.0.14.2474
+- FF-1429 - Updated Microsoft.NET.Test.Sdk to 17.4.1
 ### Removed
 ### Deployment Changes
 
