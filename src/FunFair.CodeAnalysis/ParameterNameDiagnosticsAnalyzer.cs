@@ -63,11 +63,16 @@ public sealed class ParameterNameDiagnosticsAnalyzer : DiagnosticAnalyzer
                 {
                     if (!rule.WhitelistedParameterNames.Contains(value: parameterSyntax.Identifier.Text, comparer: StringComparer.Ordinal))
                     {
-                        syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(descriptor: rule.Rule, parameterSyntax.GetLocation()));
+                        ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: rule, parameterSyntax: parameterSyntax);
                     }
                 }
             }
         }
+    }
+
+    private static void ReportDiagnostics(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, NameSanitationSpec rule, ParameterSyntax parameterSyntax)
+    {
+        syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(descriptor: rule.Rule, parameterSyntax.GetLocation()));
     }
 
     private sealed class NameSanitationSpec

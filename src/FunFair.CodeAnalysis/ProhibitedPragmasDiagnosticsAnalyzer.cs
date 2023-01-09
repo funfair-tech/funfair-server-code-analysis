@@ -69,8 +69,7 @@ public sealed class ProhibitedPragmasDiagnosticsAnalyzer : DiagnosticAnalyzer
     {
         try
         {
-            return compilation.ReferencedAssemblyNames
-                              .SelectMany(collectionSelector: _ => TestAssemblies, resultSelector: (assembly, testAssemblyName) => new { assembly, testAssemblyName })
+            return compilation.ReferencedAssemblyNames.SelectMany(collectionSelector: _ => TestAssemblies, resultSelector: (assembly, testAssemblyName) => new { assembly, testAssemblyName })
                               .Where(t => StringComparer.InvariantCultureIgnoreCase.Equals(x: t.assembly.Name, y: t.testAssemblyName))
                               .Select(t => t.assembly)
                               .Any();
@@ -107,10 +106,15 @@ public sealed class ProhibitedPragmasDiagnosticsAnalyzer : DiagnosticAnalyzer
 
             foreach (ExpressionSyntax invocation in pragmaWarningDirective.ErrorCodes.Where(invocation => isBanned(invocation.ToString())))
             {
-                syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(descriptor: Rule, invocation.GetLocation()));
+                ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, invocation: invocation);
             }
         }
 
         compilationStartContext.RegisterSyntaxNodeAction(action: LookForBannedMethods, SyntaxKind.PragmaWarningDirectiveTrivia);
+    }
+
+    private static void ReportDiagnostics(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, ExpressionSyntax invocation)
+    {
+        syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(descriptor: Rule, invocation.GetLocation()));
     }
 }

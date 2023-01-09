@@ -107,8 +107,13 @@ public sealed class OneTypePerDocumentAnalysisDiagnosticsAnalyzer : DiagnosticAn
     {
         foreach (MemberDeclarationSyntax member in members)
         {
-            syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(descriptor: Rule, member.GetLocation()));
+            ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, member: member);
         }
+    }
+
+    private static void ReportDiagnostics(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, MemberDeclarationSyntax member)
+    {
+        syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(descriptor: Rule, member.GetLocation()));
     }
 
     private static string GetTypeName(MemberDeclarationSyntax memberDeclarationSyntax)

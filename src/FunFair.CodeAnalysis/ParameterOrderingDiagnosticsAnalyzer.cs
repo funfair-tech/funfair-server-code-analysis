@@ -90,11 +90,13 @@ public sealed class ParameterOrderingDiagnosticsAnalyzer : DiagnosticAnalyzer
 
             if (parameterIndex != requiredParameterIndex)
             {
-                syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(descriptor: Rule,
-                                                                             matchingParameter.Parameter.GetLocation(),
-                                                                             matchingParameter.Parameter.Identifier.Text,
-                                                                             requiredParameterIndex + 1));
+                ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, parameterSyntax: matchingParameter.Parameter, requiredParameterIndex: requiredParameterIndex);
             }
         }
+    }
+
+    private static void ReportDiagnostics(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, ParameterSyntax parameterSyntax, int requiredParameterIndex)
+    {
+        syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(descriptor: Rule, parameterSyntax.GetLocation(), parameterSyntax.Identifier.Text, requiredParameterIndex + 1));
     }
 }

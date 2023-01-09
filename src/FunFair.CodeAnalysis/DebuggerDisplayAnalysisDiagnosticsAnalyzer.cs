@@ -54,8 +54,13 @@ public sealed class DebuggerDisplayAnalysisDiagnosticsAnalyzer : DiagnosticAnaly
                                     .Any(ti => IsDebuggerDisplayAttribute(ti.ToDisplayString())))
 
         {
-            syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(descriptor: Rule, recordDeclarationSyntax.GetLocation()));
+            ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, recordDeclarationSyntax: recordDeclarationSyntax);
         }
+    }
+
+    private static void ReportDiagnostics(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, RecordDeclarationSyntax recordDeclarationSyntax)
+    {
+        syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(descriptor: Rule, recordDeclarationSyntax.GetLocation()));
     }
 
     private static bool IsDebuggerDisplayAttribute(string fullName)

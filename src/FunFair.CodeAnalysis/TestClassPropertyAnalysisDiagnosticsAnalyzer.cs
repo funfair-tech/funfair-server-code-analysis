@@ -55,8 +55,13 @@ public sealed class TestClassPropertyAnalysisDiagnosticsAnalyzer : DiagnosticAna
         if (propertyDeclarationSyntax.AccessorList?.Accessors.Any(IsMutable) == true)
         {
             // its read-only or const.
-            syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(descriptor: Rule, propertyDeclarationSyntax.GetLocation()));
+            ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, propertyDeclarationSyntax: propertyDeclarationSyntax);
         }
+    }
+
+    private static void ReportDiagnostics(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, PropertyDeclarationSyntax propertyDeclarationSyntax)
+    {
+        syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(descriptor: Rule, propertyDeclarationSyntax.GetLocation()));
     }
 
     private static bool IsMutable(AccessorDeclarationSyntax a)

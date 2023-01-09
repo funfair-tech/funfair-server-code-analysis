@@ -70,9 +70,14 @@ public sealed class ProhibitedClassesDiagnosticsAnalyzer : DiagnosticAnalyzer
 
             if (bannedClass != null)
             {
-                syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(descriptor: bannedClass.Rule, syntaxNodeAnalysisContext.Node.GetLocation()));
+                ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, bannedClass: bannedClass);
             }
         }
+    }
+
+    private static void ReportDiagnostics(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, ProhibitedClassSpec bannedClass)
+    {
+        syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(descriptor: bannedClass.Rule, syntaxNodeAnalysisContext.Node.GetLocation()));
     }
 
     private static Dictionary<string, INamedTypeSymbol> BuildCachedSymbols(Compilation compilation)

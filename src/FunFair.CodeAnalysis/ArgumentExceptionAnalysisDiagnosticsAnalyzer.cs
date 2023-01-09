@@ -74,6 +74,11 @@ public sealed class ArgumentExceptionAnalysisDiagnosticsAnalyzer : DiagnosticAna
             return;
         }
 
+        ReportDiagnostics(syntaxNodeContext: syntaxNodeContext, objectCreation: objectCreation);
+    }
+
+    private static void ReportDiagnostics(in SyntaxNodeAnalysisContext syntaxNodeContext, ObjectCreationExpressionSyntax objectCreation)
+    {
         syntaxNodeContext.ReportDiagnostic(Diagnostic.Create(descriptor: Rule, objectCreation.GetLocation()));
     }
 

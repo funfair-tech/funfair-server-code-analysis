@@ -49,8 +49,13 @@ public sealed class StructAnalysisDiagnosticsAnalyzer : DiagnosticAnalyzer
 
         if (!structDeclarationSyntax.Modifiers.Any(IsReadOnlyKeyword))
         {
-            syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(descriptor: Rule, structDeclarationSyntax.GetLocation()));
+            ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, structDeclarationSyntax: structDeclarationSyntax);
         }
+    }
+
+    private static void ReportDiagnostics(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, StructDeclarationSyntax structDeclarationSyntax)
+    {
+        syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(descriptor: Rule, structDeclarationSyntax.GetLocation()));
     }
 
     private static bool IsReadOnlyKeyword(SyntaxToken syntaxToken)

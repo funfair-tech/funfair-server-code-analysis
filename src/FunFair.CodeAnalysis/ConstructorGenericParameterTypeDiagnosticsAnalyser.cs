@@ -114,8 +114,13 @@ public sealed class ConstructorGenericParameterTypeDiagnosticsAnalyser : Diagnos
 
         if (rule.ProhibitedClass == fullTypeName)
         {
-            syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(descriptor: rule.Rule, parameterSyntax.GetLocation(), className));
+            ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, parameterSyntax: parameterSyntax, className: className, rule: rule);
         }
+    }
+
+    private static void ReportDiagnostics(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, ParameterSyntax parameterSyntax, string className, TypeCheckSpec rule)
+    {
+        syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(descriptor: rule.Rule, parameterSyntax.GetLocation(), className));
     }
 
     private static void CheckGenericParameterTypeMatch(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, ParameterSyntax parameterSyntax, string className, string fullTypeName)
@@ -141,8 +146,13 @@ public sealed class ConstructorGenericParameterTypeDiagnosticsAnalyser : Diagnos
 
         if (displayName != className)
         {
-            syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(descriptor: MissMatchTypes, parameterSyntax.GetLocation(), className, displayName, fullTypeName));
+            ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, parameterSyntax: parameterSyntax, className: className, fullTypeName: fullTypeName, displayName: displayName);
         }
+    }
+
+    private static void ReportDiagnostics(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, ParameterSyntax parameterSyntax, string className, string fullTypeName, string displayName)
+    {
+        syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(descriptor: MissMatchTypes, parameterSyntax.GetLocation(), className, displayName, fullTypeName));
     }
 
     private sealed class TypeCheckSpec

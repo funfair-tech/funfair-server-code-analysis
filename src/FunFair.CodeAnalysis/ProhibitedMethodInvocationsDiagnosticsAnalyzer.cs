@@ -137,7 +137,7 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzer : DiagnosticA
 
                 if (IsBannedMethodSignature(invocationArguments: memberSymbol, methodSignatures: prohibitedMethodSignatures))
                 {
-                    syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(descriptor: prohibitedMethod.Rule, invocation.GetLocation()));
+                    ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, prohibitedMethod: prohibitedMethod, invocation: invocation);
                 }
             }
         }
@@ -151,6 +151,11 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzer : DiagnosticA
         }
 
         compilationStartContext.RegisterSyntaxNodeAction(action: LookForBannedMethods, SyntaxKind.InvocationExpression);
+    }
+
+    private static void ReportDiagnostics(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, ProhibitedMethodsSpec prohibitedMethod, InvocationExpressionSyntax invocation)
+    {
+        syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(descriptor: prohibitedMethod.Rule, invocation.GetLocation()));
     }
 
     private static IReadOnlyDictionary<ProhibitedMethodsSpec, IReadOnlyList<IMethodSymbol>> BuildCachedSymbols(Compilation compilation)

@@ -120,11 +120,16 @@ public sealed class ProhibitedMethodsDiagnosticsAnalyzer : DiagnosticAnalyzer
                 {
                     if (invocation.Name.Identifier.ToString() == item.BannedMethod)
                     {
-                        syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(descriptor: item.Rule, invocation.GetLocation()));
+                        ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, invocation: invocation, item: item);
                     }
                 }
             }
         }
+    }
+
+    private static void ReportDiagnostics(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, MemberAccessExpressionSyntax invocation, ProhibitedMethodsSpec item)
+    {
+        syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(descriptor: item.Rule, invocation.GetLocation()));
     }
 
     private static Dictionary<string, INamedTypeSymbol> BuildCachedSymbols(Compilation compilation)

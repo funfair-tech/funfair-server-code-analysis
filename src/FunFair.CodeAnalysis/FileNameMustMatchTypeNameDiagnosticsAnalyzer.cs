@@ -66,9 +66,14 @@ public sealed class FileNameMustMatchTypeNameDiagnosticsAnalyzer : DiagnosticAna
 
             if (!StringComparer.InvariantCultureIgnoreCase.Equals(x: fileName, y: name))
             {
-                syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(descriptor: Rule, member.GetLocation()));
+                ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, member: member);
             }
         }
+    }
+
+    private static void ReportDiagnostics(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, MemberDeclarationSyntax member)
+    {
+        syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(descriptor: Rule, member.GetLocation()));
     }
 
     private static string GetDocumentFileName(CompilationUnitSyntax compilationUnitSyntax)

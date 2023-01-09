@@ -75,7 +75,7 @@ public sealed class SuppressMessageDiagnosticsAnalyzer : DiagnosticAnalyzer
 
         if (justification == null)
         {
-            syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(descriptor: RuleMustHaveJustification, methodDeclarationSyntax.GetLocation()));
+            ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, methodDeclarationSyntax: methodDeclarationSyntax);
 
             return;
         }
@@ -90,18 +90,28 @@ public sealed class SuppressMessageDiagnosticsAnalyzer : DiagnosticAnalyzer
         CheckJustification(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, text: text, l: l);
     }
 
+    private static void ReportDiagnostics(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, AttributeSyntax methodDeclarationSyntax)
+    {
+        syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(descriptor: RuleMustHaveJustification, methodDeclarationSyntax.GetLocation()));
+    }
+
     private static void CheckJustification(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, string text, LiteralExpressionSyntax l)
     {
         if (string.IsNullOrWhiteSpace(text))
         {
-            syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(descriptor: RuleMustHaveJustification, l.GetLocation()));
+            ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, l: l, rule: RuleMustHaveJustification);
 
             return;
         }
 
         if (text.StartsWith(value: "TODO", comparisonType: StringComparison.OrdinalIgnoreCase))
         {
-            syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(descriptor: RuleMustNotHaveTodoJustification, l.GetLocation()));
+            ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, l: l, rule: RuleMustNotHaveTodoJustification);
         }
+    }
+
+    private static void ReportDiagnostics(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, LiteralExpressionSyntax l, DiagnosticDescriptor rule)
+    {
+        syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(descriptor: rule, l.GetLocation()));
     }
 }
