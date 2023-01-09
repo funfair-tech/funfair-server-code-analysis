@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using FunFair.CodeAnalysis.Extensions;
 using FunFair.CodeAnalysis.Helpers;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -120,7 +121,7 @@ public sealed class ConstructorGenericParameterTypeDiagnosticsAnalyser : Diagnos
 
     private static void ReportDiagnostics(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, ParameterSyntax parameterSyntax, string className, TypeCheckSpec rule)
     {
-        syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(descriptor: rule.Rule, parameterSyntax.GetLocation(), className));
+        parameterSyntax.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: rule.Rule, className);
     }
 
     private static void CheckGenericParameterTypeMatch(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, ParameterSyntax parameterSyntax, string className, string fullTypeName)
@@ -152,7 +153,7 @@ public sealed class ConstructorGenericParameterTypeDiagnosticsAnalyser : Diagnos
 
     private static void ReportDiagnostics(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, ParameterSyntax parameterSyntax, string className, string fullTypeName, string displayName)
     {
-        syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(descriptor: MissMatchTypes, parameterSyntax.GetLocation(), className, displayName, fullTypeName));
+        parameterSyntax.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: MissMatchTypes, className, displayName, fullTypeName);
     }
 
     private sealed class TypeCheckSpec
