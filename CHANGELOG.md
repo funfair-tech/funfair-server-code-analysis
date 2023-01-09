@@ -13,7 +13,6 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 - FF-1429 - Updated xunit to 2.4.2
 - FF-1429 - Updated Microsoft.CodeAnalysis.CSharp.Workspaces to 4.3.1
 - FF-1429 - Updated coverlet to 3.2.0
-- FF-1429 - Updated Roslynator.Analyzers to 4.1.2
 - FF-1429 - Updated Microsoft.NET.Test.Sdk to 17.4.0
 - FF-1429 - Updated FunFair.Test.Common to 6.0.7.2278
 - FF-1429 - Updated SonarAnalyzer.CSharp to 8.48.0.56517
@@ -22,6 +21,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 - FF-1429 - Updated Meziantou.Analyzer to 2.0.4
 - FF-1429 - Updated Microsoft.VisualStudio.Threading.Analyzers to 17.4.33
 - FF-1429 - Updated Philips.CodeAnalysis.MaintainabilityAnalyzers to 1.2.32
+- FF-1429 - Updated Roslynator.Analyzers to 4.2.0
 ### Removed
 ### Deployment Changes
 
