@@ -86,6 +86,7 @@ internal static class MethodSymbolHelper
         return arguments.Parameters.Length == invocation.ArgumentList.Arguments.Count;
     }
 
+    [Conditional("DEBUG")]
     private static void Dump(in ImmutableArray<ISymbol> symbols)
     {
         foreach (ISymbol symbol in symbols)
