@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using FunFair.CodeAnalysis.Extensions;
@@ -36,11 +35,6 @@ public sealed class ProhibitedPragmasDiagnosticsAnalyzer : DiagnosticAnalyzer
                                                                                title: "Don't disable warnings with #pragma warning disable",
                                                                                message: "Don't disable warnings using #pragma warning disable");
 
-    private static readonly IReadOnlyList<string> TestAssemblies = new[]
-                                                                   {
-                                                                       @"Microsoft.NET.Test.Sdk"
-                                                                   };
-
     /// <inheritdoc />
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
         new[]
@@ -67,38 +61,16 @@ public sealed class ProhibitedPragmasDiagnosticsAnalyzer : DiagnosticAnalyzer
         return AllowedInTestWarnings.Contains(value: code, comparer: StringComparer.Ordinal) || IsBanned(code);
     }
 
-    private static bool IsTestAssembly(Compilation compilation)
-    {
-        try
-        {
-            return compilation.ReferencedAssemblyNames.SelectMany(collectionSelector: _ => TestAssemblies, resultSelector: (assembly, testAssemblyName) => new { assembly, testAssemblyName })
-                              .Where(t => StringComparer.InvariantCultureIgnoreCase.Equals(x: t.assembly.Name, y: t.testAssemblyName))
-                              .Select(t => t.assembly)
-                              .Any();
-        }
-        catch (Exception exception)
-        {
-            // note this shouldn't occur; Line here for debugging
-            Debug.WriteLine(exception.Message);
-
-            return false;
-        }
-    }
-
     private static Func<string, bool> DetermineWarningList(Compilation compilation)
     {
-        if (IsTestAssembly(compilation))
-        {
-            return IsBannedForTestAssemblies;
-        }
-
-        return IsBanned;
+        return compilation.IsTestAssembly()
+            ? IsBannedForTestAssemblies
+            : IsBanned;
     }
 
     private static void PerformCheck(CompilationStartAnalysisContext compilationStartContext)
     {
-        Func<string, bool> isBanned = DetermineWarningList(compilationStartContext.Compilation);
-        Banned banned = new(isBanned);
+        Banned banned = new(DetermineWarningList(compilationStartContext.Compilation));
 
         compilationStartContext.RegisterSyntaxNodeAction(action: banned.LookForBannedMethods, SyntaxKind.PragmaWarningDirectiveTrivia);
     }
