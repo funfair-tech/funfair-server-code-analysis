@@ -109,14 +109,15 @@ public sealed class ProhibitedMethodWithStrictParametersInvocationDiagnosticsAna
         }
 
         // Thi needs to be simplified
-        return !(from bannedSignature in prohibitedMethod.BannedSignatures
-                 from parameterSpec in bannedSignature
-                 let parameter = parameters.FirstOrDefault(predicate: param => param.MetadataName == parameterSpec.Name)
-                 where parameter != null
-                 let argument = arguments.Arguments[parameter.Ordinal]
-                 where argument.Expression.ToFullString() == parameterSpec.Value && argument.Expression.Kind()
-                                                                                            .ToString() == parameterSpec.Type
-                 select parameterSpec).Any();
+        return !prohibitedMethod.BannedSignatures.SelectMany(collectionSelector: bannedSignature => bannedSignature,
+                                                             resultSelector: (bannedSignature, parameterSpec) => new { bannedSignature, parameterSpec })
+                                .Select(t => new { t, parameter = parameters.FirstOrDefault(predicate: param => param.MetadataName == t.parameterSpec.Name) })
+                                .Where(t => t.parameter != null)
+                                .Select(t => new { t, argument = arguments.Arguments[t.parameter!.Ordinal] })
+                                .Where(t => t.argument.Expression.ToFullString() == t.t.t.parameterSpec.Value && t.argument.Expression.Kind()
+                                                                                                                  .ToString() == t.t.t.parameterSpec.Type)
+                                .Select(t => t.t.t.parameterSpec)
+                                .Any();
     }
 
     private sealed class ParameterSpec
