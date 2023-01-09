@@ -64,20 +64,16 @@ internal static class MethodSymbolHelper
 
     private static ImmutableArray<ISymbol> BuildSymbolsWithBaseTypes(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, INamedTypeSymbol sourceType, string fullName)
     {
-        return syntaxNodeAnalysisContext.SemanticModel.LookupSymbols(position: 0, container: sourceType, name: fullName, includeReducedExtensionMethods: true)
-                                        .Concat(sourceType.BaseClasses()
-                                                          .SelectMany(baseType => syntaxNodeAnalysisContext.SemanticModel.LookupSymbols(
-                                                                          position: 0,
-                                                                          container: baseType,
-                                                                          name: fullName,
-                                                                          includeReducedExtensionMethods: true)))
-                                        .Concat(sourceType.AllInterfaces.SelectMany(
-                                                    interfaceType => syntaxNodeAnalysisContext.SemanticModel.LookupSymbols(
-                                                        position: 0,
-                                                        container: interfaceType,
-                                                        name: fullName,
-                                                        includeReducedExtensionMethods: true)))
-                                        .ToImmutableArray();
+        return LookupSymbols(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, sourceType: sourceType, fullName: fullName)
+               .Concat(sourceType.BaseClasses()
+                                 .SelectMany(baseType => LookupSymbols(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, fullName: fullName, sourceType: baseType)))
+               .Concat(sourceType.AllInterfaces.SelectMany(interfaceType => LookupSymbols(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, sourceType: interfaceType, fullName: fullName)))
+               .ToImmutableArray();
+    }
+
+    private static ImmutableArray<ISymbol> LookupSymbols(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, INamedTypeSymbol sourceType, string fullName)
+    {
+        return syntaxNodeAnalysisContext.SemanticModel.LookupSymbols(position: 0, container: sourceType, name: fullName, includeReducedExtensionMethods: true);
     }
 
     private static bool HasMatchingArguments(InvocationExpressionSyntax invocation, IMethodSymbol arguments)
