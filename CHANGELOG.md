@@ -12,7 +12,6 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 - FF-1429 - Updated Philips.CodeAnalysis.DuplicateCodeAnalyzer to 1.1.7
 - FF-1429 - Updated xunit to 2.4.2
 - FF-1429 - Updated Microsoft.CodeAnalysis.CSharp.Workspaces to 4.3.1
-- FF-1429 - Updated Microsoft.VisualStudio.Threading.Analyzers to 17.3.48
 - FF-1429 - Updated coverlet to 3.2.0
 - FF-1429 - Updated Roslynator.Analyzers to 4.1.2
 - FF-1429 - Updated Microsoft.NET.Test.Sdk to 17.4.0
@@ -21,6 +20,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 - FF-3881 - Updated DotNet SDK to 7.0.101
 - FF-1429 - Updated Credfeto.Enumeration.Source.Generation to 1.0.4.16
 - FF-1429 - Updated Meziantou.Analyzer to 2.0.4
+- FF-1429 - Updated Microsoft.VisualStudio.Threading.Analyzers to 17.4.33
 ### Removed
 ### Deployment Changes
 
