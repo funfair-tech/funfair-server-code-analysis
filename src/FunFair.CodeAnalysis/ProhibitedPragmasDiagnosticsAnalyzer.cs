@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using FunFair.CodeAnalysis.Extensions;
 using FunFair.CodeAnalysis.Helpers;
@@ -97,20 +98,37 @@ public sealed class ProhibitedPragmasDiagnosticsAnalyzer : DiagnosticAnalyzer
     private static void PerformCheck(CompilationStartAnalysisContext compilationStartContext)
     {
         Func<string, bool> isBanned = DetermineWarningList(compilationStartContext.Compilation);
+        Banned banned = new(isBanned);
 
-        void LookForBannedMethods(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
+        compilationStartContext.RegisterSyntaxNodeAction(action: banned.LookForBannedMethods, SyntaxKind.PragmaWarningDirectiveTrivia);
+    }
+
+    private sealed class Banned
+    {
+        private readonly Func<string, bool> _isBanned;
+
+        public Banned(Func<string, bool> isBanned)
+        {
+            this._isBanned = isBanned;
+        }
+
+        [SuppressMessage(category: "Roslynator.Analyzers", checkId: "RCS1231:Make parameter ref read only", Justification = "Needed here")]
+        public void LookForBannedMethods(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
         {
             if (syntaxNodeAnalysisContext.Node is not PragmaWarningDirectiveTriviaSyntax pragmaWarningDirective)
             {
                 return;
             }
 
-            foreach (ExpressionSyntax invocation in pragmaWarningDirective.ErrorCodes.Where(invocation => isBanned(invocation.ToString())))
+            foreach (ExpressionSyntax invocation in this.BannedInvocations(pragmaWarningDirective: pragmaWarningDirective))
             {
                 invocation.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: Rule);
             }
         }
 
-        compilationStartContext.RegisterSyntaxNodeAction(action: LookForBannedMethods, SyntaxKind.PragmaWarningDirectiveTrivia);
+        private IEnumerable<ExpressionSyntax> BannedInvocations(PragmaWarningDirectiveTriviaSyntax pragmaWarningDirective)
+        {
+            return pragmaWarningDirective.ErrorCodes.Where(invocation => this._isBanned(invocation.ToString()));
+        }
     }
 }
