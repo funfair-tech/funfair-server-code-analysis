@@ -173,12 +173,9 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzer : DiagnosticA
             }
 
             // get all method overloads
-            IMethodSymbol[] methodSignatures = sourceClassType.GetMembers()
-                                                              .Where(predicate: x => x.Name == rule.BannedMethod)
-                                                              .OfType<IMethodSymbol>()
-                                                              .ToArray();
+            IReadOnlyList<IMethodSymbol> methodSignatures = GetOverloads(sourceClassType: sourceClassType, rule: rule);
 
-            if (methodSignatures.Length > 0)
+            if (methodSignatures.Count != 0)
             {
                 cachedSymbols.Add(key: rule, RemoveAllowedSignaturesForMethod(methodSignatures: methodSignatures, ruleSignatures: rule.BannedSignatures));
             }
@@ -187,13 +184,21 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzer : DiagnosticA
         return cachedSymbols;
     }
 
+    private static IReadOnlyList<IMethodSymbol> GetOverloads(INamedTypeSymbol sourceClassType, ProhibitedMethodsSpec rule)
+    {
+        return sourceClassType.GetMembers()
+                              .Where(predicate: x => x.Name == rule.BannedMethod)
+                              .OfType<IMethodSymbol>()
+                              .ToArray();
+    }
+
     /// <summary>
     ///     Filter method signatures to get only signatures banned by rules
     /// </summary>
     /// <param name="methodSignatures">All signatures of one method</param>
     /// <param name="ruleSignatures">All banned signatures</param>
     /// <returns>Collection of allowed signatures.</returns>
-    private static IReadOnlyList<IMethodSymbol> RemoveAllowedSignaturesForMethod(IEnumerable<IMethodSymbol>? methodSignatures, IEnumerable<IEnumerable<string>>? ruleSignatures)
+    private static IReadOnlyList<IMethodSymbol> RemoveAllowedSignaturesForMethod(IReadOnlyList<IMethodSymbol>? methodSignatures, IEnumerable<IEnumerable<string>>? ruleSignatures)
     {
         if (methodSignatures == null)
         {
@@ -205,20 +210,28 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzer : DiagnosticA
             return ThrowUnknownRuleSignature(ruleSignatures);
         }
 
-        IEnumerable<IMethodSymbol> methodSymbols = methodSignatures.ToList();
+        List<IMethodSymbol> methodSymbols = methodSignatures.ToList();
+
+        return BuildMethodSignatureList(ruleSignatures: ruleSignatures, methodSymbols: methodSymbols);
+    }
+
+    private static IReadOnlyList<IMethodSymbol> BuildMethodSignatureList(IEnumerable<IEnumerable<string>> ruleSignatures, IReadOnlyList<IMethodSymbol> methodSymbols)
+    {
         List<IMethodSymbol> methodSignatureList = new();
 
         // iterate over each rule to find symbol signature that correspond with rule it self
         foreach (IEnumerable<string> ruleSignature in ruleSignatures)
         {
-            IEnumerable<IMethodSymbol> bannedMethodSymbols = methodSymbols.Where(methodSymbol => methodSymbol
-                                                                                                 .Parameters.Select(selector: parameterSymbol => SymbolDisplay.ToDisplayString(parameterSymbol.Type))
-                                                                                                 .SequenceEqual(second: ruleSignature, comparer: StringComparer.Ordinal));
-
-            methodSignatureList.AddRange(bannedMethodSymbols);
+            methodSignatureList.AddRange(GetBannedMethodSymbols(methodSymbols: methodSymbols, ruleSignature: ruleSignature));
         }
 
         return methodSignatureList;
+    }
+
+    private static IEnumerable<IMethodSymbol> GetBannedMethodSymbols(IReadOnlyList<IMethodSymbol> methodSymbols, IEnumerable<string> ruleSignature)
+    {
+        return methodSymbols.Where(methodSymbol => methodSymbol.Parameters.Select(selector: parameterSymbol => SymbolDisplay.ToDisplayString(parameterSymbol.Type))
+                                                               .SequenceEqual(second: ruleSignature, comparer: StringComparer.Ordinal));
     }
 
     [SuppressMessage(category: "SonarAnalyzer.CSharp", checkId: "S1172: Parameter only used for name", Justification = "By Design")]
