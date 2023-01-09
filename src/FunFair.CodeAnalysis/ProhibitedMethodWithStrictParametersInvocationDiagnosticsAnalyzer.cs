@@ -108,6 +108,7 @@ public sealed class ProhibitedMethodWithStrictParametersInvocationDiagnosticsAna
             return true;
         }
 
+        // Thi needs to be simplified
         return !(from bannedSignature in prohibitedMethod.BannedSignatures
                  from parameterSpec in bannedSignature
                  let parameter = parameters.FirstOrDefault(predicate: param => param.MetadataName == parameterSpec.Name)
