@@ -37,16 +37,16 @@ public sealed class NullableDirectiveDiagnosticsAnalyzer : DiagnosticAnalyzer
 
     private static void PerformCheck(CompilationStartAnalysisContext compilationStartContext)
     {
-        void LookForProhibition(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
-        {
-            if (syntaxNodeAnalysisContext.Node is not NullableDirectiveTriviaSyntax pragmaWarningDirective)
-            {
-                return;
-            }
+        compilationStartContext.RegisterSyntaxNodeAction(action: LookForProhibition, SyntaxKind.NullableDirectiveTrivia);
+    }
 
-            pragmaWarningDirective.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: Rule);
+    private static void LookForProhibition(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
+    {
+        if (syntaxNodeAnalysisContext.Node is not NullableDirectiveTriviaSyntax pragmaWarningDirective)
+        {
+            return;
         }
 
-        compilationStartContext.RegisterSyntaxNodeAction(action: LookForProhibition, SyntaxKind.NullableDirectiveTrivia);
+        pragmaWarningDirective.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: Rule);
     }
 }

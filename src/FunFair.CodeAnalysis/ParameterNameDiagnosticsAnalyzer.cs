@@ -52,21 +52,35 @@ public sealed class ParameterNameDiagnosticsAnalyzer : DiagnosticAnalyzer
 
     private static void MustHaveASaneName(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
     {
-        if (syntaxNodeAnalysisContext.Node is ParameterSyntax parameterSyntax)
+        if (syntaxNodeAnalysisContext.Node is not ParameterSyntax parameterSyntax)
         {
-            string? fullTypeName = ParameterHelpers.GetFullTypeName(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, parameterSyntax: parameterSyntax);
+            return;
+        }
 
-            if (fullTypeName != null)
+        MustHaveASaneName(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, parameterSyntax: parameterSyntax);
+    }
+
+    private static void MustHaveASaneName(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, ParameterSyntax parameterSyntax)
+    {
+        string? fullTypeName = ParameterHelpers.GetFullTypeName(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, parameterSyntax: parameterSyntax);
+
+        if (fullTypeName == null)
+        {
+            return;
+        }
+
+        MustHaveASaneName(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, parameterSyntax: parameterSyntax, fullTypeName: fullTypeName);
+    }
+
+    private static void MustHaveASaneName(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, ParameterSyntax parameterSyntax, string fullTypeName)
+    {
+        NameSanitationSpec? rule = NameSpecifications.FirstOrDefault(ns => ns.SourceClass == fullTypeName);
+
+        if (rule != null)
+        {
+            if (!rule.WhitelistedParameterNames.Contains(value: parameterSyntax.Identifier.Text, comparer: StringComparer.Ordinal))
             {
-                NameSanitationSpec? rule = NameSpecifications.FirstOrDefault(ns => ns.SourceClass == fullTypeName);
-
-                if (rule != null)
-                {
-                    if (!rule.WhitelistedParameterNames.Contains(value: parameterSyntax.Identifier.Text, comparer: StringComparer.Ordinal))
-                    {
-                        parameterSyntax.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: rule.Rule);
-                    }
-                }
+                parameterSyntax.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: rule.Rule);
             }
         }
     }

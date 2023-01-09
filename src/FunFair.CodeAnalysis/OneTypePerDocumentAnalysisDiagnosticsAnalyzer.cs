@@ -60,9 +60,7 @@ public sealed class OneTypePerDocumentAnalysisDiagnosticsAnalyzer : DiagnosticAn
         IReadOnlyList<MemberDeclarationSyntax> members = GetNonNestedTypeDeclarations(compilationUnitSyntax)
             .ToArray();
 
-        IReadOnlyList<IGrouping<string, MemberDeclarationSyntax>> grouped = members.GroupBy(keySelector: GetTypeName, comparer: StringComparer.Ordinal)
-                                                                                   .Where(x => !string.IsNullOrWhiteSpace(x.Key))
-                                                                                   .ToArray();
+        IReadOnlyList<IGrouping<string, MemberDeclarationSyntax>> grouped = GroupedMembers(members);
 
         switch (grouped.Count)
         {
@@ -73,6 +71,13 @@ public sealed class OneTypePerDocumentAnalysisDiagnosticsAnalyzer : DiagnosticAn
 
                 break;
         }
+    }
+
+    private static IReadOnlyList<IGrouping<string, MemberDeclarationSyntax>> GroupedMembers(IReadOnlyList<MemberDeclarationSyntax> members)
+    {
+        return members.GroupBy(keySelector: GetTypeName, comparer: StringComparer.Ordinal)
+                      .Where(x => !string.IsNullOrWhiteSpace(x.Key))
+                      .ToArray();
     }
 
     private static bool IsSpecialCaseWhereNonGenericHelperClassExists(IReadOnlyList<IGrouping<string, MemberDeclarationSyntax>> grouped)
