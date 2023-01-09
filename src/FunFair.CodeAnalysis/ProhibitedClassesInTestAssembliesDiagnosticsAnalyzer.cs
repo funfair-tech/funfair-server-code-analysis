@@ -52,7 +52,7 @@ public sealed class ProhibitedClassesInTestAssembliesDiagnosticsAnalyzer : Diagn
                 return;
             }
 
-            ProhibitedClassSpec? bannedClass = BannedClasses.FirstOrDefault(rule => StringComparer.Ordinal.Equals(x: typeSymbol, y: rule.SourceClass));
+            ProhibitedClassSpec? bannedClass = GetBannedClass(typeSymbol);
 
             if (bannedClass != null)
             {
@@ -64,6 +64,11 @@ public sealed class ProhibitedClassesInTestAssembliesDiagnosticsAnalyzer : Diagn
         {
             compilationStartContext.RegisterSyntaxNodeAction(action: LookForBannedClasses, SyntaxKind.InvocationExpression);
         }
+    }
+
+    private static ProhibitedClassSpec? GetBannedClass(string typeSymbol)
+    {
+        return BannedClasses.FirstOrDefault(rule => StringComparer.Ordinal.Equals(x: typeSymbol, y: rule.SourceClass));
     }
 
     private static Dictionary<string, INamedTypeSymbol> BuildCachedSymbols(Compilation compilation)
