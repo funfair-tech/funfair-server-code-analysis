@@ -244,10 +244,16 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzer : DiagnosticA
     /// <returns>true, if the method was allowed; otherwise, false.</returns>
     private static bool IsBannedMethodSignature(IMethodSymbol invocationArguments, IEnumerable<IMethodSymbol> methodSignatures)
     {
-        IEnumerable<string> invocationParameters = invocationArguments.Parameters.Select(parameter => SymbolDisplay.ToDisplayString(parameter.OriginalDefinition));
+        IReadOnlyList<string> invocationParameters = GetInvocationParameters(invocationArguments);
 
         return methodSignatures.Any(predicate: methodSignature => methodSignature.Parameters.Select(x => SymbolDisplay.ToDisplayString(x.OriginalDefinition))
                                                                                  .SequenceEqual(second: invocationParameters, comparer: StringComparer.Ordinal));
+    }
+
+    private static IReadOnlyList<string> GetInvocationParameters(IMethodSymbol invocationArguments)
+    {
+        return invocationArguments.Parameters.Select(parameter => SymbolDisplay.ToDisplayString(parameter.OriginalDefinition))
+                                  .ToArray();
     }
 
     private sealed class ProhibitedMethodsSpec
