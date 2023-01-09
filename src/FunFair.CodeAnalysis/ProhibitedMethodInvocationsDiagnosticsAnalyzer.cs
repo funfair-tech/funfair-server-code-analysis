@@ -217,15 +217,8 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzer : DiagnosticA
 
     private static IReadOnlyList<IMethodSymbol> BuildMethodSignatureList(IEnumerable<IEnumerable<string>> ruleSignatures, IReadOnlyList<IMethodSymbol> methodSymbols)
     {
-        List<IMethodSymbol> methodSignatureList = new();
-
-        // iterate over each rule to find symbol signature that correspond with rule it self
-        foreach (IEnumerable<string> ruleSignature in ruleSignatures)
-        {
-            methodSignatureList.AddRange(GetBannedMethodSymbols(methodSymbols: methodSymbols, ruleSignature: ruleSignature));
-        }
-
-        return methodSignatureList;
+        return ruleSignatures.SelectMany(ruleSignature => GetBannedMethodSymbols(methodSymbols: methodSymbols, ruleSignature: ruleSignature))
+                             .ToArray();
     }
 
     private static IEnumerable<IMethodSymbol> GetBannedMethodSymbols(IReadOnlyList<IMethodSymbol> methodSymbols, IEnumerable<string> ruleSignature)
