@@ -48,15 +48,19 @@ public sealed class DebuggerDisplayAnalysisDiagnosticsAnalyzer : DiagnosticAnaly
             return;
         }
 
-        if (!recordDeclarationSyntax.AttributeLists.SelectMany(selector: al => al.Attributes)
-                                    .Select(attribute => syntaxNodeAnalysisContext.SemanticModel.GetTypeInfo(attribute))
-                                    .Select(ti => ti.Type)
-                                    .RemoveNulls()
-                                    .Any(ti => IsDebuggerDisplayAttribute(ti.ToDisplayString())))
-
+        if (!IsReadOnly(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, recordDeclarationSyntax: recordDeclarationSyntax))
         {
             recordDeclarationSyntax.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: Rule);
         }
+    }
+
+    private static bool IsReadOnly(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, RecordDeclarationSyntax recordDeclarationSyntax)
+    {
+        return recordDeclarationSyntax.AttributeLists.SelectMany(selector: al => al.Attributes)
+                                      .Select(attribute => syntaxNodeAnalysisContext.SemanticModel.GetTypeInfo(attribute))
+                                      .Select(ti => ti.Type)
+                                      .RemoveNulls()
+                                      .Any(ti => IsDebuggerDisplayAttribute(ti.ToDisplayString()));
     }
 
     private static bool IsDebuggerDisplayAttribute(string fullName)
