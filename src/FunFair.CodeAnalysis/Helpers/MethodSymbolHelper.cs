@@ -55,21 +55,29 @@ internal static class MethodSymbolHelper
 
     private static ImmutableArray<ISymbol> BuildSymbols(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, INamedTypeSymbol sourceType, string fullName)
     {
-        ImmutableArray<ISymbol> symbols = syntaxNodeAnalysisContext.SemanticModel.LookupSymbols(position: 0, container: sourceType, name: fullName, includeReducedExtensionMethods: true);
-
-        foreach (INamedTypeSymbol? baseType in sourceType.BaseClasses())
-        {
-            symbols = symbols.AddRange(syntaxNodeAnalysisContext.SemanticModel.LookupSymbols(position: 0, container: baseType, name: fullName, includeReducedExtensionMethods: true));
-        }
-
-        foreach (INamedTypeSymbol interfaceType in sourceType.AllInterfaces)
-        {
-            symbols = symbols.AddRange(syntaxNodeAnalysisContext.SemanticModel.LookupSymbols(position: 0, container: interfaceType, name: fullName, includeReducedExtensionMethods: true));
-        }
+        ImmutableArray<ISymbol> symbols = BuildSymbolsWithBaseTypes(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, sourceType: sourceType, fullName: fullName);
 
         Dump(symbols);
 
         return symbols;
+    }
+
+    private static ImmutableArray<ISymbol> BuildSymbolsWithBaseTypes(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, INamedTypeSymbol sourceType, string fullName)
+    {
+        return syntaxNodeAnalysisContext.SemanticModel.LookupSymbols(position: 0, container: sourceType, name: fullName, includeReducedExtensionMethods: true)
+                                        .Concat(sourceType.BaseClasses()
+                                                          .SelectMany(baseType => syntaxNodeAnalysisContext.SemanticModel.LookupSymbols(
+                                                                          position: 0,
+                                                                          container: baseType,
+                                                                          name: fullName,
+                                                                          includeReducedExtensionMethods: true)))
+                                        .Concat(sourceType.AllInterfaces.SelectMany(
+                                                    interfaceType => syntaxNodeAnalysisContext.SemanticModel.LookupSymbols(
+                                                        position: 0,
+                                                        container: interfaceType,
+                                                        name: fullName,
+                                                        includeReducedExtensionMethods: true)))
+                                        .ToImmutableArray();
     }
 
     private static bool HasMatchingArguments(InvocationExpressionSyntax invocation, IMethodSymbol arguments)
