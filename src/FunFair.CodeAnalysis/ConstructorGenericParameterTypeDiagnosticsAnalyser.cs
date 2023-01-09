@@ -64,34 +64,62 @@ public sealed class ConstructorGenericParameterTypeDiagnosticsAnalyser : Diagnos
 
     private static void MustHaveSaneGenericUsages(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
     {
-        if (syntaxNodeAnalysisContext.Node is ConstructorDeclarationSyntax constructorDeclarationSyntax)
+        if (syntaxNodeAnalysisContext.Node is not ConstructorDeclarationSyntax constructorDeclarationSyntax)
         {
-            if (constructorDeclarationSyntax.Parent is ClassDeclarationSyntax parentSymbolForClassForConstructor)
-            {
-                ISymbol classForConstructor = syntaxNodeAnalysisContext.SemanticModel.GetDeclaredSymbol(parentSymbolForClassForConstructor)!;
-                string className = classForConstructor.ToDisplayString();
+            return;
+        }
 
-                bool needed = IsClassNeeded(parentSymbolForClassForConstructor: parentSymbolForClassForConstructor,
-                                            classForConstructor: classForConstructor,
-                                            constructorDeclarationSyntax: constructorDeclarationSyntax);
+        MustHaveSaneGenericUsages(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, constructorDeclarationSyntax: constructorDeclarationSyntax);
+    }
 
-                foreach (ParameterSyntax parameterSyntax in constructorDeclarationSyntax.ParameterList.Parameters)
-                {
-                    CheckParameter(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, parameterSyntax: parameterSyntax, isProtected: needed, className: className);
-                }
-            }
+    private static void MustHaveSaneGenericUsages(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, ConstructorDeclarationSyntax constructorDeclarationSyntax)
+    {
+        if (constructorDeclarationSyntax.Parent is not ClassDeclarationSyntax parentSymbolForClassForConstructor)
+        {
+            return;
+        }
+
+        MustHaveSaneGenericUsages(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
+                                  constructorDeclarationSyntax: constructorDeclarationSyntax,
+                                  parentSymbolForClassForConstructor: parentSymbolForClassForConstructor);
+    }
+
+    private static void MustHaveSaneGenericUsages(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext,
+                                                  ConstructorDeclarationSyntax constructorDeclarationSyntax,
+                                                  ClassDeclarationSyntax parentSymbolForClassForConstructor)
+    {
+        ISymbol classForConstructor = syntaxNodeAnalysisContext.SemanticModel.GetDeclaredSymbol(parentSymbolForClassForConstructor)!;
+        string className = classForConstructor.ToDisplayString();
+
+        bool needed = IsNeeded(parentSymbolForClassForConstructor: parentSymbolForClassForConstructor,
+                               classForConstructor: classForConstructor,
+                               constructorDeclarationSyntax: constructorDeclarationSyntax);
+
+        foreach (ParameterSyntax parameterSyntax in constructorDeclarationSyntax.ParameterList.Parameters)
+        {
+            CheckParameter(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, parameterSyntax: parameterSyntax, isProtected: needed, className: className);
         }
     }
 
-    private static bool IsClassNeeded(ClassDeclarationSyntax parentSymbolForClassForConstructor, ISymbol classForConstructor, ConstructorDeclarationSyntax constructorDeclarationSyntax)
+    private static bool IsNeeded(ClassDeclarationSyntax parentSymbolForClassForConstructor, ISymbol classForConstructor, ConstructorDeclarationSyntax constructorDeclarationSyntax)
     {
-        bool classIsPublic = parentSymbolForClassForConstructor.Modifiers.Any(x => x.IsKind(SyntaxKind.PublicKeyword));
+        bool isProtected = constructorDeclarationSyntax.Modifiers.Any(x => x.IsKind(SyntaxKind.ProtectedKeyword));
+
+        if (isProtected)
+        {
+            return true;
+        }
 
         bool classIsNested = classForConstructor.ContainingType != null;
 
-        bool isProtected = constructorDeclarationSyntax.Modifiers.Any(x => x.IsKind(SyntaxKind.ProtectedKeyword));
+        if (classIsNested)
+        {
+            return true;
+        }
 
-        return isProtected || !classIsPublic || classIsNested;
+        bool classIsPublic = parentSymbolForClassForConstructor.Modifiers.Any(x => x.IsKind(SyntaxKind.PublicKeyword));
+
+        return !classIsPublic;
     }
 
     private static void CheckParameter(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, ParameterSyntax parameterSyntax, bool isProtected, string className)
