@@ -25,7 +25,7 @@ internal static class ParameterHelpers
     {
         ITypeSymbol dsType = ds.Type;
 
-        if (dsType is INamedTypeSymbol nts && nts.IsGenericType)
+        if (dsType is INamedTypeSymbol { IsGenericType: true })
         {
             dsType = dsType.OriginalDefinition;
         }
