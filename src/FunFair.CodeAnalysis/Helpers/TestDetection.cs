@@ -12,7 +12,8 @@ internal static class TestDetection
     public static bool IsTestMethod(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, MethodDeclarationSyntax methodDeclarationSyntax)
     {
         return methodDeclarationSyntax.AttributeLists.SelectMany(selector: al => al.Attributes)
-                                      .Select(attribute => syntaxNodeAnalysisContext.SemanticModel.GetTypeInfo(attribute))
+                                      .Select(attribute => syntaxNodeAnalysisContext.SemanticModel.GetTypeInfo(attributeSyntax: attribute,
+                                                                                                               cancellationToken: syntaxNodeAnalysisContext.CancellationToken))
                                       .Select(ti => ti.Type)
                                       .RemoveNulls()
                                       .Any(ti => IsTestMethodAttribute(ti.ToDisplayString()));

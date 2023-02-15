@@ -63,7 +63,8 @@ public sealed class ParameterOrderingDiagnosticsAnalyzer : DiagnosticAnalyzer
                                                                                    Index = index,
                                                                                    FullTypeName = ParameterHelpers.GetFullTypeName(
                                                                                        syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
-                                                                                       parameterSyntax: parameter)
+                                                                                       parameterSyntax: parameter,
+                                                                                       cancellationToken: syntaxNodeAnalysisContext.CancellationToken)
                                                                                })
                                       .ToArray();
 

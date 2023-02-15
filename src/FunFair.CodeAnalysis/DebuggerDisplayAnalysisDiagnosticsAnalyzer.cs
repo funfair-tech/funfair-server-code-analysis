@@ -57,7 +57,8 @@ public sealed class DebuggerDisplayAnalysisDiagnosticsAnalyzer : DiagnosticAnaly
     private static bool IsReadOnly(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, RecordDeclarationSyntax recordDeclarationSyntax)
     {
         return recordDeclarationSyntax.AttributeLists.SelectMany(selector: al => al.Attributes)
-                                      .Select(attribute => syntaxNodeAnalysisContext.SemanticModel.GetTypeInfo(attribute))
+                                      .Select(attribute => syntaxNodeAnalysisContext.SemanticModel.GetTypeInfo(attributeSyntax: attribute,
+                                                                                                               cancellationToken: syntaxNodeAnalysisContext.CancellationToken))
                                       .Select(ti => ti.Type)
                                       .RemoveNulls()
                                       .Any(ti => IsDebuggerDisplayAttribute(ti.ToDisplayString()));

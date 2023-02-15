@@ -65,7 +65,7 @@ public sealed class SuppressMessageDiagnosticsAnalyzer : DiagnosticAnalyzer
             return;
         }
 
-        TypeInfo ti = syntaxNodeAnalysisContext.SemanticModel.GetTypeInfo(methodDeclarationSyntax.Name);
+        TypeInfo ti = syntaxNodeAnalysisContext.SemanticModel.GetTypeInfo(expression: methodDeclarationSyntax.Name, cancellationToken: syntaxNodeAnalysisContext.CancellationToken);
 
         if (ti.Type?.MetadataName != sourceClassType.MetadataName)
         {

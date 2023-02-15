@@ -50,14 +50,14 @@ public sealed class ArgumentExceptionAnalysisDiagnosticsAnalyzer : DiagnosticAna
         compilationStartContext.RegisterSyntaxNodeAction(action: ArgumentExceptionsMustPassParameterName, SyntaxKind.ObjectCreationExpression);
     }
 
-    private static void ArgumentExceptionsMustPassParameterName(SyntaxNodeAnalysisContext syntaxNodeContext)
+    private static void ArgumentExceptionsMustPassParameterName(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
     {
-        if (syntaxNodeContext.Node is not ObjectCreationExpressionSyntax objectCreation)
+        if (syntaxNodeAnalysisContext.Node is not ObjectCreationExpressionSyntax objectCreation)
         {
             return;
         }
 
-        SymbolInfo symbolInfo = syntaxNodeContext.SemanticModel.GetSymbolInfo(objectCreation);
+        SymbolInfo symbolInfo = syntaxNodeAnalysisContext.SemanticModel.GetSymbolInfo(expression: objectCreation, cancellationToken: syntaxNodeAnalysisContext.CancellationToken);
 
         if (symbolInfo.Symbol is not IMethodSymbol methodSymbol)
         {
@@ -74,7 +74,7 @@ public sealed class ArgumentExceptionAnalysisDiagnosticsAnalyzer : DiagnosticAna
             return;
         }
 
-        syntaxNodeContext.ReportDiagnostic(Diagnostic.Create(descriptor: Rule, objectCreation.GetLocation()));
+        syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(descriptor: Rule, objectCreation.GetLocation()));
     }
 
     private static bool HasParamNameParameter(IMethodSymbol methodSymbol)

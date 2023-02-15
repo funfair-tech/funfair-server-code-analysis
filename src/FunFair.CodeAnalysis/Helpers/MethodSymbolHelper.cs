@@ -1,6 +1,7 @@
 ﻿using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -39,7 +40,9 @@ internal static class MethodSymbolHelper
                                                                           in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext,
                                                                           MemberAccessExpressionSyntax memberAccessExpressionSyntax)
     {
-        INamedTypeSymbol? sourceType = GetSourceType(memberAccessExpressionSyntax: memberAccessExpressionSyntax, semanticModel: syntaxNodeAnalysisContext.SemanticModel);
+        INamedTypeSymbol? sourceType = GetSourceType(memberAccessExpressionSyntax: memberAccessExpressionSyntax,
+                                                     semanticModel: syntaxNodeAnalysisContext.SemanticModel,
+                                                     cancellationToken: syntaxNodeAnalysisContext.CancellationToken);
 
         if (sourceType == null)
         {
@@ -97,13 +100,13 @@ internal static class MethodSymbolHelper
 
     private static ISymbol? GetSymbol(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, SyntaxNode expression)
     {
-        return syntaxNodeAnalysisContext.SemanticModel.GetSymbolInfo(node: expression)
+        return syntaxNodeAnalysisContext.SemanticModel.GetSymbolInfo(node: expression, cancellationToken: syntaxNodeAnalysisContext.CancellationToken)
                                         .Symbol;
     }
 
-    private static INamedTypeSymbol? GetSourceType(MemberAccessExpressionSyntax memberAccessExpressionSyntax, SemanticModel semanticModel)
+    private static INamedTypeSymbol? GetSourceType(MemberAccessExpressionSyntax memberAccessExpressionSyntax, SemanticModel semanticModel, CancellationToken cancellationToken)
     {
-        ISymbol? symbol = semanticModel.GetSymbolInfo(memberAccessExpressionSyntax.Expression)
+        ISymbol? symbol = semanticModel.GetSymbolInfo(expression: memberAccessExpressionSyntax.Expression, cancellationToken: cancellationToken)
                                        .Symbol;
 
         return symbol switch
