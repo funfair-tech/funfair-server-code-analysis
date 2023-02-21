@@ -15,7 +15,6 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 - FF-1429 - Updated Philips.CodeAnalysis.MaintainabilityAnalyzers to 1.2.32
 - FF-1429 - Updated Roslynator.Analyzers to 4.2.0
 - FF-1429 - Updated xunit.analyzers to 1.1.0
-- FF-1429 - Updated Microsoft.NET.Test.Sdk to 17.4.1
 - FF-1429 - Updated Microsoft.CodeAnalysis.CSharp.Workspaces to 4.4.0
 - FF-1429 - Updated Credfeto.Enumeration.Source.Generation to 1.0.5.17
 - FF-1429 - Updated NSubstitute.Analyzers.CSharp to 1.0.16
@@ -25,6 +24,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 - FF-1429 - Updated FunFair.Test.Common to 6.0.22.2685
 - FF-1429 - Updated SonarAnalyzer.CSharp to 8.53.0.62665
 - FF-1429 - Updated Meziantou.Analyzer to 2.0.17
+- FF-1429 - Updated Microsoft.NET.Test.Sdk to 17.5.0
 ### Removed
 ### Deployment Changes
 
