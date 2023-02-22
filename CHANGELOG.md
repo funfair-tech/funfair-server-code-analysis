@@ -22,9 +22,9 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 - FF-1429 - Updated Microsoft.VisualStudio.Threading.Analyzers to 17.5.22
 - FF-3881 - Updated DotNet SDK to 7.0.200
 - FF-1429 - Updated SonarAnalyzer.CSharp to 8.53.0.62665
-- FF-1429 - Updated Meziantou.Analyzer to 2.0.17
 - FF-1429 - Updated Microsoft.NET.Test.Sdk to 17.5.0
 - FF-1429 - Updated FunFair.Test.Common to 6.0.23.2715
+- FF-1429 - Updated Meziantou.Analyzer to 2.0.18
 ### Removed
 ### Deployment Changes
 
