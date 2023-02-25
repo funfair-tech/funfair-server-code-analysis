@@ -22,9 +22,9 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 - FF-1429 - Updated SonarAnalyzer.CSharp to 8.53.0.62665
 - FF-1429 - Updated Microsoft.NET.Test.Sdk to 17.5.0
 - FF-1429 - Updated Meziantou.Analyzer to 2.0.18
-- FF-1429 - Updated Credfeto.Enumeration.Source.Generation to 1.0.6.18
 - FF-1429 - Updated FunFair.Test.Common to 6.0.24.2725
 - FF-1429 - Updated Microsoft.CodeAnalysis.CSharp.Workspaces to 4.5.0
+- FF-1429 - Updated Credfeto.Enumeration.Source.Generation to 1.0.7.19
 ### Removed
 ### Deployment Changes
 
