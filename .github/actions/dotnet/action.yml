@@ -77,6 +77,8 @@ runs:
       DOTNET_ReadyToRun: "0"
       DOTNET_TC_QuickJitForLoops: "1"
       DOTNET_TieredPGO: "1"
+      TMP: "${{inputs.TEMP_WORK_DIR}}"
+      TEMP: "${{inputs.TEMP_WORK_DIR}}"
       TMPDIR: "${{inputs.TEMP_WORK_DIR}}"
 
   - name: "Dotnet: Build"
@@ -93,6 +95,8 @@ runs:
       DOTNET_ReadyToRun: "0"
       DOTNET_TC_QuickJitForLoops: "1"
       DOTNET_TieredPGO: "1"
+      TMP: "${{inputs.TEMP_WORK_DIR}}"
+      TEMP: "${{inputs.TEMP_WORK_DIR}}"
       TMPDIR: "${{inputs.TEMP_WORK_DIR}}"
 
   ## RUN TESTS
@@ -110,6 +114,8 @@ runs:
       DOTNET_ReadyToRun: "0"
       DOTNET_TC_QuickJitForLoops: "1"
       DOTNET_TieredPGO: "1"
+      TMP: "${{inputs.TEMP_WORK_DIR}}"
+      TEMP: "${{inputs.TEMP_WORK_DIR}}"
       TMPDIR: "${{inputs.TEMP_WORK_DIR}}"
 
   # ############################################################################################################
