@@ -40,8 +40,6 @@ runs:
       DOTNET_ReadyToRun: "0"
       DOTNET_TC_QuickJitForLoops: "1"
       DOTNET_TieredPGO: "1"
-      TMPDIR: "${{github.workspace}}/.tmp"
-
 
   - name: "Dotnet: Stop build server post publish"
     working-directory: ${{github.workspace}}/src
@@ -56,7 +54,6 @@ runs:
       DOTNET_ReadyToRun: "0"
       DOTNET_TC_QuickJitForLoops: "1"
       DOTNET_TieredPGO: "1"
-      TMPDIR: "${{github.workspace}}/.tmp"
 
   - name: "Dotnet: Zip Packages for Octopus"
     working-directory: ${{github.workspace}}/src/server-dist/${{inputs.PLATFORM}}

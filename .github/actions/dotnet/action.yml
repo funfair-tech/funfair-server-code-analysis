@@ -70,7 +70,6 @@ runs:
       DOTNET_ReadyToRun: "0"
       DOTNET_TC_QuickJitForLoops: "1"
       DOTNET_TieredPGO: "1"
-      TMPDIR: "${{github.workspace}}/.tmp"
 
   - name: "Dotnet: Clean"
     working-directory: ${{github.workspace}}/src
@@ -85,7 +84,6 @@ runs:
       DOTNET_ReadyToRun: "0"
       DOTNET_TC_QuickJitForLoops: "1"
       DOTNET_TieredPGO: "1"
-      TMPDIR: "${{github.workspace}}/.tmp"
 
   - name: "Dotnet: Stop build server for restore"
     working-directory: ${{github.workspace}}/src
@@ -100,7 +98,6 @@ runs:
       DOTNET_ReadyToRun: "0"
       DOTNET_TC_QuickJitForLoops: "1"
       DOTNET_TieredPGO: "1"
-      TMPDIR: "${{github.workspace}}/.tmp"
 
   - name: "Dotnet: Restore packages"
     working-directory: ${{github.workspace}}/src
@@ -115,7 +112,6 @@ runs:
       DOTNET_ReadyToRun: "0"
       DOTNET_TC_QuickJitForLoops: "1"
       DOTNET_TieredPGO: "1"
-      TMPDIR: "${{github.workspace}}/.tmp"
 
   - name: "Dotnet: Stop build server for build"
     working-directory: ${{github.workspace}}/src
@@ -130,7 +126,6 @@ runs:
       DOTNET_ReadyToRun: "0"
       DOTNET_TC_QuickJitForLoops: "1"
       DOTNET_TieredPGO: "1"
-      TMPDIR: "${{github.workspace}}/.tmp"
 
   - name: "Dotnet: Build"
     working-directory: ${{github.workspace}}/src
@@ -146,7 +141,6 @@ runs:
       DOTNET_ReadyToRun: "0"
       DOTNET_TC_QuickJitForLoops: "1"
       DOTNET_TieredPGO: "1"
-      TMPDIR: "${{github.workspace}}/.tmp"
 
   ## RUN TESTS
   - name: "Dotnet: Stop build server for Test"
@@ -162,7 +156,6 @@ runs:
       DOTNET_ReadyToRun: "0"
       DOTNET_TC_QuickJitForLoops: "1"
       DOTNET_TieredPGO: "1"
-      TMPDIR: "${{github.workspace}}/.tmp"
 
   - name: "Dotnet: Test"
     working-directory: ${{github.workspace}}/src
@@ -178,7 +171,6 @@ runs:
       DOTNET_ReadyToRun: "0"
       DOTNET_TC_QuickJitForLoops: "1"
       DOTNET_TieredPGO: "1"
-      TMPDIR: "${{github.workspace}}/.tmp"
 
   - name: "Dotnet: Stop build server post test"
     working-directory: ${{github.workspace}}/src
@@ -193,7 +185,6 @@ runs:
       DOTNET_ReadyToRun: "0"
       DOTNET_TC_QuickJitForLoops: "1"
       DOTNET_TieredPGO: "1"
-      TMPDIR: "${{github.workspace}}/.tmp"
 
   # ############################################################################################################
   # # DATABASE BUILD
@@ -257,7 +248,6 @@ runs:
       DOTNET_ReadyToRun: "0"
       DOTNET_TC_QuickJitForLoops: "1"
       DOTNET_TieredPGO: "1"
-      TMPDIR: "${{github.workspace}}/.tmp"
 
   - if: ${{inputs.NUGET_API_KEY != '' && inputs.NUGET_PACK == 'true'}}
     name: "Dotnet: Stop build server post Pack"
