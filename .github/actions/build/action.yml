@@ -251,7 +251,7 @@ runs:
       NUGET_API_KEY: ${{inputs.NUGET_API_KEY}}
       OCTOPUS_DEPLOY_PACKAGE: ${{inputs.OCTOPUS_DEPLOY_PACKAGE}}
       OCTOPUS_DEPLOY_PACKAGE_ZIP: ${{inputs.OCTOPUS_DEPLOY_PACKAGE_ZIP}}
-      TMPDIR: "${{inputs.TEMP_WORK_DIR}}"
+      TEMP_WORK_DIR: "${{inputs.TEMP_WORK_DIR}}"
 
   ############################################################################################################
   # NPM BUILD
