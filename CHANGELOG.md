@@ -9,6 +9,14 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 ### Added
 ### Fixed
 ### Changed
+### Removed
+### Deployment Changes
+
+<!--
+Releases that have at least been deployed to staging, BUT NOT necessarily released to live.  Changes should be moved from [Unreleased] into here as they are merged into the appropriate release branch
+-->
+## [5.9.1] - 2023-04-17
+### Changed
 - FF-1429 - Updated Philips.CodeAnalysis.DuplicateCodeAnalyzer to 1.1.7
 - FF-1429 - Updated xunit to 2.4.2
 - FF-1429 - Updated coverlet to 3.2.0
@@ -28,12 +36,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 - Dependencies - Updated SonarAnalyzer.CSharp to 8.55.0.65544
 - Dependencies - Updated Meziantou.Analyzer to 2.0.34
 - SDK - Updated DotNet SDK to 7.0.203
-### Removed
-### Deployment Changes
 
-<!--
-Releases that have at least been deployed to staging, BUT NOT necessarily released to live.  Changes should be moved from [Unreleased] into here as they are merged into the appropriate release branch
--->
 ## [5.9.0] - 2022-09-06
 ### Added
 - Added FFS0042 - SuppressMessage must not have a TODO Justification
