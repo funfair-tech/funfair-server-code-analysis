@@ -47,7 +47,10 @@ public abstract partial class DiagnosticVerifier
     /// <param name="language">The language the source classes are in</param>
     /// <param name="analyzer">The analyzer to be run on the sources</param>
     /// <returns>An IEnumerable of Diagnostics that surfaced in the source code, sorted by Location</returns>
-    private static Task<IReadOnlyList<Diagnostic>> GetSortedDiagnosticsAsync(string[] sources, MetadataReference[] references, string language, DiagnosticAnalyzer analyzer)
+    private static Task<IReadOnlyList<Diagnostic>> GetSortedDiagnosticsAsync(in ReadOnlySpan<string> sources,
+                                                                             in ReadOnlySpan<MetadataReference> references,
+                                                                             string language,
+                                                                             DiagnosticAnalyzer analyzer)
     {
         return GetSortedDiagnosticsFromDocumentsAsync(analyzer: analyzer, GetDocuments(sources: sources, references: references, language: language));
     }
@@ -183,7 +186,7 @@ public abstract partial class DiagnosticVerifier
     /// <param name="references">Metadata references.</param>
     /// <param name="language">The language the source code is in</param>
     /// <returns>A Tuple containing the Documents produced from the sources and their TextSpans if relevant</returns>
-    private static Document[] GetDocuments(string[] sources, MetadataReference[] references, string language)
+    private static Document[] GetDocuments(in ReadOnlySpan<string> sources, in ReadOnlySpan<MetadataReference> references, string language)
     {
         if (language != LanguageNames.CSharp && language != LanguageNames.VisualBasic)
         {
@@ -208,7 +211,7 @@ public abstract partial class DiagnosticVerifier
     /// <param name="references">Metadata References.</param>
     /// <param name="language">The language the source code is in</param>
     /// <returns>A Project created out of the Documents created from the source strings</returns>
-    private static Project CreateProject(string[] sources, MetadataReference[] references, string language = LanguageNames.CSharp)
+    private static Project CreateProject(in ReadOnlySpan<string> sources, in ReadOnlySpan<MetadataReference> references, string language = LanguageNames.CSharp)
     {
         const string fileNamePrefix = DEFAULT_FILE_PATH_PREFIX;
         string fileExt = language == LanguageNames.CSharp
@@ -217,7 +220,8 @@ public abstract partial class DiagnosticVerifier
 
         ProjectId projectId = ProjectId.CreateNewId(TEST_PROJECT_NAME);
 
-        Solution solution = references.Aggregate(BuildSolutionWithStandardReferences(language: language, projectId: projectId),
+        Solution solution = references.ToArray()
+                                      .Aggregate(BuildSolutionWithStandardReferences(language: language, projectId: projectId),
                                                  func: (current, reference) => current.AddMetadataReference(projectId: projectId, metadataReference: reference));
 
         int count = 0;
