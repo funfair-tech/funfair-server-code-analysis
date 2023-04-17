@@ -37,11 +37,6 @@ inputs:
     description: 'Package (root) to deploy when zipped'
     required: false
 
-  # BUILD
-  TEMP_WORK_DIR:
-    description: 'Temp path'
-    required: true
-
 runs:
   using: "composite"
   steps:
@@ -128,7 +123,6 @@ runs:
       BUILD_VERSION: ${{inputs.BUILD_VERSION}}
       OCTOPUS_DEPLOY_PACKAGE: ${{inputs.OCTOPUS_DEPLOY_PACKAGE}}
       OCTOPUS_DEPLOY_PACKAGE_ZIP: ${{inputs.OCTOPUS_DEPLOY_PACKAGE_ZIP}}
-      TEMP_WORK_DIR: "${{inputs.TEMP_WORK_DIR}}"
 
   ############################################################################################################
   # Publish ready for deploy to octopus
@@ -142,7 +136,6 @@ runs:
       PLATFORM: "win-x64"
       OCTOPUS_DEPLOY_PACKAGE: ${{inputs.OCTOPUS_DEPLOY_PACKAGE}}
       OCTOPUS_DEPLOY_PACKAGE_ZIP: ${{inputs.OCTOPUS_DEPLOY_PACKAGE_ZIP}}
-      TEMP_WORK_DIR: "${{inputs.TEMP_WORK_DIR}}"
 
   - if: ${{inputs.OCTOPUS_DEPLOY_PACKAGE != ''}}
     name: "Dotnet: Pack Packages for Octopus (linux-x64)"
@@ -153,7 +146,6 @@ runs:
       PLATFORM: "linux-x64"
       OCTOPUS_DEPLOY_PACKAGE: ${{inputs.OCTOPUS_DEPLOY_PACKAGE}}
       OCTOPUS_DEPLOY_PACKAGE_ZIP: ${{inputs.OCTOPUS_DEPLOY_PACKAGE_ZIP}}
-      TEMP_WORK_DIR: "${{inputs.TEMP_WORK_DIR}}"
 
   - if: ${{inputs.OCTOPUS_DEPLOY_PACKAGE != ''}}
     name: "Dotnet: Pack Packages for Octopus (linux-arm64)"
@@ -164,7 +156,6 @@ runs:
       PLATFORM: "linux-arm64"
       OCTOPUS_DEPLOY_PACKAGE: ${{inputs.OCTOPUS_DEPLOY_PACKAGE}}
       OCTOPUS_DEPLOY_PACKAGE_ZIP: ${{inputs.OCTOPUS_DEPLOY_PACKAGE_ZIP}}
-      TEMP_WORK_DIR: "${{inputs.TEMP_WORK_DIR}}"
 
   ############################################################################################################
   # DOTNET PUSH TO NUGET

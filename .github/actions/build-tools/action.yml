@@ -6,11 +6,6 @@ inputs:
     description: 'Github Token'
     required: true
 
-  # BUILD
-  TEMP_WORK_DIR:
-    description: 'Temp path'
-    required: true
-
 runs:
   using: "composite"
   steps:
@@ -37,9 +32,6 @@ runs:
       DOTNET_ReadyToRun: "0"
       DOTNET_TC_QuickJitForLoops: "1"
       DOTNET_TieredPGO: "1"
-      TMP: "${{inputs.TEMP_WORK_DIR}}"
-      TEMP: "${{inputs.TEMP_WORK_DIR}}"
-      TEMP_WORK_DIR: "${{inputs.TEMP_WORK_DIR}}"
     with:
       dotnet-version: |
           6.0.*
@@ -60,9 +52,6 @@ runs:
       DOTNET_ReadyToRun: "0"
       DOTNET_TC_QuickJitForLoops: "1"
       DOTNET_TieredPGO: "1"
-      TMP: "${{inputs.TEMP_WORK_DIR}}"
-      TEMP: "${{inputs.TEMP_WORK_DIR}}"
-      TEMP_WORK_DIR: "${{inputs.TEMP_WORK_DIR}}"
 
   - name: Install Build Version Tool
     shell: bash
@@ -76,9 +65,6 @@ runs:
       DOTNET_ReadyToRun: "0"
       DOTNET_TC_QuickJitForLoops: "1"
       DOTNET_TieredPGO: "1"
-      TMP: "${{inputs.TEMP_WORK_DIR}}"
-      TEMP: "${{inputs.TEMP_WORK_DIR}}"
-      TEMP_WORK_DIR: "${{inputs.TEMP_WORK_DIR}}"
 
   - name: Install Changelog Tool
     shell: bash
@@ -92,6 +78,3 @@ runs:
       DOTNET_ReadyToRun: "0"
       DOTNET_TC_QuickJitForLoops: "1"
       DOTNET_TieredPGO: "1"
-      TMP: "${{inputs.TEMP_WORK_DIR}}"
-      TEMP: "${{inputs.TEMP_WORK_DIR}}"
-      TEMP_WORK_DIR: "${{inputs.TEMP_WORK_DIR}}"
