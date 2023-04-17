@@ -37,6 +37,9 @@ runs:
       DOTNET_ReadyToRun: "0"
       DOTNET_TC_QuickJitForLoops: "1"
       DOTNET_TieredPGO: "1"
+      TMP: "${{inputs.TEMP_WORK_DIR}}"
+      TEMP: "${{inputs.TEMP_WORK_DIR}}"
+      TEMP_WORK_DIR: "${{inputs.TEMP_WORK_DIR}}"
     with:
       dotnet-version: |
           6.0.*
