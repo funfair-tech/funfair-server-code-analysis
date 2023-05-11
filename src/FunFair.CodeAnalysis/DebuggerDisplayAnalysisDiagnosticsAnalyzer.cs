@@ -38,30 +38,65 @@ public sealed class DebuggerDisplayAnalysisDiagnosticsAnalyzer : DiagnosticAnaly
 
     private static void PerformCheck(CompilationStartAnalysisContext compilationStartContext)
     {
-        compilationStartContext.RegisterSyntaxNodeAction(action: MustBeReadOnly, SyntaxKind.RecordDeclaration);
+        compilationStartContext.RegisterSyntaxNodeAction(action: RecordMustHaveDebuggerDisplayAttribute, SyntaxKind.RecordDeclaration, SyntaxKind.RecordStructDeclaration);
     }
 
-    private static void MustBeReadOnly(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
+    private static void RecordMustHaveDebuggerDisplayAttribute(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
     {
-        if (syntaxNodeAnalysisContext.Node is not RecordDeclarationSyntax recordDeclarationSyntax)
+        switch (syntaxNodeAnalysisContext.Node)
+        {
+            case RecordDeclarationSyntax recordDeclarationSyntax:
+                RecordMustHaveDebuggerDisplayAttribute(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, recordDeclarationSyntax: recordDeclarationSyntax);
+
+                return;
+            case StructDeclarationSyntax structDeclarationSyntax:
+                RecordMustHaveDebuggerDisplayAttribute(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, structDeclarationSyntax: structDeclarationSyntax);
+
+                return;
+            default:
+                // should never happen
+                return;
+        }
+    }
+
+    private static void RecordMustHaveDebuggerDisplayAttribute(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, StructDeclarationSyntax structDeclarationSyntax)
+    {
+        if (!structDeclarationSyntax.Modifiers.Any(SyntaxKind.RecordKeyword))
         {
             return;
         }
 
-        if (!IsReadOnly(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, recordDeclarationSyntax: recordDeclarationSyntax))
+        if (!HasDebuggerDisplayAttribute(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, structDeclarationSyntax: structDeclarationSyntax))
+        {
+            structDeclarationSyntax.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: Rule);
+        }
+    }
+
+    private static void RecordMustHaveDebuggerDisplayAttribute(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, RecordDeclarationSyntax recordDeclarationSyntax)
+    {
+        if (!HasDebuggerDisplayAttribute(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, recordDeclarationSyntax: recordDeclarationSyntax))
         {
             recordDeclarationSyntax.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: Rule);
         }
     }
 
-    private static bool IsReadOnly(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, RecordDeclarationSyntax recordDeclarationSyntax)
+    private static bool HasDebuggerDisplayAttribute(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, RecordDeclarationSyntax recordDeclarationSyntax)
     {
-        return recordDeclarationSyntax.AttributeLists.SelectMany(selector: al => al.Attributes)
-                                      .Select(attribute => syntaxNodeAnalysisContext.SemanticModel.GetTypeInfo(attributeSyntax: attribute,
-                                                                                                               cancellationToken: syntaxNodeAnalysisContext.CancellationToken))
-                                      .Select(ti => ti.Type)
-                                      .RemoveNulls()
-                                      .Any(ti => IsDebuggerDisplayAttribute(ti.ToDisplayString()));
+        return HasDebuggerDisplayAttribute(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, attributeLists: recordDeclarationSyntax.AttributeLists);
+    }
+
+    private static bool HasDebuggerDisplayAttribute(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, StructDeclarationSyntax structDeclarationSyntax)
+    {
+        return HasDebuggerDisplayAttribute(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, attributeLists: structDeclarationSyntax.AttributeLists);
+    }
+
+    private static bool HasDebuggerDisplayAttribute(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, in SyntaxList<AttributeListSyntax> attributeLists)
+    {
+        return attributeLists.SelectMany(selector: al => al.Attributes)
+                             .Select(attribute => syntaxNodeAnalysisContext.SemanticModel.GetTypeInfo(attributeSyntax: attribute, cancellationToken: syntaxNodeAnalysisContext.CancellationToken))
+                             .Select(ti => ti.Type)
+                             .RemoveNulls()
+                             .Any(ti => IsDebuggerDisplayAttribute(ti.ToDisplayString()));
     }
 
     private static bool IsDebuggerDisplayAttribute(string fullName)
