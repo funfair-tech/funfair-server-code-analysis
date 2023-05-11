@@ -8,6 +8,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 ## [Unreleased]
 ### Added
 ### Fixed
+- Missing DebuggerDisplay attribute check for record structs
 ### Changed
 - Dependencies - Updated Credfeto.Enumeration.Source.Generation to 1.0.9.588
 - Dependencies - Updated Roslynator.Analyzers to 4.3.0

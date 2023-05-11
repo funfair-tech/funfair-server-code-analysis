@@ -38,7 +38,7 @@ public sealed class DebuggerDisplayAnalysisDiagnosticsAnalyzer : DiagnosticAnaly
 
     private static void PerformCheck(CompilationStartAnalysisContext compilationStartContext)
     {
-        compilationStartContext.RegisterSyntaxNodeAction(action: RecordMustHaveDebuggerDisplayAttribute, SyntaxKind.RecordDeclaration, SyntaxKind.StructDeclaration);
+        compilationStartContext.RegisterSyntaxNodeAction(action: RecordMustHaveDebuggerDisplayAttribute, SyntaxKind.RecordDeclaration, SyntaxKind.RecordStructDeclaration);
     }
 
     private static void RecordMustHaveDebuggerDisplayAttribute(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
