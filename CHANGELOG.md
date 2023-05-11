@@ -8,6 +8,15 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 ## [Unreleased]
 ### Added
 ### Fixed
+### Changed
+### Removed
+### Deployment Changes
+
+<!--
+Releases that have at least been deployed to staging, BUT NOT necessarily released to live.  Changes should be moved from [Unreleased] into here as they are merged into the appropriate release branch
+-->
+## [5.9.2] - 2023-05-11
+### Fixed
 - Missing DebuggerDisplay attribute check for record structs
 ### Changed
 - Dependencies - Updated Credfeto.Enumeration.Source.Generation to 1.0.9.588
@@ -15,12 +24,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 - Dependencies - Updated SonarAnalyzer.CSharp to 9.0.0.68202
 - Dependencies - Updated FunFair.Test.Common to 6.1.0.8
 - Dependencies - Updated Meziantou.Analyzer to 2.0.49
-### Removed
-### Deployment Changes
 
-<!--
-Releases that have at least been deployed to staging, BUT NOT necessarily released to live.  Changes should be moved from [Unreleased] into here as they are merged into the appropriate release branch
--->
 ## [5.9.1] - 2023-04-17
 ### Changed
 - FF-1429 - Updated Philips.CodeAnalysis.DuplicateCodeAnalyzer to 1.1.7
