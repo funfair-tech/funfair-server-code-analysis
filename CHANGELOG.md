@@ -9,9 +9,9 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 ### Added
 ### Fixed
 ### Changed
-- Dependencies - Updated Meziantou.Analyzer to 2.0.50
 - Dependencies - Updated Microsoft.NET.Test.Sdk to 17.6.0
 - SDK - Updated DotNet SDK to 7.0.302
+- Dependencies - Updated Meziantou.Analyzer to 2.0.52
 ### Removed
 ### Deployment Changes
 
