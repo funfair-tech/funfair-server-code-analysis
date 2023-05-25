@@ -11,10 +11,10 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 ### Changed
 - Dependencies - Updated Microsoft.NET.Test.Sdk to 17.6.0
 - SDK - Updated DotNet SDK to 7.0.302
-- Dependencies - Updated Meziantou.Analyzer to 2.0.52
 - Dependencies - Updated Microsoft.CodeAnalysis.CSharp to 4.6.0
 - Dependencies - Updated Microsoft.VisualStudio.Threading.Analyzers to 17.6.40
 - Dependencies - Updated coverlet to 6.0.0
+- Dependencies - Updated Meziantou.Analyzer to 2.0.54
 ### Removed
 ### Deployment Changes
 
