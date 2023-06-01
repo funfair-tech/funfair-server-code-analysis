@@ -9,7 +9,6 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 ### Added
 ### Fixed
 ### Changed
-- Dependencies - Updated Microsoft.NET.Test.Sdk to 17.6.0
 - SDK - Updated DotNet SDK to 7.0.302
 - Dependencies - Updated Microsoft.CodeAnalysis.CSharp to 4.6.0
 - Dependencies - Updated Microsoft.VisualStudio.Threading.Analyzers to 17.6.40
@@ -17,6 +16,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 - Dependencies - Updated Meziantou.Analyzer to 2.0.56
 - Dependencies - Updated SonarAnalyzer.CSharp to 9.2.0.71021
 - Dependencies - Updated FunFair.Test.Common to 6.1.1.49
+- Dependencies - Updated Microsoft.NET.Test.Sdk to 17.6.1
 ### Removed
 ### Deployment Changes
 
