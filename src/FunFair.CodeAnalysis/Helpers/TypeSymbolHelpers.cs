@@ -6,7 +6,7 @@ internal static class TypeSymbolHelpers
 {
     public static string? ToFullyQualifiedName(this ITypeSymbol symbol)
     {
-        if (symbol.OriginalDefinition.ContainingNamespace == null)
+        if (symbol.OriginalDefinition.ContainingNamespace is null)
         {
             return null;
         }

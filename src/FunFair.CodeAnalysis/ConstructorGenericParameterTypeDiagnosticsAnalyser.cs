@@ -111,7 +111,7 @@ public sealed class ConstructorGenericParameterTypeDiagnosticsAnalyser : Diagnos
             return true;
         }
 
-        bool classIsNested = classForConstructor.ContainingType != null;
+        bool classIsNested = classForConstructor.ContainingType is not null;
 
         if (classIsNested)
         {
@@ -129,14 +129,14 @@ public sealed class ConstructorGenericParameterTypeDiagnosticsAnalyser : Diagnos
                                                                 parameterSyntax: parameterSyntax,
                                                                 cancellationToken: syntaxNodeAnalysisContext.CancellationToken);
 
-        if (fullTypeName == null)
+        if (fullTypeName is null)
         {
             return;
         }
 
         TypeCheckSpec? rule = GetTypeSpec(isProtected: isProtected, fullTypeName: fullTypeName);
 
-        if (rule == null)
+        if (rule is null)
         {
             return;
         }

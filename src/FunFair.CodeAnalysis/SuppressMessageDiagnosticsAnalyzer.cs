@@ -48,7 +48,7 @@ public sealed class SuppressMessageDiagnosticsAnalyzer : DiagnosticAnalyzer
     {
         INamedTypeSymbol? sourceClassType = compilationStartContext.Compilation.GetTypeByMetadataName(typeof(SuppressMessageAttribute).FullName);
 
-        if (sourceClassType == null)
+        if (sourceClassType is null)
         {
             return;
         }
@@ -74,7 +74,7 @@ public sealed class SuppressMessageDiagnosticsAnalyzer : DiagnosticAnalyzer
 
         AttributeArgumentSyntax? justification = methodDeclarationSyntax.ArgumentList?.Arguments.FirstOrDefault(k => k.NameEquals?.Name.Identifier.Text == "Justification");
 
-        if (justification == null)
+        if (justification is null)
         {
             methodDeclarationSyntax.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: RuleMustHaveJustification);
 

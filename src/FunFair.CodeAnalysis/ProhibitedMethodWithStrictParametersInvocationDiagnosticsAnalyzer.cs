@@ -72,7 +72,7 @@ public sealed class ProhibitedMethodWithStrictParametersInvocationDiagnosticsAna
                 IMethodSymbol? memberSymbol = MethodSymbolHelper.FindInvokedMemberSymbol(invocation: invocation, syntaxNodeAnalysisContext: syntaxNodeAnalysisContext);
 
                 // check if there is at least one rule that correspond to invocation method
-                if (memberSymbol == null)
+                if (memberSymbol is null)
                 {
                     return;
                 }
@@ -112,7 +112,7 @@ public sealed class ProhibitedMethodWithStrictParametersInvocationDiagnosticsAna
         return !prohibitedMethod.BannedSignatures.SelectMany(collectionSelector: bannedSignature => bannedSignature,
                                                              resultSelector: (bannedSignature, parameterSpec) => new { bannedSignature, parameterSpec })
                                 .Select(t => new { t, parameter = parameters.FirstOrDefault(predicate: param => param.MetadataName == t.parameterSpec.Name) })
-                                .Where(t => t.parameter != null)
+                                .Where(t => t.parameter is not null)
                                 .Select(t => new { t, argument = arguments.Arguments[t.parameter!.Ordinal] })
                                 .Where(t => t.argument.Expression.ToFullString() == t.t.t.parameterSpec.Value && t.argument.Expression.Kind()
                                                                                                                   .ToString() == t.t.t.parameterSpec.Type)

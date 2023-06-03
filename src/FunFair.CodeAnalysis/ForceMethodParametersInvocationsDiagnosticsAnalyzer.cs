@@ -84,7 +84,7 @@ public sealed class ForceMethodParametersInvocationsDiagnosticsAnalyzer : Diagno
         IMethodSymbol? memberSymbol = MethodSymbolHelper.FindInvokedMemberSymbol(invocation: invocation, syntaxNodeAnalysisContext: syntaxNodeAnalysisContext);
 
         // check if there is at least one rule that correspond to invocation method
-        if (memberSymbol == null)
+        if (memberSymbol is null)
         {
             return;
         }

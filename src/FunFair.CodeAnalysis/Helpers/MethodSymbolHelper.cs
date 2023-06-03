@@ -44,7 +44,7 @@ internal static class MethodSymbolHelper
                                                      semanticModel: syntaxNodeAnalysisContext.SemanticModel,
                                                      cancellationToken: syntaxNodeAnalysisContext.CancellationToken);
 
-        if (sourceType == null)
+        if (sourceType is null)
         {
             return null;
         }

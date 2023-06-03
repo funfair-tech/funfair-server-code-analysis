@@ -47,14 +47,14 @@ public sealed class ProhibitedClassesInTestAssembliesDiagnosticsAnalyzer : Diagn
             Dictionary<string, INamedTypeSymbol> cachedSymbols = BuildCachedSymbols(compilationStartContext.Compilation);
             string? typeSymbol = GetNameIfBanned(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, cachedSymbols: cachedSymbols);
 
-            if (typeSymbol == null)
+            if (typeSymbol is null)
             {
                 return;
             }
 
             ProhibitedClassSpec? bannedClass = GetBannedClass(typeSymbol);
 
-            if (bannedClass != null)
+            if (bannedClass is not null)
             {
                 syntaxNodeAnalysisContext.Node.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: bannedClass.Rule);
             }
@@ -81,7 +81,7 @@ public sealed class ProhibitedClassesInTestAssembliesDiagnosticsAnalyzer : Diagn
             {
                 INamedTypeSymbol? item = compilation.GetTypeByMetadataName(ruleSourceClass);
 
-                if (item != null)
+                if (item is not null)
                 {
                     cachedSymbols.Add(key: ruleSourceClass, value: item);
                 }
@@ -100,7 +100,7 @@ public sealed class ProhibitedClassesInTestAssembliesDiagnosticsAnalyzer : Diagn
 
         IMethodSymbol? memberSymbol = MethodSymbolHelper.FindInvokedMemberSymbol(invocation: invocation, syntaxNodeAnalysisContext: syntaxNodeAnalysisContext);
 
-        if (memberSymbol == null)
+        if (memberSymbol is null)
         {
             return null;
         }
@@ -108,7 +108,7 @@ public sealed class ProhibitedClassesInTestAssembliesDiagnosticsAnalyzer : Diagn
         ITypeSymbol? receivingType = memberSymbol.ReceiverType;
         string? fullName = receivingType?.ToFullyQualifiedName();
 
-        if (fullName == null)
+        if (fullName is null)
         {
             return null;
         }

@@ -84,7 +84,7 @@ public sealed class ArgumentExceptionAnalysisDiagnosticsAnalyzer : DiagnosticAna
 
     private static bool IsArgumentException(ITypeSymbol? methodSymbolReceiverType)
     {
-        if (methodSymbolReceiverType == null)
+        if (methodSymbolReceiverType is null)
         {
             return false;
         }

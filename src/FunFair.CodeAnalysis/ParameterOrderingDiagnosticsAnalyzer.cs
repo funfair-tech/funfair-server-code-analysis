@@ -74,7 +74,7 @@ public sealed class ParameterOrderingDiagnosticsAnalyzer : DiagnosticAnalyzer
         {
             var matchingParameter = Array.Find(array: parameters, match: x => x.FullTypeName == parameterType);
 
-            if (matchingParameter == null)
+            if (matchingParameter is null)
             {
                 continue;
             }

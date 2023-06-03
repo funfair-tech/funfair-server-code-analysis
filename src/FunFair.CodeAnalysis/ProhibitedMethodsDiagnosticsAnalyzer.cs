@@ -89,7 +89,7 @@ public sealed class ProhibitedMethodsDiagnosticsAnalyzer : DiagnosticAnalyzer
         {
             INamedTypeSymbol? typeInfo = ExtractExpressionSyntax(invocation: memberAccessExpressionSyntax, syntaxNodeAnalysisContext: syntaxNodeAnalysisContext);
 
-            if (typeInfo == null)
+            if (typeInfo is null)
             {
                 return;
             }
@@ -138,7 +138,7 @@ public sealed class ProhibitedMethodsDiagnosticsAnalyzer : DiagnosticAnalyzer
             {
                 INamedTypeSymbol? item = compilation.GetTypeByMetadataName(ruleSourceClass);
 
-                if (item != null)
+                if (item is not null)
                 {
                     cachedSymbols.Add(key: ruleSourceClass, value: item);
                 }
@@ -168,7 +168,7 @@ public sealed class ProhibitedMethodsDiagnosticsAnalyzer : DiagnosticAnalyzer
         INamedTypeSymbol? typeInfo = syntaxNodeAnalysisContext.SemanticModel.GetTypeInfo(expression: e, cancellationToken: syntaxNodeAnalysisContext.CancellationToken)
                                                               .Type as INamedTypeSymbol;
 
-        if (typeInfo?.ConstructedFrom == null)
+        if (typeInfo?.ConstructedFrom is null)
         {
             return null;
         }

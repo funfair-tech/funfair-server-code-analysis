@@ -23,7 +23,7 @@ internal static class TestDetection
     {
         ISymbol? containingType = syntaxNodeAnalysisContext.ContainingSymbol;
 
-        if (containingType == null)
+        if (containingType is null)
         {
             return false;
         }

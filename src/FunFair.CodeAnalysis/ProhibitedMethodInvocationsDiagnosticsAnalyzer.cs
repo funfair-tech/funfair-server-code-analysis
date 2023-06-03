@@ -115,14 +115,14 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzer : DiagnosticA
             IMethodSymbol? memberSymbol = MethodSymbolHelper.FindInvokedMemberSymbol(invocation: invocation, syntaxNodeAnalysisContext: syntaxNodeAnalysisContext);
 
             // check if there is at least one rule that correspond to invocation method
-            if (memberSymbol == null)
+            if (memberSymbol is null)
             {
                 return;
             }
 
             string? fullyQualifiedName = memberSymbol.ContainingType.ToFullyQualifiedName();
 
-            if (fullyQualifiedName == null)
+            if (fullyQualifiedName is null)
             {
                 return;
             }
@@ -201,12 +201,12 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzer : DiagnosticA
     /// <returns>Collection of allowed signatures.</returns>
     private static IReadOnlyList<IMethodSymbol> RemoveAllowedSignaturesForMethod(IReadOnlyList<IMethodSymbol>? methodSignatures, IEnumerable<IEnumerable<string>>? ruleSignatures)
     {
-        if (methodSignatures == null)
+        if (methodSignatures is null)
         {
             return ThrowUnknownMethodSignatureException(methodSignatures);
         }
 
-        if (ruleSignatures == null)
+        if (ruleSignatures is null)
         {
             return ThrowUnknownRuleSignature(ruleSignatures);
         }

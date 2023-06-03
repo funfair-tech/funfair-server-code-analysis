@@ -65,7 +65,7 @@ public sealed class ParameterNameDiagnosticsAnalyzer : DiagnosticAnalyzer
     {
         string? fullTypeName = ParameterHelpers.GetFullTypeName(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, parameterSyntax: parameterSyntax, cancellationToken: cancellationToken);
 
-        if (fullTypeName == null)
+        if (fullTypeName is null)
         {
             return;
         }
@@ -77,7 +77,7 @@ public sealed class ParameterNameDiagnosticsAnalyzer : DiagnosticAnalyzer
     {
         NameSanitationSpec? rule = NameSpecifications.FirstOrDefault(ns => ns.SourceClass == fullTypeName);
 
-        if (rule != null)
+        if (rule is not null)
         {
             if (!rule.WhitelistedParameterNames.Contains(value: parameterSyntax.Identifier.Text, comparer: StringComparer.Ordinal))
             {

@@ -12,7 +12,7 @@ internal static class ParameterHelpers
     {
         IParameterSymbol? ds = syntaxNodeAnalysisContext.SemanticModel.GetDeclaredSymbol(declarationSyntax: parameterSyntax, cancellationToken: cancellationToken);
 
-        if (ds != null)
+        if (ds is not null)
         {
             ITypeSymbol typeSymbol = GetTypeSymbol(ds);
 

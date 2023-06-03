@@ -46,7 +46,7 @@ public sealed class ProhibitedClassesDiagnosticsAnalyzer : DiagnosticAnalyzer
             Dictionary<string, INamedTypeSymbol> cachedSymbols = BuildCachedSymbols(compilationStartContext.Compilation);
             IEnumerable<INamedTypeSymbol>? typeSymbols = LookForUsageOfBannedClasses(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, cachedSymbols: cachedSymbols);
 
-            if (typeSymbols == null)
+            if (typeSymbols is null)
             {
                 return;
             }
@@ -69,7 +69,7 @@ public sealed class ProhibitedClassesDiagnosticsAnalyzer : DiagnosticAnalyzer
         {
             ProhibitedClassSpec? bannedClass = BannedClasses.FirstOrDefault(rule => StringComparer.OrdinalIgnoreCase.Equals(typeSymbol.ToFullyQualifiedName(), y: rule.SourceClass));
 
-            if (bannedClass != null)
+            if (bannedClass is not null)
             {
                 syntaxNodeAnalysisContext.Node.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: bannedClass.Rule);
             }
@@ -86,7 +86,7 @@ public sealed class ProhibitedClassesDiagnosticsAnalyzer : DiagnosticAnalyzer
             {
                 INamedTypeSymbol? item = compilation.GetTypeByMetadataName(ruleSourceClass);
 
-                if (item != null)
+                if (item is not null)
                 {
                     cachedSymbols.Add(key: ruleSourceClass, value: item);
                 }
@@ -100,7 +100,7 @@ public sealed class ProhibitedClassesDiagnosticsAnalyzer : DiagnosticAnalyzer
     {
         ISymbol? symbol = syntaxNodeAnalysisContext.SemanticModel.GetDeclaredSymbol(declaration: syntaxNodeAnalysisContext.Node, cancellationToken: syntaxNodeAnalysisContext.CancellationToken);
 
-        if (symbol == null)
+        if (symbol is null)
         {
             return LookupSymbolInContext(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, cachedSymbols: cachedSymbols);
         }
@@ -127,7 +127,7 @@ public sealed class ProhibitedClassesDiagnosticsAnalyzer : DiagnosticAnalyzer
         ITypeSymbol? typeInfo = syntaxNodeAnalysisContext.SemanticModel.GetTypeInfo(node: syntaxNodeAnalysisContext.Node, cancellationToken: syntaxNodeAnalysisContext.CancellationToken)
                                                          .Type;
 
-        if (typeInfo != null)
+        if (typeInfo is not null)
         {
             return GetSymbol(new[]
                              {
@@ -142,7 +142,7 @@ public sealed class ProhibitedClassesDiagnosticsAnalyzer : DiagnosticAnalyzer
     private static IEnumerable<INamedTypeSymbol> GetSymbol(IEnumerable<ITypeSymbol> symbols, Dictionary<string, INamedTypeSymbol> cachedSymbols)
     {
         return symbols.Select(symbol => GetSymbol(typeSymbol: symbol, cachedSymbols: cachedSymbols))
-                      .Where(symbol => symbol != null)!;
+                      .Where(symbol => symbol is not null)!;
     }
 
     /// <summary>
@@ -155,7 +155,7 @@ public sealed class ProhibitedClassesDiagnosticsAnalyzer : DiagnosticAnalyzer
     {
         string? fullyQualifiedSymbolName = typeSymbol.ToFullyQualifiedName();
 
-        if (fullyQualifiedSymbolName == null)
+        if (fullyQualifiedSymbolName is null)
         {
             return null;
         }

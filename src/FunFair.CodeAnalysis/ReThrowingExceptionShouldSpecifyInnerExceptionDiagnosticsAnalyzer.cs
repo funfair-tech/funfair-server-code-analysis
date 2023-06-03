@@ -50,7 +50,7 @@ public sealed class ReThrowingExceptionShouldSpecifyInnerExceptionDiagnosticsAna
 
         string? exceptionVariable = catchClause.Declaration?.Identifier.Text;
 
-        if (exceptionVariable == null)
+        if (exceptionVariable is null)
         {
             return;
         }
@@ -86,7 +86,7 @@ public sealed class ReThrowingExceptionShouldSpecifyInnerExceptionDiagnosticsAna
                                               in SyntaxNodeAnalysisContext syntaxNodeContext,
                                               ExpressionSyntax objectCreationExpression)
     {
-        if (argumentListSyntax == null || argumentListSyntax.Arguments.Count == 0)
+        if (argumentListSyntax is null || argumentListSyntax.Arguments.Count == 0)
         {
             ReportDiagnostic(exceptionVariable: exceptionVariable, syntaxNodeContext: syntaxNodeContext, objectCreationExpression.GetLocation());
 

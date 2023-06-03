@@ -84,7 +84,7 @@ public sealed class OneTypePerDocumentAnalysisDiagnosticsAnalyzer : DiagnosticAn
     {
         IGrouping<string, MemberDeclarationSyntax>? staticGrouping = grouped.FirstOrDefault(g => IsStatic(g.Key));
 
-        if (staticGrouping == null)
+        if (staticGrouping is null)
         {
             return false;
         }
