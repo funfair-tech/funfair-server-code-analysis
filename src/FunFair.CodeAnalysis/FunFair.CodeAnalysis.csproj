@@ -2,6 +2,7 @@
   <PropertyGroup>
     <DebuggerSupport>true</DebuggerSupport>
     <DisableImplicitNuGetFallbackFolder>true</DisableImplicitNuGetFallbackFolder>
+    <EnableMicrosoftExtensionsConfigurationBinderSourceGenerator>true</EnableMicrosoftExtensionsConfigurationBinderSourceGenerator>
     <EnablePackageValidation>true</EnablePackageValidation>
     <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
     <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
@@ -13,26 +14,25 @@
     <ImplicitUsings>disable</ImplicitUsings>
     <IncludeBuildOutput>false</IncludeBuildOutput>
     <IncludeOpenAPIAnalyzers>true</IncludeOpenAPIAnalyzers>
+    <IncludeSymbols>true</IncludeSymbols>
     <IsPackable>true</IsPackable>
     <IsPublishable>false</IsPublishable>
     <IsTrimmable>true</IsTrimmable>
+    <JsonSerializerIsReflectionEnabledByDefault>false</JsonSerializerIsReflectionEnabledByDefault>
     <LangVersion>latest</LangVersion>
     <NoWarn />
     <Nullable>enable</Nullable>
+    <OptimizationPreference>speed</OptimizationPreference>
     <OutputType>Library</OutputType>
     <PackAsTool>false</PackAsTool>
     <RunAOTCompilation>false</RunAOTCompilation>
+    <SymbolPackageFormat>symbols.nupkg</SymbolPackageFormat>
     <TargetFramework>netstandard2.0</TargetFramework>
     <TieredCompilation>true</TieredCompilation>
     <TieredPGO>true</TieredPGO>
     <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
     <UseSystemResourceKeys>true</UseSystemResourceKeys>
     <WarningsAsErrors />
-    <EnableMicrosoftExtensionsConfigurationBinderSourceGenerator>true</EnableMicrosoftExtensionsConfigurationBinderSourceGenerator>
-    <JsonSerializerIsReflectionEnabledByDefault>false</JsonSerializerIsReflectionEnabledByDefault>
-    <OptimizationPreference>speed</OptimizationPreference>
-    <IncludeSymbols>true</IncludeSymbols>
-    <SymbolPackageFormat>symbols.nupkg</SymbolPackageFormat>
   </PropertyGroup>
   <Import Project="$(SolutionDir)FunFair.props" />
   <PropertyGroup>

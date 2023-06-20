@@ -11,10 +11,6 @@ using Microsoft.CodeAnalysis.Diagnostics;
 
 namespace FunFair.CodeAnalysis;
 
-/// <inheritdoc />
-/// <summary>
-///     Looks for prohibited methods.
-/// </summary>
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public sealed class ProhibitedMethodsDiagnosticsAnalyzer : DiagnosticAnalyzer
 {
@@ -67,12 +63,10 @@ public sealed class ProhibitedMethodsDiagnosticsAnalyzer : DiagnosticAnalyzer
             bannedMethod: "Parse")
     };
 
-    /// <inheritdoc />
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
         BannedMethods.Select(selector: r => r.Rule)
                      .ToImmutableArray();
 
-    /// <inheritdoc />
     public override void Initialize(AnalysisContext context)
     {
         context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.None);
@@ -94,7 +88,10 @@ public sealed class ProhibitedMethodsDiagnosticsAnalyzer : DiagnosticAnalyzer
                 return;
             }
 
-            ReportAnyBannedSymbols(cachedSymbols: cachedSymbols, typeInfo: typeInfo, invocation: memberAccessExpressionSyntax, syntaxNodeAnalysisContext: syntaxNodeAnalysisContext);
+            ReportAnyBannedSymbols(cachedSymbols: cachedSymbols,
+                                   typeInfo: typeInfo,
+                                   invocation: memberAccessExpressionSyntax,
+                                   syntaxNodeAnalysisContext: syntaxNodeAnalysisContext);
         }
 
         void LookForBannedMethods(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)

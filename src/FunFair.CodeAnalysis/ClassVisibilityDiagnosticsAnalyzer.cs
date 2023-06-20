@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using FunFair.CodeAnalysis.Extensions;
@@ -10,9 +10,6 @@ using Microsoft.CodeAnalysis.Diagnostics;
 
 namespace FunFair.CodeAnalysis;
 
-/// <summary>
-///     Looks for issues with class declarations
-/// </summary>
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public sealed class ClassVisibilityDiagnosticsAnalyzer : DiagnosticAnalyzer
 {
@@ -30,12 +27,10 @@ public sealed class ClassVisibilityDiagnosticsAnalyzer : DiagnosticAnalyzer
                                                                                              visibility: SyntaxKind.SealedKeyword)
                                                                      };
 
-    /// <inheritdoc />
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
         Classes.Select(c => c.Rule)
                .ToImmutableArray();
 
-    /// <inheritdoc />
     public override void Initialize(AnalysisContext context)
     {
         context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.None);
@@ -58,7 +53,8 @@ public sealed class ClassVisibilityDiagnosticsAnalyzer : DiagnosticAnalyzer
 
         foreach (ConfiguredClass classDefinition in Classes)
         {
-            if (classDefinition.TypeMatchesClass(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext) && !classDefinition.HasCorrectClassModifier(classDeclarationSyntax: classDeclarationSyntax))
+            if (classDefinition.TypeMatchesClass(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext) &&
+                !classDefinition.HasCorrectClassModifier(classDeclarationSyntax: classDeclarationSyntax))
             {
                 classDeclarationSyntax.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: classDefinition.Rule);
             }

@@ -1,4 +1,4 @@
-﻿using System.Collections.Immutable;
+using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
@@ -9,23 +9,16 @@ using Microsoft.CodeAnalysis.Diagnostics;
 
 namespace FunFair.CodeAnalysis.Helpers;
 
-/// <summary>
-///     Method symbol helper
-/// </summary>
 internal static class MethodSymbolHelper
 {
-    /// <summary>
-    ///     Find invoked member symbol
-    /// </summary>
-    /// <param name="invocation">Invocation expression syntax</param>
-    /// <param name="syntaxNodeAnalysisContext">Syntax node analysis context</param>
-    /// <returns></returns>
     public static IMethodSymbol? FindInvokedMemberSymbol(InvocationExpressionSyntax invocation, in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
     {
         if (invocation.Expression is MemberAccessExpressionSyntax memberAccessExpressionSyntax)
         {
             return GetSimpleMemberSymbol(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, memberAccessExpressionSyntax: memberAccessExpressionSyntax) ??
-                   ResolveExtensionMethodUsedByConstructor(invocation: invocation, syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, memberAccessExpressionSyntax: memberAccessExpressionSyntax);
+                   ResolveExtensionMethodUsedByConstructor(invocation: invocation,
+                                                           syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
+                                                           memberAccessExpressionSyntax: memberAccessExpressionSyntax);
         }
 
         return null;
@@ -70,7 +63,8 @@ internal static class MethodSymbolHelper
         return LookupSymbols(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, sourceType: sourceType, fullName: fullName)
                .Concat(sourceType.BaseClasses()
                                  .SelectMany(baseType => LookupSymbols(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, fullName: fullName, sourceType: baseType)))
-               .Concat(sourceType.AllInterfaces.SelectMany(interfaceType => LookupSymbols(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, sourceType: interfaceType, fullName: fullName)))
+               .Concat(sourceType.AllInterfaces.SelectMany(
+                           interfaceType => LookupSymbols(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, sourceType: interfaceType, fullName: fullName)))
                .ToImmutableArray();
     }
 

@@ -12,10 +12,6 @@ using Microsoft.CodeAnalysis.Diagnostics;
 
 namespace FunFair.CodeAnalysis;
 
-/// <inheritdoc />
-/// <summary>
-///     Looks for prohibited methods with specific parameter invocation
-/// </summary>
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzer : DiagnosticAnalyzer
 {
@@ -88,12 +84,10 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzer : DiagnosticA
             })
     };
 
-    /// <inheritdoc />
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
         BannedMethods.Select(selector: r => r.Rule)
                      .ToImmutableArray();
 
-    /// <inheritdoc />
     public override void Initialize(AnalysisContext context)
     {
         context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.None);
@@ -102,10 +96,6 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzer : DiagnosticA
         context.RegisterCompilationStartAction(PerformCheck);
     }
 
-    /// <summary>
-    ///     Perform check over code base
-    /// </summary>
-    /// <param name="compilationStartContext"></param>
     private static void PerformCheck(CompilationStartAnalysisContext compilationStartContext)
     {
         IReadOnlyDictionary<ProhibitedMethodsSpec, IReadOnlyList<IMethodSymbol>> cachedSymbols = BuildCachedSymbols(compilationStartContext.Compilation);
@@ -193,12 +183,6 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzer : DiagnosticA
                               .ToArray();
     }
 
-    /// <summary>
-    ///     Filter method signatures to get only signatures banned by rules
-    /// </summary>
-    /// <param name="methodSignatures">All signatures of one method</param>
-    /// <param name="ruleSignatures">All banned signatures</param>
-    /// <returns>Collection of allowed signatures.</returns>
     private static IReadOnlyList<IMethodSymbol> RemoveAllowedSignaturesForMethod(IReadOnlyList<IMethodSymbol>? methodSignatures, IEnumerable<IEnumerable<string>>? ruleSignatures)
     {
         if (methodSignatures is null)
@@ -217,7 +201,8 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzer : DiagnosticA
     private static IReadOnlyList<IMethodSymbol> BuildMethodSignatureList(IEnumerable<IEnumerable<string>> ruleSignatures, IReadOnlyList<IMethodSymbol> methodSymbols)
     {
         return ruleSignatures.SelectMany(ruleSignature => methodSymbols.Where(methodSymbol => methodSymbol
-                                                                                              .Parameters.Select(selector: parameterSymbol => SymbolDisplay.ToDisplayString(parameterSymbol.Type))
+                                                                                              .Parameters.Select(
+                                                                                                  selector: parameterSymbol => SymbolDisplay.ToDisplayString(parameterSymbol.Type))
                                                                                               .SequenceEqual(second: ruleSignature, comparer: StringComparer.Ordinal)))
                              .ToArray();
     }
@@ -236,12 +221,6 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzer : DiagnosticA
         throw new ArgumentException(message: "Unknown method signature", nameof(methodSignatures));
     }
 
-    /// <summary>
-    ///     Check if invoked method signature is in list of allowed signatures
-    /// </summary>
-    /// <param name="invocationArguments">Arguments used in invocation of method</param>
-    /// <param name="methodSignatures">List of all blocked signatures for method</param>
-    /// <returns>true, if the method was allowed; otherwise, false.</returns>
     private static bool IsBannedMethodSignature(IMethodSymbol invocationArguments, IEnumerable<IMethodSymbol> methodSignatures)
     {
         IReadOnlyList<string> invocationParameters = GetInvocationParameters(invocationArguments);
@@ -270,16 +249,10 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzer : DiagnosticA
 
         public string BannedMethod { get; }
 
-        /// <summary>
-        ///     List of all method signatures that are banned, every signature is given with array of types in exact parameter order
-        /// </summary>
         public IEnumerable<IEnumerable<string>> BannedSignatures { get; }
 
         public DiagnosticDescriptor Rule { get; }
 
-        /// <summary>
-        ///     Full qualified name of method
-        /// </summary>
         public string QualifiedName => string.Concat(str0: this.SourceClass, str1: ".", str2: this.BannedMethod);
     }
 }

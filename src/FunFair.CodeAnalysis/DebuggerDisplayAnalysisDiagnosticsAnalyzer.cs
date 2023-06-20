@@ -1,4 +1,4 @@
-﻿using System.Collections.Immutable;
+using System.Collections.Immutable;
 using System.Linq;
 using FunFair.CodeAnalysis.Extensions;
 using FunFair.CodeAnalysis.Helpers;
@@ -9,9 +9,6 @@ using Microsoft.CodeAnalysis.Diagnostics;
 
 namespace FunFair.CodeAnalysis;
 
-/// <summary>
-///     Looks for issues with record declarations
-/// </summary>
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public sealed class DebuggerDisplayAnalysisDiagnosticsAnalyzer : DiagnosticAnalyzer
 {
@@ -20,14 +17,12 @@ public sealed class DebuggerDisplayAnalysisDiagnosticsAnalyzer : DiagnosticAnaly
                                                                                title: "Should have DebuggerDisplay attribute",
                                                                                message: "Should have DebuggerDisplay attribute");
 
-    /// <inheritdoc />
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
         new[]
         {
             Rule
         }.ToImmutableArray();
 
-    /// <inheritdoc />
     public override void Initialize(AnalysisContext context)
     {
         context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.None);
@@ -93,7 +88,8 @@ public sealed class DebuggerDisplayAnalysisDiagnosticsAnalyzer : DiagnosticAnaly
     private static bool HasDebuggerDisplayAttribute(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, in SyntaxList<AttributeListSyntax> attributeLists)
     {
         return attributeLists.SelectMany(selector: al => al.Attributes)
-                             .Select(attribute => syntaxNodeAnalysisContext.SemanticModel.GetTypeInfo(attributeSyntax: attribute, cancellationToken: syntaxNodeAnalysisContext.CancellationToken))
+                             .Select(attribute => syntaxNodeAnalysisContext.SemanticModel.GetTypeInfo(attributeSyntax: attribute,
+                                                                                                      cancellationToken: syntaxNodeAnalysisContext.CancellationToken))
                              .Select(ti => ti.Type)
                              .RemoveNulls()
                              .Any(ti => IsDebuggerDisplayAttribute(ti.ToDisplayString()));

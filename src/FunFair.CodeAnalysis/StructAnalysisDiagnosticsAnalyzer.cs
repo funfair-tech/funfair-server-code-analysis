@@ -1,4 +1,4 @@
-﻿using System.Collections.Immutable;
+using System.Collections.Immutable;
 using System.Linq;
 using FunFair.CodeAnalysis.Extensions;
 using FunFair.CodeAnalysis.Helpers;
@@ -9,9 +9,6 @@ using Microsoft.CodeAnalysis.Diagnostics;
 
 namespace FunFair.CodeAnalysis;
 
-/// <summary>
-///     Looks for problems with structs.
-/// </summary>
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public sealed class StructAnalysisDiagnosticsAnalyzer : DiagnosticAnalyzer
 {
@@ -20,14 +17,12 @@ public sealed class StructAnalysisDiagnosticsAnalyzer : DiagnosticAnalyzer
                                                                                title: "Structs should be read-only",
                                                                                message: "Structs should be read-only");
 
-    /// <inheritdoc />
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
         new[]
         {
             Rule
         }.ToImmutableArray();
 
-    /// <inheritdoc />
     public override void Initialize(AnalysisContext context)
     {
         context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.None);

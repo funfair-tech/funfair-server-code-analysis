@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using FunFair.CodeAnalysis.Extensions;
@@ -10,9 +10,6 @@ using Microsoft.CodeAnalysis.Diagnostics;
 
 namespace FunFair.CodeAnalysis;
 
-/// <summary>
-///     Looks for issues with parameter types in constructor
-/// </summary>
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public sealed class ConstructorGenericParameterTypeDiagnosticsAnalyser : DiagnosticAnalyzer
 {
@@ -39,7 +36,6 @@ public sealed class ConstructorGenericParameterTypeDiagnosticsAnalyser : Diagnos
                                                                                          title: "Should be using '{0}' rather than '{1}' with {2}",
                                                                                          message: "Should be using '{0}' rather than '{1}' with {2}");
 
-    /// <inheritdoc />
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
         Specifications.Select(selector: r => r.Rule)
                       .Concat(new[]
@@ -48,7 +44,6 @@ public sealed class ConstructorGenericParameterTypeDiagnosticsAnalyser : Diagnos
                               })
                       .ToImmutableArray();
 
-    /// <inheritdoc />
     public override void Initialize(AnalysisContext context)
     {
         context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.None);
@@ -89,7 +84,8 @@ public sealed class ConstructorGenericParameterTypeDiagnosticsAnalyser : Diagnos
                                                   ClassDeclarationSyntax parentSymbolForClassForConstructor)
     {
         ISymbol classForConstructor =
-            syntaxNodeAnalysisContext.SemanticModel.GetDeclaredSymbol(declarationSyntax: parentSymbolForClassForConstructor, cancellationToken: syntaxNodeAnalysisContext.CancellationToken)!;
+            syntaxNodeAnalysisContext.SemanticModel.GetDeclaredSymbol(declarationSyntax: parentSymbolForClassForConstructor,
+                                                                      cancellationToken: syntaxNodeAnalysisContext.CancellationToken)!;
         string className = classForConstructor.ToDisplayString();
 
         bool needed = IsNeeded(parentSymbolForClassForConstructor: parentSymbolForClassForConstructor,
@@ -145,7 +141,10 @@ public sealed class ConstructorGenericParameterTypeDiagnosticsAnalyser : Diagnos
         {
             if (rule.MatchTypeOnGenericParameters)
             {
-                CheckGenericParameterTypeMatch(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, parameterSyntax: parameterSyntax, className: className, fullTypeName: fullTypeName);
+                CheckGenericParameterTypeMatch(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
+                                               parameterSyntax: parameterSyntax,
+                                               className: className,
+                                               fullTypeName: fullTypeName);
             }
 
             return;
@@ -162,9 +161,13 @@ public sealed class ConstructorGenericParameterTypeDiagnosticsAnalyser : Diagnos
         return Specifications.FirstOrDefault(ns => ns.IsProtected == isProtected && (ns.AllowedSourceClass == fullTypeName || ns.ProhibitedClass == fullTypeName));
     }
 
-    private static void CheckGenericParameterTypeMatch(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, ParameterSyntax parameterSyntax, string className, string fullTypeName)
+    private static void CheckGenericParameterTypeMatch(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext,
+                                                       ParameterSyntax parameterSyntax,
+                                                       string className,
+                                                       string fullTypeName)
     {
-        IParameterSymbol? ds = syntaxNodeAnalysisContext.SemanticModel.GetDeclaredSymbol(declarationSyntax: parameterSyntax, cancellationToken: syntaxNodeAnalysisContext.CancellationToken);
+        IParameterSymbol? ds =
+            syntaxNodeAnalysisContext.SemanticModel.GetDeclaredSymbol(declarationSyntax: parameterSyntax, cancellationToken: syntaxNodeAnalysisContext.CancellationToken);
 
         ITypeSymbol? dsType = ds?.Type;
 

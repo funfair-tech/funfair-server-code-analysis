@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
@@ -12,9 +12,6 @@ using Microsoft.CodeAnalysis.Diagnostics;
 
 namespace FunFair.CodeAnalysis;
 
-/// <summary>
-///     Looks for issues with parameter names
-/// </summary>
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public sealed class ParameterNameDiagnosticsAnalyzer : DiagnosticAnalyzer
 {
@@ -32,12 +29,10 @@ public sealed class ParameterNameDiagnosticsAnalyzer : DiagnosticAnalyzer
                                                                                            whitelistedParameterName: "logger")
                                                                                    };
 
-    /// <inheritdoc />
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
         NameSpecifications.Select(selector: r => r.Rule)
                           .ToImmutableArray();
 
-    /// <inheritdoc />
     public override void Initialize(AnalysisContext context)
     {
         context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.None);
@@ -63,7 +58,9 @@ public sealed class ParameterNameDiagnosticsAnalyzer : DiagnosticAnalyzer
 
     private static void MustHaveASaneName(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, ParameterSyntax parameterSyntax, CancellationToken cancellationToken)
     {
-        string? fullTypeName = ParameterHelpers.GetFullTypeName(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, parameterSyntax: parameterSyntax, cancellationToken: cancellationToken);
+        string? fullTypeName = ParameterHelpers.GetFullTypeName(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
+                                                                parameterSyntax: parameterSyntax,
+                                                                cancellationToken: cancellationToken);
 
         if (fullTypeName is null)
         {

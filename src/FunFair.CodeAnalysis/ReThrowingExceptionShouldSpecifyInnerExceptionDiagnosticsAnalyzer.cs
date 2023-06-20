@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using FunFair.CodeAnalysis.Helpers;
@@ -9,9 +9,6 @@ using Microsoft.CodeAnalysis.Diagnostics;
 
 namespace FunFair.CodeAnalysis;
 
-/// <summary>
-///     Looks for catches which throw a new exception without passing the exception as an inner exception.
-/// </summary>
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public sealed class ReThrowingExceptionShouldSpecifyInnerExceptionDiagnosticsAnalyzer : DiagnosticAnalyzer
 {
@@ -20,14 +17,12 @@ public sealed class ReThrowingExceptionShouldSpecifyInnerExceptionDiagnosticsAna
                                                                                title: "Pass an a inner exception when thrown from a catch clause",
                                                                                message: "Provide '{0}' as a inner exception when throw from the catch clauses");
 
-    /// <inheritdoc />
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
         new[]
         {
             Rule
         }.ToImmutableArray();
 
-    /// <inheritdoc />
     public override void Initialize(AnalysisContext context)
     {
         context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.None);

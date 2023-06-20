@@ -1,4 +1,4 @@
-﻿using System.Collections.Immutable;
+using System.Collections.Immutable;
 using FunFair.CodeAnalysis.Extensions;
 using FunFair.CodeAnalysis.Helpers;
 using Microsoft.CodeAnalysis;
@@ -8,9 +8,6 @@ using Microsoft.CodeAnalysis.Diagnostics;
 
 namespace FunFair.CodeAnalysis;
 
-/// <summary>
-///     Looks for issues with class declarations
-/// </summary>
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public sealed class TestClassFieldsAnalysisDiagnosticsAnalyzer : DiagnosticAnalyzer
 {
@@ -19,14 +16,12 @@ public sealed class TestClassFieldsAnalysisDiagnosticsAnalyzer : DiagnosticAnaly
                                                                                title: "Fields in test classes should be read-only or const",
                                                                                message: "Fields in test classes should be read-only or const");
 
-    /// <inheritdoc />
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
         new[]
         {
             Rule
         }.ToImmutableArray();
 
-    /// <inheritdoc />
     public override void Initialize(AnalysisContext context)
     {
         context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.None);

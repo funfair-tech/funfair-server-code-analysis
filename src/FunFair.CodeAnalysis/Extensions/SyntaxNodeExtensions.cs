@@ -10,7 +10,10 @@ internal static class SyntaxNodeExtensions
         syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(descriptor: rule, expressionSyntax.GetLocation()));
     }
 
-    public static void ReportDiagnostics(this SyntaxNode expressionSyntax, in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, DiagnosticDescriptor rule, params object?[]? messageArgs)
+    public static void ReportDiagnostics(this SyntaxNode expressionSyntax,
+                                         in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext,
+                                         DiagnosticDescriptor rule,
+                                         params object?[]? messageArgs)
     {
         syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(descriptor: rule, expressionSyntax.GetLocation(), messageArgs: messageArgs));
     }

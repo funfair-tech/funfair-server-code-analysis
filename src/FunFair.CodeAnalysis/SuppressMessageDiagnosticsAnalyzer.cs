@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -11,9 +11,6 @@ using Microsoft.CodeAnalysis.Diagnostics;
 
 namespace FunFair.CodeAnalysis;
 
-/// <summary>
-///     Looks for problems with <see cref="SuppressMessageAttribute" />
-/// </summary>
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public sealed class SuppressMessageDiagnosticsAnalyzer : DiagnosticAnalyzer
 {
@@ -27,7 +24,6 @@ public sealed class SuppressMessageDiagnosticsAnalyzer : DiagnosticAnalyzer
                                                                                                            title: "SuppressMessage must not have a TODO Justification",
                                                                                                            message: "SuppressMessage must not have a TODO Justification");
 
-    /// <inheritdoc />
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
         new[]
         {
@@ -35,7 +31,6 @@ public sealed class SuppressMessageDiagnosticsAnalyzer : DiagnosticAnalyzer
             RuleMustNotHaveTodoJustification
         }.ToImmutableArray();
 
-    /// <inheritdoc />
     public override void Initialize(AnalysisContext context)
     {
         context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.None);

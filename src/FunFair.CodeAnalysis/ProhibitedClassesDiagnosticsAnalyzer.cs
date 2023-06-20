@@ -10,10 +10,6 @@ using Microsoft.CodeAnalysis.Diagnostics;
 
 namespace FunFair.CodeAnalysis;
 
-/// <inheritdoc />
-/// <summary>
-///     Looks for prohibited classes.
-/// </summary>
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public sealed class ProhibitedClassesDiagnosticsAnalyzer : DiagnosticAnalyzer
 {
@@ -21,16 +17,15 @@ public sealed class ProhibitedClassesDiagnosticsAnalyzer : DiagnosticAnalyzer
                                                                                {
                                                                                    new(ruleId: Rules.RuleDontUseConcurrentDictionary,
                                                                                        title: "Avoid use of System.Collections.Concurrent.ConcurrentDictionary class",
-                                                                                       message: "Use NonBlocking.ConcurrentDictionary  rather than System.Collections.Concurrent.ConcurrentDictionary",
+                                                                                       message:
+                                                                                       "Use NonBlocking.ConcurrentDictionary  rather than System.Collections.Concurrent.ConcurrentDictionary",
                                                                                        sourceClass: "System.Collections.Concurrent.ConcurrentDictionary`2")
                                                                                };
 
-    /// <inheritdoc />
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
         BannedClasses.Select(selector: r => r.Rule)
                      .ToImmutableArray();
 
-    /// <inheritdoc />
     public override void Initialize(AnalysisContext context)
     {
         context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.None);
@@ -67,7 +62,8 @@ public sealed class ProhibitedClassesDiagnosticsAnalyzer : DiagnosticAnalyzer
     {
         foreach (INamedTypeSymbol typeSymbol in typeSymbols)
         {
-            ProhibitedClassSpec? bannedClass = BannedClasses.FirstOrDefault(rule => StringComparer.OrdinalIgnoreCase.Equals(typeSymbol.ToFullyQualifiedName(), y: rule.SourceClass));
+            ProhibitedClassSpec? bannedClass =
+                BannedClasses.FirstOrDefault(rule => StringComparer.OrdinalIgnoreCase.Equals(typeSymbol.ToFullyQualifiedName(), y: rule.SourceClass));
 
             if (bannedClass is not null)
             {
@@ -96,9 +92,11 @@ public sealed class ProhibitedClassesDiagnosticsAnalyzer : DiagnosticAnalyzer
         return cachedSymbols;
     }
 
-    private static IEnumerable<INamedTypeSymbol>? LookForUsageOfBannedClasses(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, Dictionary<string, INamedTypeSymbol> cachedSymbols)
+    private static IEnumerable<INamedTypeSymbol>? LookForUsageOfBannedClasses(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext,
+                                                                              Dictionary<string, INamedTypeSymbol> cachedSymbols)
     {
-        ISymbol? symbol = syntaxNodeAnalysisContext.SemanticModel.GetDeclaredSymbol(declaration: syntaxNodeAnalysisContext.Node, cancellationToken: syntaxNodeAnalysisContext.CancellationToken);
+        ISymbol? symbol = syntaxNodeAnalysisContext.SemanticModel.GetDeclaredSymbol(declaration: syntaxNodeAnalysisContext.Node,
+                                                                                    cancellationToken: syntaxNodeAnalysisContext.CancellationToken);
 
         if (symbol is null)
         {
@@ -124,8 +122,9 @@ public sealed class ProhibitedClassesDiagnosticsAnalyzer : DiagnosticAnalyzer
 
     private static IEnumerable<INamedTypeSymbol>? LookupSymbolInContext(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, Dictionary<string, INamedTypeSymbol> cachedSymbols)
     {
-        ITypeSymbol? typeInfo = syntaxNodeAnalysisContext.SemanticModel.GetTypeInfo(node: syntaxNodeAnalysisContext.Node, cancellationToken: syntaxNodeAnalysisContext.CancellationToken)
-                                                         .Type;
+        ITypeSymbol? typeInfo = syntaxNodeAnalysisContext
+                                .SemanticModel.GetTypeInfo(node: syntaxNodeAnalysisContext.Node, cancellationToken: syntaxNodeAnalysisContext.CancellationToken)
+                                .Type;
 
         if (typeInfo is not null)
         {
@@ -145,12 +144,6 @@ public sealed class ProhibitedClassesDiagnosticsAnalyzer : DiagnosticAnalyzer
                       .Where(symbol => symbol is not null)!;
     }
 
-    /// <summary>
-    ///     Get symbol from list of defined banned classes
-    /// </summary>
-    /// <param name="typeSymbol">Type symbol to get</param>
-    /// <param name="cachedSymbols">The symbol cache</param>
-    /// <returns></returns>
     private static INamedTypeSymbol? GetSymbol(ITypeSymbol typeSymbol, Dictionary<string, INamedTypeSymbol> cachedSymbols)
     {
         string? fullyQualifiedSymbolName = typeSymbol.ToFullyQualifiedName();

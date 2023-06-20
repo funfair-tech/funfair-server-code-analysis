@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Immutable;
 using System.Linq;
 using FunFair.CodeAnalysis.Helpers;
@@ -9,9 +9,6 @@ using Microsoft.CodeAnalysis.Diagnostics;
 
 namespace FunFair.CodeAnalysis;
 
-/// <summary>
-///     Looks for issues with argument exception creation
-/// </summary>
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public sealed class ArgumentExceptionAnalysisDiagnosticsAnalyzer : DiagnosticAnalyzer
 {
@@ -29,14 +26,12 @@ public sealed class ArgumentExceptionAnalysisDiagnosticsAnalyzer : DiagnosticAna
         "System.ArgumentOutOfRangeException"
     };
 
-    /// <inheritdoc />
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
         new[]
         {
             Rule
         }.ToImmutableArray();
 
-    /// <inheritdoc />
     public override void Initialize(AnalysisContext context)
     {
         context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.None);

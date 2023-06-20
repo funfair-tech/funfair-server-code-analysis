@@ -1,40 +1,22 @@
-﻿using System;
+using System;
 using System.Diagnostics.CodeAnalysis;
 
 namespace FunFair.CodeAnalysis.Helpers;
 
-/// <summary>
-///     Mapping class
-/// </summary>
 internal sealed class Mapping : IEquatable<Mapping>
 {
-    /// <summary>
-    ///     Constructor
-    /// </summary>
-    /// <param name="methodName">Method name</param>
-    /// <param name="className">Class name</param>
     public Mapping(string methodName, string className)
     {
         this.MethodName = methodName;
         this.ClassName = className;
     }
 
-    /// <summary>
-    ///     Method name
-    /// </summary>
     private string MethodName { get; }
 
-    /// <summary>
-    ///     Class name
-    /// </summary>
     private string ClassName { get; }
 
-    /// <summary>
-    ///     Full qualified name of method
-    /// </summary>
     public string QualifiedName => string.Concat(str0: this.ClassName, str1: ".", str2: this.MethodName);
 
-    /// <inheritdoc />
     public bool Equals(Mapping? other)
     {
         if (ReferenceEquals(objA: null, objB: other))
@@ -50,36 +32,22 @@ internal sealed class Mapping : IEquatable<Mapping>
         return this.MethodName == other.MethodName && this.ClassName == other.ClassName;
     }
 
-    /// <inheritdoc />
     public override bool Equals(object? obj)
     {
         return ReferenceEquals(this, objB: obj) || obj is Mapping other && this.Equals(other);
     }
 
-    /// <inheritdoc />
     [SuppressMessage(category: "Meziantou.Analyzer", checkId: "MA0021:Use String Comparer to compute hash codes", Justification = "Not in net stabdard 2.0")]
     public override int GetHashCode()
     {
         return (this.MethodName.GetHashCode() * 397) ^ this.ClassName.GetHashCode();
     }
 
-    /// <summary>
-    ///     Operator ==
-    /// </summary>
-    /// <param name="left">Left</param>
-    /// <param name="right">Right</param>
-    /// <returns>Result</returns>
     public static bool operator ==(Mapping? left, Mapping? right)
     {
         return Equals(objA: left, objB: right);
     }
 
-    /// <summary>
-    ///     Operator !=
-    /// </summary>
-    /// <param name="left">Left</param>
-    /// <param name="right">Right</param>
-    /// <returns>Result</returns>
     public static bool operator !=(Mapping? left, Mapping? right)
     {
         return !Equals(objA: left, objB: right);

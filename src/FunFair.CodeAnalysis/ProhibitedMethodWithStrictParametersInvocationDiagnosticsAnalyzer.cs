@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using FunFair.CodeAnalysis.Extensions;
@@ -10,10 +10,6 @@ using Microsoft.CodeAnalysis.Diagnostics;
 
 namespace FunFair.CodeAnalysis;
 
-/// <inheritdoc />
-/// <summary>
-///     Looks for methods which we want to prohibit with strict parameter invocation
-/// </summary>
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public sealed class ProhibitedMethodWithStrictParametersInvocationDiagnosticsAnalyzer : DiagnosticAnalyzer
 {
@@ -45,12 +41,10 @@ public sealed class ProhibitedMethodWithStrictParametersInvocationDiagnosticsAna
             })
     };
 
-    /// <inheritdoc />
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
         ForcedMethods.Select(selector: r => r.Rule)
                      .ToImmutableArray();
 
-    /// <inheritdoc />
     public override void Initialize(AnalysisContext context)
     {
         context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.None);
@@ -59,10 +53,6 @@ public sealed class ProhibitedMethodWithStrictParametersInvocationDiagnosticsAna
         context.RegisterCompilationStartAction(PerformCheck);
     }
 
-    /// <summary>
-    ///     Perform check over code base
-    /// </summary>
-    /// <param name="compilationStartContext"></param>
     private static void PerformCheck(CompilationStartAnalysisContext compilationStartContext)
     {
         void LookForForcedMethods(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
@@ -94,13 +84,6 @@ public sealed class ProhibitedMethodWithStrictParametersInvocationDiagnosticsAna
         compilationStartContext.RegisterSyntaxNodeAction(action: LookForForcedMethods, SyntaxKind.InvocationExpression);
     }
 
-    /// <summary>
-    ///     Check if invoked method is using proper arguments and values for them
-    /// </summary>
-    /// <param name="arguments">Arguments used in invocation of method</param>
-    /// <param name="parameters">Method parameters</param>
-    /// <param name="prohibitedMethod">Prohibited method rule</param>
-    /// <returns></returns>
     private static bool IsInvocationAllowed(BaseArgumentListSyntax arguments, IReadOnlyList<IParameterSymbol> parameters, ProhibitedMethodsSpec prohibitedMethod)
     {
         if (!prohibitedMethod.BannedSignatures.Any())
@@ -150,16 +133,10 @@ public sealed class ProhibitedMethodWithStrictParametersInvocationDiagnosticsAna
 
         public string ForcedMethod { get; }
 
-        /// <summary>
-        ///     List of all method signatures that are banned, every signature is given with array of types in exact parameter order
-        /// </summary>
         public IEnumerable<IEnumerable<ParameterSpec>> BannedSignatures { get; }
 
         public DiagnosticDescriptor Rule { get; }
 
-        /// <summary>
-        ///     Full qualified name of method
-        /// </summary>
         public string QualifiedName => string.Concat(str0: this.SourceClass, str1: ".", str2: this.ForcedMethod);
     }
 }

@@ -3,9 +3,6 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace FunFair.CodeAnalysis.Tests.Helpers;
 
-/// <summary>
-///     Location where the diagnostic appears, as determined by path, line number, and column number.
-/// </summary>
 [SuppressMessage(category: "Microsoft.Performance", checkId: "CA1815:OverrideEqualsAndOperatorEqualsOnValueTypes", Justification = "Test code")]
 public readonly struct DiagnosticResultLocation
 {

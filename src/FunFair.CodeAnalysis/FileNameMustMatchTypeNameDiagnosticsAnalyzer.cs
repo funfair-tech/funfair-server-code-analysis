@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.IO;
@@ -12,9 +12,6 @@ using Microsoft.CodeAnalysis.Diagnostics;
 
 namespace FunFair.CodeAnalysis;
 
-/// <summary>
-///     Looks for multiple classes being present in a file.
-/// </summary>
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public sealed class FileNameMustMatchTypeNameDiagnosticsAnalyzer : DiagnosticAnalyzer
 {
@@ -23,14 +20,12 @@ public sealed class FileNameMustMatchTypeNameDiagnosticsAnalyzer : DiagnosticAna
                                                                                title: "Should be in a file of the same name as the type",
                                                                                message: "Should be in a file of the same name as the type");
 
-    /// <inheritdoc />
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
         new[]
         {
             Rule
         }.ToImmutableArray();
 
-    /// <inheritdoc />
     public override void Initialize(AnalysisContext context)
     {
         context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.None);

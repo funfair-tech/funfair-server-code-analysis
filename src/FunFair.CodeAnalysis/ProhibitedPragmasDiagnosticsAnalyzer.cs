@@ -12,9 +12,6 @@ using Microsoft.CodeAnalysis.Diagnostics;
 
 namespace FunFair.CodeAnalysis;
 
-/// <summary>
-///     Looks for prohibited methods.
-/// </summary>
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public sealed class ProhibitedPragmasDiagnosticsAnalyzer : DiagnosticAnalyzer
 {
@@ -35,14 +32,12 @@ public sealed class ProhibitedPragmasDiagnosticsAnalyzer : DiagnosticAnalyzer
                                                                                title: "Don't disable warnings with #pragma warning disable",
                                                                                message: "Don't disable warnings using #pragma warning disable");
 
-    /// <inheritdoc />
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
         new[]
         {
             Rule
         }.ToImmutableArray();
 
-    /// <inheritdoc />
     public override void Initialize(AnalysisContext context)
     {
         context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.None);

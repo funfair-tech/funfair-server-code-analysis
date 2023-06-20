@@ -8,9 +8,6 @@ using Microsoft.CodeAnalysis.Diagnostics;
 
 namespace FunFair.CodeAnalysis;
 
-/// <summary>
-///     Looks for #nullable directives.
-/// </summary>
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public sealed class NullableDirectiveDiagnosticsAnalyzer : DiagnosticAnalyzer
 {
@@ -19,14 +16,12 @@ public sealed class NullableDirectiveDiagnosticsAnalyzer : DiagnosticAnalyzer
                                                                                title: "Don't use #nulllable directive, make the change globally for the project",
                                                                                message: "Don't use #nulllable directive, make the change globally for the project");
 
-    /// <inheritdoc />
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
         new[]
         {
             Rule
         }.ToImmutableArray();
 
-    /// <inheritdoc />
     public override void Initialize(AnalysisContext context)
     {
         context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.None);
