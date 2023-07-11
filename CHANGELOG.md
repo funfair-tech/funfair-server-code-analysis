@@ -14,12 +14,12 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 - Dependencies - Updated coverlet to 6.0.0
 - SDK - Updated DotNet SDK to 7.0.305
 - Dependencies - Updated Microsoft.NET.Test.Sdk to 17.6.3
-- Dependencies - Updated Meziantou.Analyzer to 2.0.63
 - Dependencies - Updated xunit.analyzers to 1.2.0
 - Dependencies - Updated xunit.runner.visualstudio to 2.5.0
 - Dependencies - Updated SonarAnalyzer.CSharp to 9.5.0.73987
 - Dependencies - Updated xunit to 2.5.0
 - Dependencies - Updated FunFair.Test.Common to 6.1.2.83
+- Dependencies - Updated Meziantou.Analyzer to 2.0.64
 ### Removed
 ### Deployment Changes
 
