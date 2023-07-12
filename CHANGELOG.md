@@ -12,7 +12,6 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 - Dependencies - Updated Microsoft.CodeAnalysis.CSharp to 4.6.0
 - Dependencies - Updated Microsoft.VisualStudio.Threading.Analyzers to 17.6.40
 - Dependencies - Updated coverlet to 6.0.0
-- SDK - Updated DotNet SDK to 7.0.305
 - Dependencies - Updated Microsoft.NET.Test.Sdk to 17.6.3
 - Dependencies - Updated xunit.analyzers to 1.2.0
 - Dependencies - Updated xunit.runner.visualstudio to 2.5.0
@@ -20,6 +19,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 - Dependencies - Updated xunit to 2.5.0
 - Dependencies - Updated FunFair.Test.Common to 6.1.2.83
 - Dependencies - Updated Meziantou.Analyzer to 2.0.64
+- SDK - Updated DotNet SDK to 7.0.306
 ### Removed
 ### Deployment Changes
 
