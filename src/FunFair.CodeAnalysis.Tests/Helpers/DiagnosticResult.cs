@@ -16,13 +16,11 @@ public readonly struct DiagnosticResult
 
     public int Line =>
         this.Locations.Length > 0
-            ? this.Locations[0]
-                  .Line
+            ? this.Locations[0].Line
             : -1;
 
     public int Column =>
         this.Locations.Length > 0
-            ? this.Locations[0]
-                  .Column
+            ? this.Locations[0].Column
             : -1;
 }
