@@ -17,6 +17,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 - Dependencies - Updated Microsoft.CodeAnalysis.CSharp to 4.7.0
 - Dependencies - Updated FunFair.Test.Common to 6.1.7.129
 - Dependencies - Updated SonarAnalyzer.CSharp to 9.8.0.76515
+- Dependencies - Updated TeamCity.VSTest.TestAdapter to 1.0.37
 ### Removed
 ### Deployment Changes
 
