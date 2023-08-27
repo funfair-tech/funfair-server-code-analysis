@@ -38,68 +38,80 @@ public sealed class SuppressMessageDiagnosticsAnalyzer : DiagnosticAnalyzer
         context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.None);
         context.EnableConcurrentExecution();
 
-        context.RegisterCompilationStartAction(PerformCheck);
+        Checker checker = new();
+
+        context.RegisterCompilationStartAction(checker.PerformCheck);
     }
 
-    private static void PerformCheck(CompilationStartAnalysisContext compilationStartContext)
+    private sealed class Checker
     {
-        INamedTypeSymbol? sourceClassType = compilationStartContext.Compilation.GetTypeByMetadataName(SuppressMessageFullName);
+        private INamedTypeSymbol? _suppressMessage;
 
-        if (sourceClassType is null)
+        public void PerformCheck(CompilationStartAnalysisContext compilationStartContext)
         {
-            return;
+            INamedTypeSymbol? sourceClassType = this.GetSuppressMessageAttributeType(compilationStartContext.Compilation);
+
+            if (sourceClassType is null)
+            {
+                return;
+            }
+
+            compilationStartContext.RegisterSyntaxNodeAction(action: syntaxNodeAnalysisContext =>
+                                                                         MustDeriveFromTestBase(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, sourceClassType: sourceClassType),
+                                                             SyntaxKind.Attribute);
         }
 
-        compilationStartContext.RegisterSyntaxNodeAction(action: syntaxNodeAnalysisContext =>
-                                                                     MustDeriveFromTestBase(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, sourceClassType: sourceClassType),
-                                                         SyntaxKind.Attribute);
-    }
-
-    private static void MustDeriveFromTestBase(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, INamedTypeSymbol sourceClassType)
-    {
-        if (syntaxNodeAnalysisContext.Node is not AttributeSyntax methodDeclarationSyntax)
+        private INamedTypeSymbol? GetSuppressMessageAttributeType(Compilation compilation)
         {
-            return;
+            return this._suppressMessage ??= compilation.GetTypeByMetadataName(SuppressMessageFullName);
         }
 
-        TypeInfo ti = syntaxNodeAnalysisContext.SemanticModel.GetTypeInfo(expression: methodDeclarationSyntax.Name, cancellationToken: syntaxNodeAnalysisContext.CancellationToken);
-
-        if (ti.Type?.MetadataName != sourceClassType.MetadataName)
+        private static void MustDeriveFromTestBase(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, INamedTypeSymbol sourceClassType)
         {
-            return;
+            if (syntaxNodeAnalysisContext.Node is not AttributeSyntax methodDeclarationSyntax)
+            {
+                return;
+            }
+
+            TypeInfo ti = syntaxNodeAnalysisContext.SemanticModel.GetTypeInfo(expression: methodDeclarationSyntax.Name, cancellationToken: syntaxNodeAnalysisContext.CancellationToken);
+
+            if (ti.Type?.MetadataName != sourceClassType.MetadataName)
+            {
+                return;
+            }
+
+            AttributeArgumentSyntax? justification = methodDeclarationSyntax.ArgumentList?.Arguments.FirstOrDefault(k => k.NameEquals?.Name.Identifier.Text == "Justification");
+
+            if (justification is null)
+            {
+                methodDeclarationSyntax.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: RuleMustHaveJustification);
+
+                return;
+            }
+
+            if (justification.Expression is not LiteralExpressionSyntax l)
+            {
+                return;
+            }
+
+            string text = l.Token.ValueText;
+
+            CheckJustification(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, text: text, l: l);
         }
 
-        AttributeArgumentSyntax? justification = methodDeclarationSyntax.ArgumentList?.Arguments.FirstOrDefault(k => k.NameEquals?.Name.Identifier.Text == "Justification");
-
-        if (justification is null)
+        private static void CheckJustification(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, string text, LiteralExpressionSyntax l)
         {
-            methodDeclarationSyntax.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: RuleMustHaveJustification);
+            if (string.IsNullOrWhiteSpace(text))
+            {
+                l.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: RuleMustHaveJustification);
 
-            return;
-        }
+                return;
+            }
 
-        if (justification.Expression is not LiteralExpressionSyntax l)
-        {
-            return;
-        }
-
-        string text = l.Token.ValueText;
-
-        CheckJustification(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, text: text, l: l);
-    }
-
-    private static void CheckJustification(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, string text, LiteralExpressionSyntax l)
-    {
-        if (string.IsNullOrWhiteSpace(text))
-        {
-            l.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: RuleMustHaveJustification);
-
-            return;
-        }
-
-        if (text.StartsWith(value: "TODO", comparisonType: StringComparison.OrdinalIgnoreCase))
-        {
-            l.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: RuleMustNotHaveTodoJustification);
+            if (text.StartsWith(value: "TODO", comparisonType: StringComparison.OrdinalIgnoreCase))
+            {
+                l.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: RuleMustNotHaveTodoJustification);
+            }
         }
     }
 }
