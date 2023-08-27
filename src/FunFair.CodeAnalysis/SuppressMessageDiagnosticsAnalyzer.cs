@@ -24,6 +24,8 @@ public sealed class SuppressMessageDiagnosticsAnalyzer : DiagnosticAnalyzer
                                                                                                            title: "SuppressMessage must not have a TODO Justification",
                                                                                                            message: "SuppressMessage must not have a TODO Justification");
 
+    private static readonly string SuppressMessageFullName = typeof(SuppressMessageAttribute).FullName!;
+
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
         new[]
         {
@@ -41,7 +43,7 @@ public sealed class SuppressMessageDiagnosticsAnalyzer : DiagnosticAnalyzer
 
     private static void PerformCheck(CompilationStartAnalysisContext compilationStartContext)
     {
-        INamedTypeSymbol? sourceClassType = compilationStartContext.Compilation.GetTypeByMetadataName(typeof(SuppressMessageAttribute).FullName);
+        INamedTypeSymbol? sourceClassType = compilationStartContext.Compilation.GetTypeByMetadataName(SuppressMessageFullName);
 
         if (sourceClassType is null)
         {
