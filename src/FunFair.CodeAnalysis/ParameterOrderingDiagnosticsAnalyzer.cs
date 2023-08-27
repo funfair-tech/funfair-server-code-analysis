@@ -1,6 +1,6 @@
-using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Diagnostics;
 using System.Linq;
 using FunFair.CodeAnalysis.Extensions;
 using FunFair.CodeAnalysis.Helpers;
@@ -52,27 +52,27 @@ public sealed class ParameterOrderingDiagnosticsAnalyzer : DiagnosticAnalyzer
             return;
         }
 
-        var parameters = parameterList.Parameters.Select((parameter, index) => new
-                                                                               {
-                                                                                   Parameter = parameter,
-                                                                                   Index = index,
-                                                                                   FullTypeName = ParameterHelpers.GetFullTypeName(
-                                                                                       syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
-                                                                                       parameterSyntax: parameter,
-                                                                                       cancellationToken: syntaxNodeAnalysisContext.CancellationToken)
-                                                                               })
-                                      .ToArray();
+        ParameterItem[] parameters = parameterList.Parameters.Select((parameter, index) =>
+                                                                         new ParameterItem(parameter: parameter,
+                                                                                           index: index,
+                                                                                           ParameterHelpers.GetFullTypeName(
+                                                                                               syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
+                                                                                               parameterSyntax: parameter,
+                                                                                               cancellationToken: syntaxNodeAnalysisContext.CancellationToken)!))
+                                                  .ToArray();
 
         List<string> matchedEndings = new();
 
         foreach (string parameterType in PreferredEndingOrdering.Reverse())
         {
-            var matchingParameter = Array.Find(array: parameters, match: x => x.FullTypeName == parameterType);
+            ParameterItem? match = FindParameter(parameters: parameters, parameterType: parameterType);
 
-            if (matchingParameter is null)
+            if (match is null)
             {
                 continue;
             }
+
+            ParameterItem matchingParameter = match.Value;
 
             if (matchingParameter.Parameter.Modifiers.Any(pm => pm.IsKind(SyntaxKind.ThisKeyword)))
             {
@@ -93,5 +93,35 @@ public sealed class ParameterOrderingDiagnosticsAnalyzer : DiagnosticAnalyzer
                                                               requiredParameterIndex + 1);
             }
         }
+    }
+
+    private static ParameterItem? FindParameter(ParameterItem[] parameters, string parameterType)
+    {
+        foreach (ParameterItem parameter in parameters)
+        {
+            if (parameter.FullTypeName == parameterType)
+            {
+                return parameter;
+            }
+        }
+
+        return null;
+    }
+
+    [DebuggerDisplay("{Parameter.Identifier.Text} {Index} {FullTypeName}")]
+    private readonly record struct ParameterItem
+    {
+        public ParameterItem(ParameterSyntax parameter, int index, string fullTypeName)
+        {
+            this.Parameter = parameter;
+            this.Index = index;
+            this.FullTypeName = fullTypeName;
+        }
+
+        public ParameterSyntax Parameter { get; }
+
+        public int Index { get; }
+
+        public string FullTypeName { get; }
     }
 }
