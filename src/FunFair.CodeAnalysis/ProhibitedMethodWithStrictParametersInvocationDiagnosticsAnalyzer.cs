@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Diagnostics;
 using System.Linq;
 using FunFair.CodeAnalysis.Extensions;
 using FunFair.CodeAnalysis.Helpers;
@@ -84,14 +85,14 @@ public sealed class ProhibitedMethodWithStrictParametersInvocationDiagnosticsAna
         compilationStartContext.RegisterSyntaxNodeAction(action: LookForForcedMethods, SyntaxKind.InvocationExpression);
     }
 
-    private static bool IsInvocationAllowed(BaseArgumentListSyntax arguments, IReadOnlyList<IParameterSymbol> parameters, ProhibitedMethodsSpec prohibitedMethod)
+    private static bool IsInvocationAllowed(BaseArgumentListSyntax arguments, IReadOnlyList<IParameterSymbol> parameters, in ProhibitedMethodsSpec prohibitedMethod)
     {
         if (!prohibitedMethod.BannedSignatures.Any())
         {
             return true;
         }
 
-        // Thi needs to be simplified
+        // This needs to be simplified
         return !prohibitedMethod.BannedSignatures.SelectMany(collectionSelector: bannedSignature => bannedSignature,
                                                              resultSelector: (bannedSignature, parameterSpec) => new { bannedSignature, parameterSpec })
                                 .Select(t => new { t, parameter = parameters.FirstOrDefault(predicate: param => param.MetadataName == t.parameterSpec.Name) })
@@ -119,7 +120,8 @@ public sealed class ProhibitedMethodWithStrictParametersInvocationDiagnosticsAna
         public string Value { get; }
     }
 
-    private sealed class ProhibitedMethodsSpec
+    [DebuggerDisplay("{Rule.Id} {Rule.Title} Class {SourceClass} Forced Method: {ForcedMethod}")]
+    private readonly record struct ProhibitedMethodsSpec
     {
         public ProhibitedMethodsSpec(string ruleId, string title, string message, string sourceClass, string forcedMethod, IEnumerable<IEnumerable<ParameterSpec>> bannedSignatures)
         {
