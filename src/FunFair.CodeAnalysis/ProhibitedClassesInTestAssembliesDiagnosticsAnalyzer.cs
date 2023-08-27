@@ -31,14 +31,29 @@ public sealed class ProhibitedClassesInTestAssembliesDiagnosticsAnalyzer : Diagn
         context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.None);
         context.EnableConcurrentExecution();
 
-        context.RegisterCompilationStartAction(PerformCheck);
+        Checker checker = new();
+
+        context.RegisterCompilationStartAction(checker.PerformCheck);
     }
 
-    private static void PerformCheck(CompilationStartAnalysisContext compilationStartContext)
+    private sealed class Checker
     {
-        void LookForBannedClasses(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
+        private Dictionary<string, INamedTypeSymbol>? _cachedSymbols;
+
+        public void PerformCheck(CompilationStartAnalysisContext compilationStartContext)
         {
-            Dictionary<string, INamedTypeSymbol> cachedSymbols = BuildCachedSymbols(compilationStartContext.Compilation);
+            if (compilationStartContext.Compilation.IsUnitTestAssembly())
+            {
+                compilationStartContext.RegisterSyntaxNodeAction(action: syntaxNodeAnalysisContext =>
+                                                                             this.LookForBannedClasses(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
+                                                                                                       compilation: compilationStartContext.Compilation),
+                                                                 SyntaxKind.InvocationExpression);
+            }
+        }
+
+        private void LookForBannedClasses(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, Compilation compilation)
+        {
+            Dictionary<string, INamedTypeSymbol> cachedSymbols = this.LookupCachedSymbols(compilation);
             string? typeSymbol = GetNameIfBanned(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, cachedSymbols: cachedSymbols);
 
             if (typeSymbol is null)
@@ -54,62 +69,62 @@ public sealed class ProhibitedClassesInTestAssembliesDiagnosticsAnalyzer : Diagn
             }
         }
 
-        if (compilationStartContext.Compilation.IsUnitTestAssembly())
+        private static ProhibitedClassSpec? GetBannedClass(string typeSymbol)
         {
-            compilationStartContext.RegisterSyntaxNodeAction(action: LookForBannedClasses, SyntaxKind.InvocationExpression);
+            return BannedClasses.FirstOrDefault(rule => StringComparer.Ordinal.Equals(x: typeSymbol, y: rule.SourceClass));
         }
-    }
 
-    private static ProhibitedClassSpec? GetBannedClass(string typeSymbol)
-    {
-        return BannedClasses.FirstOrDefault(rule => StringComparer.Ordinal.Equals(x: typeSymbol, y: rule.SourceClass));
-    }
-
-    private static Dictionary<string, INamedTypeSymbol> BuildCachedSymbols(Compilation compilation)
-    {
-        Dictionary<string, INamedTypeSymbol> cachedSymbols = new(StringComparer.Ordinal);
-
-        foreach (string ruleSourceClass in BannedClasses.Select(rule => rule.SourceClass))
+        private Dictionary<string, INamedTypeSymbol> LookupCachedSymbols(Compilation compilation)
         {
-            if (!cachedSymbols.ContainsKey(ruleSourceClass))
-            {
-                INamedTypeSymbol? item = compilation.GetTypeByMetadataName(ruleSourceClass);
+            return this._cachedSymbols ??= BuildCachedSymbols(compilation);
+        }
 
-                if (item is not null)
+        private static Dictionary<string, INamedTypeSymbol> BuildCachedSymbols(Compilation compilation)
+        {
+            Dictionary<string, INamedTypeSymbol> cachedSymbols = new(StringComparer.Ordinal);
+
+            foreach (string ruleSourceClass in BannedClasses.Select(rule => rule.SourceClass))
+            {
+                if (!cachedSymbols.ContainsKey(ruleSourceClass))
                 {
-                    cachedSymbols.Add(key: ruleSourceClass, value: item);
+                    INamedTypeSymbol? item = compilation.GetTypeByMetadataName(ruleSourceClass);
+
+                    if (item is not null)
+                    {
+                        cachedSymbols.Add(key: ruleSourceClass, value: item);
+                    }
                 }
             }
+
+            return cachedSymbols;
         }
 
-        return cachedSymbols;
-    }
-
-    private static string? GetNameIfBanned(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, Dictionary<string, INamedTypeSymbol> cachedSymbols)
-    {
-        if (syntaxNodeAnalysisContext.Node is not InvocationExpressionSyntax invocation)
+        private static string? GetNameIfBanned(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, Dictionary<string, INamedTypeSymbol> cachedSymbols)
         {
-            return null;
+            if (syntaxNodeAnalysisContext.Node is not InvocationExpressionSyntax invocation)
+            {
+                return null;
+            }
+
+            IMethodSymbol? memberSymbol = MethodSymbolHelper.FindInvokedMemberSymbol(invocation: invocation, syntaxNodeAnalysisContext: syntaxNodeAnalysisContext);
+
+            if (memberSymbol is null)
+            {
+                return null;
+            }
+
+            ITypeSymbol? receivingType = memberSymbol.ReceiverType;
+            string? fullName = receivingType?.ToFullyQualifiedName();
+
+            if (fullName is null)
+            {
+                return null;
+            }
+
+            return cachedSymbols.TryGetValue(key: fullName, out INamedTypeSymbol? _)
+                ? fullName
+                : null;
         }
-
-        IMethodSymbol? memberSymbol = MethodSymbolHelper.FindInvokedMemberSymbol(invocation: invocation, syntaxNodeAnalysisContext: syntaxNodeAnalysisContext);
-
-        if (memberSymbol is null)
-        {
-            return null;
-        }
-
-        ITypeSymbol? receivingType = memberSymbol.ReceiverType;
-        string? fullName = receivingType?.ToFullyQualifiedName();
-
-        if (fullName is null)
-        {
-            return null;
-        }
-
-        return cachedSymbols.TryGetValue(key: fullName, out INamedTypeSymbol? _)
-            ? fullName
-            : null;
     }
 
     private sealed class ProhibitedClassSpec
