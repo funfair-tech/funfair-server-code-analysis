@@ -104,7 +104,8 @@ public sealed class ProhibitedMethodWithStrictParametersInvocationDiagnosticsAna
                                 .Any();
     }
 
-    private sealed class ParameterSpec
+    [DebuggerDisplay("{Name}:{Type} = {Value}")]
+    private readonly record struct ParameterSpec
     {
         public ParameterSpec(string name, string type, string value)
         {
