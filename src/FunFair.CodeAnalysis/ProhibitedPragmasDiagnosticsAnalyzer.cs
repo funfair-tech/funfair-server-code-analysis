@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using FunFair.CodeAnalysis.Extensions;
@@ -70,7 +71,8 @@ public sealed class ProhibitedPragmasDiagnosticsAnalyzer : DiagnosticAnalyzer
         compilationStartContext.RegisterSyntaxNodeAction(action: banned.LookForBannedMethods, SyntaxKind.PragmaWarningDirectiveTrivia);
     }
 
-    private sealed class Banned
+    [DebuggerDisplay("IsBaned = {_isBanned}")]
+    private readonly record struct Banned
     {
         private readonly Func<string, bool> _isBanned;
 
@@ -95,7 +97,9 @@ public sealed class ProhibitedPragmasDiagnosticsAnalyzer : DiagnosticAnalyzer
 
         private IEnumerable<ExpressionSyntax> BannedInvocations(PragmaWarningDirectiveTriviaSyntax pragmaWarningDirective)
         {
-            return pragmaWarningDirective.ErrorCodes.Where(invocation => this._isBanned(invocation.ToString()));
+            Func<string, bool>? isBanned = this._isBanned;
+
+            return pragmaWarningDirective.ErrorCodes.Where(invocation => isBanned(invocation.ToString()));
         }
     }
 }
