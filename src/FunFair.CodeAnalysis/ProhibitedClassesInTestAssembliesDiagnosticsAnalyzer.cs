@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using FunFair.CodeAnalysis.Extensions;
 using FunFair.CodeAnalysis.Helpers;
@@ -65,13 +67,22 @@ public sealed class ProhibitedClassesInTestAssembliesDiagnosticsAnalyzer : Diagn
 
             if (bannedClass is not null)
             {
-                syntaxNodeAnalysisContext.Node.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: bannedClass.Rule);
+                syntaxNodeAnalysisContext.Node.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: bannedClass.Value.Rule);
             }
         }
 
+        [SuppressMessage(category: "SonarAnalyzer.CSharp", checkId: "S3267: Use Linq", Justification = "Not here")]
         private static ProhibitedClassSpec? GetBannedClass(string typeSymbol)
         {
-            return BannedClasses.FirstOrDefault(rule => StringComparer.Ordinal.Equals(x: typeSymbol, y: rule.SourceClass));
+            foreach (ProhibitedClassSpec rule in BannedClasses)
+            {
+                if (StringComparer.Ordinal.Equals(x: typeSymbol, y: rule.SourceClass))
+                {
+                    return rule;
+                }
+            }
+
+            return null;
         }
 
         private Dictionary<string, INamedTypeSymbol> LookupCachedSymbols(Compilation compilation)
@@ -127,7 +138,8 @@ public sealed class ProhibitedClassesInTestAssembliesDiagnosticsAnalyzer : Diagn
         }
     }
 
-    private sealed class ProhibitedClassSpec
+    [DebuggerDisplay("{Rule.Id} {Rule.Title} Class {SourceClass}")]
+    private readonly record struct ProhibitedClassSpec
     {
         public ProhibitedClassSpec(string ruleId, string title, string message, string sourceClass)
         {
