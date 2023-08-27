@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Diagnostics;
 using System.Linq;
 using FunFair.CodeAnalysis.Extensions;
 using FunFair.CodeAnalysis.Helpers;
@@ -182,7 +183,8 @@ public sealed class ProhibitedMethodsDiagnosticsAnalyzer : DiagnosticAnalyzer
         }
     }
 
-    private sealed class ProhibitedMethodsSpec
+    [DebuggerDisplay("{Rule.Id} {Rule.Title} Class {SourceClass} Banned Method: {BannedMethod}")]
+    private readonly record struct ProhibitedMethodsSpec
     {
         public ProhibitedMethodsSpec(string ruleId, string title, string message, string sourceClass, string bannedMethod)
         {
