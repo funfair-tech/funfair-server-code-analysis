@@ -1,5 +1,4 @@
 using System.Collections.Immutable;
-using System.Linq;
 using FunFair.CodeAnalysis.Extensions;
 using FunFair.CodeAnalysis.Helpers;
 using Microsoft.CodeAnalysis;
