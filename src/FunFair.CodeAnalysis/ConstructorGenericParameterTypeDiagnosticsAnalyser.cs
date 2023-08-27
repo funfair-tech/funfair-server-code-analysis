@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Diagnostics;
 using System.Linq;
 using FunFair.CodeAnalysis.Extensions;
 using FunFair.CodeAnalysis.Helpers;
@@ -84,8 +85,7 @@ public sealed class ConstructorGenericParameterTypeDiagnosticsAnalyser : Diagnos
                                                   ClassDeclarationSyntax parentSymbolForClassForConstructor)
     {
         ISymbol classForConstructor =
-            syntaxNodeAnalysisContext.SemanticModel.GetDeclaredSymbol(declarationSyntax: parentSymbolForClassForConstructor,
-                                                                      cancellationToken: syntaxNodeAnalysisContext.CancellationToken)!;
+            syntaxNodeAnalysisContext.SemanticModel.GetDeclaredSymbol(declarationSyntax: parentSymbolForClassForConstructor, cancellationToken: syntaxNodeAnalysisContext.CancellationToken)!;
         string className = classForConstructor.ToDisplayString();
 
         bool needed = IsNeeded(parentSymbolForClassForConstructor: parentSymbolForClassForConstructor,
@@ -130,21 +130,20 @@ public sealed class ConstructorGenericParameterTypeDiagnosticsAnalyser : Diagnos
             return;
         }
 
-        TypeCheckSpec? rule = GetTypeSpec(isProtected: isProtected, fullTypeName: fullTypeName);
+        TypeCheckSpec? checkRule = GetTypeSpec(isProtected: isProtected, fullTypeName: fullTypeName);
 
-        if (rule is null)
+        if (checkRule is null)
         {
             return;
         }
+
+        TypeCheckSpec rule = checkRule.Value;
 
         if (rule.AllowedSourceClass == fullTypeName)
         {
             if (rule.MatchTypeOnGenericParameters)
             {
-                CheckGenericParameterTypeMatch(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
-                                               parameterSyntax: parameterSyntax,
-                                               className: className,
-                                               fullTypeName: fullTypeName);
+                CheckGenericParameterTypeMatch(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, parameterSyntax: parameterSyntax, className: className, fullTypeName: fullTypeName);
             }
 
             return;
@@ -161,13 +160,9 @@ public sealed class ConstructorGenericParameterTypeDiagnosticsAnalyser : Diagnos
         return Specifications.FirstOrDefault(ns => ns.IsProtected == isProtected && (ns.AllowedSourceClass == fullTypeName || ns.ProhibitedClass == fullTypeName));
     }
 
-    private static void CheckGenericParameterTypeMatch(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext,
-                                                       ParameterSyntax parameterSyntax,
-                                                       string className,
-                                                       string fullTypeName)
+    private static void CheckGenericParameterTypeMatch(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, ParameterSyntax parameterSyntax, string className, string fullTypeName)
     {
-        IParameterSymbol? ds =
-            syntaxNodeAnalysisContext.SemanticModel.GetDeclaredSymbol(declarationSyntax: parameterSyntax, cancellationToken: syntaxNodeAnalysisContext.CancellationToken);
+        IParameterSymbol? ds = syntaxNodeAnalysisContext.SemanticModel.GetDeclaredSymbol(declarationSyntax: parameterSyntax, cancellationToken: syntaxNodeAnalysisContext.CancellationToken);
 
         ITypeSymbol? dsType = ds?.Type;
 
@@ -192,7 +187,8 @@ public sealed class ConstructorGenericParameterTypeDiagnosticsAnalyser : Diagnos
         }
     }
 
-    private sealed class TypeCheckSpec
+    [DebuggerDisplay("{Rule.Id} {Rule.Title} Allowed {AllowedSourceClass} Prohibited {ProhibitedClass} Match on generics {MatchTypeOnGenericParameters}")]
+    private readonly record struct TypeCheckSpec
     {
         public TypeCheckSpec(string ruleId, string title, string message, string allowedSourceClass, string prohibitedClass, bool isProtected, bool matchTypeOnGenericParameters)
         {
