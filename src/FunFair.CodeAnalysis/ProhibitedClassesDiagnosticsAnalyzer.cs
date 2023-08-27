@@ -112,16 +112,8 @@ public sealed class ProhibitedClassesDiagnosticsAnalyzer : DiagnosticAnalyzer
 
             return symbol.OriginalDefinition switch
             {
-                IPropertySymbol propertySymbol => GetSymbol(new[]
-                                                            {
-                                                                propertySymbol.Type
-                                                            },
-                                                            cachedSymbols: cachedSymbols),
-                IFieldSymbol fieldSymbol => GetSymbol(new[]
-                                                      {
-                                                          fieldSymbol.Type
-                                                      },
-                                                      cachedSymbols: cachedSymbols),
+                IPropertySymbol propertySymbol => GetOneSymbol(symbol: propertySymbol.Type, cachedSymbols: cachedSymbols),
+                IFieldSymbol fieldSymbol => GetOneSymbol(symbol: fieldSymbol.Type, cachedSymbols: cachedSymbols),
                 IMethodSymbol parameterSymbol => GetSymbol(parameterSymbol.Parameters.Select(x => x.Type), cachedSymbols: cachedSymbols),
                 _ => LookupSymbolInContext(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, cachedSymbols: cachedSymbols)
             };
@@ -134,14 +126,20 @@ public sealed class ProhibitedClassesDiagnosticsAnalyzer : DiagnosticAnalyzer
 
             if (typeInfo is not null)
             {
-                return GetSymbol(new[]
-                                 {
-                                     typeInfo
-                                 },
-                                 cachedSymbols: cachedSymbols);
+                return GetOneSymbol(symbol: typeInfo, cachedSymbols: cachedSymbols);
             }
 
             return null;
+        }
+
+        private static IEnumerable<INamedTypeSymbol> GetOneSymbol(ITypeSymbol symbol, Dictionary<string, INamedTypeSymbol> cachedSymbols)
+        {
+            INamedTypeSymbol? namedTypeSymbol = GetSymbol(typeSymbol: symbol, cachedSymbols: cachedSymbols);
+
+            if (namedTypeSymbol is not null)
+            {
+                yield return namedTypeSymbol;
+            }
         }
 
         private static IEnumerable<INamedTypeSymbol> GetSymbol(IEnumerable<ITypeSymbol> symbols, Dictionary<string, INamedTypeSymbol> cachedSymbols)
