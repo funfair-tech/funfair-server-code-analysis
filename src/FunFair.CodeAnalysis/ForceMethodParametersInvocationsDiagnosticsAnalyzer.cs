@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Diagnostics;
 using System.Linq;
 using FunFair.CodeAnalysis.Extensions;
 using FunFair.CodeAnalysis.Helpers;
@@ -85,9 +86,7 @@ public sealed class ForceMethodParametersInvocationsDiagnosticsAnalyzer : Diagno
 
         foreach (ForcedMethodsSpec prohibitedMethod in forcedMethods)
         {
-            if (!IsInvocationAllowed(invocationArguments: memberSymbol,
-                                     argumentsInvokedCount: invocation.ArgumentList.Arguments.Count,
-                                     requiredArgumentsCount: prohibitedMethod.RequiredArgumentCount))
+            if (!IsInvocationAllowed(invocationArguments: memberSymbol, argumentsInvokedCount: invocation.ArgumentList.Arguments.Count, requiredArgumentsCount: prohibitedMethod.RequiredArgumentCount))
             {
                 invocation.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: prohibitedMethod.Rule);
             }
@@ -102,7 +101,8 @@ public sealed class ForceMethodParametersInvocationsDiagnosticsAnalyzer : Diagno
         return allowedBasedOnArgumentCount && allowedBasedOnArgumentTypeAndSequence;
     }
 
-    private sealed class ForcedMethodsSpec
+    [DebuggerDisplay("{Rule.Id} {Rule.Title} Prohibits {SourceClass}.{ForcedMethod}")]
+    private readonly record struct ForcedMethodsSpec
     {
         public ForcedMethodsSpec(string ruleId, string title, string message, string sourceClass, string forcedMethod, int requiredArgumentCount)
         {
