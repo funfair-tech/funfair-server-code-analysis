@@ -9,6 +9,14 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 ### Added
 ### Fixed
 ### Changed
+### Removed
+### Deployment Changes
+
+<!--
+Releases that have at least been deployed to staging, BUT NOT necessarily released to live.  Changes should be moved from [Unreleased] into here as they are merged into the appropriate release branch
+-->
+## [7.0.2] - 2023-08-27
+### Changed
 - SDK - Updated DotNet SDK to 7.0.400
 - Dependencies - Updated Microsoft.VisualStudio.Threading.Analyzers to 17.7.30
 - Dependencies - Updated Meziantou.Analyzer to 2.0.82
@@ -19,12 +27,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 - Dependencies - Updated TeamCity.VSTest.TestAdapter to 1.0.37
 - Dependencies - Updated Roslynator.Analyzers to 4.5.0
 - Improved performance by caching and reducing memory allocations
-### Removed
-### Deployment Changes
 
-<!--
-Releases that have at least been deployed to staging, BUT NOT necessarily released to live.  Changes should be moved from [Unreleased] into here as they are merged into the appropriate release branch
--->
 ## [7.0.1] - 2023-07-27
 ### Added
 - Packages on new NuGet feed
