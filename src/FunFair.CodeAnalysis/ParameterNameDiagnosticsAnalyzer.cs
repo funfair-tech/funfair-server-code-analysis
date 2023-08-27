@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using FunFair.CodeAnalysis.Extensions;
@@ -58,9 +59,7 @@ public sealed class ParameterNameDiagnosticsAnalyzer : DiagnosticAnalyzer
 
     private static void MustHaveASaneName(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, ParameterSyntax parameterSyntax, CancellationToken cancellationToken)
     {
-        string? fullTypeName = ParameterHelpers.GetFullTypeName(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
-                                                                parameterSyntax: parameterSyntax,
-                                                                cancellationToken: cancellationToken);
+        string? fullTypeName = ParameterHelpers.GetFullTypeName(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, parameterSyntax: parameterSyntax, cancellationToken: cancellationToken);
 
         if (fullTypeName is null)
         {
@@ -72,18 +71,34 @@ public sealed class ParameterNameDiagnosticsAnalyzer : DiagnosticAnalyzer
 
     private static void MustHaveASaneName(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, ParameterSyntax parameterSyntax, string fullTypeName)
     {
-        NameSanitationSpec? rule = NameSpecifications.FirstOrDefault(ns => ns.SourceClass == fullTypeName);
+        NameSanitationSpec? rule = FindSpec(fullTypeName);
 
-        if (rule is not null)
+        if (!rule.HasValue)
         {
-            if (!rule.WhitelistedParameterNames.Contains(value: parameterSyntax.Identifier.Text, comparer: StringComparer.Ordinal))
-            {
-                parameterSyntax.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: rule.Rule);
-            }
+            return;
+        }
+
+        if (!rule.Value.WhitelistedParameterNames.Contains(value: parameterSyntax.Identifier.Text, comparer: StringComparer.Ordinal))
+        {
+            parameterSyntax.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: rule.Value.Rule);
         }
     }
 
-    private sealed class NameSanitationSpec
+    private static NameSanitationSpec? FindSpec(string fullTypeName)
+    {
+        foreach (NameSanitationSpec ns in NameSpecifications)
+        {
+            if (ns.SourceClass == fullTypeName)
+            {
+                return ns;
+            }
+        }
+
+        return null;
+    }
+
+    [DebuggerDisplay("{Rule.Id} {Rule.Title} Class {SourceClass}")]
+    private readonly record struct NameSanitationSpec
     {
         public NameSanitationSpec(string ruleId, string title, string message, string sourceClass, string whitelistedParameterName)
             : this(ruleId: ruleId,
