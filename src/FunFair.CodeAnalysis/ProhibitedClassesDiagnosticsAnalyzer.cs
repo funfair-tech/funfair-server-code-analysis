@@ -17,8 +17,7 @@ public sealed class ProhibitedClassesDiagnosticsAnalyzer : DiagnosticAnalyzer
                                                                                {
                                                                                    new(ruleId: Rules.RuleDontUseConcurrentDictionary,
                                                                                        title: "Avoid use of System.Collections.Concurrent.ConcurrentDictionary class",
-                                                                                       message:
-                                                                                       "Use NonBlocking.ConcurrentDictionary  rather than System.Collections.Concurrent.ConcurrentDictionary",
+                                                                                       message: "Use NonBlocking.ConcurrentDictionary  rather than System.Collections.Concurrent.ConcurrentDictionary",
                                                                                        sourceClass: "System.Collections.Concurrent.ConcurrentDictionary`2")
                                                                                };
 
@@ -31,14 +30,29 @@ public sealed class ProhibitedClassesDiagnosticsAnalyzer : DiagnosticAnalyzer
         context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.None);
         context.EnableConcurrentExecution();
 
-        context.RegisterCompilationStartAction(PerformCheck);
+        Checker checker = new();
+        context.RegisterCompilationStartAction(checker.PerformCheck);
     }
 
-    private static void PerformCheck(CompilationStartAnalysisContext compilationStartContext)
+    private sealed class Checker
     {
-        void LookForBannedClasses(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
+        private Dictionary<string, INamedTypeSymbol>? _cachedSymbols;
+
+        public void PerformCheck(CompilationStartAnalysisContext compilationStartContext)
         {
-            Dictionary<string, INamedTypeSymbol> cachedSymbols = BuildCachedSymbols(compilationStartContext.Compilation);
+            compilationStartContext.RegisterSyntaxNodeAction(
+                action: syntaxNodeAnalysisContext => this.LookForBannedClasses(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, compilation: compilationStartContext.Compilation),
+                SyntaxKind.ObjectCreationExpression,
+                SyntaxKind.FieldDeclaration,
+                SyntaxKind.VariableDeclarator,
+                SyntaxKind.MethodDeclaration,
+                SyntaxKind.PropertyDeclaration,
+                SyntaxKind.ConstructorDeclaration);
+        }
+
+        private void LookForBannedClasses(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, Compilation compilation)
+        {
+            Dictionary<string, INamedTypeSymbol> cachedSymbols = this.LoadCachedSymbols(compilation);
             IEnumerable<INamedTypeSymbol>? typeSymbols = LookForUsageOfBannedClasses(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, cachedSymbols: cachedSymbols);
 
             if (typeSymbols is null)
@@ -49,113 +63,106 @@ public sealed class ProhibitedClassesDiagnosticsAnalyzer : DiagnosticAnalyzer
             ReportAnyBannedSymbols(typeSymbols.ToList(), syntaxNodeAnalysisContext: syntaxNodeAnalysisContext);
         }
 
-        compilationStartContext.RegisterSyntaxNodeAction(action: LookForBannedClasses,
-                                                         SyntaxKind.ObjectCreationExpression,
-                                                         SyntaxKind.FieldDeclaration,
-                                                         SyntaxKind.VariableDeclarator,
-                                                         SyntaxKind.MethodDeclaration,
-                                                         SyntaxKind.PropertyDeclaration,
-                                                         SyntaxKind.ConstructorDeclaration);
-    }
-
-    private static void ReportAnyBannedSymbols(IReadOnlyCollection<INamedTypeSymbol> typeSymbols, in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
-    {
-        foreach (INamedTypeSymbol typeSymbol in typeSymbols)
+        private static void ReportAnyBannedSymbols(IReadOnlyCollection<INamedTypeSymbol> typeSymbols, in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
         {
-            ProhibitedClassSpec? bannedClass =
-                BannedClasses.FirstOrDefault(rule => StringComparer.OrdinalIgnoreCase.Equals(typeSymbol.ToFullyQualifiedName(), y: rule.SourceClass));
-
-            if (bannedClass is not null)
+            foreach (INamedTypeSymbol typeSymbol in typeSymbols)
             {
-                syntaxNodeAnalysisContext.Node.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: bannedClass.Rule);
-            }
-        }
-    }
+                ProhibitedClassSpec? bannedClass = BannedClasses.FirstOrDefault(rule => StringComparer.OrdinalIgnoreCase.Equals(typeSymbol.ToFullyQualifiedName(), y: rule.SourceClass));
 
-    private static Dictionary<string, INamedTypeSymbol> BuildCachedSymbols(Compilation compilation)
-    {
-        Dictionary<string, INamedTypeSymbol> cachedSymbols = new(StringComparer.Ordinal);
-
-        foreach (string ruleSourceClass in BannedClasses.Select(rule => rule.SourceClass))
-        {
-            if (!cachedSymbols.ContainsKey(ruleSourceClass))
-            {
-                INamedTypeSymbol? item = compilation.GetTypeByMetadataName(ruleSourceClass);
-
-                if (item is not null)
+                if (bannedClass is not null)
                 {
-                    cachedSymbols.Add(key: ruleSourceClass, value: item);
+                    syntaxNodeAnalysisContext.Node.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: bannedClass.Rule);
                 }
             }
         }
 
-        return cachedSymbols;
-    }
-
-    private static IEnumerable<INamedTypeSymbol>? LookForUsageOfBannedClasses(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext,
-                                                                              Dictionary<string, INamedTypeSymbol> cachedSymbols)
-    {
-        ISymbol? symbol = syntaxNodeAnalysisContext.SemanticModel.GetDeclaredSymbol(declaration: syntaxNodeAnalysisContext.Node,
-                                                                                    cancellationToken: syntaxNodeAnalysisContext.CancellationToken);
-
-        if (symbol is null)
+        private Dictionary<string, INamedTypeSymbol> LoadCachedSymbols(Compilation compilation)
         {
-            return LookupSymbolInContext(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, cachedSymbols: cachedSymbols);
+            return this._cachedSymbols ??= BuildCachedSymbols(compilation);
         }
 
-        return symbol.OriginalDefinition switch
+        private static Dictionary<string, INamedTypeSymbol> BuildCachedSymbols(Compilation compilation)
         {
-            IPropertySymbol propertySymbol => GetSymbol(new[]
-                                                        {
-                                                            propertySymbol.Type
-                                                        },
-                                                        cachedSymbols: cachedSymbols),
-            IFieldSymbol fieldSymbol => GetSymbol(new[]
-                                                  {
-                                                      fieldSymbol.Type
-                                                  },
-                                                  cachedSymbols: cachedSymbols),
-            IMethodSymbol parameterSymbol => GetSymbol(parameterSymbol.Parameters.Select(x => x.Type), cachedSymbols: cachedSymbols),
-            _ => LookupSymbolInContext(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, cachedSymbols: cachedSymbols)
-        };
-    }
+            Dictionary<string, INamedTypeSymbol> cachedSymbols = new(StringComparer.Ordinal);
 
-    private static IEnumerable<INamedTypeSymbol>? LookupSymbolInContext(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, Dictionary<string, INamedTypeSymbol> cachedSymbols)
-    {
-        ITypeSymbol? typeInfo = syntaxNodeAnalysisContext
-                                .SemanticModel.GetTypeInfo(node: syntaxNodeAnalysisContext.Node, cancellationToken: syntaxNodeAnalysisContext.CancellationToken)
-                                .Type;
+            foreach (string ruleSourceClass in BannedClasses.Select(rule => rule.SourceClass))
+            {
+                if (!cachedSymbols.ContainsKey(ruleSourceClass))
+                {
+                    INamedTypeSymbol? item = compilation.GetTypeByMetadataName(ruleSourceClass);
 
-        if (typeInfo is not null)
-        {
-            return GetSymbol(new[]
-                             {
-                                 typeInfo
-                             },
-                             cachedSymbols: cachedSymbols);
+                    if (item is not null)
+                    {
+                        cachedSymbols.Add(key: ruleSourceClass, value: item);
+                    }
+                }
+            }
+
+            return cachedSymbols;
         }
 
-        return null;
-    }
-
-    private static IEnumerable<INamedTypeSymbol> GetSymbol(IEnumerable<ITypeSymbol> symbols, Dictionary<string, INamedTypeSymbol> cachedSymbols)
-    {
-        return symbols.Select(symbol => GetSymbol(typeSymbol: symbol, cachedSymbols: cachedSymbols))
-                      .Where(symbol => symbol is not null)!;
-    }
-
-    private static INamedTypeSymbol? GetSymbol(ITypeSymbol typeSymbol, Dictionary<string, INamedTypeSymbol> cachedSymbols)
-    {
-        string? fullyQualifiedSymbolName = typeSymbol.ToFullyQualifiedName();
-
-        if (fullyQualifiedSymbolName is null)
+        private static IEnumerable<INamedTypeSymbol>? LookForUsageOfBannedClasses(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, Dictionary<string, INamedTypeSymbol> cachedSymbols)
         {
+            ISymbol? symbol = syntaxNodeAnalysisContext.SemanticModel.GetDeclaredSymbol(declaration: syntaxNodeAnalysisContext.Node, cancellationToken: syntaxNodeAnalysisContext.CancellationToken);
+
+            if (symbol is null)
+            {
+                return LookupSymbolInContext(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, cachedSymbols: cachedSymbols);
+            }
+
+            return symbol.OriginalDefinition switch
+            {
+                IPropertySymbol propertySymbol => GetSymbol(new[]
+                                                            {
+                                                                propertySymbol.Type
+                                                            },
+                                                            cachedSymbols: cachedSymbols),
+                IFieldSymbol fieldSymbol => GetSymbol(new[]
+                                                      {
+                                                          fieldSymbol.Type
+                                                      },
+                                                      cachedSymbols: cachedSymbols),
+                IMethodSymbol parameterSymbol => GetSymbol(parameterSymbol.Parameters.Select(x => x.Type), cachedSymbols: cachedSymbols),
+                _ => LookupSymbolInContext(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, cachedSymbols: cachedSymbols)
+            };
+        }
+
+        private static IEnumerable<INamedTypeSymbol>? LookupSymbolInContext(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, Dictionary<string, INamedTypeSymbol> cachedSymbols)
+        {
+            ITypeSymbol? typeInfo = syntaxNodeAnalysisContext.SemanticModel.GetTypeInfo(node: syntaxNodeAnalysisContext.Node, cancellationToken: syntaxNodeAnalysisContext.CancellationToken)
+                                                             .Type;
+
+            if (typeInfo is not null)
+            {
+                return GetSymbol(new[]
+                                 {
+                                     typeInfo
+                                 },
+                                 cachedSymbols: cachedSymbols);
+            }
+
             return null;
         }
 
-        return cachedSymbols.TryGetValue(key: fullyQualifiedSymbolName, out INamedTypeSymbol? symbol)
-            ? symbol
-            : null;
+        private static IEnumerable<INamedTypeSymbol> GetSymbol(IEnumerable<ITypeSymbol> symbols, Dictionary<string, INamedTypeSymbol> cachedSymbols)
+        {
+            return symbols.Select(symbol => GetSymbol(typeSymbol: symbol, cachedSymbols: cachedSymbols))
+                          .Where(symbol => symbol is not null)!;
+        }
+
+        private static INamedTypeSymbol? GetSymbol(ITypeSymbol typeSymbol, Dictionary<string, INamedTypeSymbol> cachedSymbols)
+        {
+            string? fullyQualifiedSymbolName = typeSymbol.ToFullyQualifiedName();
+
+            if (fullyQualifiedSymbolName is null)
+            {
+                return null;
+            }
+
+            return cachedSymbols.TryGetValue(key: fullyQualifiedSymbolName, out INamedTypeSymbol? symbol)
+                ? symbol
+                : null;
+        }
     }
 
     private sealed class ProhibitedClassSpec
