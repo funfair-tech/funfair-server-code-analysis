@@ -93,14 +93,29 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzer : DiagnosticA
         context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.None);
         context.EnableConcurrentExecution();
 
-        context.RegisterCompilationStartAction(PerformCheck);
+        Checker checker = new();
+
+        context.RegisterCompilationStartAction(checker.PerformCheck);
     }
 
-    private static void PerformCheck(CompilationStartAnalysisContext compilationStartContext)
+    private sealed class Checker
     {
-        IReadOnlyDictionary<ProhibitedMethodsSpec, IReadOnlyList<IMethodSymbol>> cachedSymbols = BuildCachedSymbols(compilationStartContext.Compilation);
+        private IReadOnlyDictionary<ProhibitedMethodsSpec, IReadOnlyList<IMethodSymbol>>? _cachedSymbols;
 
-        void LookForBannedInvocation(InvocationExpressionSyntax invocation, in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
+        public void PerformCheck(CompilationStartAnalysisContext compilationStartContext)
+        {
+            compilationStartContext.RegisterSyntaxNodeAction(action: syntaxNodeAnalysisContext =>
+                                                                         this.LookForBannedMethods(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
+                                                                                                   compilation: compilationStartContext.Compilation),
+                                                             SyntaxKind.InvocationExpression);
+        }
+
+        private IReadOnlyDictionary<ProhibitedMethodsSpec, IReadOnlyList<IMethodSymbol>> LoadCachedSymbols(Compilation compilation)
+        {
+            return this._cachedSymbols ??= BuildCachedSymbols(compilation);
+        }
+
+        private void LookForBannedInvocation(InvocationExpressionSyntax invocation, in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, Compilation compilation)
         {
             IMethodSymbol? memberSymbol = MethodSymbolHelper.FindInvokedMemberSymbol(invocation: invocation, syntaxNodeAnalysisContext: syntaxNodeAnalysisContext);
 
@@ -116,6 +131,8 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzer : DiagnosticA
             {
                 return;
             }
+
+            IReadOnlyDictionary<ProhibitedMethodsSpec, IReadOnlyList<IMethodSymbol>> cachedSymbols = this.LoadCachedSymbols(compilation);
 
             Mapping mapping = new(methodName: memberSymbol.Name, className: fullyQualifiedName);
 
@@ -133,106 +150,103 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzer : DiagnosticA
             }
         }
 
-        void LookForBannedMethods(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
+        private void LookForBannedMethods(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, Compilation compilation)
         {
             if (syntaxNodeAnalysisContext.Node is InvocationExpressionSyntax invocation)
             {
-                LookForBannedInvocation(invocation: invocation, syntaxNodeAnalysisContext: syntaxNodeAnalysisContext);
+                this.LookForBannedInvocation(invocation: invocation, syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, compilation: compilation);
             }
         }
 
-        compilationStartContext.RegisterSyntaxNodeAction(action: LookForBannedMethods, SyntaxKind.InvocationExpression);
-    }
-
-    private static IReadOnlyDictionary<ProhibitedMethodsSpec, IReadOnlyList<IMethodSymbol>> BuildCachedSymbols(Compilation compilation)
-    {
-        Dictionary<ProhibitedMethodsSpec, IReadOnlyList<IMethodSymbol>> cachedSymbols = new();
-
-        foreach (ProhibitedMethodsSpec rule in BannedMethods)
+        private static IReadOnlyDictionary<ProhibitedMethodsSpec, IReadOnlyList<IMethodSymbol>> BuildCachedSymbols(Compilation compilation)
         {
-            if (cachedSymbols.ContainsKey(rule))
+            Dictionary<ProhibitedMethodsSpec, IReadOnlyList<IMethodSymbol>> cachedSymbols = new();
+
+            foreach (ProhibitedMethodsSpec rule in BannedMethods)
             {
-                continue;
+                if (cachedSymbols.ContainsKey(rule))
+                {
+                    continue;
+                }
+
+                INamedTypeSymbol? sourceClassType = compilation.GetTypeByMetadataName(rule.SourceClass);
+
+                if (sourceClassType?.GetMembers()
+                                   .IsEmpty != false)
+                {
+                    continue;
+                }
+
+                // get all method overloads
+                IReadOnlyList<IMethodSymbol> methodSignatures = GetOverloads(sourceClassType: sourceClassType, rule: rule);
+
+                if (methodSignatures.Count != 0)
+                {
+                    cachedSymbols.Add(key: rule, RemoveAllowedSignaturesForMethod(methodSignatures: methodSignatures, ruleSignatures: rule.BannedSignatures));
+                }
             }
 
-            INamedTypeSymbol? sourceClassType = compilation.GetTypeByMetadataName(rule.SourceClass);
-
-            if (sourceClassType?.GetMembers()
-                               .IsEmpty != false)
-            {
-                continue;
-            }
-
-            // get all method overloads
-            IReadOnlyList<IMethodSymbol> methodSignatures = GetOverloads(sourceClassType: sourceClassType, rule: rule);
-
-            if (methodSignatures.Count != 0)
-            {
-                cachedSymbols.Add(key: rule, RemoveAllowedSignaturesForMethod(methodSignatures: methodSignatures, ruleSignatures: rule.BannedSignatures));
-            }
+            return cachedSymbols;
         }
 
-        return cachedSymbols;
-    }
-
-    private static IReadOnlyList<IMethodSymbol> GetOverloads(INamedTypeSymbol sourceClassType, ProhibitedMethodsSpec rule)
-    {
-        return sourceClassType.GetMembers()
-                              .Where(predicate: x => x.Name == rule.BannedMethod)
-                              .OfType<IMethodSymbol>()
-                              .ToArray();
-    }
-
-    private static IReadOnlyList<IMethodSymbol> RemoveAllowedSignaturesForMethod(IReadOnlyList<IMethodSymbol>? methodSignatures, IEnumerable<IEnumerable<string>>? ruleSignatures)
-    {
-        if (methodSignatures is null)
+        private static IReadOnlyList<IMethodSymbol> GetOverloads(INamedTypeSymbol sourceClassType, ProhibitedMethodsSpec rule)
         {
-            return ThrowUnknownMethodSignatureException(methodSignatures);
-        }
-
-        if (ruleSignatures is null)
-        {
-            return ThrowUnknownRuleSignature(ruleSignatures);
-        }
-
-        return BuildMethodSignatureList(ruleSignatures: ruleSignatures, methodSymbols: methodSignatures);
-    }
-
-    private static IReadOnlyList<IMethodSymbol> BuildMethodSignatureList(IEnumerable<IEnumerable<string>> ruleSignatures, IReadOnlyList<IMethodSymbol> methodSymbols)
-    {
-        return ruleSignatures.SelectMany(ruleSignature => methodSymbols.Where(methodSymbol => methodSymbol
-                                                                                              .Parameters.Select(
-                                                                                                  selector: parameterSymbol => SymbolDisplay.ToDisplayString(parameterSymbol.Type))
-                                                                                              .SequenceEqual(second: ruleSignature, comparer: StringComparer.Ordinal)))
-                             .ToArray();
-    }
-
-    [SuppressMessage(category: "SonarAnalyzer.CSharp", checkId: "S1172: Parameter only used for name", Justification = "By Design")]
-    [SuppressMessage(category: "ReSharper", checkId: "EntityNameCapturedOnly.Local", Justification = "By Design")]
-    private static IReadOnlyList<IMethodSymbol> ThrowUnknownRuleSignature(IEnumerable<IEnumerable<string>>? ruleSignatures)
-    {
-        throw new ArgumentException(message: "Unknown rule signature", nameof(ruleSignatures));
-    }
-
-    [SuppressMessage(category: "SonarAnalyzer.CSharp", checkId: "S1172: Parameter only used for name", Justification = "By Design")]
-    [SuppressMessage(category: "ReSharper", checkId: "EntityNameCapturedOnly.Local", Justification = "By Design")]
-    private static IReadOnlyList<IMethodSymbol> ThrowUnknownMethodSignatureException(IEnumerable<IMethodSymbol>? methodSignatures)
-    {
-        throw new ArgumentException(message: "Unknown method signature", nameof(methodSignatures));
-    }
-
-    private static bool IsBannedMethodSignature(IMethodSymbol invocationArguments, IEnumerable<IMethodSymbol> methodSignatures)
-    {
-        IReadOnlyList<string> invocationParameters = GetInvocationParameters(invocationArguments);
-
-        return methodSignatures.Any(predicate: methodSignature => methodSignature.Parameters.Select(x => SymbolDisplay.ToDisplayString(x.OriginalDefinition))
-                                                                                 .SequenceEqual(second: invocationParameters, comparer: StringComparer.Ordinal));
-    }
-
-    private static IReadOnlyList<string> GetInvocationParameters(IMethodSymbol invocationArguments)
-    {
-        return invocationArguments.Parameters.Select(parameter => SymbolDisplay.ToDisplayString(parameter.OriginalDefinition))
+            return sourceClassType.GetMembers()
+                                  .Where(predicate: x => x.Name == rule.BannedMethod)
+                                  .OfType<IMethodSymbol>()
                                   .ToArray();
+        }
+
+        private static IReadOnlyList<IMethodSymbol> RemoveAllowedSignaturesForMethod(IReadOnlyList<IMethodSymbol>? methodSignatures, IEnumerable<IEnumerable<string>>? ruleSignatures)
+        {
+            if (methodSignatures is null)
+            {
+                return ThrowUnknownMethodSignatureException(methodSignatures);
+            }
+
+            if (ruleSignatures is null)
+            {
+                return ThrowUnknownRuleSignature(ruleSignatures);
+            }
+
+            return BuildMethodSignatureList(ruleSignatures: ruleSignatures, methodSymbols: methodSignatures);
+        }
+
+        private static IReadOnlyList<IMethodSymbol> BuildMethodSignatureList(IEnumerable<IEnumerable<string>> ruleSignatures, IReadOnlyList<IMethodSymbol> methodSymbols)
+        {
+            return ruleSignatures.SelectMany(ruleSignature => methodSymbols.Where(methodSymbol => methodSymbol
+                                                                                                  .Parameters.Select(selector: parameterSymbol => SymbolDisplay.ToDisplayString(parameterSymbol.Type))
+                                                                                                  .SequenceEqual(second: ruleSignature, comparer: StringComparer.Ordinal)))
+                                 .ToArray();
+        }
+
+        [SuppressMessage(category: "SonarAnalyzer.CSharp", checkId: "S1172: Parameter only used for name", Justification = "By Design")]
+        [SuppressMessage(category: "ReSharper", checkId: "EntityNameCapturedOnly.Local", Justification = "By Design")]
+        private static IReadOnlyList<IMethodSymbol> ThrowUnknownRuleSignature(IEnumerable<IEnumerable<string>>? ruleSignatures)
+        {
+            throw new ArgumentException(message: "Unknown rule signature", nameof(ruleSignatures));
+        }
+
+        [SuppressMessage(category: "SonarAnalyzer.CSharp", checkId: "S1172: Parameter only used for name", Justification = "By Design")]
+        [SuppressMessage(category: "ReSharper", checkId: "EntityNameCapturedOnly.Local", Justification = "By Design")]
+        private static IReadOnlyList<IMethodSymbol> ThrowUnknownMethodSignatureException(IEnumerable<IMethodSymbol>? methodSignatures)
+        {
+            throw new ArgumentException(message: "Unknown method signature", nameof(methodSignatures));
+        }
+
+        private static bool IsBannedMethodSignature(IMethodSymbol invocationArguments, IEnumerable<IMethodSymbol> methodSignatures)
+        {
+            IReadOnlyList<string> invocationParameters = GetInvocationParameters(invocationArguments);
+
+            return methodSignatures.Any(predicate: methodSignature => methodSignature.Parameters.Select(x => SymbolDisplay.ToDisplayString(x.OriginalDefinition))
+                                                                                     .SequenceEqual(second: invocationParameters, comparer: StringComparer.Ordinal));
+        }
+
+        private static IReadOnlyList<string> GetInvocationParameters(IMethodSymbol invocationArguments)
+        {
+            return invocationArguments.Parameters.Select(parameter => SymbolDisplay.ToDisplayString(parameter.OriginalDefinition))
+                                      .ToArray();
+        }
     }
 
     private sealed class ProhibitedMethodsSpec
