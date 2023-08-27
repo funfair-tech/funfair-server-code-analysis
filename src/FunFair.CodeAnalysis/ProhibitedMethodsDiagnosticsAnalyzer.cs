@@ -72,14 +72,24 @@ public sealed class ProhibitedMethodsDiagnosticsAnalyzer : DiagnosticAnalyzer
         context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.None);
         context.EnableConcurrentExecution();
 
-        context.RegisterCompilationStartAction(PerformCheck);
+        Checker checker = new();
+
+        context.RegisterCompilationStartAction(checker.PerformCheck);
     }
 
-    private static void PerformCheck(CompilationStartAnalysisContext compilationStartContext)
+    private sealed class Checker
     {
-        Dictionary<string, INamedTypeSymbol> cachedSymbols = BuildCachedSymbols(compilationStartContext.Compilation);
+        private Dictionary<string, INamedTypeSymbol>? _cachedSymbols;
 
-        void LookForBannedMethod(MemberAccessExpressionSyntax memberAccessExpressionSyntax, in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
+        public void PerformCheck(CompilationStartAnalysisContext compilationStartContext)
+        {
+            compilationStartContext.RegisterSyntaxNodeAction(
+                action: syntaxNodeAnalysisContext => this.LookForBannedMethods(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, compilation: compilationStartContext.Compilation),
+                SyntaxKind.PointerMemberAccessExpression,
+                SyntaxKind.SimpleMemberAccessExpression);
+        }
+
+        private void LookForBannedMethod(MemberAccessExpressionSyntax memberAccessExpressionSyntax, in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, Compilation compilation)
         {
             INamedTypeSymbol? typeInfo = ExtractExpressionSyntax(invocation: memberAccessExpressionSyntax, syntaxNodeAnalysisContext: syntaxNodeAnalysisContext);
 
@@ -88,89 +98,88 @@ public sealed class ProhibitedMethodsDiagnosticsAnalyzer : DiagnosticAnalyzer
                 return;
             }
 
-            ReportAnyBannedSymbols(cachedSymbols: cachedSymbols,
-                                   typeInfo: typeInfo,
-                                   invocation: memberAccessExpressionSyntax,
-                                   syntaxNodeAnalysisContext: syntaxNodeAnalysisContext);
+            this.ReportAnyBannedSymbols(typeInfo: typeInfo, invocation: memberAccessExpressionSyntax, syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, compilation: compilation);
         }
 
-        void LookForBannedMethods(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
+        private void LookForBannedMethods(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, Compilation compilation)
         {
             if (syntaxNodeAnalysisContext.Node is MemberAccessExpressionSyntax memberAccessExpressionSyntax)
             {
-                LookForBannedMethod(memberAccessExpressionSyntax: memberAccessExpressionSyntax, syntaxNodeAnalysisContext: syntaxNodeAnalysisContext);
+                this.LookForBannedMethod(memberAccessExpressionSyntax: memberAccessExpressionSyntax, syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, compilation: compilation);
             }
         }
 
-        compilationStartContext.RegisterSyntaxNodeAction(action: LookForBannedMethods, SyntaxKind.PointerMemberAccessExpression, SyntaxKind.SimpleMemberAccessExpression);
-    }
-
-    private static void ReportAnyBannedSymbols(Dictionary<string, INamedTypeSymbol> cachedSymbols,
-                                               INamedTypeSymbol typeInfo,
-                                               MemberAccessExpressionSyntax invocation,
-                                               in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
-    {
-        foreach (ProhibitedMethodsSpec item in BannedMethods)
+        private void ReportAnyBannedSymbols(INamedTypeSymbol typeInfo, MemberAccessExpressionSyntax invocation, in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, Compilation compilation)
         {
-            if (cachedSymbols.TryGetValue(key: item.SourceClass, out INamedTypeSymbol metadataType))
+            Dictionary<string, INamedTypeSymbol> cachedSymbols = this.LoadCachedSymbols(compilation);
+
+            foreach (ProhibitedMethodsSpec item in BannedMethods)
             {
-                if (StringComparer.OrdinalIgnoreCase.Equals(x: typeInfo.ConstructedFrom.MetadataName, y: metadataType.MetadataName))
+                if (cachedSymbols.TryGetValue(key: item.SourceClass, out INamedTypeSymbol metadataType))
                 {
-                    if (invocation.Name.Identifier.ToString() == item.BannedMethod)
+                    if (StringComparer.OrdinalIgnoreCase.Equals(x: typeInfo.ConstructedFrom.MetadataName, y: metadataType.MetadataName))
                     {
-                        invocation.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: item.Rule);
+                        if (invocation.Name.Identifier.ToString() == item.BannedMethod)
+                        {
+                            invocation.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: item.Rule);
+                        }
                     }
                 }
             }
         }
-    }
 
-    private static Dictionary<string, INamedTypeSymbol> BuildCachedSymbols(Compilation compilation)
-    {
-        Dictionary<string, INamedTypeSymbol> cachedSymbols = new(StringComparer.Ordinal);
-
-        foreach (string ruleSourceClass in BannedMethods.Select(rule => rule.SourceClass))
+        private Dictionary<string, INamedTypeSymbol> LoadCachedSymbols(Compilation compilation)
         {
-            if (!cachedSymbols.ContainsKey(ruleSourceClass))
-            {
-                INamedTypeSymbol? item = compilation.GetTypeByMetadataName(ruleSourceClass);
+            return this._cachedSymbols ??= BuildCachedSymbols(compilation);
+        }
 
-                if (item is not null)
+        private static Dictionary<string, INamedTypeSymbol> BuildCachedSymbols(Compilation compilation)
+        {
+            Dictionary<string, INamedTypeSymbol> cachedSymbols = new(StringComparer.Ordinal);
+
+            foreach (string ruleSourceClass in BannedMethods.Select(rule => rule.SourceClass))
+            {
+                if (!cachedSymbols.ContainsKey(ruleSourceClass))
                 {
-                    cachedSymbols.Add(key: ruleSourceClass, value: item);
+                    INamedTypeSymbol? item = compilation.GetTypeByMetadataName(ruleSourceClass);
+
+                    if (item is not null)
+                    {
+                        cachedSymbols.Add(key: ruleSourceClass, value: item);
+                    }
                 }
             }
+
+            return cachedSymbols;
         }
 
-        return cachedSymbols;
-    }
-
-    private static INamedTypeSymbol? ExtractExpressionSyntax(MemberAccessExpressionSyntax invocation, in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
-    {
-        ExpressionSyntax e;
-
-        if (invocation.Expression is MemberAccessExpressionSyntax syntax)
+        private static INamedTypeSymbol? ExtractExpressionSyntax(MemberAccessExpressionSyntax invocation, in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
         {
-            e = syntax;
-        }
-        else if (invocation.Expression is IdentifierNameSyntax expression)
-        {
-            e = expression;
-        }
-        else
-        {
-            return null;
-        }
+            ExpressionSyntax e;
 
-        INamedTypeSymbol? typeInfo = syntaxNodeAnalysisContext.SemanticModel.GetTypeInfo(expression: e, cancellationToken: syntaxNodeAnalysisContext.CancellationToken)
-                                                              .Type as INamedTypeSymbol;
+            if (invocation.Expression is MemberAccessExpressionSyntax syntax)
+            {
+                e = syntax;
+            }
+            else if (invocation.Expression is IdentifierNameSyntax expression)
+            {
+                e = expression;
+            }
+            else
+            {
+                return null;
+            }
 
-        if (typeInfo?.ConstructedFrom is null)
-        {
-            return null;
+            INamedTypeSymbol? typeInfo = syntaxNodeAnalysisContext.SemanticModel.GetTypeInfo(expression: e, cancellationToken: syntaxNodeAnalysisContext.CancellationToken)
+                                                                  .Type as INamedTypeSymbol;
+
+            if (typeInfo?.ConstructedFrom is null)
+            {
+                return null;
+            }
+
+            return typeInfo;
         }
-
-        return typeInfo;
     }
 
     private sealed class ProhibitedMethodsSpec
