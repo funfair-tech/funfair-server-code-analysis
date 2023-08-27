@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Diagnostics;
 using System.Linq;
 using FunFair.CodeAnalysis.Extensions;
 using FunFair.CodeAnalysis.Helpers;
@@ -53,15 +54,15 @@ public sealed class ClassVisibilityDiagnosticsAnalyzer : DiagnosticAnalyzer
 
         foreach (ConfiguredClass classDefinition in Classes)
         {
-            if (classDefinition.TypeMatchesClass(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext) &&
-                !classDefinition.HasCorrectClassModifier(classDeclarationSyntax: classDeclarationSyntax))
+            if (classDefinition.TypeMatchesClass(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext) && !classDefinition.HasCorrectClassModifier(classDeclarationSyntax: classDeclarationSyntax))
             {
                 classDeclarationSyntax.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: classDefinition.Rule);
             }
         }
     }
 
-    private sealed class ConfiguredClass
+    [DebuggerDisplay("{Rule.Id} {Rule.Title} Class {ClassName} Visibility {Visibility}")]
+    private readonly record struct ConfiguredClass
     {
         public ConfiguredClass(string ruleId, string title, string message, string className, SyntaxKind visibility)
         {
@@ -96,12 +97,9 @@ public sealed class ClassVisibilityDiagnosticsAnalyzer : DiagnosticAnalyzer
 
         public bool HasCorrectClassModifier(ClassDeclarationSyntax classDeclarationSyntax)
         {
-            return classDeclarationSyntax.Modifiers.Any(modifier => MatchesVisibility(this, syntaxToken: modifier));
-        }
+            SyntaxKind visibility = this.Visibility;
 
-        private static bool MatchesVisibility(ConfiguredClass classDefinition, in SyntaxToken syntaxToken)
-        {
-            return syntaxToken.IsKind(classDefinition.Visibility);
+            return classDeclarationSyntax.Modifiers.Any(modifier => modifier.IsKind(visibility));
         }
     }
 }
