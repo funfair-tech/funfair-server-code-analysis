@@ -38,12 +38,8 @@ public sealed class ConstructorGenericParameterTypeDiagnosticsAnalyser : Diagnos
                                                                                          message: "Should be using '{0}' rather than '{1}' with {2}");
 
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
-        Specifications.Select(selector: r => r.Rule)
-                      .Concat(new[]
-                              {
-                                  MissMatchTypes
-                              })
-                      .ToImmutableArray();
+        SupportedDiagnosisList.Build(Specifications.Select(s => s.Rule))
+                              .Add(MissMatchTypes);
 
     public override void Initialize(AnalysisContext context)
     {
