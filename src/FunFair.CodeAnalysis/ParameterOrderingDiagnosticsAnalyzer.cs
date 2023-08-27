@@ -26,11 +26,7 @@ public sealed class ParameterOrderingDiagnosticsAnalyzer : DiagnosticAnalyzer
                                                                                title: "Parameters are out of order",
                                                                                message: "Parameter '{0}' must be parameter {1}");
 
-    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
-        new[]
-        {
-            Rule
-        }.ToImmutableArray();
+    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => SupportedDiagnosisList.Build(Rule);
 
     public override void Initialize(AnalysisContext context)
     {

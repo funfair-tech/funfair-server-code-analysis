@@ -26,12 +26,7 @@ public sealed class SuppressMessageDiagnosticsAnalyzer : DiagnosticAnalyzer
 
     private static readonly string SuppressMessageFullName = typeof(SuppressMessageAttribute).FullName!;
 
-    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
-        new[]
-        {
-            RuleMustHaveJustification,
-            RuleMustNotHaveTodoJustification
-        }.ToImmutableArray();
+    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => SupportedDiagnosisList.Build(RuleMustHaveJustification, RuleMustNotHaveTodoJustification);
 
     public override void Initialize(AnalysisContext context)
     {

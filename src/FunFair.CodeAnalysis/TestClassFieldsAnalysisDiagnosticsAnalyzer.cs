@@ -16,11 +16,7 @@ public sealed class TestClassFieldsAnalysisDiagnosticsAnalyzer : DiagnosticAnaly
                                                                                title: "Fields in test classes should be read-only or const",
                                                                                message: "Fields in test classes should be read-only or const");
 
-    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
-        new[]
-        {
-            Rule
-        }.ToImmutableArray();
+    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => SupportedDiagnosisList.Build(Rule);
 
     public override void Initialize(AnalysisContext context)
     {

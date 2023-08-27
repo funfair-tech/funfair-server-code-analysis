@@ -16,11 +16,7 @@ public sealed class ClassAnalysisDiagnosticsAnalyzer : DiagnosticAnalyzer
                                                                                title: "Classes should be static, sealed or abstract",
                                                                                message: "Classes should be static, sealed or abstract");
 
-    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
-        new[]
-        {
-            Rule
-        }.ToImmutableArray();
+    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => SupportedDiagnosisList.Build(Rule);
 
     public override void Initialize(AnalysisContext context)
     {

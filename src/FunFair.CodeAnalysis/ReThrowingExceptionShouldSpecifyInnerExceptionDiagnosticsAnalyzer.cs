@@ -17,11 +17,7 @@ public sealed class ReThrowingExceptionShouldSpecifyInnerExceptionDiagnosticsAna
                                                                                title: "Pass an a inner exception when thrown from a catch clause",
                                                                                message: "Provide '{0}' as a inner exception when throw from the catch clauses");
 
-    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
-        new[]
-        {
-            Rule
-        }.ToImmutableArray();
+    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => SupportedDiagnosisList.Build(Rule);
 
     public override void Initialize(AnalysisContext context)
     {

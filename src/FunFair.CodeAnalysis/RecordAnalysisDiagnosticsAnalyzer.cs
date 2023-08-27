@@ -16,11 +16,7 @@ public sealed class RecordAnalysisDiagnosticsAnalyzer : DiagnosticAnalyzer
                                                                                title: "Records should be sealed",
                                                                                message: "Records should be sealed");
 
-    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
-        new[]
-        {
-            Rule
-        }.ToImmutableArray();
+    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => SupportedDiagnosisList.Build(Rule);
 
     public override void Initialize(AnalysisContext context)
     {

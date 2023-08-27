@@ -16,11 +16,7 @@ public sealed class NullableDirectiveDiagnosticsAnalyzer : DiagnosticAnalyzer
                                                                                title: "Don't use #nulllable directive, make the change globally for the project",
                                                                                message: "Don't use #nulllable directive, make the change globally for the project");
 
-    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
-        new[]
-        {
-            Rule
-        }.ToImmutableArray();
+    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => SupportedDiagnosisList.Build(Rule);
 
     public override void Initialize(AnalysisContext context)
     {

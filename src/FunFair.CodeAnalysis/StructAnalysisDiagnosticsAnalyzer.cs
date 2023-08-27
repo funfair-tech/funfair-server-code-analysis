@@ -16,11 +16,7 @@ public sealed class StructAnalysisDiagnosticsAnalyzer : DiagnosticAnalyzer
                                                                                title: "Structs should be read-only",
                                                                                message: "Structs should be read-only");
 
-    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
-        new[]
-        {
-            Rule
-        }.ToImmutableArray();
+    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => SupportedDiagnosisList.Build(Rule);
 
     public override void Initialize(AnalysisContext context)
     {

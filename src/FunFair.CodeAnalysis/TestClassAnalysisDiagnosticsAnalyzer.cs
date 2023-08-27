@@ -16,11 +16,7 @@ public sealed class TestClassAnalysisDiagnosticsAnalyzer : DiagnosticAnalyzer
                                                                                title: "Test classes should be derived from TestBase",
                                                                                message: "Test classes should be derived from TestBase");
 
-    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
-        new[]
-        {
-            Rule
-        }.ToImmutableArray();
+    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => SupportedDiagnosisList.Build(Rule);
 
     public override void Initialize(AnalysisContext context)
     {
