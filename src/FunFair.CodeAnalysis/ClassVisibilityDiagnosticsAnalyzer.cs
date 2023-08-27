@@ -84,15 +84,17 @@ public sealed class ClassVisibilityDiagnosticsAnalyzer : DiagnosticAnalyzer
                 return false;
             }
 
+            string className = this.ClassName;
+
             return containingType.BaseClasses()
-                                 .Any(this.IsMatchingClass);
+                                 .Any(s => IsMatchingClass(typeSymbol: s, className: className));
         }
 
-        private bool IsMatchingClass(INamedTypeSymbol typeSymbol)
+        private static bool IsMatchingClass(INamedTypeSymbol typeSymbol, string className)
         {
             INamedTypeSymbol originalDefinition = typeSymbol.OriginalDefinition;
 
-            return SymbolDisplay.ToDisplayString(originalDefinition) == this.ClassName;
+            return SymbolDisplay.ToDisplayString(originalDefinition) == className;
         }
 
         public bool HasCorrectClassModifier(ClassDeclarationSyntax classDeclarationSyntax)
