@@ -198,7 +198,8 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzer : DiagnosticA
                                   .ToArray();
         }
 
-        private static IReadOnlyList<IMethodSymbol> RemoveAllowedSignaturesForMethod(IReadOnlyList<IMethodSymbol>? methodSignatures, IEnumerable<IEnumerable<string>>? ruleSignatures)
+        private static IReadOnlyList<IMethodSymbol> RemoveAllowedSignaturesForMethod(IReadOnlyList<IMethodSymbol>? methodSignatures,
+                                                                                     IEnumerable<IEnumerable<string>>? ruleSignatures)
         {
             if (methodSignatures is null)
             {
@@ -216,7 +217,9 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzer : DiagnosticA
         private static IReadOnlyList<IMethodSymbol> BuildMethodSignatureList(IEnumerable<IEnumerable<string>> ruleSignatures, IReadOnlyList<IMethodSymbol> methodSymbols)
         {
             return ruleSignatures.SelectMany(ruleSignature => methodSymbols.Where(methodSymbol => methodSymbol
-                                                                                                  .Parameters.Select(selector: parameterSymbol => SymbolDisplay.ToDisplayString(parameterSymbol.Type))
+                                                                                                  .Parameters.Select(
+                                                                                                      selector: parameterSymbol =>
+                                                                                                                    SymbolDisplay.ToDisplayString(parameterSymbol.Type))
                                                                                                   .SequenceEqual(second: ruleSignature, comparer: StringComparer.Ordinal)))
                                  .ToArray();
         }

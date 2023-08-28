@@ -81,7 +81,8 @@ public sealed class ConstructorGenericParameterTypeDiagnosticsAnalyser : Diagnos
                                                   ClassDeclarationSyntax parentSymbolForClassForConstructor)
     {
         ISymbol classForConstructor =
-            syntaxNodeAnalysisContext.SemanticModel.GetDeclaredSymbol(declarationSyntax: parentSymbolForClassForConstructor, cancellationToken: syntaxNodeAnalysisContext.CancellationToken)!;
+            syntaxNodeAnalysisContext.SemanticModel.GetDeclaredSymbol(declarationSyntax: parentSymbolForClassForConstructor,
+                                                                      cancellationToken: syntaxNodeAnalysisContext.CancellationToken)!;
         string className = classForConstructor.ToDisplayString();
 
         bool needed = IsNeeded(parentSymbolForClassForConstructor: parentSymbolForClassForConstructor,
@@ -139,7 +140,10 @@ public sealed class ConstructorGenericParameterTypeDiagnosticsAnalyser : Diagnos
         {
             if (rule.MatchTypeOnGenericParameters)
             {
-                CheckGenericParameterTypeMatch(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, parameterSyntax: parameterSyntax, className: className, fullTypeName: fullTypeName);
+                CheckGenericParameterTypeMatch(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
+                                               parameterSyntax: parameterSyntax,
+                                               className: className,
+                                               fullTypeName: fullTypeName);
             }
 
             return;
@@ -156,9 +160,13 @@ public sealed class ConstructorGenericParameterTypeDiagnosticsAnalyser : Diagnos
         return Specifications.FirstOrDefault(ns => ns.IsProtected == isProtected && (ns.AllowedSourceClass == fullTypeName || ns.ProhibitedClass == fullTypeName));
     }
 
-    private static void CheckGenericParameterTypeMatch(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, ParameterSyntax parameterSyntax, string className, string fullTypeName)
+    private static void CheckGenericParameterTypeMatch(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext,
+                                                       ParameterSyntax parameterSyntax,
+                                                       string className,
+                                                       string fullTypeName)
     {
-        IParameterSymbol? ds = syntaxNodeAnalysisContext.SemanticModel.GetDeclaredSymbol(declarationSyntax: parameterSyntax, cancellationToken: syntaxNodeAnalysisContext.CancellationToken);
+        IParameterSymbol? ds =
+            syntaxNodeAnalysisContext.SemanticModel.GetDeclaredSymbol(declarationSyntax: parameterSyntax, cancellationToken: syntaxNodeAnalysisContext.CancellationToken);
 
         ITypeSymbol? dsType = ds?.Type;
 
