@@ -10,6 +10,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 ### Fixed
 ### Changed
 - Dependencies - Updated Microsoft.NET.Test.Sdk to 17.7.2
+- Dependencies - Updated Credfeto.Enumeration.Source.Generation to 1.0.16.111
 ### Removed
 ### Deployment Changes
 
