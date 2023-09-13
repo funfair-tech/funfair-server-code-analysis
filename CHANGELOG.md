@@ -11,10 +11,10 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 ### Changed
 - Dependencies - Updated Microsoft.NET.Test.Sdk to 17.7.2
 - Dependencies - Updated SonarAnalyzer.CSharp to 9.9.0.77355
-- SDK - Updated DotNet SDK to 7.0.401
 - Dependencies - Updated Meziantou.Analyzer to 2.0.85
 - Dependencies - Updated FunFair.Test.Common to 6.1.9.149
 - Dependencies - Updated Credfeto.Enumeration.Source.Generation to 1.1.0.135
+- SDK - Updated DotNet SDK to 8.0.100-rc.1.23455.8
 ### Removed
 ### Deployment Changes
 
