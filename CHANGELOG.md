@@ -9,18 +9,21 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 ### Added
 ### Fixed
 ### Changed
-- Dependencies - Updated Microsoft.NET.Test.Sdk to 17.7.2
-- Dependencies - Updated SonarAnalyzer.CSharp to 9.9.0.77355
-- Dependencies - Updated Meziantou.Analyzer to 2.0.85
-- Dependencies - Updated FunFair.Test.Common to 6.1.9.149
-- Dependencies - Updated Credfeto.Enumeration.Source.Generation to 1.1.0.135
-- SDK - Updated DotNet SDK to 8.0.100-rc.1.23455.8
 ### Removed
 ### Deployment Changes
 
 <!--
 Releases that have at least been deployed to staging, BUT NOT necessarily released to live.  Changes should be moved from [Unreleased] into here as they are merged into the appropriate release branch
 -->
+## [7.0.3] - 2023-09-14
+### Changed
+- Dependencies - Updated Microsoft.NET.Test.Sdk to 17.7.2
+- Dependencies - Updated SonarAnalyzer.CSharp to 9.9.0.77355
+- Dependencies - Updated Meziantou.Analyzer to 2.0.85
+- Dependencies - Updated FunFair.Test.Common to 6.1.9.149
+- Dependencies - Updated Credfeto.Enumeration.Source.Generation to 1.1.0.135
+- SDK - Updated DotNet SDK to 8.0.100-rc.1.23455.8
+
 ## [7.0.2] - 2023-08-27
 ### Changed
 - SDK - Updated DotNet SDK to 7.0.400
