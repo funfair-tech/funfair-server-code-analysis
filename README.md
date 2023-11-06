@@ -2,6 +2,15 @@
 
 Static Code analysis Repo for FunFair Server dotnet projects.
 
+## Build Status
+
+| Branch  | Status                                                                                                                                                                                                                                                                |
+|---------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| main    | [![Build: Pre-Release](https://github.com/funfair-tech/funfair-server-code-analysis/actions/workflows/build-and-publish-pre-release.yml/badge.svg)](https://github.com/funfair-tech/funfair-server-code-analysis/actions/workflows/build-and-publish-pre-release.yml) |
+| release | [![Build: Release](https://github.com/funfair-tech/funfair-server-code-analysis/actions/workflows/build-and-publish-release.yml/badge.svg)](https://github.com/funfair-tech/funfair-server-code-analysis/actions/workflows/build-and-publish-release.yml)             |
+
+## Checks
+
 | Code    | Meaning                                                                                                                                        |
 |---------|------------------------------------------------------------------------------------------------------------------------------------------------|
 | FFS0001 | Avoid using ``DateTime.Now`` - Use ``IDateTimeSource.UtcNow()``                                                                                |
