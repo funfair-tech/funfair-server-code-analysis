@@ -9,6 +9,14 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 ### Added
 ### Fixed
 ### Changed
+### Removed
+### Deployment Changes
+
+<!--
+Releases that have at least been deployed to staging, BUT NOT necessarily released to live.  Changes should be moved from [Unreleased] into here as they are merged into the appropriate release branch
+-->
+## [7.0.4] - 2023-11-14
+### Changed
 - Dependencies - Updated Credfeto.Enumeration.Source.Generation to 1.1.0.138
 - Dependencies - Updated SonarAnalyzer.CSharp to 9.12.0.78982
 - Dependencies - Updated xunit.runner.visualstudio to 2.5.3
@@ -21,12 +29,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 - Dependencies - Updated Meziantou.Analyzer to 2.0.109
 - Dependencies - Updated Philips.CodeAnalysis.MaintainabilityAnalyzers to 1.4.0
 - SDK - Updated DotNet SDK to 8.0.100
-### Removed
-### Deployment Changes
 
-<!--
-Releases that have at least been deployed to staging, BUT NOT necessarily released to live.  Changes should be moved from [Unreleased] into here as they are merged into the appropriate release branch
--->
 ## [7.0.3] - 2023-09-14
 ### Changed
 - Dependencies - Updated Microsoft.NET.Test.Sdk to 17.7.2
