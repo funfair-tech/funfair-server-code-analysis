@@ -44,10 +44,9 @@ public sealed class ProhibitedClassesInTestAssembliesDiagnosticsAnalyzerTests : 
                                     };
 
         return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                new[]
-                                                {
+                                                [
                                                     WellKnownMetadataReferences.Xunit
-                                                },
+                                                ],
                                                 expected);
     }
 

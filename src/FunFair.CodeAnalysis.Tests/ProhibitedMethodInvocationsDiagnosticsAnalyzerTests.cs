@@ -31,10 +31,9 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzerTests : Diagno
      }";
 
         return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                new[]
-                                                {
-                                                    WellKnownMetadataReferences.Assert
-                                                });
+        [
+            WellKnownMetadataReferences.Assert
+        ]);
     }
 
     [Fact]
@@ -64,10 +63,9 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzerTests : Diagno
                                     };
 
         return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                new[]
-                                                {
+                                                [
                                                     WellKnownMetadataReferences.Assert
-                                                },
+                                                ],
                                                 expected);
     }
 
@@ -88,10 +86,9 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzerTests : Diagno
     }";
 
         return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                new[]
-                                                {
-                                                    WellKnownMetadataReferences.Assert
-                                                });
+        [
+            WellKnownMetadataReferences.Assert
+        ]);
     }
 
     [Fact]
@@ -121,10 +118,9 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzerTests : Diagno
                                     };
 
         return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                new[]
-                                                {
+                                                [
                                                     WellKnownMetadataReferences.Assert
-                                                },
+                                                ],
                                                 expected);
     }
 
@@ -147,8 +143,7 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzerTests : Diagno
         DiagnosticResult expected = new()
                                     {
                                         Id = "FFS0032",
-                                        Message =
-                                            @"Don't use any of the built in AddOrUpdate methods, instead FunFair.Common.Extensions.ConcurrentDictionaryExtensions.AddOrUpdate can be used",
+                                        Message = @"Don't use any of the built in AddOrUpdate methods, instead FunFair.Common.Extensions.ConcurrentDictionaryExtensions.AddOrUpdate can be used",
                                         Severity = DiagnosticSeverity.Error,
                                         Locations = new[]
                                                     {
@@ -157,10 +152,9 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzerTests : Diagno
                                     };
 
         return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                new[]
-                                                {
+                                                [
                                                     WellKnownMetadataReferences.NonBlockingConcurrentDictionary
-                                                },
+                                                ],
                                                 expected: expected);
     }
 
@@ -183,8 +177,7 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzerTests : Diagno
         DiagnosticResult expected = new()
                                     {
                                         Id = "FFS0032",
-                                        Message =
-                                            @"Don't use any of the built in AddOrUpdate methods, instead FunFair.Common.Extensions.ConcurrentDictionaryExtensions.AddOrUpdate can be used",
+                                        Message = @"Don't use any of the built in AddOrUpdate methods, instead FunFair.Common.Extensions.ConcurrentDictionaryExtensions.AddOrUpdate can be used",
                                         Severity = DiagnosticSeverity.Error,
                                         Locations = new[]
                                                     {
@@ -193,10 +186,9 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzerTests : Diagno
                                     };
 
         return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                new[]
-                                                {
+                                                [
                                                     WellKnownMetadataReferences.NonBlockingConcurrentDictionary
-                                                },
+                                                ],
                                                 expected: expected);
     }
 
@@ -226,8 +218,7 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzerTests : Diagno
         DiagnosticResult expected = new()
                                     {
                                         Id = "FFS0032",
-                                        Message =
-                                            @"Don't use any of the built in AddOrUpdate methods, instead FunFair.Common.Extensions.ConcurrentDictionaryExtensions.AddOrUpdate can be used",
+                                        Message = @"Don't use any of the built in AddOrUpdate methods, instead FunFair.Common.Extensions.ConcurrentDictionaryExtensions.AddOrUpdate can be used",
                                         Severity = DiagnosticSeverity.Error,
                                         Locations = new[]
                                                     {
@@ -236,10 +227,9 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzerTests : Diagno
                                     };
 
         return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                new[]
-                                                {
+                                                [
                                                     WellKnownMetadataReferences.NonBlockingConcurrentDictionary
-                                                },
+                                                ],
                                                 expected: expected);
     }
 
@@ -266,8 +256,7 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzerTests : Diagno
         DiagnosticResult expected = new()
                                     {
                                         Id = "FFS0032",
-                                        Message =
-                                            @"Don't use any of the built in AddOrUpdate methods, instead FunFair.Common.Extensions.ConcurrentDictionaryExtensions.AddOrUpdate can be used",
+                                        Message = @"Don't use any of the built in AddOrUpdate methods, instead FunFair.Common.Extensions.ConcurrentDictionaryExtensions.AddOrUpdate can be used",
                                         Severity = DiagnosticSeverity.Error,
                                         Locations = new[]
                                                     {
@@ -276,10 +265,9 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzerTests : Diagno
                                     };
 
         return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                new[]
-                                                {
+                                                [
                                                     WellKnownMetadataReferences.NonBlockingConcurrentDictionary
-                                                },
+                                                ],
                                                 expected);
     }
 
@@ -302,8 +290,7 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzerTests : Diagno
         DiagnosticResult expected = new()
                                     {
                                         Id = "FFS0033",
-                                        Message =
-                                            @"Don't use any of the built in GetOrAdd methods, instead FunFair.Common.Extensions.ConcurrentDictionaryExtensions.GetOrAdd can be used",
+                                        Message = @"Don't use any of the built in GetOrAdd methods, instead FunFair.Common.Extensions.ConcurrentDictionaryExtensions.GetOrAdd can be used",
                                         Severity = DiagnosticSeverity.Error,
                                         Locations = new[]
                                                     {
@@ -312,10 +299,9 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzerTests : Diagno
                                     };
 
         return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                new[]
-                                                {
+                                                [
                                                     WellKnownMetadataReferences.NonBlockingConcurrentDictionary
-                                                },
+                                                ],
                                                 expected);
     }
 
@@ -341,8 +327,7 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzerTests : Diagno
         DiagnosticResult expected = new()
                                     {
                                         Id = "FFS0033",
-                                        Message =
-                                            @"Don't use any of the built in GetOrAdd methods, instead FunFair.Common.Extensions.ConcurrentDictionaryExtensions.GetOrAdd can be used",
+                                        Message = @"Don't use any of the built in GetOrAdd methods, instead FunFair.Common.Extensions.ConcurrentDictionaryExtensions.GetOrAdd can be used",
                                         Severity = DiagnosticSeverity.Error,
                                         Locations = new[]
                                                     {
@@ -351,10 +336,9 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzerTests : Diagno
                                     };
 
         return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                new[]
-                                                {
+                                                [
                                                     WellKnownMetadataReferences.NonBlockingConcurrentDictionary
-                                                },
+                                                ],
                                                 expected);
     }
 
@@ -376,9 +360,8 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzerTests : Diagno
      }";
 
         return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                new[]
-                                                {
-                                                    WellKnownMetadataReferences.NonBlockingConcurrentDictionary
-                                                });
+        [
+            WellKnownMetadataReferences.NonBlockingConcurrentDictionary
+        ]);
     }
 }

@@ -16,13 +16,13 @@ namespace FunFair.CodeAnalysis;
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public sealed class ProhibitedClassesInTestAssembliesDiagnosticsAnalyzer : DiagnosticAnalyzer
 {
-    private static readonly IReadOnlyList<ProhibitedClassSpec> BannedClasses = new ProhibitedClassSpec[]
-                                                                               {
-                                                                                   new(ruleId: Rules.RuleDontUseSystemConsoleInTestProjects,
-                                                                                       title: "Avoid use of System.Console class",
-                                                                                       message: "Use ITestOutputHelper rather than System.Console in test projects",
-                                                                                       sourceClass: "System.Console")
-                                                                               };
+    private static readonly IReadOnlyList<ProhibitedClassSpec> BannedClasses =
+    [
+        Build(ruleId: Rules.RuleDontUseSystemConsoleInTestProjects,
+              title: "Avoid use of System.Console class",
+              message: "Use ITestOutputHelper rather than System.Console in test projects",
+              sourceClass: "System.Console")
+    ];
 
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
         BannedClasses.Select(selector: r => r.Rule)
@@ -36,6 +36,11 @@ public sealed class ProhibitedClassesInTestAssembliesDiagnosticsAnalyzer : Diagn
         Checker checker = new();
 
         context.RegisterCompilationStartAction(checker.PerformCheck);
+    }
+
+    private static ProhibitedClassSpec Build(string ruleId, string title, string message, string sourceClass)
+    {
+        return new(ruleId: ruleId, title: title, message: message, sourceClass: sourceClass);
     }
 
     private sealed class Checker

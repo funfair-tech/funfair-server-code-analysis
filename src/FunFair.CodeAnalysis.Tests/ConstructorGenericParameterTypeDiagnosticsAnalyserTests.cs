@@ -28,10 +28,9 @@ public sealed class Test {
 }";
 
         return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                new[]
-                                                {
-                                                    WellKnownMetadataReferences.Logger
-                                                });
+        [
+            WellKnownMetadataReferences.Logger
+        ]);
     }
 
     [Fact]
@@ -59,10 +58,9 @@ public sealed class Test {
                                     };
 
         return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                new[]
-                                                {
+                                                [
                                                     WellKnownMetadataReferences.Logger
-                                                },
+                                                ],
                                                 expected);
     }
 
@@ -91,10 +89,9 @@ public abstract class Test {
                                     };
 
         return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                new[]
-                                                {
+                                                [
                                                     WellKnownMetadataReferences.Logger
-                                                },
+                                                ],
                                                 expected);
     }
 
@@ -112,10 +109,9 @@ public abstract class Test {
 }";
 
         return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                new[]
-                                                {
-                                                    WellKnownMetadataReferences.Logger
-                                                });
+        [
+            WellKnownMetadataReferences.Logger
+        ]);
     }
 
     [Fact]
@@ -147,10 +143,9 @@ public sealed class Test {
                                     };
 
         return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                new[]
-                                                {
+                                                [
                                                     WellKnownMetadataReferences.Logger
-                                                },
+                                                ],
                                                 expected);
     }
 
@@ -168,10 +163,9 @@ internal sealed class Test {
 }";
 
         return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                new[]
-                                                {
-                                                    WellKnownMetadataReferences.Logger
-                                                });
+        [
+            WellKnownMetadataReferences.Logger
+        ]);
     }
 
     [Fact]
@@ -191,10 +185,9 @@ public sealed class Onion {
 }";
 
         return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                new[]
-                                                {
-                                                    WellKnownMetadataReferences.Logger
-                                                });
+        [
+            WellKnownMetadataReferences.Logger
+        ]);
     }
 
     [Fact]
@@ -214,10 +207,9 @@ public sealed class Onion {
 }";
 
         return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                new[]
-                                                {
-                                                    WellKnownMetadataReferences.Logger
-                                                });
+        [
+            WellKnownMetadataReferences.Logger
+        ]);
     }
 
     [Fact]
@@ -237,9 +229,8 @@ public class Onion {
 }";
 
         return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                new[]
-                                                {
-                                                    WellKnownMetadataReferences.Logger
-                                                });
+        [
+            WellKnownMetadataReferences.Logger
+        ]);
     }
 }

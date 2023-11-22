@@ -14,33 +14,29 @@ namespace FunFair.CodeAnalysis;
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public sealed class ProhibitedMethodWithStrictParametersInvocationDiagnosticsAnalyzer : DiagnosticAnalyzer
 {
-    private static readonly ProhibitedMethodsSpec[] ForcedMethods =
-    {
-        new(ruleId: Rules.RuleDontUseSubstituteReceivedWithZeroNumberOfCalls,
-            title: "Avoid use of received with zero call count",
-            message: "Only use Received with expected call count greater than 0, use DidNotReceived instead if 0 call received expected",
-            sourceClass: "NSubstitute.SubstituteExtensions",
-            forcedMethod: "Received",
-            new[]
-            {
-                new[]
-                {
-                    new ParameterSpec(name: "requiredNumberOfCalls", type: "NumericLiteralExpression", value: "0")
-                }
-            }),
-        new(ruleId: Rules.RuleDontUseConfigurationBuilderAddJsonFileWithReload,
-            title: "Avoid use of reloadOnChange with value true",
-            message: "Only use AddJsonFile with reloadOnChange set to false",
-            sourceClass: "Microsoft.Extensions.Configuration.JsonConfigurationExtensions",
-            forcedMethod: "AddJsonFile",
-            new[]
-            {
-                new[]
-                {
-                    new ParameterSpec(name: "reloadOnChange", type: "TrueLiteralExpression", value: "true")
-                }
-            })
-    };
+    private static readonly IReadOnlyList<ProhibitedMethodsSpec> ForcedMethods =
+    [
+        Build(ruleId: Rules.RuleDontUseSubstituteReceivedWithZeroNumberOfCalls,
+              title: "Avoid use of received with zero call count",
+              message: "Only use Received with expected call count greater than 0, use DidNotReceived instead if 0 call received expected",
+              sourceClass: "NSubstitute.SubstituteExtensions",
+              forcedMethod: "Received",
+              [
+                  [
+                      Build(name: "requiredNumberOfCalls", type: "NumericLiteralExpression", value: "0")
+                  ]
+              ]),
+        Build(ruleId: Rules.RuleDontUseConfigurationBuilderAddJsonFileWithReload,
+              title: "Avoid use of reloadOnChange with value true",
+              message: "Only use AddJsonFile with reloadOnChange set to false",
+              sourceClass: "Microsoft.Extensions.Configuration.JsonConfigurationExtensions",
+              forcedMethod: "AddJsonFile",
+              [
+                  [
+                      Build(name: "reloadOnChange", type: "TrueLiteralExpression", value: "true")
+                  ]
+              ])
+    ];
 
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
         ForcedMethods.Select(selector: r => r.Rule)
@@ -56,38 +52,40 @@ public sealed class ProhibitedMethodWithStrictParametersInvocationDiagnosticsAna
 
     private static void PerformCheck(CompilationStartAnalysisContext compilationStartContext)
     {
+        compilationStartContext.RegisterSyntaxNodeAction(action: LookForForcedMethods, SyntaxKind.InvocationExpression);
+
         void LookForForcedMethods(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
         {
-            if (syntaxNodeAnalysisContext.Node is InvocationExpressionSyntax invocation)
+            if (syntaxNodeAnalysisContext.Node is not InvocationExpressionSyntax invocation)
             {
-                IMethodSymbol? memberSymbol = MethodSymbolHelper.FindInvokedMemberSymbol(invocation: invocation, syntaxNodeAnalysisContext: syntaxNodeAnalysisContext);
+                return;
+            }
 
-                // check if there is at least one rule that correspond to invocation method
-                if (memberSymbol is null)
+            IMethodSymbol? memberSymbol = MethodSymbolHelper.FindInvokedMemberSymbol(invocation: invocation, syntaxNodeAnalysisContext: syntaxNodeAnalysisContext);
+
+            // check if there is at least one rule that correspond to invocation method
+            if (memberSymbol is null)
+            {
+                return;
+            }
+
+            Mapping mapping = new(methodName: memberSymbol.Name, SymbolDisplay.ToDisplayString(memberSymbol.ContainingType));
+
+            IEnumerable<ProhibitedMethodsSpec> forcedMethods = ForcedMethods.Where(predicate: rule => rule.QualifiedName == mapping.QualifiedName);
+
+            foreach (ProhibitedMethodsSpec prohibitedMethod in forcedMethods)
+            {
+                if (!IsInvocationAllowed(arguments: invocation.ArgumentList, parameters: memberSymbol.Parameters, prohibitedMethod: prohibitedMethod))
                 {
-                    return;
-                }
-
-                Mapping mapping = new(methodName: memberSymbol.Name, SymbolDisplay.ToDisplayString(memberSymbol.ContainingType));
-
-                IEnumerable<ProhibitedMethodsSpec> forcedMethods = ForcedMethods.Where(predicate: rule => rule.QualifiedName == mapping.QualifiedName);
-
-                foreach (ProhibitedMethodsSpec prohibitedMethod in forcedMethods)
-                {
-                    if (!IsInvocationAllowed(arguments: invocation.ArgumentList, parameters: memberSymbol.Parameters, prohibitedMethod: prohibitedMethod))
-                    {
-                        invocation.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: prohibitedMethod.Rule);
-                    }
+                    invocation.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: prohibitedMethod.Rule);
                 }
             }
         }
-
-        compilationStartContext.RegisterSyntaxNodeAction(action: LookForForcedMethods, SyntaxKind.InvocationExpression);
     }
 
     private static bool IsInvocationAllowed(BaseArgumentListSyntax arguments, IReadOnlyList<IParameterSymbol> parameters, in ProhibitedMethodsSpec prohibitedMethod)
     {
-        if (!prohibitedMethod.BannedSignatures.Any())
+        if (prohibitedMethod.BannedSignatures.Count == 0)
         {
             return true;
         }
@@ -102,6 +100,16 @@ public sealed class ProhibitedMethodWithStrictParametersInvocationDiagnosticsAna
                                                                                                                   .ToString() == t.t.t.parameterSpec.Type)
                                 .Select(t => t.t.t.parameterSpec)
                                 .Any();
+    }
+
+    private static ParameterSpec Build(string name, string type, string value)
+    {
+        return new(name: name, type: type, value: value);
+    }
+
+    private static ProhibitedMethodsSpec Build(string ruleId, string title, string message, string sourceClass, string forcedMethod, IReadOnlyList<IReadOnlyList<ParameterSpec>> bannedSignatures)
+    {
+        return new(ruleId: ruleId, title: title, message: message, sourceClass: sourceClass, forcedMethod: forcedMethod, bannedSignatures: bannedSignatures);
     }
 
     [DebuggerDisplay("{Name}:{Type} = {Value}")]
@@ -124,7 +132,7 @@ public sealed class ProhibitedMethodWithStrictParametersInvocationDiagnosticsAna
     [DebuggerDisplay("{Rule.Id} {Rule.Title} Class {SourceClass} Forced Method: {ForcedMethod}")]
     private readonly record struct ProhibitedMethodsSpec
     {
-        public ProhibitedMethodsSpec(string ruleId, string title, string message, string sourceClass, string forcedMethod, IEnumerable<IEnumerable<ParameterSpec>> bannedSignatures)
+        public ProhibitedMethodsSpec(string ruleId, string title, string message, string sourceClass, string forcedMethod, IReadOnlyList<IReadOnlyList<ParameterSpec>> bannedSignatures)
         {
             this.SourceClass = sourceClass;
             this.ForcedMethod = forcedMethod;
@@ -136,7 +144,7 @@ public sealed class ProhibitedMethodWithStrictParametersInvocationDiagnosticsAna
 
         public string ForcedMethod { get; }
 
-        public IEnumerable<IEnumerable<ParameterSpec>> BannedSignatures { get; }
+        public IReadOnlyList<IReadOnlyList<ParameterSpec>> BannedSignatures { get; }
 
         public DiagnosticDescriptor Rule { get; }
 

@@ -39,10 +39,9 @@ public sealed class ForcedMethodParametersInvocationsDiagnosticsAnalyzerTests : 
     }";
 
         return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                new[]
-                                                {
-                                                    WellKnownMetadataReferences.JsonSerializer
-                                                });
+        [
+            WellKnownMetadataReferences.JsonSerializer
+        ]);
     }
 
     [Fact]
@@ -79,10 +78,9 @@ public sealed class ForcedMethodParametersInvocationsDiagnosticsAnalyzerTests : 
                                     };
 
         return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                new[]
-                                                {
+                                                [
                                                     WellKnownMetadataReferences.JsonSerializer
-                                                },
+                                                ],
                                                 expected);
     }
 
@@ -109,10 +107,9 @@ public sealed class ForcedMethodParametersInvocationsDiagnosticsAnalyzerTests : 
      }";
 
         return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                new[]
-                                                {
-                                                    WellKnownMetadataReferences.Substitute
-                                                });
+        [
+            WellKnownMetadataReferences.Substitute
+        ]);
     }
 
     [Fact]
@@ -148,10 +145,9 @@ public sealed class ForcedMethodParametersInvocationsDiagnosticsAnalyzerTests : 
                                     };
 
         return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                new[]
-                                                {
+                                                [
                                                     WellKnownMetadataReferences.Substitute
-                                                },
+                                                ],
                                                 expected);
     }
 
@@ -180,10 +176,9 @@ public sealed class ForcedMethodParametersInvocationsDiagnosticsAnalyzerTests : 
     }";
 
         return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                new[]
-                                                {
-                                                    WellKnownMetadataReferences.JsonSerializer
-                                                });
+        [
+            WellKnownMetadataReferences.JsonSerializer
+        ]);
     }
 
     [Fact]
@@ -219,10 +214,9 @@ public sealed class ForcedMethodParametersInvocationsDiagnosticsAnalyzerTests : 
                                     };
 
         return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                new[]
-                                                {
+                                                [
                                                     WellKnownMetadataReferences.JsonSerializer
-                                                },
+                                                ],
                                                 expected);
     }
 }

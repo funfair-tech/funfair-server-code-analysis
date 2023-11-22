@@ -32,10 +32,9 @@ public sealed class ProhibitedClassesDiagnosticsAnalyzerTests : DiagnosticVerifi
      }";
 
         return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                new[]
-                                                {
-                                                    WellKnownMetadataReferences.NonBlockingConcurrentDictionary
-                                                });
+        [
+            WellKnownMetadataReferences.NonBlockingConcurrentDictionary
+        ]);
     }
 
     [Fact]
@@ -66,10 +65,9 @@ public sealed class ProhibitedClassesDiagnosticsAnalyzerTests : DiagnosticVerifi
                                     };
 
         return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                new[]
-                                                {
+                                                [
                                                     WellKnownMetadataReferences.ConcurrentDictionary
-                                                },
+                                                ],
                                                 expected);
     }
 
@@ -101,10 +99,9 @@ public sealed class ProhibitedClassesDiagnosticsAnalyzerTests : DiagnosticVerifi
                                     };
 
         return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                new[]
-                                                {
+                                                [
                                                     WellKnownMetadataReferences.ConcurrentDictionary
-                                                },
+                                                ],
                                                 expected);
     }
 
@@ -151,10 +148,9 @@ public sealed class ProhibitedClassesDiagnosticsAnalyzerTests : DiagnosticVerifi
         };
 
         return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                new[]
-                                                {
+                                                [
                                                     WellKnownMetadataReferences.ConcurrentDictionary
-                                                },
+                                                ],
                                                 expected: expected);
     }
 
@@ -188,10 +184,9 @@ public sealed class ProhibitedClassesDiagnosticsAnalyzerTests : DiagnosticVerifi
                                     };
 
         return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                new[]
-                                                {
+                                                [
                                                     WellKnownMetadataReferences.ConcurrentDictionary
-                                                },
+                                                ],
                                                 expected);
     }
 
@@ -223,10 +218,9 @@ public sealed class ProhibitedClassesDiagnosticsAnalyzerTests : DiagnosticVerifi
                                     };
 
         return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                new[]
-                                                {
+                                                [
                                                     WellKnownMetadataReferences.ConcurrentDictionary
-                                                },
+                                                ],
                                                 expected);
     }
 }
