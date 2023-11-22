@@ -37,10 +37,9 @@ public sealed class ProhibitedMethodWithStrictParametersInvocationDiagnosticsAna
      }";
 
         return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                new[]
-                                                {
-                                                    WellKnownMetadataReferences.Substitute
-                                                });
+        [
+            WellKnownMetadataReferences.Substitute
+        ]);
     }
 
     [Fact]
@@ -76,10 +75,9 @@ public sealed class ProhibitedMethodWithStrictParametersInvocationDiagnosticsAna
                                     };
 
         return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                new[]
-                                                {
+                                                [
                                                     WellKnownMetadataReferences.Substitute
-                                                },
+                                                ],
                                                 expected);
     }
 
@@ -106,10 +104,9 @@ public sealed class ProhibitedMethodWithStrictParametersInvocationDiagnosticsAna
      }";
 
         return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                new[]
-                                                {
-                                                    WellKnownMetadataReferences.Substitute
-                                                });
+        [
+            WellKnownMetadataReferences.Substitute
+        ]);
     }
 
     [Fact]
@@ -130,12 +127,11 @@ public sealed class ProhibitedMethodWithStrictParametersInvocationDiagnosticsAna
      }";
 
         return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                new[]
-                                                {
-                                                    WellKnownMetadataReferences.MicrosoftExtensionsIConfigurationBuilder,
-                                                    WellKnownMetadataReferences.ConfigurationBuilder,
-                                                    WellKnownMetadataReferences.JsonConfigurationExtensions
-                                                });
+        [
+            WellKnownMetadataReferences.MicrosoftExtensionsIConfigurationBuilder,
+            WellKnownMetadataReferences.ConfigurationBuilder,
+            WellKnownMetadataReferences.JsonConfigurationExtensions
+        ]);
     }
 
     [Fact]
@@ -169,12 +165,11 @@ public sealed class ProhibitedMethodWithStrictParametersInvocationDiagnosticsAna
                                     };
 
         return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                new[]
-                                                {
+                                                [
                                                     WellKnownMetadataReferences.MicrosoftExtensionsIConfigurationBuilder,
                                                     WellKnownMetadataReferences.ConfigurationBuilder,
                                                     WellKnownMetadataReferences.JsonConfigurationExtensions
-                                                },
+                                                ],
                                                 expected);
     }
 
@@ -210,12 +205,11 @@ public sealed class ProhibitedMethodWithStrictParametersInvocationDiagnosticsAna
                                     };
 
         return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                new[]
-                                                {
+                                                [
                                                     WellKnownMetadataReferences.MicrosoftExtensionsIConfigurationBuilder,
                                                     WellKnownMetadataReferences.ConfigurationBuilder,
                                                     WellKnownMetadataReferences.JsonConfigurationExtensions
-                                                },
+                                                ],
                                                 expected);
     }
 }

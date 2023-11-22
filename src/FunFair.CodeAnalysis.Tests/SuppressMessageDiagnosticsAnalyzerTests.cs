@@ -29,10 +29,9 @@ public sealed class SuppressMessageDiagnosticsAnalyzerTests : DiagnosticVerifier
 }";
 
         return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                new[]
-                                                {
-                                                    WellKnownMetadataReferences.SuppressMessage
-                                                });
+        [
+            WellKnownMetadataReferences.SuppressMessage
+        ]);
     }
 
     [Fact]
@@ -60,10 +59,9 @@ public sealed class SuppressMessageDiagnosticsAnalyzerTests : DiagnosticVerifier
                                     };
 
         return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                new[]
-                                                {
+                                                [
                                                     WellKnownMetadataReferences.SuppressMessage
-                                                },
+                                                ],
                                                 expected);
     }
 
@@ -93,10 +91,9 @@ public sealed class SuppressMessageDiagnosticsAnalyzerTests : DiagnosticVerifier
                                     };
 
         return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                new[]
-                                                {
+                                                [
                                                     WellKnownMetadataReferences.SuppressMessage
-                                                },
+                                                ],
                                                 expected);
     }
 
@@ -126,10 +123,9 @@ public sealed class SuppressMessageDiagnosticsAnalyzerTests : DiagnosticVerifier
                                     };
 
         return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                new[]
-                                                {
+                                                [
                                                     WellKnownMetadataReferences.SuppressMessage
-                                                },
+                                                ],
                                                 expected);
     }
 }

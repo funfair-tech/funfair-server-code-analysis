@@ -465,12 +465,11 @@ public sealed class ProhibitedMethodsDiagnosticsAnalyzerTests : DiagnosticVerifi
                                     };
 
         return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                new[]
-                                                {
+                                                [
                                                     WellKnownMetadataReferences.IpAddress,
                                                     WellKnownMetadataReferences.ConnectionInfo,
                                                     WellKnownMetadataReferences.HttpContext
-                                                },
+                                                ],
                                                 expected);
     }
 
@@ -504,12 +503,11 @@ public sealed class ProhibitedMethodsDiagnosticsAnalyzerTests : DiagnosticVerifi
                                     };
 
         return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                new[]
-                                                {
+                                                [
                                                     WellKnownMetadataReferences.IpAddress,
                                                     WellKnownMetadataReferences.ConnectionInfo,
                                                     WellKnownMetadataReferences.HttpContext
-                                                },
+                                                ],
                                                 expected);
     }
 

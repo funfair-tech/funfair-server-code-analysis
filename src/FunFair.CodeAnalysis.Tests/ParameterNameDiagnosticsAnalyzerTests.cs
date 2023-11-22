@@ -39,10 +39,9 @@ public sealed class ParameterNameDiagnosticsAnalyzerTests : DiagnosticVerifier
                                     };
 
         return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                new[]
-                                                {
+                                                [
                                                     WellKnownMetadataReferences.GenericLogger
-                                                },
+                                                ],
                                                 expected);
     }
 
@@ -60,10 +59,9 @@ public sealed class ParameterNameDiagnosticsAnalyzerTests : DiagnosticVerifier
 }";
 
         return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                new[]
-                                                {
-                                                    WellKnownMetadataReferences.GenericLogger
-                                                });
+        [
+            WellKnownMetadataReferences.GenericLogger
+        ]);
     }
 
     [Fact]
@@ -91,10 +89,9 @@ public sealed class ParameterNameDiagnosticsAnalyzerTests : DiagnosticVerifier
                                     };
 
         return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                new[]
-                                                {
+                                                [
                                                     WellKnownMetadataReferences.Logger
-                                                },
+                                                ],
                                                 expected);
     }
 
@@ -112,9 +109,8 @@ public sealed class ParameterNameDiagnosticsAnalyzerTests : DiagnosticVerifier
 }";
 
         return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                new[]
-                                                {
-                                                    WellKnownMetadataReferences.Logger
-                                                });
+        [
+            WellKnownMetadataReferences.Logger
+        ]);
     }
 }

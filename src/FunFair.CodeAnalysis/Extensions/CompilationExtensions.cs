@@ -8,23 +8,28 @@ namespace FunFair.CodeAnalysis.Extensions;
 
 internal static class CompilationExtensions
 {
-    private static readonly HashSet<string> TestAssemblies = new([
-                                                                     "Microsoft.NET.Test.Sdk"
-                                                                 ],
-                                                                 comparer: StringComparer.OrdinalIgnoreCase);
+    private static readonly IReadOnlyList<string> TestAssemblies =
+    [
+        "Microsoft.NET.Test.Sdk"
+    ];
 
-    private static readonly HashSet<string> UnitTestAssemblies = new([
-                                                                         "Microsoft.NET.Test.Sdk",
-                                                                         "xunit",
-                                                                         "xunit.core"
-                                                                     ],
-                                                                     comparer: StringComparer.OrdinalIgnoreCase);
+    private static readonly IReadOnlyList<string> UnitTestAssemblies =
+    [
+        "Microsoft.NET.Test.Sdk",
+        "xunit",
+        "xunit.core"
+    ];
+
+    private static bool Matches(IReadOnlyList<string> assemblyNames, AssemblyIdentity assembly)
+    {
+        return assemblyNames.Contains(assembly.Name, StringComparer.OrdinalIgnoreCase);
+    }
 
     public static bool IsTestAssembly(this Compilation compilation)
     {
         try
         {
-            return compilation.ReferencedAssemblyNames.Any(assemblyName => TestAssemblies.Contains(assemblyName.Name));
+            return compilation.ReferencedAssemblyNames.Any(assemblyName => Matches(TestAssemblies, assemblyName));
         }
         catch (Exception exception)
         {
@@ -39,7 +44,7 @@ internal static class CompilationExtensions
     {
         try
         {
-            return compilation.ReferencedAssemblyNames.Any(assemblyName => UnitTestAssemblies.Contains(assemblyName.Name));
+            return compilation.ReferencedAssemblyNames.Any(assemblyName => Matches(UnitTestAssemblies, assemblyName));
         }
         catch (Exception exception)
         {

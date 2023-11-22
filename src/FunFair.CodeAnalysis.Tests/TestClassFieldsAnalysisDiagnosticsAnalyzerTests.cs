@@ -57,11 +57,10 @@ public sealed class Test : TestBase{
                                     };
 
         return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                new[]
-                                                {
+                                                [
                                                     WellKnownMetadataReferences.Xunit,
                                                     WellKnownMetadataReferences.FunFairTestCommon
-                                                },
+                                                ],
                                                 expected);
     }
 
@@ -81,11 +80,10 @@ public sealed class Test : TestBase{
 }";
 
         return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                new[]
-                                                {
-                                                    WellKnownMetadataReferences.Xunit,
-                                                    WellKnownMetadataReferences.FunFairTestCommon
-                                                });
+        [
+            WellKnownMetadataReferences.Xunit,
+            WellKnownMetadataReferences.FunFairTestCommon
+        ]);
     }
 
     [Fact]
@@ -104,10 +102,9 @@ public sealed class Test : TestBase{
 }";
 
         return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                new[]
-                                                {
-                                                    WellKnownMetadataReferences.Xunit,
-                                                    WellKnownMetadataReferences.FunFairTestCommon
-                                                });
+        [
+            WellKnownMetadataReferences.Xunit,
+            WellKnownMetadataReferences.FunFairTestCommon
+        ]);
     }
 }

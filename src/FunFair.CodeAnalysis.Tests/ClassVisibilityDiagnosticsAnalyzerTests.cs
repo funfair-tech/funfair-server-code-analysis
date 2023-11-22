@@ -27,10 +27,9 @@ public sealed class Test
 }";
 
         return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                new[]
-                                                {
-                                                    WellKnownMetadataReferences.FunFairTestCommon
-                                                });
+        [
+            WellKnownMetadataReferences.FunFairTestCommon
+        ]);
     }
 
     [Fact]
@@ -64,10 +63,9 @@ public sealed class Test : MockBase<string>
                                     };
 
         return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                new[]
-                                                {
+                                                [
                                                     WellKnownMetadataReferences.FunFairTestCommon
-                                                },
+                                                ],
                                                 expected);
     }
 
@@ -92,10 +90,9 @@ internal sealed class Test : MockBase<string>
 }";
 
         return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                new[]
-                                                {
-                                                    WellKnownMetadataReferences.FunFairTestCommon
-                                                });
+        [
+            WellKnownMetadataReferences.FunFairTestCommon
+        ]);
     }
 
     [Fact]
@@ -130,10 +127,9 @@ internal abstract class Test : MockBase<string>
                                     };
 
         return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                new[]
-                                                {
+                                                [
                                                     WellKnownMetadataReferences.FunFairTestCommon
-                                                },
+                                                ],
                                                 expected);
     }
 }

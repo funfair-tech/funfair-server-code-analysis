@@ -28,10 +28,9 @@ public sealed class ParameterOrderingDiagnosticsAnalyzerTests : DiagnosticVerifi
 }";
 
         return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                new[]
-                                                {
-                                                    WellKnownMetadataReferences.GenericLogger
-                                                });
+        [
+            WellKnownMetadataReferences.GenericLogger
+        ]);
     }
 
     [Fact]
@@ -48,10 +47,9 @@ public sealed class ParameterOrderingDiagnosticsAnalyzerTests : DiagnosticVerifi
 }";
 
         return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                new[]
-                                                {
-                                                    WellKnownMetadataReferences.GenericLogger
-                                                });
+        [
+            WellKnownMetadataReferences.GenericLogger
+        ]);
     }
 
     [Fact]
@@ -79,10 +77,9 @@ public sealed class ParameterOrderingDiagnosticsAnalyzerTests : DiagnosticVerifi
                                     };
 
         return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                new[]
-                                                {
+                                                [
                                                     WellKnownMetadataReferences.GenericLogger
-                                                },
+                                                ],
                                                 expected);
     }
 
@@ -112,11 +109,10 @@ public sealed class ParameterOrderingDiagnosticsAnalyzerTests : DiagnosticVerifi
                                     };
 
         return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                new[]
-                                                {
+                                                [
                                                     WellKnownMetadataReferences.GenericLogger,
                                                     WellKnownMetadataReferences.CancellationToken
-                                                },
+                                                ],
                                                 expected);
     }
 
@@ -134,10 +130,9 @@ public sealed class ParameterOrderingDiagnosticsAnalyzerTests : DiagnosticVerifi
 }";
 
         return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                new[]
-                                                {
-                                                    WellKnownMetadataReferences.GenericLogger
-                                                });
+        [
+            WellKnownMetadataReferences.GenericLogger
+        ]);
     }
 
     [Fact]
@@ -154,10 +149,9 @@ public sealed class ParameterOrderingDiagnosticsAnalyzerTests : DiagnosticVerifi
 }";
 
         return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                new[]
-                                                {
-                                                    WellKnownMetadataReferences.GenericLogger
-                                                });
+        [
+            WellKnownMetadataReferences.GenericLogger
+        ]);
     }
 
     [Fact]
@@ -174,10 +168,9 @@ public sealed class ParameterOrderingDiagnosticsAnalyzerTests : DiagnosticVerifi
 }";
 
         return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                new[]
-                                                {
-                                                    WellKnownMetadataReferences.GenericLogger
-                                                });
+        [
+            WellKnownMetadataReferences.GenericLogger
+        ]);
     }
 
     [Fact]
@@ -205,10 +198,9 @@ public sealed class ParameterOrderingDiagnosticsAnalyzerTests : DiagnosticVerifi
                                     };
 
         return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                new[]
-                                                {
+                                                [
                                                     WellKnownMetadataReferences.GenericLogger
-                                                },
+                                                ],
                                                 expected);
     }
 
@@ -238,11 +230,10 @@ public sealed class ParameterOrderingDiagnosticsAnalyzerTests : DiagnosticVerifi
                                     };
 
         return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                new[]
-                                                {
+                                                [
                                                     WellKnownMetadataReferences.GenericLogger,
                                                     WellKnownMetadataReferences.CancellationToken
-                                                },
+                                                ],
                                                 expected);
     }
 }

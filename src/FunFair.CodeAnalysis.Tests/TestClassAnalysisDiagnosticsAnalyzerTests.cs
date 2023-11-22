@@ -26,11 +26,10 @@ public sealed class TestClassAnalysisDiagnosticsAnalyzerTests : DiagnosticVerifi
 }";
 
         return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                new[]
-                                                {
-                                                    WellKnownMetadataReferences.Xunit,
-                                                    WellKnownMetadataReferences.FunFairTestCommon
-                                                });
+        [
+            WellKnownMetadataReferences.Xunit,
+            WellKnownMetadataReferences.FunFairTestCommon
+        ]);
     }
 
     [Fact]
@@ -58,10 +57,9 @@ using Xunit;
                                     };
 
         return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                new[]
-                                                {
+                                                [
                                                     WellKnownMetadataReferences.Xunit
-                                                },
+                                                ],
                                                 expected);
     }
 
@@ -87,12 +85,11 @@ using Xunit.Abstractions;
 }";
 
         return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                new[]
-                                                {
-                                                    WellKnownMetadataReferences.Xunit,
-                                                    WellKnownMetadataReferences.FunFairTestCommon,
-                                                    WellKnownMetadataReferences.XunitAbstractions
-                                                });
+        [
+            WellKnownMetadataReferences.Xunit,
+            WellKnownMetadataReferences.FunFairTestCommon,
+            WellKnownMetadataReferences.XunitAbstractions
+        ]);
     }
 
     [Fact]
@@ -111,11 +108,10 @@ using Xunit;
 }";
 
         return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                new[]
-                                                {
-                                                    WellKnownMetadataReferences.Xunit,
-                                                    WellKnownMetadataReferences.FunFairTestCommon
-                                                });
+        [
+            WellKnownMetadataReferences.Xunit,
+            WellKnownMetadataReferences.FunFairTestCommon
+        ]);
     }
 
     [Fact]
@@ -144,10 +140,9 @@ using Xunit;
                                     };
 
         return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                new[]
-                                                {
+                                                [
                                                     WellKnownMetadataReferences.Xunit
-                                                },
+                                                ],
                                                 expected);
     }
 
@@ -174,12 +169,11 @@ using Xunit.Abstractions;
 }";
 
         return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                new[]
-                                                {
-                                                    WellKnownMetadataReferences.Xunit,
-                                                    WellKnownMetadataReferences.FunFairTestCommon,
-                                                    WellKnownMetadataReferences.XunitAbstractions
-                                                });
+        [
+            WellKnownMetadataReferences.Xunit,
+            WellKnownMetadataReferences.FunFairTestCommon,
+            WellKnownMetadataReferences.XunitAbstractions
+        ]);
     }
 
     [Fact]
@@ -199,10 +193,9 @@ using Xunit;
 }";
 
         return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                new[]
-                                                {
-                                                    WellKnownMetadataReferences.Xunit,
-                                                    WellKnownMetadataReferences.FunFairTestCommon
-                                                });
+        [
+            WellKnownMetadataReferences.Xunit,
+            WellKnownMetadataReferences.FunFairTestCommon
+        ]);
     }
 }
