@@ -16,19 +16,19 @@ namespace FunFair.CodeAnalysis;
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public sealed class ParameterNameDiagnosticsAnalyzer : DiagnosticAnalyzer
 {
-    private static readonly IReadOnlyList<NameSanitationSpec> NameSpecifications = new NameSanitationSpec[]
-                                                                                   {
-                                                                                       new(ruleId: Rules.RuleLoggerParametersShouldBeCalledLogger,
-                                                                                           title: @"ILogger parameters should be called 'logger'",
-                                                                                           message: "ILogger parameters should be called 'logger'",
-                                                                                           sourceClass: "Microsoft.Extensions.Logging.ILogger",
-                                                                                           whitelistedParameterName: "logger"),
-                                                                                       new(ruleId: Rules.RuleLoggerParametersShouldBeCalledLogger,
-                                                                                           title: @"ILogger parameters should be called 'logger'",
-                                                                                           message: "ILogger parameters should be called 'logger'",
-                                                                                           sourceClass: "Microsoft.Extensions.Logging.ILogger<TCategoryName>",
-                                                                                           whitelistedParameterName: "logger")
-                                                                                   };
+    private static readonly IReadOnlyList<NameSanitationSpec> NameSpecifications =
+    [
+        Build(ruleId: Rules.RuleLoggerParametersShouldBeCalledLogger,
+              title: @"ILogger parameters should be called 'logger'",
+              message: "ILogger parameters should be called 'logger'",
+              sourceClass: "Microsoft.Extensions.Logging.ILogger",
+              whitelistedParameterName: "logger"),
+        Build(ruleId: Rules.RuleLoggerParametersShouldBeCalledLogger,
+              title: @"ILogger parameters should be called 'logger'",
+              message: "ILogger parameters should be called 'logger'",
+              sourceClass: "Microsoft.Extensions.Logging.ILogger<TCategoryName>",
+              whitelistedParameterName: "logger")
+    ];
 
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
         NameSpecifications.Select(selector: r => r.Rule)
@@ -97,6 +97,11 @@ public sealed class ParameterNameDiagnosticsAnalyzer : DiagnosticAnalyzer
         return null;
     }
 
+    private static NameSanitationSpec Build(string ruleId, string title, string message, string sourceClass, string whitelistedParameterName)
+    {
+        return new(ruleId: ruleId, title: title, message: message, sourceClass: sourceClass, whitelistedParameterName: whitelistedParameterName);
+    }
+
     [DebuggerDisplay("{Rule.Id} {Rule.Title} Class {SourceClass}")]
     private readonly record struct NameSanitationSpec
     {
@@ -111,7 +116,7 @@ public sealed class ParameterNameDiagnosticsAnalyzer : DiagnosticAnalyzer
         {
         }
 
-        public NameSanitationSpec(string ruleId, string title, string message, string sourceClass, string[] whitelistedParameterNames)
+        public NameSanitationSpec(string ruleId, string title, string message, string sourceClass, IReadOnlyList<string> whitelistedParameterNames)
         {
             this.SourceClass = sourceClass;
             this.WhitelistedParameterNames = whitelistedParameterNames;

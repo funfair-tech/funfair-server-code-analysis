@@ -14,19 +14,19 @@ namespace FunFair.CodeAnalysis;
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public sealed class ClassVisibilityDiagnosticsAnalyzer : DiagnosticAnalyzer
 {
-    private static readonly IReadOnlyList<ConfiguredClass> Classes = new[]
-                                                                     {
-                                                                         new ConfiguredClass(ruleId: Rules.MockBaseClassInstancesMustBeInternal,
-                                                                                             title: "MockBase<T> instances must be internal",
-                                                                                             message: "MockBase<T> instances must be internal",
-                                                                                             className: "FunFair.Test.Common.Mocks.MockBase<T>",
-                                                                                             visibility: SyntaxKind.InternalKeyword),
-                                                                         new ConfiguredClass(ruleId: Rules.MockBaseClassInstancesMustBeSealed,
-                                                                                             title: "MockBase<T> instances must be sealed",
-                                                                                             message: "MockBase<T> instances must be sealed",
-                                                                                             className: "FunFair.Test.Common.Mocks.MockBase<T>",
-                                                                                             visibility: SyntaxKind.SealedKeyword)
-                                                                     };
+    private static readonly IReadOnlyList<ConfiguredClass> Classes =
+    [
+        Build(ruleId: Rules.MockBaseClassInstancesMustBeInternal,
+              title: "MockBase<T> instances must be internal",
+              message: "MockBase<T> instances must be internal",
+              className: "FunFair.Test.Common.Mocks.MockBase<T>",
+              visibility: SyntaxKind.InternalKeyword),
+        Build(ruleId: Rules.MockBaseClassInstancesMustBeSealed,
+              title: "MockBase<T> instances must be sealed",
+              message: "MockBase<T> instances must be sealed",
+              className: "FunFair.Test.Common.Mocks.MockBase<T>",
+              visibility: SyntaxKind.SealedKeyword)
+    ];
 
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
         Classes.Select(c => c.Rule)
@@ -54,12 +54,16 @@ public sealed class ClassVisibilityDiagnosticsAnalyzer : DiagnosticAnalyzer
 
         foreach (ConfiguredClass classDefinition in Classes)
         {
-            if (classDefinition.TypeMatchesClass(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext) &&
-                !classDefinition.HasCorrectClassModifier(classDeclarationSyntax: classDeclarationSyntax))
+            if (classDefinition.TypeMatchesClass(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext) && !classDefinition.HasCorrectClassModifier(classDeclarationSyntax: classDeclarationSyntax))
             {
                 classDeclarationSyntax.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: classDefinition.Rule);
             }
         }
+    }
+
+    private static ConfiguredClass Build(string ruleId, string title, string message, string className, SyntaxKind visibility)
+    {
+        return new(ruleId: ruleId, title: title, message: message, className: className, visibility: visibility);
     }
 
     [DebuggerDisplay("{Rule.Id} {Rule.Title} Class {ClassName} Visibility {Visibility}")]
