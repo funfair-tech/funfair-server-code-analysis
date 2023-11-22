@@ -45,12 +45,7 @@ public abstract partial class DiagnosticVerifier
 
     protected static async Task<IReadOnlyList<Diagnostic>> GetSortedDiagnosticsFromDocumentsAsync(DiagnosticAnalyzer analyzer, IReadOnlyList<Document> documents)
     {
-        HashSet<Project> projects = new();
-
-        foreach (Document document in documents)
-        {
-            projects.Add(document.Project);
-        }
+        HashSet<Project> projects = BuildProjects(documents);
 
         IReadOnlyList<Diagnostic> diagnostics = Array.Empty<Diagnostic>();
 
@@ -65,43 +60,59 @@ public abstract partial class DiagnosticVerifier
 
             EnsureNoCompilationErrors(compilation);
 
-            CompilationWithAnalyzers compilationWithAnalyzers =
-                compilation.WithAnalyzers(ImmutableArray.Create(analyzer), options: null, cancellationToken: CancellationToken.None);
+            CompilationWithAnalyzers compilationWithAnalyzers = CreateCompilationWithAnalyzers(analyzer: analyzer, compilation: compilation);
             diagnostics = await CollectDiagnosticsAsync(documents: documents, compilationWithAnalyzers: compilationWithAnalyzers);
         }
 
         return SortDiagnostics(diagnostics);
     }
 
-    private static async Task<IReadOnlyList<Diagnostic>> CollectDiagnosticsAsync(IReadOnlyList<Document> documents, CompilationWithAnalyzers compilationWithAnalyzers)
+    private static HashSet<Project> BuildProjects(IReadOnlyList<Document> documents)
     {
-        ImmutableArray<Diagnostic> diags = await compilationWithAnalyzers.GetAnalyzerDiagnosticsAsync(CancellationToken.None);
+        HashSet<Project> projects = [];
 
-        return await ExtractDiagnosticsAsync(documents: documents, diags: diags);
+        foreach (Document document in documents)
+        {
+            projects.Add(document.Project);
+        }
+
+        return projects;
     }
 
-    private static async Task<IReadOnlyList<Diagnostic>> ExtractDiagnosticsAsync(IReadOnlyList<Document> documents, IReadOnlyList<Diagnostic> diags)
+    private static CompilationWithAnalyzers CreateCompilationWithAnalyzers(DiagnosticAnalyzer analyzer, Compilation compilation)
     {
-        List<Diagnostic> diagnostics = new();
+        return compilation.WithAnalyzers(ImmutableArray.Create(analyzer), options: null);
+    }
 
-        foreach (Diagnostic diag in diags)
+    private static async Task<IReadOnlyList<Diagnostic>> CollectDiagnosticsAsync(IReadOnlyList<Document> documents, CompilationWithAnalyzers compilationWithAnalyzers)
+    {
+        ImmutableArray<Diagnostic> diagnostics = await compilationWithAnalyzers.GetAnalyzerDiagnosticsAsync(CancellationToken.None);
+
+        return await ExtractDiagnosticsAsync(documents: documents, diagnostics: diagnostics);
+    }
+
+    private static async Task<IReadOnlyList<Diagnostic>> ExtractDiagnosticsAsync(IReadOnlyList<Document> documents, IReadOnlyList<Diagnostic> diagnostics)
+    {
+        List<Diagnostic> results = [];
+
+        foreach (Diagnostic diagnostic in diagnostics)
         {
-            bool add = diag.Location == Location.None || diag.Location.IsInMetadata || await ShouldAddDocumentDiagnosticAsync(documents: documents, diag: diag);
+            bool add = diagnostic.Location == Location.None || diagnostic.Location.IsInMetadata || await ShouldAddDocumentDiagnosticAsync(documents: documents, diagnostic: diagnostic);
 
             if (add)
             {
-                diagnostics.Add(diag);
+                results.Add(diagnostic);
             }
         }
 
-        return diagnostics;
+        return results;
     }
 
-    private static async Task<bool> ShouldAddDocumentDiagnosticAsync(IReadOnlyList<Document> documents, Diagnostic diag)
+    private static async Task<bool> ShouldAddDocumentDiagnosticAsync(IReadOnlyList<Document> documents, Diagnostic diagnostic)
     {
         foreach (Document document in documents)
         {
-            bool add = await ShouldAddDiagnosticAsync(document: document, diag: diag);
+            bool add = await ShouldAddDiagnosticAsync(document: document, diagnostic: diagnostic);
 
             if (add)
             {
@@ -112,27 +123,28 @@ public abstract partial class DiagnosticVerifier
         return false;
     }
 
-    private static async Task<bool> ShouldAddDiagnosticAsync(Document document, Diagnostic diag)
+    private static async Task<bool> ShouldAddDiagnosticAsync(Document document, Diagnostic diagnostic)
     {
         SyntaxTree? tree = await document.GetSyntaxTreeAsync(CancellationToken.None);
-        bool add = tree is not null && tree == diag.Location.SourceTree;
 
-        return add;
+        return tree is not null && tree == diagnostic.Location.SourceTree;
     }
 
     private static void EnsureNoCompilationErrors(Compilation compilation)
     {
         ImmutableArray<Diagnostic> compilerErrors = compilation.GetDiagnostics(CancellationToken.None);
 
-        if (compilerErrors.Length != 0)
+        if (compilerErrors.Length == 0)
         {
-            StringBuilder errors = compilerErrors.Where(IsReportableCSharpError)
-                                                 .Aggregate(new StringBuilder(), func: (current, compilerError) => current.Append(compilerError));
+            return;
+        }
 
-            if (errors.Length != 0)
-            {
-                throw new UnitTestSourceException("Please correct following compiler errors in your unit test source:" + errors);
-            }
+        StringBuilder errors = compilerErrors.Where(IsReportableCSharpError)
+                                             .Aggregate(new StringBuilder(), func: (current, compilerError) => current.Append(compilerError));
+
+        if (errors.Length != 0)
+        {
+            throw new UnitTestSourceException("Please correct following compiler errors in your unit test source:" + errors);
         }
     }
 
@@ -140,11 +152,10 @@ public abstract partial class DiagnosticVerifier
     {
         return !compilerError.ToString()
                              .Contains(value: "netstandard", comparisonType: StringComparison.Ordinal) && !compilerError.ToString()
-            .Contains(value: "static 'Main' method", comparisonType: StringComparison.Ordinal) && !compilerError.ToString()
-                                                                                                                .Contains(value: "CS1002",
-                                                                                                                    comparisonType: StringComparison.Ordinal) && !compilerError
-            .ToString()
-            .Contains(value: "CS1702", comparisonType: StringComparison.Ordinal);
+                                                                                                                        .Contains(value: "static 'Main' method",
+                                                                                                                                  comparisonType: StringComparison.Ordinal) && !compilerError.ToString()
+            .Contains(value: "CS1002", comparisonType: StringComparison.Ordinal) && !compilerError.ToString()
+                                                                                                  .Contains(value: "CS1702", comparisonType: StringComparison.Ordinal);
     }
 
     private static IReadOnlyList<Diagnostic> SortDiagnostics(IEnumerable<Diagnostic> diagnostics)
@@ -157,7 +168,7 @@ public abstract partial class DiagnosticVerifier
 
     #region Set up compilation and documents
 
-    private static Document[] GetDocuments(in ReadOnlySpan<string> sources, in ReadOnlySpan<MetadataReference> references, string language)
+    private static IReadOnlyList<Document> GetDocuments(in ReadOnlySpan<string> sources, in ReadOnlySpan<MetadataReference> references, string language)
     {
         if (language != LanguageNames.CSharp && language != LanguageNames.VisualBasic)
         {
