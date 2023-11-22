@@ -59,9 +59,7 @@ public sealed class ParameterNameDiagnosticsAnalyzer : DiagnosticAnalyzer
 
     private static void MustHaveASaneName(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, ParameterSyntax parameterSyntax, CancellationToken cancellationToken)
     {
-        string? fullTypeName = ParameterHelpers.GetFullTypeName(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
-                                                                parameterSyntax: parameterSyntax,
-                                                                cancellationToken: cancellationToken);
+        string? fullTypeName = ParameterHelpers.GetFullTypeName(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, parameterSyntax: parameterSyntax, cancellationToken: cancellationToken);
 
         if (fullTypeName is null)
         {
@@ -107,10 +105,9 @@ public sealed class ParameterNameDiagnosticsAnalyzer : DiagnosticAnalyzer
                    title: title,
                    message: message,
                    sourceClass: sourceClass,
-                   new[]
-                   {
+                   [
                        whitelistedParameterName
-                   })
+                   ])
         {
         }
 

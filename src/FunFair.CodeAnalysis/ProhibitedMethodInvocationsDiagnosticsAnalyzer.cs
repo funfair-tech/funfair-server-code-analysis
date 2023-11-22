@@ -23,66 +23,56 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzer : DiagnosticA
             message: "Only use Assert.True with message parameter",
             sourceClass: "Xunit.Assert",
             bannedMethod: "True",
-            new[]
-            {
-                new[]
-                {
+            [
+                [
                     "bool"
-                }
-            }),
+                ]
+            ]),
         new(ruleId: Rules.RuleDontUseAssertFalseWithoutMessage,
             title: @"Avoid use of assert method without message",
             message: "Only use Assert.False with message parameter",
             sourceClass: "Xunit.Assert",
             bannedMethod: "False",
-            new[]
-            {
-                new[]
-                {
+            [
+                [
                     "bool"
-                }
-            }),
+                ]
+            ]),
         new(ruleId: Rules.RuleDontUseBuildInAddOrUpdateConcurrentDictionary,
             title: @"Avoid use of the built in AddOrUpdate methods",
             message: "Don't use any of the built in AddOrUpdate methods, instead FunFair.Common.Extensions.ConcurrentDictionaryExtensions.AddOrUpdate can be used",
             sourceClass: "NonBlocking.ConcurrentDictionary`2",
             bannedMethod: "AddOrUpdate",
-            new[]
-            {
-                new[]
-                {
+            [
+                [
                     "TKey",
                     "System.Func<TKey, TValue>",
                     "System.Func<TKey, TValue, TValue>"
-                }
-            }),
+                ]
+            ]),
         new(ruleId: Rules.RuleDontUseBuildInAddOrUpdateConcurrentDictionary,
             title: @"Avoid use of the built in AddOrUpdate methods",
             message: "Don't use any of the built in AddOrUpdate methods, instead FunFair.Common.Extensions.ConcurrentDictionaryExtensions.AddOrUpdate can be used",
             sourceClass: "NonBlocking.ConcurrentDictionary`2",
             bannedMethod: "AddOrUpdate",
-            new[]
-            {
-                new[]
-                {
+            [
+                [
                     "TKey",
                     "TValue",
                     "System.Func<TKey, TValue, TValue>"
-                }
-            }),
+                ]
+            ]),
         new(ruleId: Rules.RuleDontUseBuildInGetOrAddConcurrentDictionary,
             title: @"Avoid use of the built in GetOrAdd methods",
             message: "Don't use any of the built in GetOrAdd methods, instead FunFair.Common.Extensions.ConcurrentDictionaryExtensions.GetOrAdd can be used",
             sourceClass: "NonBlocking.ConcurrentDictionary`2",
             bannedMethod: "GetOrAdd",
-            new[]
-            {
-                new[]
-                {
+            [
+                [
                     "TKey",
                     "System.Func<TKey, TValue>"
-                }
-            })
+                ]
+            ])
     };
 
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
@@ -198,8 +188,7 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzer : DiagnosticA
                                   .ToArray();
         }
 
-        private static IReadOnlyList<IMethodSymbol> RemoveAllowedSignaturesForMethod(IReadOnlyList<IMethodSymbol>? methodSignatures,
-                                                                                     IEnumerable<IEnumerable<string>>? ruleSignatures)
+        private static IReadOnlyList<IMethodSymbol> RemoveAllowedSignaturesForMethod(IReadOnlyList<IMethodSymbol>? methodSignatures, IEnumerable<IEnumerable<string>>? ruleSignatures)
         {
             if (methodSignatures is null)
             {
@@ -217,9 +206,7 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzer : DiagnosticA
         private static IReadOnlyList<IMethodSymbol> BuildMethodSignatureList(IEnumerable<IEnumerable<string>> ruleSignatures, IReadOnlyList<IMethodSymbol> methodSymbols)
         {
             return ruleSignatures.SelectMany(ruleSignature => methodSymbols.Where(methodSymbol => methodSymbol
-                                                                                                  .Parameters.Select(
-                                                                                                      selector: parameterSymbol =>
-                                                                                                                    SymbolDisplay.ToDisplayString(parameterSymbol.Type))
+                                                                                                  .Parameters.Select(selector: parameterSymbol => SymbolDisplay.ToDisplayString(parameterSymbol.Type))
                                                                                                   .SequenceEqual(second: ruleSignature, comparer: StringComparer.Ordinal)))
                                  .ToArray();
         }
@@ -256,7 +243,7 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzer : DiagnosticA
     [DebuggerDisplay("{Rule.Id} {Rule.Title} Class {SourceClass} Banned Method: {BannedMethod}")]
     private readonly record struct ProhibitedMethodsSpec
     {
-        public ProhibitedMethodsSpec(string ruleId, string title, string message, string sourceClass, string bannedMethod, IEnumerable<IEnumerable<string>> bannedSignatures)
+        public ProhibitedMethodsSpec(string ruleId, string title, string message, string sourceClass, string bannedMethod, IReadOnlyList<IReadOnlyList<string>> bannedSignatures)
         {
             this.SourceClass = sourceClass;
             this.BannedMethod = bannedMethod;
@@ -268,7 +255,7 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzer : DiagnosticA
 
         public string BannedMethod { get; }
 
-        public IEnumerable<IEnumerable<string>> BannedSignatures { get; }
+        public IReadOnlyList<IReadOnlyList<string>> BannedSignatures { get; }
 
         public DiagnosticDescriptor Rule { get; }
 

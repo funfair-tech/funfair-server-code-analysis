@@ -8,4 +8,5 @@ namespace FunFair.CodeAnalysis.Tests.Verifiers;
 [SuppressMessage(category: "ReSharper", checkId: "PartialTypeWithSinglePart", Justification = "Needed for generated code")]
 internal static partial class EnumExtensions
 {
+    // defined in other files
 }

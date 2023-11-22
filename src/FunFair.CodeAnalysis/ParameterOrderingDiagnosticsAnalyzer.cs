@@ -14,12 +14,12 @@ namespace FunFair.CodeAnalysis;
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public sealed class ParameterOrderingDiagnosticsAnalyzer : DiagnosticAnalyzer
 {
-    private static readonly IReadOnlyList<string> PreferredEndingOrdering = new[]
-                                                                            {
-                                                                                "Microsoft.Extensions.Logging.ILogger<TCategoryName>",
-                                                                                "Microsoft.Extensions.Logging.ILogger",
-                                                                                "System.Threading.CancellationToken"
-                                                                            };
+    private static readonly IReadOnlyList<string> PreferredEndingOrdering =
+    [
+        "Microsoft.Extensions.Logging.ILogger<TCategoryName>",
+        "Microsoft.Extensions.Logging.ILogger",
+        "System.Threading.CancellationToken"
+    ];
 
     private static readonly DiagnosticDescriptor Rule = RuleHelpers.CreateRule(code: Rules.RuleParametersShouldBeInOrder,
                                                                                category: Categories.Parameters,
@@ -57,7 +57,7 @@ public sealed class ParameterOrderingDiagnosticsAnalyzer : DiagnosticAnalyzer
                                                                                                cancellationToken: syntaxNodeAnalysisContext.CancellationToken)!))
                                                   .ToArray();
 
-        List<string> matchedEndings = new();
+        List<string> matchedEndings = [];
 
         foreach (string parameterType in PreferredEndingOrdering.Reverse())
         {

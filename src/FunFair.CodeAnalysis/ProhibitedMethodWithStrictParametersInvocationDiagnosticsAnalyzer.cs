@@ -56,33 +56,35 @@ public sealed class ProhibitedMethodWithStrictParametersInvocationDiagnosticsAna
 
     private static void PerformCheck(CompilationStartAnalysisContext compilationStartContext)
     {
+        compilationStartContext.RegisterSyntaxNodeAction(action: LookForForcedMethods, SyntaxKind.InvocationExpression);
+
         void LookForForcedMethods(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
         {
-            if (syntaxNodeAnalysisContext.Node is InvocationExpressionSyntax invocation)
+            if (syntaxNodeAnalysisContext.Node is not InvocationExpressionSyntax invocation)
             {
-                IMethodSymbol? memberSymbol = MethodSymbolHelper.FindInvokedMemberSymbol(invocation: invocation, syntaxNodeAnalysisContext: syntaxNodeAnalysisContext);
+                return;
+            }
 
-                // check if there is at least one rule that correspond to invocation method
-                if (memberSymbol is null)
+            IMethodSymbol? memberSymbol = MethodSymbolHelper.FindInvokedMemberSymbol(invocation: invocation, syntaxNodeAnalysisContext: syntaxNodeAnalysisContext);
+
+            // check if there is at least one rule that correspond to invocation method
+            if (memberSymbol is null)
+            {
+                return;
+            }
+
+            Mapping mapping = new(methodName: memberSymbol.Name, SymbolDisplay.ToDisplayString(memberSymbol.ContainingType));
+
+            IEnumerable<ProhibitedMethodsSpec> forcedMethods = ForcedMethods.Where(predicate: rule => rule.QualifiedName == mapping.QualifiedName);
+
+            foreach (ProhibitedMethodsSpec prohibitedMethod in forcedMethods)
+            {
+                if (!IsInvocationAllowed(arguments: invocation.ArgumentList, parameters: memberSymbol.Parameters, prohibitedMethod: prohibitedMethod))
                 {
-                    return;
-                }
-
-                Mapping mapping = new(methodName: memberSymbol.Name, SymbolDisplay.ToDisplayString(memberSymbol.ContainingType));
-
-                IEnumerable<ProhibitedMethodsSpec> forcedMethods = ForcedMethods.Where(predicate: rule => rule.QualifiedName == mapping.QualifiedName);
-
-                foreach (ProhibitedMethodsSpec prohibitedMethod in forcedMethods)
-                {
-                    if (!IsInvocationAllowed(arguments: invocation.ArgumentList, parameters: memberSymbol.Parameters, prohibitedMethod: prohibitedMethod))
-                    {
-                        invocation.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: prohibitedMethod.Rule);
-                    }
+                    invocation.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: prohibitedMethod.Rule);
                 }
             }
         }
-
-        compilationStartContext.RegisterSyntaxNodeAction(action: LookForForcedMethods, SyntaxKind.InvocationExpression);
     }
 
     private static bool IsInvocationAllowed(BaseArgumentListSyntax arguments, IReadOnlyList<IParameterSymbol> parameters, in ProhibitedMethodsSpec prohibitedMethod)

@@ -8,18 +8,16 @@ namespace FunFair.CodeAnalysis.Extensions;
 
 internal static class CompilationExtensions
 {
-    private static readonly HashSet<string> TestAssemblies = new(new[]
-                                                                 {
-                                                                     @"Microsoft.NET.Test.Sdk"
-                                                                 },
+    private static readonly HashSet<string> TestAssemblies = new([
+                                                                     "Microsoft.NET.Test.Sdk"
+                                                                 ],
                                                                  comparer: StringComparer.OrdinalIgnoreCase);
 
-    private static readonly HashSet<string> UnitTestAssemblies = new(new[]
-                                                                     {
+    private static readonly HashSet<string> UnitTestAssemblies = new([
                                                                          "Microsoft.NET.Test.Sdk",
                                                                          "xunit",
                                                                          "xunit.core"
-                                                                     },
+                                                                     ],
                                                                      comparer: StringComparer.OrdinalIgnoreCase);
 
     public static bool IsTestAssembly(this Compilation compilation)
