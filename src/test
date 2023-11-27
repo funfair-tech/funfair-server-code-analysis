@@ -1,0 +1,12 @@
+#! /bin/sh
+
+dotnet test \
+	-noConsoleLogger \
+	--configuration Release \
+	"/p:Version=0.0.0.1-test" \
+	"/p:IsProduction=false" \
+	--filter FullyQualifiedName\!~Integration \
+	--logger:"trx;LogFilePrefix=testResults" \
+	-nodeReuse:False \
+	-p:NoWarn=MSB4241 \
+	-p:SuppressNETCoreSdkPreviewMessage=true

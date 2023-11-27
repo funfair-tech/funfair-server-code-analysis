@@ -134,7 +134,7 @@ public abstract partial class DiagnosticVerifier
     {
         ImmutableArray<Diagnostic> compilerErrors = compilation.GetDiagnostics(CancellationToken.None);
 
-        if (compilerErrors.Length == 0)
+        if (compilerErrors.IsEmpty)
         {
             return;
         }
