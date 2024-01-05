@@ -124,8 +124,7 @@ public sealed class ProhibitedClassesDiagnosticsAnalyzer : DiagnosticAnalyzer
 
         private static IEnumerable<INamedTypeSymbol>? LookupSymbolInContext(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, Dictionary<string, INamedTypeSymbol> cachedSymbols)
         {
-            ITypeSymbol? typeInfo = syntaxNodeAnalysisContext.SemanticModel.GetTypeInfo(node: syntaxNodeAnalysisContext.Node, cancellationToken: syntaxNodeAnalysisContext.CancellationToken)
-                                                             .Type;
+            ITypeSymbol? typeInfo = GetNodeTypeInfo(syntaxNodeAnalysisContext);
 
             if (typeInfo is not null)
             {
@@ -133,6 +132,12 @@ public sealed class ProhibitedClassesDiagnosticsAnalyzer : DiagnosticAnalyzer
             }
 
             return null;
+        }
+
+        private static ITypeSymbol? GetNodeTypeInfo(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
+        {
+            return syntaxNodeAnalysisContext.SemanticModel.GetTypeInfo(node: syntaxNodeAnalysisContext.Node, cancellationToken: syntaxNodeAnalysisContext.CancellationToken)
+                                            .Type;
         }
 
         private static IEnumerable<INamedTypeSymbol> GetOneSymbol(ITypeSymbol symbol, Dictionary<string, INamedTypeSymbol> cachedSymbols)

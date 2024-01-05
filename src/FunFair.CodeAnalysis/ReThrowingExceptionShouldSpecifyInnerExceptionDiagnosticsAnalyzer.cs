@@ -40,7 +40,7 @@ public sealed class ReThrowingExceptionShouldSpecifyInnerExceptionDiagnosticsAna
             return;
         }
 
-        string? exceptionVariable = catchClause.Declaration?.Identifier.Text;
+        string? exceptionVariable = GetExceptionVariable(catchClause);
 
         if (exceptionVariable is null)
         {
@@ -71,6 +71,11 @@ public sealed class ReThrowingExceptionShouldSpecifyInnerExceptionDiagnosticsAna
                                       objectCreationExpression: invocationExpressionSyntax);
             }
         }
+    }
+
+    private static string? GetExceptionVariable(CatchClauseSyntax catchClause)
+    {
+        return catchClause.Declaration?.Identifier.Text;
     }
 
     private static void TryToReportDiagnostic(ArgumentListSyntax? argumentListSyntax,

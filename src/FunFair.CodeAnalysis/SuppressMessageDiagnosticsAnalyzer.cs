@@ -76,8 +76,9 @@ public sealed class SuppressMessageDiagnosticsAnalyzer : DiagnosticAnalyzer
                 return;
             }
 
-            AttributeArgumentSyntax? justification =
-                methodDeclarationSyntax.ArgumentList?.Arguments.FirstOrDefault(k => StringComparer.Ordinal.Equals(x: k.NameEquals?.Name.Identifier.Text, y: "Justification"));
+            SeparatedSyntaxList<AttributeArgumentSyntax>? args = methodDeclarationSyntax.ArgumentList?.Arguments;
+
+            AttributeArgumentSyntax? justification = args?.FirstOrDefault(k => IsJustificationAttribute(k));
 
             if (justification is null)
             {
@@ -94,6 +95,11 @@ public sealed class SuppressMessageDiagnosticsAnalyzer : DiagnosticAnalyzer
             string text = l.Token.ValueText;
 
             CheckJustification(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, text: text, l: l);
+        }
+
+        private static bool IsJustificationAttribute(AttributeArgumentSyntax k)
+        {
+            return StringComparer.Ordinal.Equals(x: k.NameEquals?.Name.Identifier.Text, y: "Justification");
         }
 
         private static void CheckJustification(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, string text, LiteralExpressionSyntax l)
