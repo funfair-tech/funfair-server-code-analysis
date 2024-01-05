@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics;
@@ -142,7 +143,7 @@ public sealed class ConstructorGenericParameterTypeDiagnosticsAnalyser : Diagnos
 
         TypeCheckSpec rule = checkRule.Value;
 
-        if (rule.AllowedSourceClass == fullTypeName)
+        if (rule.IsAllowedSourceClass(fullTypeName))
         {
             if (rule.MatchTypeOnGenericParameters)
             {
@@ -152,7 +153,7 @@ public sealed class ConstructorGenericParameterTypeDiagnosticsAnalyser : Diagnos
             return;
         }
 
-        if (rule.ProhibitedClass == fullTypeName)
+        if (rule.IsProhibitedClass(fullTypeName))
         {
             parameterSyntax.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: rule.Rule, className);
         }
@@ -160,7 +161,7 @@ public sealed class ConstructorGenericParameterTypeDiagnosticsAnalyser : Diagnos
 
     private static TypeCheckSpec? GetTypeSpec(bool isProtected, string fullTypeName)
     {
-        return Specifications.FirstOrDefault(ns => ns.IsProtected == isProtected && (ns.AllowedSourceClass == fullTypeName || ns.ProhibitedClass == fullTypeName));
+        return Specifications.FirstOrDefault(ns => ns.IsProtected == isProtected && (ns.IsAllowedSourceClass(fullTypeName) || ns.IsProhibitedClass(fullTypeName)));
     }
 
     private static void CheckGenericParameterTypeMatch(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, ParameterSyntax parameterSyntax, string className, string fullTypeName)
@@ -184,7 +185,7 @@ public sealed class ConstructorGenericParameterTypeDiagnosticsAnalyser : Diagnos
         string displayName = tm[0]
             .ToDisplayString();
 
-        if (displayName != className)
+        if (!StringComparer.Ordinal.Equals(x: displayName, y: className))
         {
             parameterSyntax.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: MissMatchTypes, className, displayName, fullTypeName);
         }
@@ -223,5 +224,15 @@ public sealed class ConstructorGenericParameterTypeDiagnosticsAnalyser : Diagnos
         public bool MatchTypeOnGenericParameters { get; }
 
         public DiagnosticDescriptor Rule { get; }
+
+        public bool IsAllowedSourceClass(string fullTypeName)
+        {
+            return StringComparer.Ordinal.Equals(x: this.AllowedSourceClass, y: fullTypeName);
+        }
+
+        public bool IsProhibitedClass(string fullTypeName)
+        {
+            return StringComparer.Ordinal.Equals(x: this.ProhibitedClass, y: fullTypeName);
+        }
     }
 }

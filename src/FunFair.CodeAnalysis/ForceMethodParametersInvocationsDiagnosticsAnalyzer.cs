@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics;
@@ -82,7 +83,7 @@ public sealed class ForceMethodParametersInvocationsDiagnosticsAnalyzer : Diagno
 
         Mapping mapping = new(methodName: memberSymbol.Name, SymbolDisplay.ToDisplayString(memberSymbol.ContainingType));
 
-        IEnumerable<ForcedMethodsSpec> forcedMethods = ForcedMethods.Where(predicate: rule => rule.QualifiedName == mapping.QualifiedName);
+        IEnumerable<ForcedMethodsSpec> forcedMethods = ForcedMethods.Where(predicate: rule => StringComparer.Ordinal.Equals(x: rule.QualifiedName, y: mapping.QualifiedName));
 
         foreach (ForcedMethodsSpec prohibitedMethod in forcedMethods)
         {
