@@ -18,61 +18,61 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzer : DiagnosticA
 {
     private static readonly ProhibitedMethodsSpec[] BannedMethods =
     [
-        new(ruleId: Rules.RuleDontUseAssertTrueWithoutMessage,
-            title: "Avoid use of assert method without message",
-            message: "Only use Assert.True with message parameter",
-            sourceClass: "Xunit.Assert",
-            bannedMethod: "True",
-            [
-                [
-                    "bool"
-                ]
-            ]),
-        new(ruleId: Rules.RuleDontUseAssertFalseWithoutMessage,
-            title: "Avoid use of assert method without message",
-            message: "Only use Assert.False with message parameter",
-            sourceClass: "Xunit.Assert",
-            bannedMethod: "False",
-            [
-                [
-                    "bool"
-                ]
-            ]),
-        new(ruleId: Rules.RuleDontUseBuildInAddOrUpdateConcurrentDictionary,
-            title: "Avoid use of the built in AddOrUpdate methods",
-            message: "Don't use any of the built in AddOrUpdate methods, instead FunFair.Common.Extensions.ConcurrentDictionaryExtensions.AddOrUpdate can be used",
-            sourceClass: "NonBlocking.ConcurrentDictionary`2",
-            bannedMethod: "AddOrUpdate",
-            [
-                [
-                    "TKey",
-                    "System.Func<TKey, TValue>",
-                    "System.Func<TKey, TValue, TValue>"
-                ]
-            ]),
-        new(ruleId: Rules.RuleDontUseBuildInAddOrUpdateConcurrentDictionary,
-            title: "Avoid use of the built in AddOrUpdate methods",
-            message: "Don't use any of the built in AddOrUpdate methods, instead FunFair.Common.Extensions.ConcurrentDictionaryExtensions.AddOrUpdate can be used",
-            sourceClass: "NonBlocking.ConcurrentDictionary`2",
-            bannedMethod: "AddOrUpdate",
-            [
-                [
-                    "TKey",
-                    "TValue",
-                    "System.Func<TKey, TValue, TValue>"
-                ]
-            ]),
-        new(ruleId: Rules.RuleDontUseBuildInGetOrAddConcurrentDictionary,
-            title: "Avoid use of the built in GetOrAdd methods",
-            message: "Don't use any of the built in GetOrAdd methods, instead FunFair.Common.Extensions.ConcurrentDictionaryExtensions.GetOrAdd can be used",
-            sourceClass: "NonBlocking.ConcurrentDictionary`2",
-            bannedMethod: "GetOrAdd",
-            [
-                [
-                    "TKey",
-                    "System.Func<TKey, TValue>"
-                ]
-            ])
+        Build(ruleId: Rules.RuleDontUseAssertTrueWithoutMessage,
+              title: "Avoid use of assert method without message",
+              message: "Only use Assert.True with message parameter",
+              sourceClass: "Xunit.Assert",
+              bannedMethod: "True",
+              [
+                  [
+                      "bool"
+                  ]
+              ]),
+        Build(ruleId: Rules.RuleDontUseAssertFalseWithoutMessage,
+              title: "Avoid use of assert method without message",
+              message: "Only use Assert.False with message parameter",
+              sourceClass: "Xunit.Assert",
+              bannedMethod: "False",
+              [
+                  [
+                      "bool"
+                  ]
+              ]),
+        Build(ruleId: Rules.RuleDontUseBuildInAddOrUpdateConcurrentDictionary,
+              title: "Avoid use of the built in AddOrUpdate methods",
+              message: "Don't use any of the built in AddOrUpdate methods, instead FunFair.Common.Extensions.ConcurrentDictionaryExtensions.AddOrUpdate can be used",
+              sourceClass: "NonBlocking.ConcurrentDictionary`2",
+              bannedMethod: "AddOrUpdate",
+              [
+                  [
+                      "TKey",
+                      "System.Func<TKey, TValue>",
+                      "System.Func<TKey, TValue, TValue>"
+                  ]
+              ]),
+        Build(ruleId: Rules.RuleDontUseBuildInAddOrUpdateConcurrentDictionary,
+              title: "Avoid use of the built in AddOrUpdate methods",
+              message: "Don't use any of the built in AddOrUpdate methods, instead FunFair.Common.Extensions.ConcurrentDictionaryExtensions.AddOrUpdate can be used",
+              sourceClass: "NonBlocking.ConcurrentDictionary`2",
+              bannedMethod: "AddOrUpdate",
+              [
+                  [
+                      "TKey",
+                      "TValue",
+                      "System.Func<TKey, TValue, TValue>"
+                  ]
+              ]),
+        Build(ruleId: Rules.RuleDontUseBuildInGetOrAddConcurrentDictionary,
+              title: "Avoid use of the built in GetOrAdd methods",
+              message: "Don't use any of the built in GetOrAdd methods, instead FunFair.Common.Extensions.ConcurrentDictionaryExtensions.GetOrAdd can be used",
+              sourceClass: "NonBlocking.ConcurrentDictionary`2",
+              bannedMethod: "GetOrAdd",
+              [
+                  [
+                      "TKey",
+                      "System.Func<TKey, TValue>"
+                  ]
+              ])
     ];
 
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
@@ -87,6 +87,11 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzer : DiagnosticA
         Checker checker = new();
 
         context.RegisterCompilationStartAction(checker.PerformCheck);
+    }
+
+    private static ProhibitedMethodsSpec Build(string ruleId, string title, string message, string sourceClass, string bannedMethod, IReadOnlyList<IReadOnlyList<string>> bannedSignatures)
+    {
+        return new(ruleId: ruleId, title: title, message: message, sourceClass: sourceClass, bannedMethod: bannedMethod, bannedSignatures: bannedSignatures);
     }
 
     private sealed class Checker
