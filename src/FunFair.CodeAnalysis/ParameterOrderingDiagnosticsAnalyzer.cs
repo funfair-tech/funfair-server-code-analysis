@@ -1,6 +1,8 @@
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using FunFair.CodeAnalysis.Extensions;
 using FunFair.CodeAnalysis.Helpers;
@@ -48,14 +50,7 @@ public sealed class ParameterOrderingDiagnosticsAnalyzer : DiagnosticAnalyzer
             return;
         }
 
-        ParameterItem[] parameters = parameterList.Parameters.Select((parameter, index) =>
-                                                                         new ParameterItem(parameter: parameter,
-                                                                                           index: index,
-                                                                                           ParameterHelpers.GetFullTypeName(
-                                                                                               syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
-                                                                                               parameterSyntax: parameter,
-                                                                                               cancellationToken: syntaxNodeAnalysisContext.CancellationToken)!))
-                                                  .ToArray();
+        ParameterItem[] parameters = BuildParameters(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, parameterList: parameterList);
 
         List<string> matchedEndings = [];
 
@@ -91,11 +86,25 @@ public sealed class ParameterOrderingDiagnosticsAnalyzer : DiagnosticAnalyzer
         }
     }
 
-    private static ParameterItem? FindParameter(ParameterItem[] parameters, string parameterType)
+    [SuppressMessage(category: "Nullable.Extended.Analyzer", checkId: "NX0003: Suppression of NullForgiving operator is not required", Justification = "Required here")]
+    private static ParameterItem[] BuildParameters(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, ParameterListSyntax parameterList)
+    {
+        return
+        [
+            ..parameterList.Parameters.Select((parameter, index) => new ParameterItem(parameter: parameter,
+                                                                                      index: index,
+                                                                                      ParameterHelpers.GetFullTypeName(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
+                                                                                                                       parameterSyntax: parameter,
+                                                                                                                       cancellationToken: syntaxNodeAnalysisContext.CancellationToken)!))
+        ];
+    }
+
+    [SuppressMessage(category: "SonarAnalyzer.CSharp", checkId: "S3267: Use Linq", Justification = "Not here")]
+    private static ParameterItem? FindParameter(IReadOnlyList<ParameterItem> parameters, string parameterType)
     {
         foreach (ParameterItem parameter in parameters)
         {
-            if (parameter.FullTypeName == parameterType)
+            if (StringComparer.Ordinal.Equals(x: parameter.FullTypeName, y: parameterType))
             {
                 return parameter;
             }

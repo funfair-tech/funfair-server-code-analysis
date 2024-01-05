@@ -95,7 +95,7 @@ public sealed class ConstructorGenericParameterTypeDiagnosticsAnalyser : Diagnos
         }
     }
 
-    [SuppressMessage(category: "Nullable.Extended.Analyzer", checkId: "NX0001: Suppression of NullForgiving operator is not required", Justification = "False positive")]
+    [SuppressMessage(category: "Nullable.Extended.Analyzer", checkId: "NX0001: Suppression of NullForgiving operator is not required", Justification = "Required here")]
     private static INamedTypeSymbol GetDeclaredSymbol(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, ClassDeclarationSyntax parentSymbolForClassForConstructor)
     {
         // TODO: consider throwing

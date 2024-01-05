@@ -125,7 +125,7 @@ public sealed class ProhibitedMethodsDiagnosticsAnalyzer : DiagnosticAnalyzer
                 {
                     if (StringComparer.OrdinalIgnoreCase.Equals(x: typeInfo.ConstructedFrom.MetadataName, y: metadataType.MetadataName))
                     {
-                        if (invocation.Name.Identifier.ToString() == item.BannedMethod)
+                        if (StringComparer.Ordinal.Equals(invocation.Name.Identifier.ToString(), y: item.BannedMethod))
                         {
                             invocation.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: item.Rule);
                         }

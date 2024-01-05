@@ -24,7 +24,7 @@ public sealed class SuppressMessageDiagnosticsAnalyzer : DiagnosticAnalyzer
                                                                                                            title: "SuppressMessage must not have a TODO Justification",
                                                                                                            message: "SuppressMessage must not have a TODO Justification");
 
-    [SuppressMessage(category: "Nullable.Extended.Analyzer", checkId: "NX0001: Suppression of NullForgiving operator is not required", Justification = "False positive")]
+    [SuppressMessage(category: "Nullable.Extended.Analyzer", checkId: "NX0001: Suppression of NullForgiving operator is not required", Justification = "Required here")]
     private static readonly string SuppressMessageFullName = typeof(SuppressMessageAttribute).FullName!;
 
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => SupportedDiagnosisList.Build(RuleMustHaveJustification, RuleMustNotHaveTodoJustification);

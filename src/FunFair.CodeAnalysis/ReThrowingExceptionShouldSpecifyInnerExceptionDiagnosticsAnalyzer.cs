@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
@@ -92,7 +93,7 @@ public sealed class ReThrowingExceptionShouldSpecifyInnerExceptionDiagnosticsAna
 
     private static bool IsNamedIdentifier(string exceptionVariable, ArgumentSyntax x)
     {
-        return x.Expression is IdentifierNameSyntax identifier && identifier.Identifier.Text == exceptionVariable;
+        return x.Expression is IdentifierNameSyntax identifier && StringComparer.Ordinal.Equals(x: identifier.Identifier.Text, y: exceptionVariable);
     }
 
     private static void ReportDiagnostic(string exceptionVariable, in SyntaxNodeAnalysisContext syntaxNodeContext, Location location)

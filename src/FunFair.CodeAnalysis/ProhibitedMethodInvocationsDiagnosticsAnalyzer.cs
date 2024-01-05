@@ -132,7 +132,7 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzer : DiagnosticA
 
             Mapping mapping = new(methodName: memberSymbol.Name, className: fullyQualifiedName);
 
-            foreach (ProhibitedMethodsSpec prohibitedMethod in BannedMethods.Where(predicate: rule => rule.QualifiedName == mapping.QualifiedName))
+            foreach (ProhibitedMethodsSpec prohibitedMethod in BannedMethods.Where(predicate: rule => StringComparer.Ordinal.Equals(x: rule.QualifiedName, y: mapping.QualifiedName)))
             {
                 if (!cachedSymbols.TryGetValue(key: prohibitedMethod, out IReadOnlyList<IMethodSymbol> prohibitedMethodSignatures))
                 {
@@ -187,10 +187,12 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzer : DiagnosticA
 
         private static IReadOnlyList<IMethodSymbol> GetOverloads(INamedTypeSymbol sourceClassType, ProhibitedMethodsSpec rule)
         {
-            return sourceClassType.GetMembers()
-                                  .Where(predicate: x => x.Name == rule.BannedMethod)
-                                  .OfType<IMethodSymbol>()
-                                  .ToArray();
+            return
+            [
+                ..sourceClassType.GetMembers()
+                                 .Where(predicate: x => StringComparer.Ordinal.Equals(x: x.Name, y: rule.BannedMethod))
+                                 .OfType<IMethodSymbol>()
+            ];
         }
 
         private static IReadOnlyList<IMethodSymbol> RemoveAllowedSignaturesForMethod(IReadOnlyList<IMethodSymbol>? methodSignatures, IEnumerable<IEnumerable<string>>? ruleSignatures)

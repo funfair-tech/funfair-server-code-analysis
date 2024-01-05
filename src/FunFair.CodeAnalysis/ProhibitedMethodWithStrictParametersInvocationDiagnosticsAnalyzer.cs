@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics;
@@ -71,7 +72,7 @@ public sealed class ProhibitedMethodWithStrictParametersInvocationDiagnosticsAna
 
             Mapping mapping = new(methodName: memberSymbol.Name, SymbolDisplay.ToDisplayString(memberSymbol.ContainingType));
 
-            IEnumerable<ProhibitedMethodsSpec> forcedMethods = ForcedMethods.Where(predicate: rule => rule.QualifiedName == mapping.QualifiedName);
+            IEnumerable<ProhibitedMethodsSpec> forcedMethods = ForcedMethods.Where(predicate: rule => StringComparer.Ordinal.Equals(x: rule.QualifiedName, y: mapping.QualifiedName));
 
             foreach (ProhibitedMethodsSpec prohibitedMethod in forcedMethods)
             {
@@ -91,13 +92,16 @@ public sealed class ProhibitedMethodWithStrictParametersInvocationDiagnosticsAna
         }
 
         // This needs to be simplified
+        // ! Nullable is guaranteed to be not null here
         return !prohibitedMethod.BannedSignatures.SelectMany(collectionSelector: bannedSignature => bannedSignature,
                                                              resultSelector: (bannedSignature, parameterSpec) => (bannedSignature, parameterSpec))
-                                .Select(t => (t, parameter: parameters.FirstOrDefault(predicate: param => param.MetadataName == t.parameterSpec.Name)))
+                                .Select(t => (t, parameter: parameters.FirstOrDefault(predicate: param => StringComparer.Ordinal.Equals(x: param.MetadataName, y: t.parameterSpec.Name))))
                                 .Where(t => t.parameter is not null)
                                 .Select(t => (t, argument: arguments.Arguments[t.parameter!.Ordinal]))
-                                .Where(t => t.argument.Expression.ToFullString() == t.t.t.parameterSpec.Value && t.argument.Expression.Kind()
-                                                                                                                  .ToString() == t.t.t.parameterSpec.Type)
+                                .Where(t => StringComparer.Ordinal.Equals(t.argument.Expression.ToFullString(), y: t.t.t.parameterSpec.Value) && StringComparer.Ordinal.Equals(
+                                           t.argument.Expression.Kind()
+                                            .ToString(),
+                                           y: t.t.t.parameterSpec.Type))
                                 .Select(t => t.t.t.parameterSpec)
                                 .Any();
     }

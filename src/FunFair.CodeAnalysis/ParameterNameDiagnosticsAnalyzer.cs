@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading;
 using FunFair.CodeAnalysis.Extensions;
@@ -84,6 +85,7 @@ public sealed class ParameterNameDiagnosticsAnalyzer : DiagnosticAnalyzer
         }
     }
 
+    [SuppressMessage(category: "SonarAnalyzer.CSharp", checkId: "S3267: Use Linq", Justification = "Not here")]
     private static NameSanitationSpec? FindSpec(string fullTypeName)
     {
         foreach (NameSanitationSpec ns in NameSpecifications)
