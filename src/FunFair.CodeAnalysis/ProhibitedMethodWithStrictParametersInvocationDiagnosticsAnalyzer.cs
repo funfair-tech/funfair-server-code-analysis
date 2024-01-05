@@ -54,32 +54,51 @@ public sealed class ProhibitedMethodWithStrictParametersInvocationDiagnosticsAna
     private static void PerformCheck(CompilationStartAnalysisContext compilationStartContext)
     {
         compilationStartContext.RegisterSyntaxNodeAction(action: LookForForcedMethods, SyntaxKind.InvocationExpression);
+    }
 
-        void LookForForcedMethods(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
+    private static bool Wtf(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, out InvocationExpressionSyntax? invocation, out IMethodSymbol? memberSymbol)
+    {
+        if (syntaxNodeAnalysisContext.Node is not InvocationExpressionSyntax i)
         {
-            if (syntaxNodeAnalysisContext.Node is not InvocationExpressionSyntax invocation)
+            invocation = null;
+            memberSymbol = null;
+
+            return false;
+        }
+
+        memberSymbol = MethodSymbolHelper.FindInvokedMemberSymbol(invocation: i, syntaxNodeAnalysisContext: syntaxNodeAnalysisContext);
+
+        // check if there is at least one rule that correspond to invocation method
+        if (memberSymbol is null)
+        {
+            invocation = null;
+
+            return false;
+        }
+
+        invocation = i;
+
+        return true;
+    }
+
+    private static void LookForForcedMethods(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
+    {
+        if (!Wtf(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, out InvocationExpressionSyntax? invocation, out IMethodSymbol? memberSymbol))
+        {
+            return;
+        }
+
+        // ! memberSymbol is guaranteed to be not null here
+        Mapping mapping = new(methodName: memberSymbol!.Name, SymbolDisplay.ToDisplayString(memberSymbol.ContainingType));
+
+        IEnumerable<ProhibitedMethodsSpec> forcedMethods = ForcedMethods.Where(predicate: rule => StringComparer.Ordinal.Equals(x: rule.QualifiedName, y: mapping.QualifiedName));
+
+        foreach (ProhibitedMethodsSpec prohibitedMethod in forcedMethods)
+        {
+            // ! Invocation is guaranteed to be not null here
+            if (!IsInvocationAllowed(arguments: invocation!.ArgumentList, parameters: memberSymbol.Parameters, prohibitedMethod: prohibitedMethod))
             {
-                return;
-            }
-
-            IMethodSymbol? memberSymbol = MethodSymbolHelper.FindInvokedMemberSymbol(invocation: invocation, syntaxNodeAnalysisContext: syntaxNodeAnalysisContext);
-
-            // check if there is at least one rule that correspond to invocation method
-            if (memberSymbol is null)
-            {
-                return;
-            }
-
-            Mapping mapping = new(methodName: memberSymbol.Name, SymbolDisplay.ToDisplayString(memberSymbol.ContainingType));
-
-            IEnumerable<ProhibitedMethodsSpec> forcedMethods = ForcedMethods.Where(predicate: rule => StringComparer.Ordinal.Equals(x: rule.QualifiedName, y: mapping.QualifiedName));
-
-            foreach (ProhibitedMethodsSpec prohibitedMethod in forcedMethods)
-            {
-                if (!IsInvocationAllowed(arguments: invocation.ArgumentList, parameters: memberSymbol.Parameters, prohibitedMethod: prohibitedMethod))
-                {
-                    invocation.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: prohibitedMethod.Rule);
-                }
+                invocation.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: prohibitedMethod.Rule);
             }
         }
     }
