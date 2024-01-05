@@ -34,7 +34,7 @@ internal static class TestDetection
 
     private static bool IsTestBase(INamedTypeSymbol symbol)
     {
-        return symbol.ToFullyQualifiedName() == "FunFair.Test.Common.TestBase";
+        return StringComparer.Ordinal.Equals(symbol.ToFullyQualifiedName(), y: "FunFair.Test.Common.TestBase");
     }
 
     private static bool IsTestMethodAttribute(string attributeType)

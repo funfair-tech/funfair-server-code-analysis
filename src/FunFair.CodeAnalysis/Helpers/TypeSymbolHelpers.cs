@@ -6,18 +6,18 @@ internal static class TypeSymbolHelpers
 {
     public static string? ToFullyQualifiedName(this ITypeSymbol symbol)
     {
-        if (symbol.OriginalDefinition.ContainingNamespace is null)
+        ITypeSymbol od = symbol.OriginalDefinition;
+        INamespaceSymbol? ns = od.ContainingNamespace;
+
+        if (ns is null)
         {
             return null;
         }
 
-        string nameSpace = symbol.OriginalDefinition.ContainingNamespace.ToDisplayString();
+        string nameSpace = ns.ToDisplayString();
 
-        if (string.IsNullOrEmpty(nameSpace))
-        {
-            return null;
-        }
-
-        return $"{nameSpace}.{symbol.OriginalDefinition.MetadataName}";
+        return string.IsNullOrEmpty(nameSpace)
+            ? null
+            : $"{nameSpace}.{od.MetadataName}";
     }
 }
