@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics;
@@ -54,7 +55,8 @@ public sealed class ClassVisibilityDiagnosticsAnalyzer : DiagnosticAnalyzer
 
         foreach (ConfiguredClass classDefinition in Classes)
         {
-            if (classDefinition.TypeMatchesClass(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext) && !classDefinition.HasCorrectClassModifier(classDeclarationSyntax: classDeclarationSyntax))
+            if (classDefinition.TypeMatchesClass(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext) &&
+                !classDefinition.HasCorrectClassModifier(classDeclarationSyntax: classDeclarationSyntax))
             {
                 classDeclarationSyntax.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: classDefinition.Rule);
             }
@@ -99,7 +101,7 @@ public sealed class ClassVisibilityDiagnosticsAnalyzer : DiagnosticAnalyzer
         {
             INamedTypeSymbol originalDefinition = typeSymbol.OriginalDefinition;
 
-            return SymbolDisplay.ToDisplayString(originalDefinition) == className;
+            return StringComparer.Ordinal.Equals(SymbolDisplay.ToDisplayString(originalDefinition), y: className);
         }
 
         public bool HasCorrectClassModifier(ClassDeclarationSyntax classDeclarationSyntax)
