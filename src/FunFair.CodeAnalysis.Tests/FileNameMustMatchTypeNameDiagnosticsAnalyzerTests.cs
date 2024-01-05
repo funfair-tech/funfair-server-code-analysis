@@ -59,17 +59,9 @@ public sealed class FileNameMustMatchTypeNameDiagnosticsAnalyzerTests : Diagnost
     {
         const string test = "public sealed class Example {}";
 
-        return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                new DiagnosticResult
-                                                {
-                                                    Id = "FFS0040",
-                                                    Message = "Should be in a file of the same name as the type",
-                                                    Severity = DiagnosticSeverity.Error,
-                                                    Locations = new[]
-                                                                {
-                                                                    new DiagnosticResultLocation(path: "Test0.cs", line: 1, column: 1)
-                                                                }
-                                                });
+        DiagnosticResult expected = Result(id: "FFS0040", message: "Should be in a file of the same name as the type", severity: DiagnosticSeverity.Error, line: 1, column: 1);
+
+        return this.VerifyCSharpDiagnosticAsync(source: test, expected);
     }
 
     [Fact]
@@ -77,17 +69,9 @@ public sealed class FileNameMustMatchTypeNameDiagnosticsAnalyzerTests : Diagnost
     {
         const string test = "public sealed record Example {}";
 
-        return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                new DiagnosticResult
-                                                {
-                                                    Id = "FFS0040",
-                                                    Message = "Should be in a file of the same name as the type",
-                                                    Severity = DiagnosticSeverity.Error,
-                                                    Locations = new[]
-                                                                {
-                                                                    new DiagnosticResultLocation(path: "Test0.cs", line: 1, column: 1)
-                                                                }
-                                                });
+        DiagnosticResult expected = Result(id: "FFS0040", message: "Should be in a file of the same name as the type", severity: DiagnosticSeverity.Error, line: 1, column: 1);
+
+        return this.VerifyCSharpDiagnosticAsync(source: test, expected);
     }
 
     [Fact]
@@ -95,17 +79,9 @@ public sealed class FileNameMustMatchTypeNameDiagnosticsAnalyzerTests : Diagnost
     {
         const string test = "public enum Example {}";
 
-        return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                new DiagnosticResult
-                                                {
-                                                    Id = "FFS0040",
-                                                    Message = "Should be in a file of the same name as the type",
-                                                    Severity = DiagnosticSeverity.Error,
-                                                    Locations = new[]
-                                                                {
-                                                                    new DiagnosticResultLocation(path: "Test0.cs", line: 1, column: 1)
-                                                                }
-                                                });
+        DiagnosticResult expected = Result(id: "FFS0040", message: "Should be in a file of the same name as the type", severity: DiagnosticSeverity.Error, line: 1, column: 1);
+
+        return this.VerifyCSharpDiagnosticAsync(source: test, expected);
     }
 
     [Fact]
@@ -113,17 +89,9 @@ public sealed class FileNameMustMatchTypeNameDiagnosticsAnalyzerTests : Diagnost
     {
         const string test = "public readonly struct Example {}";
 
-        return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                new DiagnosticResult
-                                                {
-                                                    Id = "FFS0040",
-                                                    Message = "Should be in a file of the same name as the type",
-                                                    Severity = DiagnosticSeverity.Error,
-                                                    Locations = new[]
-                                                                {
-                                                                    new DiagnosticResultLocation(path: "Test0.cs", line: 1, column: 1)
-                                                                }
-                                                });
+        DiagnosticResult expected = Result(id: "FFS0040", message: "Should be in a file of the same name as the type", severity: DiagnosticSeverity.Error, line: 1, column: 1);
+
+        return this.VerifyCSharpDiagnosticAsync(source: test, expected);
     }
 
     [Fact]
@@ -131,16 +99,8 @@ public sealed class FileNameMustMatchTypeNameDiagnosticsAnalyzerTests : Diagnost
     {
         const string test = "public interface Example {}";
 
-        return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                new DiagnosticResult
-                                                {
-                                                    Id = "FFS0040",
-                                                    Message = "Should be in a file of the same name as the type",
-                                                    Severity = DiagnosticSeverity.Error,
-                                                    Locations = new[]
-                                                                {
-                                                                    new DiagnosticResultLocation(path: "Test0.cs", line: 1, column: 1)
-                                                                }
-                                                });
+        DiagnosticResult expected = Result(id: "FFS0040", message: "Should be in a file of the same name as the type", severity: DiagnosticSeverity.Error, line: 1, column: 1);
+
+        return this.VerifyCSharpDiagnosticAsync(source: test, expected);
     }
 }

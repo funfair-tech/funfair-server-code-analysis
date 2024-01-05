@@ -26,16 +26,7 @@ public sealed class ClassAnalysisDiagnosticsAnalyzerTests : DiagnosticVerifier
     public Task ClassWithNoModifiersIsAnErrorAsync()
     {
         const string test = "public class Test {}";
-        DiagnosticResult expected = new()
-                                    {
-                                        Id = "FFS0012",
-                                        Message = "Classes should be static, sealed or abstract",
-                                        Severity = DiagnosticSeverity.Error,
-                                        Locations = new[]
-                                                    {
-                                                        new DiagnosticResultLocation(path: "Test0.cs", line: 12, column: 25)
-                                                    }
-                                    };
+        DiagnosticResult expected = Result(id: "FFS0012", message: "Classes should be static, sealed or abstract", severity: DiagnosticSeverity.Error, line: 12, column: 25);
 
         return this.VerifyCSharpDiagnosticAsync(source: test, expected);
     }

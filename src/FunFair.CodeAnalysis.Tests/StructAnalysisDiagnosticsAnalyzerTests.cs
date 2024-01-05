@@ -18,16 +18,7 @@ public sealed class StructAnalysisDiagnosticsAnalyzerTests : DiagnosticVerifier
     public Task NonReadOnlyStructIsAnErrorAsync()
     {
         const string test = "public struct Test {}";
-        DiagnosticResult expected = new()
-                                    {
-                                        Id = "FFS0011",
-                                        Message = "Structs should be read-only",
-                                        Severity = DiagnosticSeverity.Error,
-                                        Locations = new[]
-                                                    {
-                                                        new DiagnosticResultLocation(path: "Test0.cs", line: 12, column: 25)
-                                                    }
-                                    };
+        DiagnosticResult expected = Result(id: "FFS0011", message: "Structs should be read-only", severity: DiagnosticSeverity.Error, line: 12, column: 25);
 
         return this.VerifyCSharpDiagnosticAsync(source: test, expected);
     }

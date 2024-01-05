@@ -18,16 +18,7 @@ public sealed class DebuggerDisplayAnalysisDiagnosticsAnalyzerTest : DiagnosticV
     public Task RecordWithDebuggerDisplayIsAnErrorAsync()
     {
         const string test = "public sealed record Test {}";
-        DiagnosticResult expected = new()
-                                    {
-                                        Id = "FFS0038",
-                                        Message = "Should have DebuggerDisplay attribute",
-                                        Severity = DiagnosticSeverity.Error,
-                                        Locations = new[]
-                                                    {
-                                                        new DiagnosticResultLocation(path: "Test0.cs", line: 12, column: 25)
-                                                    }
-                                    };
+        DiagnosticResult expected = Result(id: "FFS0038", message: "Should have DebuggerDisplay attribute", severity: DiagnosticSeverity.Error, line: 12, column: 25);
 
         return this.VerifyCSharpDiagnosticAsync(source: test, expected);
     }
@@ -36,16 +27,7 @@ public sealed class DebuggerDisplayAnalysisDiagnosticsAnalyzerTest : DiagnosticV
     public Task RecordStructWithNoDebuggerDisplayIsAnErrorAsync()
     {
         const string test = "public readonly record struct Test {  }";
-        DiagnosticResult expected = new()
-                                    {
-                                        Id = "FFS0038",
-                                        Message = "Should have DebuggerDisplay attribute",
-                                        Severity = DiagnosticSeverity.Error,
-                                        Locations = new[]
-                                                    {
-                                                        new DiagnosticResultLocation(path: "Test0.cs", line: 12, column: 25)
-                                                    }
-                                    };
+        DiagnosticResult expected = Result(id: "FFS0038", message: "Should have DebuggerDisplay attribute", severity: DiagnosticSeverity.Error, line: 12, column: 25);
 
         return this.VerifyCSharpDiagnosticAsync(source: test, expected);
     }

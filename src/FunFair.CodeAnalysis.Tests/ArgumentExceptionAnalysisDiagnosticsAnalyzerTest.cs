@@ -28,16 +28,7 @@ public sealed class Test {
     }
 }";
 
-        DiagnosticResult expected = new()
-                                    {
-                                        Id = "FFS0016",
-                                        Message = "Argument Exceptions should pass parameter name",
-                                        Severity = DiagnosticSeverity.Error,
-                                        Locations = new[]
-                                                    {
-                                                        new DiagnosticResultLocation(path: "Test0.cs", line: 8, column: 17)
-                                                    }
-                                    };
+        DiagnosticResult expected = Result(id: "FFS0016", message: "Argument Exceptions should pass parameter name", severity: DiagnosticSeverity.Error, line: 8, column: 17);
 
         return this.VerifyCSharpDiagnosticAsync(source: test, expected);
     }
@@ -56,16 +47,7 @@ public sealed class Test {
     }
 }";
 
-        DiagnosticResult expected = new()
-                                    {
-                                        Id = "FFS0016",
-                                        Message = "Argument Exceptions should pass parameter name",
-                                        Severity = DiagnosticSeverity.Error,
-                                        Locations = new[]
-                                                    {
-                                                        new DiagnosticResultLocation(path: "Test0.cs", line: 8, column: 17)
-                                                    }
-                                    };
+        DiagnosticResult expected = Result(id: "FFS0016", message: "Argument Exceptions should pass parameter name", severity: DiagnosticSeverity.Error, line: 8, column: 17);
 
         return this.VerifyCSharpDiagnosticAsync(source: test, expected);
     }
@@ -120,16 +102,7 @@ public sealed class Test {
     }
 }";
 
-        DiagnosticResult expected = new()
-                                    {
-                                        Id = "FFS0016",
-                                        Message = "Argument Exceptions should pass parameter name",
-                                        Severity = DiagnosticSeverity.Error,
-                                        Locations = new[]
-                                                    {
-                                                        new DiagnosticResultLocation(path: "Test0.cs", line: 8, column: 17)
-                                                    }
-                                    };
+        DiagnosticResult expected = Result(id: "FFS0016", message: "Argument Exceptions should pass parameter name", severity: DiagnosticSeverity.Error, line: 8, column: 17);
 
         return this.VerifyCSharpDiagnosticAsync(source: test, expected);
     }
@@ -148,16 +121,7 @@ public sealed class Test {
     }
 }";
 
-        DiagnosticResult expected = new()
-                                    {
-                                        Id = "FFS0016",
-                                        Message = "Argument Exceptions should pass parameter name",
-                                        Severity = DiagnosticSeverity.Error,
-                                        Locations = new[]
-                                                    {
-                                                        new DiagnosticResultLocation(path: "Test0.cs", line: 8, column: 17)
-                                                    }
-                                    };
+        DiagnosticResult expected = Result(id: "FFS0016", message: "Argument Exceptions should pass parameter name", severity: DiagnosticSeverity.Error, line: 8, column: 17);
 
         return this.VerifyCSharpDiagnosticAsync(source: test, expected);
     }
@@ -212,16 +176,7 @@ public sealed class Test {
     }
 }";
 
-        DiagnosticResult expected = new()
-                                    {
-                                        Id = "FFS0016",
-                                        Message = "Argument Exceptions should pass parameter name",
-                                        Severity = DiagnosticSeverity.Error,
-                                        Locations = new[]
-                                                    {
-                                                        new DiagnosticResultLocation(path: "Test0.cs", line: 8, column: 17)
-                                                    }
-                                    };
+        DiagnosticResult expected = Result(id: "FFS0016", message: "Argument Exceptions should pass parameter name", severity: DiagnosticSeverity.Error, line: 8, column: 17);
 
         return this.VerifyCSharpDiagnosticAsync(source: test, expected);
     }
@@ -240,16 +195,7 @@ public sealed class Test {
     }
 }";
 
-        DiagnosticResult expected = new()
-                                    {
-                                        Id = "FFS0016",
-                                        Message = "Argument Exceptions should pass parameter name",
-                                        Severity = DiagnosticSeverity.Error,
-                                        Locations = new[]
-                                                    {
-                                                        new DiagnosticResultLocation(path: "Test0.cs", line: 8, column: 17)
-                                                    }
-                                    };
+        DiagnosticResult expected = Result(id: "FFS0016", message: "Argument Exceptions should pass parameter name", severity: DiagnosticSeverity.Error, line: 8, column: 17);
 
         return this.VerifyCSharpDiagnosticAsync(source: test, expected);
     }

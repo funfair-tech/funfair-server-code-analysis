@@ -46,16 +46,11 @@ public sealed class Test {
     }
 }";
 
-        DiagnosticResult expected = new()
-                                    {
-                                        Id = "FFS0024",
-                                        Message = "ILogger parameters on leaf classes should not be ILogger but ILogger<Test>",
-                                        Severity = DiagnosticSeverity.Error,
-                                        Locations = new[]
-                                                    {
-                                                        new DiagnosticResultLocation(path: "Test0.cs", line: 6, column: 17)
-                                                    }
-                                    };
+        DiagnosticResult expected = Result(id: "FFS0024",
+                                           message: "ILogger parameters on leaf classes should not be ILogger but ILogger<Test>",
+                                           severity: DiagnosticSeverity.Error,
+                                           line: 6,
+                                           column: 17);
 
         return this.VerifyCSharpDiagnosticAsync(source: test,
                                                 [
@@ -77,16 +72,11 @@ public abstract class Test {
     }
 }";
 
-        DiagnosticResult expected = new()
-                                    {
-                                        Id = "FFS0023",
-                                        Message = "ILogger parameters on base classes should not be ILogger<Test> but ILogger",
-                                        Severity = DiagnosticSeverity.Error,
-                                        Locations = new[]
-                                                    {
-                                                        new DiagnosticResultLocation(path: "Test0.cs", line: 6, column: 20)
-                                                    }
-                                    };
+        DiagnosticResult expected = Result(id: "FFS0023",
+                                           message: "ILogger parameters on base classes should not be ILogger<Test> but ILogger",
+                                           severity: DiagnosticSeverity.Error,
+                                           line: 6,
+                                           column: 20);
 
         return this.VerifyCSharpDiagnosticAsync(source: test,
                                                 [
@@ -131,16 +121,11 @@ public sealed class Test {
     }
 }";
 
-        DiagnosticResult expected = new()
-                                    {
-                                        Id = "FFS0025",
-                                        Message = "Should be using 'Test' rather than 'Banana' with Microsoft.Extensions.Logging.ILogger<TCategoryName>",
-                                        Severity = DiagnosticSeverity.Error,
-                                        Locations = new[]
-                                                    {
-                                                        new DiagnosticResultLocation(path: "Test0.cs", line: 10, column: 17)
-                                                    }
-                                    };
+        DiagnosticResult expected = Result(id: "FFS0025",
+                                           message: "Should be using 'Test' rather than 'Banana' with Microsoft.Extensions.Logging.ILogger<TCategoryName>",
+                                           severity: DiagnosticSeverity.Error,
+                                           line: 10,
+                                           column: 17);
 
         return this.VerifyCSharpDiagnosticAsync(source: test,
                                                 [

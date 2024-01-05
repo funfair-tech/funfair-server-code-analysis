@@ -51,16 +51,7 @@ public sealed class Test : MockBase<string>
     }
 }";
 
-        DiagnosticResult expected = new()
-                                    {
-                                        Id = "FFS0029",
-                                        Message = "MockBase<T> instances must be internal",
-                                        Severity = DiagnosticSeverity.Error,
-                                        Locations = new[]
-                                                    {
-                                                        new DiagnosticResultLocation(path: "Test0.cs", line: 4, column: 1)
-                                                    }
-                                    };
+        DiagnosticResult expected = Result(id: "FFS0029", message: "MockBase<T> instances must be internal", severity: DiagnosticSeverity.Error, line: 4, column: 1);
 
         return this.VerifyCSharpDiagnosticAsync(source: test,
                                                 [
@@ -115,16 +106,7 @@ internal abstract class Test : MockBase<string>
     }
 }";
 
-        DiagnosticResult expected = new()
-                                    {
-                                        Id = "FFS0030",
-                                        Message = "MockBase<T> instances must be sealed",
-                                        Severity = DiagnosticSeverity.Error,
-                                        Locations = new[]
-                                                    {
-                                                        new DiagnosticResultLocation(path: "Test0.cs", line: 4, column: 1)
-                                                    }
-                                    };
+        DiagnosticResult expected = Result(id: "FFS0030", message: "MockBase<T> instances must be sealed", severity: DiagnosticSeverity.Error, line: 4, column: 1);
 
         return this.VerifyCSharpDiagnosticAsync(source: test,
                                                 [
