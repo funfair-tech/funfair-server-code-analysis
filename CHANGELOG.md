@@ -12,7 +12,6 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 - Dependencies - Updated Microsoft.VisualStudio.Threading.Analyzers to 17.8.14
 - Dependencies - Updated Credfeto.Enumeration.Source.Generation to 1.1.1.168
 - Dependencies - Updated FunFair.Test.Common to 6.1.19.238
-- Dependencies - Updated xunit.analyzers to 1.6.0
 - Dependencies - Updated xunit to 2.6.2
 - Dependencies - Updated xunit.runner.visualstudio to 2.5.4
 - Dependencies - Updated Microsoft.CodeAnalysis.CSharp to 4.8.0
@@ -22,6 +21,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 - Dependencies - Updated Roslynator.Analyzers to 4.8.0
 - Dependencies - Updated SmartAnalyzers.CSharpExtensions.Annotations to 4.2.9
 - Dependencies - Updated SonarAnalyzer.CSharp to 9.16.0.82469
+- Dependencies - Updated xunit.analyzers to 1.9.0
 ### Removed
 ### Deployment Changes
 
