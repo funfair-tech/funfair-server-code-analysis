@@ -17,6 +17,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 - Dependencies - Updated xunit.runner.visualstudio to 2.5.4
 - Dependencies - Updated Microsoft.CodeAnalysis.CSharp to 4.8.0
 - Dependencies - Updated Meziantou.Analyzer to 2.0.134
+- Dependencies - Updated Nullable.Extended.Analyzer to 1.15.6169
 ### Removed
 ### Deployment Changes
 
