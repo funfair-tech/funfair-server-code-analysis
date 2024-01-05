@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using FunFair.CodeAnalysis.Tests.Helpers;
 using FunFair.CodeAnalysis.Tests.Verifiers;
 using Microsoft.CodeAnalysis;
@@ -105,48 +106,15 @@ public sealed record Test<T1, T2> {}
 
 public interface Test<T1, T2, T3> {}
 ";
+        IReadOnlyList<DiagnosticResult> expected =
+        [
+            Result(id: "FFS0039", message: "Should be only one type per file", severity: DiagnosticSeverity.Error, line: 1, column: 1),
+            Result(id: "FFS0039", message: "Should be only one type per file", severity: DiagnosticSeverity.Error, line: 3, column: 1),
+            Result(id: "FFS0039", message: "Should be only one type per file", severity: DiagnosticSeverity.Error, line: 5, column: 1),
+            Result(id: "FFS0039", message: "Should be only one type per file", severity: DiagnosticSeverity.Error, line: 7, column: 1)
+        ];
 
-        return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                new DiagnosticResult
-                                                {
-                                                    Id = "FFS0039",
-                                                    Message = "Should be only one type per file",
-                                                    Severity = DiagnosticSeverity.Error,
-                                                    Locations = new[]
-                                                                {
-                                                                    new DiagnosticResultLocation(path: "Test0.cs", line: 1, column: 1)
-                                                                }
-                                                },
-                                                new DiagnosticResult
-                                                {
-                                                    Id = "FFS0039",
-                                                    Message = "Should be only one type per file",
-                                                    Severity = DiagnosticSeverity.Error,
-                                                    Locations = new[]
-                                                                {
-                                                                    new DiagnosticResultLocation(path: "Test0.cs", line: 3, column: 1)
-                                                                }
-                                                },
-                                                new DiagnosticResult
-                                                {
-                                                    Id = "FFS0039",
-                                                    Message = "Should be only one type per file",
-                                                    Severity = DiagnosticSeverity.Error,
-                                                    Locations = new[]
-                                                                {
-                                                                    new DiagnosticResultLocation(path: "Test0.cs", line: 5, column: 1)
-                                                                }
-                                                },
-                                                new DiagnosticResult
-                                                {
-                                                    Id = "FFS0039",
-                                                    Message = "Should be only one type per file",
-                                                    Severity = DiagnosticSeverity.Error,
-                                                    Locations = new[]
-                                                                {
-                                                                    new DiagnosticResultLocation(path: "Test0.cs", line: 7, column: 1)
-                                                                }
-                                                });
+        return this.VerifyCSharpDiagnosticAsync(source: test, expected: expected);
     }
 
     [Fact]
@@ -156,28 +124,13 @@ public interface Test<T1, T2, T3> {}
 
 public sealed class Test1 {}
 ";
+        IReadOnlyList<DiagnosticResult> expected =
+        [
+            Result(id: "FFS0039", message: "Should be only one type per file", severity: DiagnosticSeverity.Error, line: 1, column: 1),
+            Result(id: "FFS0039", message: "Should be only one type per file", severity: DiagnosticSeverity.Error, line: 3, column: 1)
+        ];
 
-        return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                new DiagnosticResult
-                                                {
-                                                    Id = "FFS0039",
-                                                    Message = "Should be only one type per file",
-                                                    Severity = DiagnosticSeverity.Error,
-                                                    Locations = new[]
-                                                                {
-                                                                    new DiagnosticResultLocation(path: "Test0.cs", line: 1, column: 1)
-                                                                }
-                                                },
-                                                new DiagnosticResult
-                                                {
-                                                    Id = "FFS0039",
-                                                    Message = "Should be only one type per file",
-                                                    Severity = DiagnosticSeverity.Error,
-                                                    Locations = new[]
-                                                                {
-                                                                    new DiagnosticResultLocation(path: "Test0.cs", line: 3, column: 1)
-                                                                }
-                                                });
+        return this.VerifyCSharpDiagnosticAsync(source: test, expected: expected);
     }
 
     [Fact]
@@ -188,27 +141,13 @@ public sealed class Test1 {}
 public readonly struct Test1 {}
 ";
 
-        return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                new DiagnosticResult
-                                                {
-                                                    Id = "FFS0039",
-                                                    Message = "Should be only one type per file",
-                                                    Severity = DiagnosticSeverity.Error,
-                                                    Locations = new[]
-                                                                {
-                                                                    new DiagnosticResultLocation(path: "Test0.cs", line: 1, column: 1)
-                                                                }
-                                                },
-                                                new DiagnosticResult
-                                                {
-                                                    Id = "FFS0039",
-                                                    Message = "Should be only one type per file",
-                                                    Severity = DiagnosticSeverity.Error,
-                                                    Locations = new[]
-                                                                {
-                                                                    new DiagnosticResultLocation(path: "Test0.cs", line: 3, column: 1)
-                                                                }
-                                                });
+        IReadOnlyList<DiagnosticResult> expected =
+        [
+            Result(id: "FFS0039", message: "Should be only one type per file", severity: DiagnosticSeverity.Error, line: 1, column: 1),
+            Result(id: "FFS0039", message: "Should be only one type per file", severity: DiagnosticSeverity.Error, line: 3, column: 1)
+        ];
+
+        return this.VerifyCSharpDiagnosticAsync(source: test, expected: expected);
     }
 
     [Fact]
@@ -219,27 +158,13 @@ public readonly struct Test1 {}
 public sealed record Test1 {}
 ";
 
-        return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                new DiagnosticResult
-                                                {
-                                                    Id = "FFS0039",
-                                                    Message = "Should be only one type per file",
-                                                    Severity = DiagnosticSeverity.Error,
-                                                    Locations = new[]
-                                                                {
-                                                                    new DiagnosticResultLocation(path: "Test0.cs", line: 1, column: 1)
-                                                                }
-                                                },
-                                                new DiagnosticResult
-                                                {
-                                                    Id = "FFS0039",
-                                                    Message = "Should be only one type per file",
-                                                    Severity = DiagnosticSeverity.Error,
-                                                    Locations = new[]
-                                                                {
-                                                                    new DiagnosticResultLocation(path: "Test0.cs", line: 3, column: 1)
-                                                                }
-                                                });
+        IReadOnlyList<DiagnosticResult> expected =
+        [
+            Result(id: "FFS0039", message: "Should be only one type per file", severity: DiagnosticSeverity.Error, line: 1, column: 1),
+            Result(id: "FFS0039", message: "Should be only one type per file", severity: DiagnosticSeverity.Error, line: 3, column: 1)
+        ];
+
+        return this.VerifyCSharpDiagnosticAsync(source: test, expected: expected);
     }
 
     [Fact]
@@ -250,27 +175,13 @@ public sealed record Test1 {}
 public interface Test1 {}
 ";
 
-        return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                new DiagnosticResult
-                                                {
-                                                    Id = "FFS0039",
-                                                    Message = "Should be only one type per file",
-                                                    Severity = DiagnosticSeverity.Error,
-                                                    Locations = new[]
-                                                                {
-                                                                    new DiagnosticResultLocation(path: "Test0.cs", line: 1, column: 1)
-                                                                }
-                                                },
-                                                new DiagnosticResult
-                                                {
-                                                    Id = "FFS0039",
-                                                    Message = "Should be only one type per file",
-                                                    Severity = DiagnosticSeverity.Error,
-                                                    Locations = new[]
-                                                                {
-                                                                    new DiagnosticResultLocation(path: "Test0.cs", line: 3, column: 1)
-                                                                }
-                                                });
+        IReadOnlyList<DiagnosticResult> expected =
+        [
+            Result(id: "FFS0039", message: "Should be only one type per file", severity: DiagnosticSeverity.Error, line: 1, column: 1),
+            Result(id: "FFS0039", message: "Should be only one type per file", severity: DiagnosticSeverity.Error, line: 3, column: 1)
+        ];
+
+        return this.VerifyCSharpDiagnosticAsync(source: test, expected: expected);
     }
 
     [Fact]

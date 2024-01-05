@@ -26,10 +26,7 @@ public sealed class Test
     }
 }";
 
-        return this.VerifyCSharpDiagnosticAsync(source: test,
-        [
-            WellKnownMetadataReferences.FunFairTestCommon
-        ]);
+        return this.VerifyCSharpDiagnosticAsync(source: test, reference: WellKnownMetadataReferences.FunFairTestCommon);
     }
 
     [Fact]
@@ -53,11 +50,7 @@ public sealed class Test : MockBase<string>
 
         DiagnosticResult expected = Result(id: "FFS0029", message: "MockBase<T> instances must be internal", severity: DiagnosticSeverity.Error, line: 4, column: 1);
 
-        return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                [
-                                                    WellKnownMetadataReferences.FunFairTestCommon
-                                                ],
-                                                expected);
+        return this.VerifyCSharpDiagnosticAsync(source: test, reference: WellKnownMetadataReferences.FunFairTestCommon, expected: expected);
     }
 
     [Fact]
@@ -80,10 +73,7 @@ internal sealed class Test : MockBase<string>
     }
 }";
 
-        return this.VerifyCSharpDiagnosticAsync(source: test,
-        [
-            WellKnownMetadataReferences.FunFairTestCommon
-        ]);
+        return this.VerifyCSharpDiagnosticAsync(source: test, reference: WellKnownMetadataReferences.FunFairTestCommon);
     }
 
     [Fact]
@@ -108,10 +98,6 @@ internal abstract class Test : MockBase<string>
 
         DiagnosticResult expected = Result(id: "FFS0030", message: "MockBase<T> instances must be sealed", severity: DiagnosticSeverity.Error, line: 4, column: 1);
 
-        return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                [
-                                                    WellKnownMetadataReferences.FunFairTestCommon
-                                                ],
-                                                expected);
+        return this.VerifyCSharpDiagnosticAsync(source: test, reference: WellKnownMetadataReferences.FunFairTestCommon, expected: expected);
     }
 }

@@ -35,10 +35,7 @@ public abstract partial class DiagnosticVerifier
 
     #region Get Diagnostics
 
-    private static Task<IReadOnlyList<Diagnostic>> GetSortedDiagnosticsAsync(in ReadOnlySpan<string> sources,
-                                                                             in ReadOnlySpan<MetadataReference> references,
-                                                                             string language,
-                                                                             DiagnosticAnalyzer analyzer)
+    private static Task<IReadOnlyList<Diagnostic>> GetSortedDiagnosticsAsync(in ReadOnlySpan<string> sources, IReadOnlyList<MetadataReference> references, string language, DiagnosticAnalyzer analyzer)
     {
         return GetSortedDiagnosticsFromDocumentsAsync(analyzer: analyzer, GetDocuments(sources: sources, references: references, language: language));
     }
@@ -168,7 +165,7 @@ public abstract partial class DiagnosticVerifier
 
     #region Set up compilation and documents
 
-    private static IReadOnlyList<Document> GetDocuments(in ReadOnlySpan<string> sources, in ReadOnlySpan<MetadataReference> references, string language)
+    private static IReadOnlyList<Document> GetDocuments(in ReadOnlySpan<string> sources, IReadOnlyList<MetadataReference> references, string language)
     {
         if (!IsSupportedLanguage(language))
         {
@@ -201,7 +198,7 @@ public abstract partial class DiagnosticVerifier
         return StringComparer.Ordinal.Equals(x: language, y: LanguageNames.CSharp);
     }
 
-    private static Project CreateProject(in ReadOnlySpan<string> sources, in ReadOnlySpan<MetadataReference> references, string language = LanguageNames.CSharp)
+    private static Project CreateProject(in ReadOnlySpan<string> sources, IReadOnlyList<MetadataReference> references, string language = LanguageNames.CSharp)
     {
         const string fileNamePrefix = DEFAULT_FILE_PATH_PREFIX;
         string fileExt = IsCSharp(language)
@@ -210,8 +207,7 @@ public abstract partial class DiagnosticVerifier
 
         ProjectId projectId = ProjectId.CreateNewId(TEST_PROJECT_NAME);
 
-        Solution solution = references.ToArray()
-                                      .Aggregate(BuildSolutionWithStandardReferences(language: language, projectId: projectId),
+        Solution solution = references.Aggregate(BuildSolutionWithStandardReferences(language: language, projectId: projectId),
                                                  func: (current, reference) => current.AddMetadataReference(projectId: projectId, metadataReference: reference));
 
         int count = 0;

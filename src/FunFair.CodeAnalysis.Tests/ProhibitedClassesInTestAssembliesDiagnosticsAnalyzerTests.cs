@@ -32,16 +32,7 @@ public sealed class ProhibitedClassesInTestAssembliesDiagnosticsAnalyzerTests : 
              }
          }
      }";
-        DiagnosticResult expected = new()
-                                    {
-                                        Id = "FFS0041",
-                                        Message = "Use ITestOutputHelper rather than System.Console in test projects",
-                                        Severity = DiagnosticSeverity.Error,
-                                        Locations = new[]
-                                                    {
-                                                        new DiagnosticResultLocation(path: "Test0.cs", line: 12, column: 18)
-                                                    }
-                                    };
+        DiagnosticResult expected = Result(id: "FFS0041", message: "Use ITestOutputHelper rather than System.Console in test projects", severity: DiagnosticSeverity.Error, line: 12, column: 18);
 
         return this.VerifyCSharpDiagnosticAsync(source: test,
                                                 [

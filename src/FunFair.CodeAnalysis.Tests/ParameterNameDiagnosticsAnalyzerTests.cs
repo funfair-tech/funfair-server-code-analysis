@@ -27,22 +27,9 @@ public sealed class ParameterNameDiagnosticsAnalyzerTests : DiagnosticVerifier
             }
 }";
 
-        DiagnosticResult expected = new()
-                                    {
-                                        Id = "FFS0019",
-                                        Message = "ILogger parameters should be called 'logger'",
-                                        Severity = DiagnosticSeverity.Error,
-                                        Locations = new[]
-                                                    {
-                                                        new DiagnosticResultLocation(path: "Test0.cs", line: 6, column: 30)
-                                                    }
-                                    };
+        DiagnosticResult expected = Result(id: "FFS0019", message: "ILogger parameters should be called 'logger'", severity: DiagnosticSeverity.Error, line: 6, column: 30);
 
-        return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                [
-                                                    WellKnownMetadataReferences.GenericLogger
-                                                ],
-                                                expected);
+        return this.VerifyCSharpDiagnosticAsync(source: test, reference: WellKnownMetadataReferences.GenericLogger, expected: expected);
     }
 
     [Fact]
@@ -58,10 +45,7 @@ public sealed class ParameterNameDiagnosticsAnalyzerTests : DiagnosticVerifier
             }
 }";
 
-        return this.VerifyCSharpDiagnosticAsync(source: test,
-        [
-            WellKnownMetadataReferences.GenericLogger
-        ]);
+        return this.VerifyCSharpDiagnosticAsync(source: test, reference: WellKnownMetadataReferences.GenericLogger);
     }
 
     [Fact]
@@ -77,22 +61,9 @@ public sealed class ParameterNameDiagnosticsAnalyzerTests : DiagnosticVerifier
             }
 }";
 
-        DiagnosticResult expected = new()
-                                    {
-                                        Id = "FFS0019",
-                                        Message = "ILogger parameters should be called 'logger'",
-                                        Severity = DiagnosticSeverity.Error,
-                                        Locations = new[]
-                                                    {
-                                                        new DiagnosticResultLocation(path: "Test0.cs", line: 6, column: 30)
-                                                    }
-                                    };
+        DiagnosticResult expected = Result(id: "FFS0019", message: "ILogger parameters should be called 'logger'", severity: DiagnosticSeverity.Error, line: 6, column: 30);
 
-        return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                [
-                                                    WellKnownMetadataReferences.Logger
-                                                ],
-                                                expected);
+        return this.VerifyCSharpDiagnosticAsync(source: test, reference: WellKnownMetadataReferences.Logger, expected: expected);
     }
 
     [Fact]
@@ -108,9 +79,6 @@ public sealed class ParameterNameDiagnosticsAnalyzerTests : DiagnosticVerifier
             }
 }";
 
-        return this.VerifyCSharpDiagnosticAsync(source: test,
-        [
-            WellKnownMetadataReferences.Logger
-        ]);
+        return this.VerifyCSharpDiagnosticAsync(source: test, reference: WellKnownMetadataReferences.Logger);
     }
 }

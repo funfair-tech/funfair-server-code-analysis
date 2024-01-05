@@ -27,10 +27,7 @@ public sealed class Test {
     }
 }";
 
-        return this.VerifyCSharpDiagnosticAsync(source: test,
-        [
-            WellKnownMetadataReferences.Logger
-        ]);
+        return this.VerifyCSharpDiagnosticAsync(source: test, reference: WellKnownMetadataReferences.Logger);
     }
 
     [Fact]
@@ -52,11 +49,7 @@ public sealed class Test {
                                            line: 6,
                                            column: 17);
 
-        return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                [
-                                                    WellKnownMetadataReferences.Logger
-                                                ],
-                                                expected);
+        return this.VerifyCSharpDiagnosticAsync(source: test, reference: WellKnownMetadataReferences.Logger, expected: expected);
     }
 
     [Fact]
@@ -78,11 +71,7 @@ public abstract class Test {
                                            line: 6,
                                            column: 20);
 
-        return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                [
-                                                    WellKnownMetadataReferences.Logger
-                                                ],
-                                                expected);
+        return this.VerifyCSharpDiagnosticAsync(source: test, reference: WellKnownMetadataReferences.Logger, expected: expected);
     }
 
     [Fact]
@@ -98,10 +87,7 @@ public abstract class Test {
     }
 }";
 
-        return this.VerifyCSharpDiagnosticAsync(source: test,
-        [
-            WellKnownMetadataReferences.Logger
-        ]);
+        return this.VerifyCSharpDiagnosticAsync(source: test, reference: WellKnownMetadataReferences.Logger);
     }
 
     [Fact]
@@ -127,11 +113,7 @@ public sealed class Test {
                                            line: 10,
                                            column: 17);
 
-        return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                [
-                                                    WellKnownMetadataReferences.Logger
-                                                ],
-                                                expected);
+        return this.VerifyCSharpDiagnosticAsync(source: test, reference: WellKnownMetadataReferences.Logger, expected: expected);
     }
 
     [Fact]
@@ -147,10 +129,7 @@ internal sealed class Test {
     }
 }";
 
-        return this.VerifyCSharpDiagnosticAsync(source: test,
-        [
-            WellKnownMetadataReferences.Logger
-        ]);
+        return this.VerifyCSharpDiagnosticAsync(source: test, reference: WellKnownMetadataReferences.Logger);
     }
 
     [Fact]
@@ -169,10 +148,7 @@ public sealed class Onion {
     }
 }";
 
-        return this.VerifyCSharpDiagnosticAsync(source: test,
-        [
-            WellKnownMetadataReferences.Logger
-        ]);
+        return this.VerifyCSharpDiagnosticAsync(source: test, reference: WellKnownMetadataReferences.Logger);
     }
 
     [Fact]
@@ -191,10 +167,7 @@ public sealed class Onion {
     }
 }";
 
-        return this.VerifyCSharpDiagnosticAsync(source: test,
-        [
-            WellKnownMetadataReferences.Logger
-        ]);
+        return this.VerifyCSharpDiagnosticAsync(source: test, reference: WellKnownMetadataReferences.Logger);
     }
 
     [Fact]
@@ -213,9 +186,6 @@ public class Onion {
     }
 }";
 
-        return this.VerifyCSharpDiagnosticAsync(source: test,
-        [
-            WellKnownMetadataReferences.Logger
-        ]);
+        return this.VerifyCSharpDiagnosticAsync(source: test, reference: WellKnownMetadataReferences.Logger);
     }
 }

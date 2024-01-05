@@ -19,16 +19,7 @@ public sealed class NullableDirectiveDiagnosticsAnalyzerTests : DiagnosticVerifi
     {
         const string test = "#nullable disable";
 
-        DiagnosticResult expected = new()
-                                    {
-                                        Id = "FFS0022",
-                                        Message = "Don't use #nulllable directive, make the change globally for the project",
-                                        Severity = DiagnosticSeverity.Error,
-                                        Locations = new[]
-                                                    {
-                                                        new DiagnosticResultLocation(path: "Test0.cs", line: 9, column: 37)
-                                                    }
-                                    };
+        DiagnosticResult expected = Result(id: "FFS0022", message: "Don't use #nulllable directive, make the change globally for the project", severity: DiagnosticSeverity.Error, line: 9, column: 37);
 
         return this.VerifyCSharpDiagnosticAsync(source: test, expected);
     }
@@ -38,16 +29,7 @@ public sealed class NullableDirectiveDiagnosticsAnalyzerTests : DiagnosticVerifi
     {
         const string test = "#nullable restore";
 
-        DiagnosticResult expected = new()
-                                    {
-                                        Id = "FFS0022",
-                                        Message = "Don't use #nulllable directive, make the change globally for the project",
-                                        Severity = DiagnosticSeverity.Error,
-                                        Locations = new[]
-                                                    {
-                                                        new DiagnosticResultLocation(path: "Test0.cs", line: 9, column: 37)
-                                                    }
-                                    };
+        DiagnosticResult expected = Result(id: "FFS0022", message: "Don't use #nulllable directive, make the change globally for the project", severity: DiagnosticSeverity.Error, line: 9, column: 37);
 
         return this.VerifyCSharpDiagnosticAsync(source: test, expected);
     }
@@ -57,16 +39,7 @@ public sealed class NullableDirectiveDiagnosticsAnalyzerTests : DiagnosticVerifi
     {
         const string test = "#nullable enable";
 
-        DiagnosticResult expected = new()
-                                    {
-                                        Id = "FFS0022",
-                                        Message = "Don't use #nulllable directive, make the change globally for the project",
-                                        Severity = DiagnosticSeverity.Error,
-                                        Locations = new[]
-                                                    {
-                                                        new DiagnosticResultLocation(path: "Test0.cs", line: 9, column: 37)
-                                                    }
-                                    };
+        DiagnosticResult expected = Result(id: "FFS0022", message: "Don't use #nulllable directive, make the change globally for the project", severity: DiagnosticSeverity.Error, line: 9, column: 37);
 
         return this.VerifyCSharpDiagnosticAsync(source: test, expected);
     }

@@ -99,13 +99,51 @@ public abstract partial class DiagnosticVerifier : TestBase
 
     #region Verifier wrappers
 
+    protected Task VerifyCSharpDiagnosticAsync(string source, MetadataReference reference, in DiagnosticResult expected)
+    {
+        IReadOnlyList<MetadataReference> refs = [reference];
+        IReadOnlyList<DiagnosticResult> exp = [expected];
+
+        return this.VerifyCSharpDiagnosticAsync(source: source, references: refs, expected: exp);
+    }
+
+    protected Task VerifyCSharpDiagnosticAsync(string source, MetadataReference reference)
+    {
+        IReadOnlyList<MetadataReference> refs = [reference];
+        IReadOnlyList<DiagnosticResult> exp = Array.Empty<DiagnosticResult>();
+
+        return this.VerifyCSharpDiagnosticAsync(source: source, references: refs, expected: exp);
+    }
+
     protected Task VerifyCSharpDiagnosticAsync(string source, params DiagnosticResult[] expected)
+    {
+        return this.VerifyCSharpDiagnosticAsync(source: source, Array.Empty<MetadataReference>(), expected: expected);
+    }
+
+    protected Task VerifyCSharpDiagnosticAsync(string source, IReadOnlyList<DiagnosticResult> expected)
     {
         return this.VerifyCSharpDiagnosticAsync(source: source, Array.Empty<MetadataReference>(), expected: expected);
     }
 
     [SuppressMessage(category: "Meziantou.Analyzer", checkId: "MA0109: Add an overload with a Span or Memory parameter", Justification = "Won't work here")]
     protected Task VerifyCSharpDiagnosticAsync(string source, MetadataReference[] references, params DiagnosticResult[] expected)
+    {
+        IReadOnlyList<MetadataReference> refs = references;
+        IReadOnlyList<DiagnosticResult> exp = expected;
+
+        return this.VerifyCSharpDiagnosticAsync(source: source, references: refs, expected: exp);
+    }
+
+    [SuppressMessage(category: "Meziantou.Analyzer", checkId: "MA0109: Add an overload with a Span or Memory parameter", Justification = "Won't work here")]
+    protected Task VerifyCSharpDiagnosticAsync(string source, MetadataReference references, IReadOnlyList<DiagnosticResult> expected)
+    {
+        IReadOnlyList<MetadataReference> refs = [references];
+
+        return this.VerifyCSharpDiagnosticAsync(source: source, references: refs, expected: expected);
+    }
+
+    [SuppressMessage(category: "Meziantou.Analyzer", checkId: "MA0109: Add an overload with a Span or Memory parameter", Justification = "Won't work here")]
+    protected Task VerifyCSharpDiagnosticAsync(string source, IReadOnlyList<MetadataReference> references, IReadOnlyList<DiagnosticResult> expected)
     {
         DiagnosticAnalyzer diagnostic = AssertReallyNotNull(this.GetCSharpDiagnosticAnalyzer());
 
@@ -132,7 +170,11 @@ public abstract partial class DiagnosticVerifier : TestBase
         return VerifyDiagnosticsAsync(sources: sources, references: references, language: LanguageNames.CSharp, analyzer: diagnostic, expected: expected);
     }
 
-    private static async Task VerifyDiagnosticsAsync(string[] sources, MetadataReference[] references, string language, DiagnosticAnalyzer analyzer, params DiagnosticResult[] expected)
+    private static async Task VerifyDiagnosticsAsync(string[] sources,
+                                                     IReadOnlyList<MetadataReference> references,
+                                                     string language,
+                                                     DiagnosticAnalyzer analyzer,
+                                                     IReadOnlyList<DiagnosticResult> expected)
     {
         IReadOnlyList<Diagnostic> diagnostics = await GetSortedDiagnosticsAsync(sources: sources, references: references, language: language, analyzer: analyzer);
 
