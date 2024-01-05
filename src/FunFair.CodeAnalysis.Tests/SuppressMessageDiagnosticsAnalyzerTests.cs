@@ -2,18 +2,12 @@
 using FunFair.CodeAnalysis.Tests.Helpers;
 using FunFair.CodeAnalysis.Tests.Verifiers;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.Diagnostics;
 using Xunit;
 
 namespace FunFair.CodeAnalysis.Tests;
 
-public sealed class SuppressMessageDiagnosticsAnalyzerTests : DiagnosticVerifier
+public sealed class SuppressMessageDiagnosticsAnalyzerTests : DiagnosticAnalyzerVerifier<SuppressMessageDiagnosticsAnalyzer>
 {
-    protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer()
-    {
-        return new SuppressMessageDiagnosticsAnalyzer();
-    }
-
     [Fact]
     public Task SuppressMessageWithJustificationIsOkAsync()
     {
@@ -28,10 +22,7 @@ public sealed class SuppressMessageDiagnosticsAnalyzerTests : DiagnosticVerifier
             }
 }";
 
-        return this.VerifyCSharpDiagnosticAsync(source: test,
-        [
-            WellKnownMetadataReferences.SuppressMessage
-        ]);
+        return this.VerifyCSharpDiagnosticAsync(source: test, reference: WellKnownMetadataReferences.SuppressMessage);
     }
 
     [Fact]
@@ -47,22 +38,13 @@ public sealed class SuppressMessageDiagnosticsAnalyzerTests : DiagnosticVerifier
             {
             }
 }";
-        DiagnosticResult expected = new()
-                                    {
-                                        Id = "FFS0027",
-                                        Message = "SuppressMessage must specify a Justification",
-                                        Severity = DiagnosticSeverity.Error,
-                                        Locations = new[]
-                                                    {
-                                                        new DiagnosticResultLocation(path: "Test0.cs", line: 6, column: 14)
-                                                    }
-                                    };
+        DiagnosticResult expected = Result(id: "FFS0027", message: "SuppressMessage must specify a Justification", severity: DiagnosticSeverity.Error, line: 6, column: 14);
 
         return this.VerifyCSharpDiagnosticAsync(source: test,
                                                 [
                                                     WellKnownMetadataReferences.SuppressMessage
                                                 ],
-                                                expected);
+                                                expected: expected);
     }
 
     [Fact]
@@ -79,22 +61,9 @@ public sealed class SuppressMessageDiagnosticsAnalyzerTests : DiagnosticVerifier
             }
 }";
 
-        DiagnosticResult expected = new()
-                                    {
-                                        Id = "FFS0027",
-                                        Message = "SuppressMessage must specify a Justification",
-                                        Severity = DiagnosticSeverity.Error,
-                                        Locations = new[]
-                                                    {
-                                                        new DiagnosticResultLocation(path: "Test0.cs", line: 6, column: 75)
-                                                    }
-                                    };
+        DiagnosticResult expected = Result(id: "FFS0027", message: "SuppressMessage must specify a Justification", severity: DiagnosticSeverity.Error, line: 6, column: 75);
 
-        return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                [
-                                                    WellKnownMetadataReferences.SuppressMessage
-                                                ],
-                                                expected);
+        return this.VerifyCSharpDiagnosticAsync(source: test, reference: WellKnownMetadataReferences.SuppressMessage, expected: expected);
     }
 
     [Fact]
@@ -111,21 +80,12 @@ public sealed class SuppressMessageDiagnosticsAnalyzerTests : DiagnosticVerifier
             }
 }";
 
-        DiagnosticResult expected = new()
-                                    {
-                                        Id = "FFS0042",
-                                        Message = "SuppressMessage must not have a TODO Justification",
-                                        Severity = DiagnosticSeverity.Error,
-                                        Locations = new[]
-                                                    {
-                                                        new DiagnosticResultLocation(path: "Test0.cs", line: 6, column: 75)
-                                                    }
-                                    };
+        DiagnosticResult expected = Result(id: "FFS0042", message: "SuppressMessage must not have a TODO Justification", severity: DiagnosticSeverity.Error, line: 6, column: 75);
 
         return this.VerifyCSharpDiagnosticAsync(source: test,
                                                 [
                                                     WellKnownMetadataReferences.SuppressMessage
                                                 ],
-                                                expected);
+                                                expected: expected);
     }
 }

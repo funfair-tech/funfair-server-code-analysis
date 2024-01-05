@@ -2,18 +2,12 @@
 using FunFair.CodeAnalysis.Tests.Helpers;
 using FunFair.CodeAnalysis.Tests.Verifiers;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.Diagnostics;
 using Xunit;
 
 namespace FunFair.CodeAnalysis.Tests;
 
-public sealed class TestClassFieldsAnalysisDiagnosticsAnalyzerTests : DiagnosticVerifier
+public sealed class TestClassFieldsAnalysisDiagnosticsAnalyzerTests : DiagnosticAnalyzerVerifier<TestClassFieldsAnalysisDiagnosticsAnalyzer>
 {
-    protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer()
-    {
-        return new TestClassFieldsAnalysisDiagnosticsAnalyzer();
-    }
-
     [Fact]
     public Task NonTestClassAllowedMutableFieldsAsync()
     {
@@ -45,23 +39,14 @@ public sealed class Test : TestBase{
     }
 }";
 
-        DiagnosticResult expected = new()
-                                    {
-                                        Id = "FFS0035",
-                                        Message = "Fields in test classes should be read-only or const",
-                                        Severity = DiagnosticSeverity.Error,
-                                        Locations = new[]
-                                                    {
-                                                        new DiagnosticResultLocation(path: "Test0.cs", line: 5, column: 5)
-                                                    }
-                                    };
+        DiagnosticResult expected = Result(id: "FFS0035", message: "Fields in test classes should be read-only or const", severity: DiagnosticSeverity.Error, line: 5, column: 5);
 
         return this.VerifyCSharpDiagnosticAsync(source: test,
                                                 [
                                                     WellKnownMetadataReferences.Xunit,
                                                     WellKnownMetadataReferences.FunFairTestCommon
                                                 ],
-                                                expected);
+                                                expected: expected);
     }
 
     [Fact]

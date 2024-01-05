@@ -2,18 +2,12 @@
 using FunFair.CodeAnalysis.Tests.Helpers;
 using FunFair.CodeAnalysis.Tests.Verifiers;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.Diagnostics;
 using Xunit;
 
 namespace FunFair.CodeAnalysis.Tests;
 
-public sealed class ParameterNameDiagnosticsAnalyzerTests : DiagnosticVerifier
+public sealed class ParameterNameDiagnosticsAnalyzerTests : DiagnosticAnalyzerVerifier<ParameterNameDiagnosticsAnalyzer>
 {
-    protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer()
-    {
-        return new ParameterNameDiagnosticsAnalyzer();
-    }
-
     [Fact]
     public Task GenericLoggerParameterNameInvalidAsync()
     {

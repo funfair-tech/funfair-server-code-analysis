@@ -2,18 +2,12 @@
 using FunFair.CodeAnalysis.Tests.Helpers;
 using FunFair.CodeAnalysis.Tests.Verifiers;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.Diagnostics;
 using Xunit;
 
 namespace FunFair.CodeAnalysis.Tests;
 
-public sealed class ConstructorGenericParameterTypeDiagnosticsAnalyserTests : DiagnosticVerifier
+public sealed class ConstructorGenericParameterTypeDiagnosticsAnalyserTests : DiagnosticAnalyzerVerifier<ConstructorGenericParameterTypeDiagnosticsAnalyser>
 {
-    protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer()
-    {
-        return new ConstructorGenericParameterTypeDiagnosticsAnalyser();
-    }
-
     [Fact]
     public Task SealedClassUsesOwnClassNameInConstructorParameterIsNotAnErrorAsync()
     {

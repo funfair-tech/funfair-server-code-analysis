@@ -2,25 +2,19 @@
 using FunFair.CodeAnalysis.Tests.Helpers;
 using FunFair.CodeAnalysis.Tests.Verifiers;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.Diagnostics;
 using Xunit;
 
 namespace FunFair.CodeAnalysis.Tests;
 
-public sealed class DebuggerDisplayAnalysisDiagnosticsAnalyzerTest : DiagnosticVerifier
+public sealed class DebuggerDisplayAnalysisDiagnosticsAnalyzerTest : DiagnosticAnalyzerVerifier<DebuggerDisplayAnalysisDiagnosticsAnalyzer>
 {
-    protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer()
-    {
-        return new DebuggerDisplayAnalysisDiagnosticsAnalyzer();
-    }
-
     [Fact]
     public Task RecordWithDebuggerDisplayIsAnErrorAsync()
     {
         const string test = "public sealed record Test {}";
         DiagnosticResult expected = Result(id: "FFS0038", message: "Should have DebuggerDisplay attribute", severity: DiagnosticSeverity.Error, line: 12, column: 25);
 
-        return this.VerifyCSharpDiagnosticAsync(source: test, expected);
+        return this.VerifyCSharpDiagnosticAsync(source: test, expected: expected);
     }
 
     [Fact]
@@ -29,7 +23,7 @@ public sealed class DebuggerDisplayAnalysisDiagnosticsAnalyzerTest : DiagnosticV
         const string test = "public readonly record struct Test {  }";
         DiagnosticResult expected = Result(id: "FFS0038", message: "Should have DebuggerDisplay attribute", severity: DiagnosticSeverity.Error, line: 12, column: 25);
 
-        return this.VerifyCSharpDiagnosticAsync(source: test, expected);
+        return this.VerifyCSharpDiagnosticAsync(source: test, expected: expected);
     }
 
     [Fact]

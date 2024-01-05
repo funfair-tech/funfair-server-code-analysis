@@ -2,18 +2,12 @@
 using FunFair.CodeAnalysis.Tests.Helpers;
 using FunFair.CodeAnalysis.Tests.Verifiers;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.Diagnostics;
 using Xunit;
 
 namespace FunFair.CodeAnalysis.Tests;
 
-public sealed class ProhibitedMethodWithStrictParametersInvocationDiagnosticsAnalyzerTests : DiagnosticVerifier
+public sealed class ProhibitedMethodWithStrictParametersInvocationDiagnosticsAnalyzerTests : DiagnosticAnalyzerVerifier<ProhibitedMethodWithStrictParametersInvocationDiagnosticsAnalyzer>
 {
-    protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer()
-    {
-        return new ProhibitedMethodWithStrictParametersInvocationDiagnosticsAnalyzer();
-    }
-
     [Fact]
     public Task NSubstituteExtensionsReceivedWithExpectedCallCountIsPassingAsync()
     {
@@ -36,10 +30,7 @@ public sealed class ProhibitedMethodWithStrictParametersInvocationDiagnosticsAna
          }
      }";
 
-        return this.VerifyCSharpDiagnosticAsync(source: test,
-        [
-            WellKnownMetadataReferences.Substitute
-        ]);
+        return this.VerifyCSharpDiagnosticAsync(source: test, reference: WellKnownMetadataReferences.Substitute);
     }
 
     [Fact]
@@ -63,22 +54,13 @@ public sealed class ProhibitedMethodWithStrictParametersInvocationDiagnosticsAna
              }
          }
      }";
-        DiagnosticResult expected = new()
-                                    {
-                                        Id = "FFS0021",
-                                        Message = "Only use Received with expected call count greater than 0, use DidNotReceived instead if 0 call received expected",
-                                        Severity = DiagnosticSeverity.Error,
-                                        Locations = new[]
-                                                    {
-                                                        new DiagnosticResultLocation(path: "Test0.cs", line: 15, column: 18)
-                                                    }
-                                    };
+        DiagnosticResult expected = Result(id: "FFS0021",
+                                           message: "Only use Received with expected call count greater than 0, use DidNotReceived instead if 0 call received expected",
+                                           severity: DiagnosticSeverity.Error,
+                                           line: 15,
+                                           column: 18);
 
-        return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                [
-                                                    WellKnownMetadataReferences.Substitute
-                                                ],
-                                                expected);
+        return this.VerifyCSharpDiagnosticAsync(source: test, reference: WellKnownMetadataReferences.Substitute, expected: expected);
     }
 
     [Fact]
@@ -103,10 +85,7 @@ public sealed class ProhibitedMethodWithStrictParametersInvocationDiagnosticsAna
          }
      }";
 
-        return this.VerifyCSharpDiagnosticAsync(source: test,
-        [
-            WellKnownMetadataReferences.Substitute
-        ]);
+        return this.VerifyCSharpDiagnosticAsync(source: test, reference: WellKnownMetadataReferences.Substitute);
     }
 
     [Fact]
@@ -153,16 +132,7 @@ public sealed class ProhibitedMethodWithStrictParametersInvocationDiagnosticsAna
          }
      }";
 
-        DiagnosticResult expected = new()
-                                    {
-                                        Id = "FFS0034",
-                                        Message = "Only use AddJsonFile with reloadOnChange set to false",
-                                        Severity = DiagnosticSeverity.Error,
-                                        Locations = new[]
-                                                    {
-                                                        new DiagnosticResultLocation(path: "Test0.cs", line: 10, column: 47)
-                                                    }
-                                    };
+        DiagnosticResult expected = Result(id: "FFS0034", message: "Only use AddJsonFile with reloadOnChange set to false", severity: DiagnosticSeverity.Error, line: 10, column: 47);
 
         return this.VerifyCSharpDiagnosticAsync(source: test,
                                                 [
@@ -170,7 +140,7 @@ public sealed class ProhibitedMethodWithStrictParametersInvocationDiagnosticsAna
                                                     WellKnownMetadataReferences.ConfigurationBuilder,
                                                     WellKnownMetadataReferences.JsonConfigurationExtensions
                                                 ],
-                                                expected);
+                                                expected: expected);
     }
 
     [Fact]
@@ -193,16 +163,7 @@ public sealed class ProhibitedMethodWithStrictParametersInvocationDiagnosticsAna
          }
      }";
 
-        DiagnosticResult expected = new()
-                                    {
-                                        Id = "FFS0034",
-                                        Message = "Only use AddJsonFile with reloadOnChange set to false",
-                                        Severity = DiagnosticSeverity.Error,
-                                        Locations = new[]
-                                                    {
-                                                        new DiagnosticResultLocation(path: "Test0.cs", line: 10, column: 47)
-                                                    }
-                                    };
+        DiagnosticResult expected = Result(id: "FFS0034", message: "Only use AddJsonFile with reloadOnChange set to false", severity: DiagnosticSeverity.Error, line: 10, column: 47);
 
         return this.VerifyCSharpDiagnosticAsync(source: test,
                                                 [
@@ -210,6 +171,6 @@ public sealed class ProhibitedMethodWithStrictParametersInvocationDiagnosticsAna
                                                     WellKnownMetadataReferences.ConfigurationBuilder,
                                                     WellKnownMetadataReferences.JsonConfigurationExtensions
                                                 ],
-                                                expected);
+                                                expected: expected);
     }
 }

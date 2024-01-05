@@ -2,18 +2,12 @@
 using FunFair.CodeAnalysis.Tests.Helpers;
 using FunFair.CodeAnalysis.Tests.Verifiers;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.Diagnostics;
 using Xunit;
 
 namespace FunFair.CodeAnalysis.Tests;
 
-public sealed class NullableDirectiveDiagnosticsAnalyzerTests : DiagnosticVerifier
+public sealed class NullableDirectiveDiagnosticsAnalyzerTests : DiagnosticAnalyzerVerifier<NullableDirectiveDiagnosticsAnalyzer>
 {
-    protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer()
-    {
-        return new NullableDirectiveDiagnosticsAnalyzer();
-    }
-
     [Fact]
     public Task NullableDisableIsAnErrorAsync()
     {
@@ -21,7 +15,7 @@ public sealed class NullableDirectiveDiagnosticsAnalyzerTests : DiagnosticVerifi
 
         DiagnosticResult expected = Result(id: "FFS0022", message: "Don't use #nulllable directive, make the change globally for the project", severity: DiagnosticSeverity.Error, line: 9, column: 37);
 
-        return this.VerifyCSharpDiagnosticAsync(source: test, expected);
+        return this.VerifyCSharpDiagnosticAsync(source: test, expected: expected);
     }
 
     [Fact]
@@ -31,7 +25,7 @@ public sealed class NullableDirectiveDiagnosticsAnalyzerTests : DiagnosticVerifi
 
         DiagnosticResult expected = Result(id: "FFS0022", message: "Don't use #nulllable directive, make the change globally for the project", severity: DiagnosticSeverity.Error, line: 9, column: 37);
 
-        return this.VerifyCSharpDiagnosticAsync(source: test, expected);
+        return this.VerifyCSharpDiagnosticAsync(source: test, expected: expected);
     }
 
     [Fact]
@@ -41,6 +35,6 @@ public sealed class NullableDirectiveDiagnosticsAnalyzerTests : DiagnosticVerifi
 
         DiagnosticResult expected = Result(id: "FFS0022", message: "Don't use #nulllable directive, make the change globally for the project", severity: DiagnosticSeverity.Error, line: 9, column: 37);
 
-        return this.VerifyCSharpDiagnosticAsync(source: test, expected);
+        return this.VerifyCSharpDiagnosticAsync(source: test, expected: expected);
     }
 }

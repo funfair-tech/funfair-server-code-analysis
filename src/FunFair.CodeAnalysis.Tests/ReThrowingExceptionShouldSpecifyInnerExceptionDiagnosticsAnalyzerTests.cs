@@ -2,18 +2,12 @@
 using FunFair.CodeAnalysis.Tests.Helpers;
 using FunFair.CodeAnalysis.Tests.Verifiers;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.Diagnostics;
 using Xunit;
 
 namespace FunFair.CodeAnalysis.Tests;
 
-public sealed class ReThrowingExceptionShouldSpecifyInnerExceptionDiagnosticsAnalyzerTests : DiagnosticVerifier
+public sealed class ReThrowingExceptionShouldSpecifyInnerExceptionDiagnosticsAnalyzerTests : DiagnosticAnalyzerVerifier<ReThrowingExceptionShouldSpecifyInnerExceptionDiagnosticsAnalyzer>
 {
-    protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer()
-    {
-        return new ReThrowingExceptionShouldSpecifyInnerExceptionDiagnosticsAnalyzer();
-    }
-
     [Fact]
     public Task ReThrowingExceptionShouldNotTriggerErrorAsync()
     {
@@ -86,18 +80,13 @@ public sealed class Test {
     }
 }";
 
-        DiagnosticResult expected = new()
-                                    {
-                                        Id = "FFS0017",
-                                        Message = "Provide 'failingException' as a inner exception when throw from the catch clauses",
-                                        Severity = DiagnosticSeverity.Error,
-                                        Locations = new[]
-                                                    {
-                                                        new DiagnosticResultLocation(path: "Test0.cs", line: 14, column: 19)
-                                                    }
-                                    };
+        DiagnosticResult expected = Result(id: "FFS0017",
+                                           message: "Provide 'failingException' as a inner exception when throw from the catch clauses",
+                                           severity: DiagnosticSeverity.Error,
+                                           line: 14,
+                                           column: 19);
 
-        return this.VerifyCSharpDiagnosticAsync(source: test, expected);
+        return this.VerifyCSharpDiagnosticAsync(source: test, expected: expected);
     }
 
     [Fact]
@@ -121,17 +110,12 @@ public sealed class Test {
     }
 }";
 
-        DiagnosticResult expected = new()
-                                    {
-                                        Id = "FFS0017",
-                                        Message = "Provide 'failingException' as a inner exception when throw from the catch clauses",
-                                        Severity = DiagnosticSeverity.Error,
-                                        Locations = new[]
-                                                    {
-                                                        new DiagnosticResultLocation(path: "Test0.cs", line: 14, column: 19)
-                                                    }
-                                    };
+        DiagnosticResult expected = Result(id: "FFS0017",
+                                           message: "Provide 'failingException' as a inner exception when throw from the catch clauses",
+                                           severity: DiagnosticSeverity.Error,
+                                           line: 14,
+                                           column: 19);
 
-        return this.VerifyCSharpDiagnosticAsync(source: test, expected);
+        return this.VerifyCSharpDiagnosticAsync(source: test, expected: expected);
     }
 }

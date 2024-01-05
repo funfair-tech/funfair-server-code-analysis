@@ -2,18 +2,12 @@
 using FunFair.CodeAnalysis.Tests.Helpers;
 using FunFair.CodeAnalysis.Tests.Verifiers;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.Diagnostics;
 using Xunit;
 
 namespace FunFair.CodeAnalysis.Tests;
 
-public sealed class FileNameMustMatchTypeNameDiagnosticsAnalyzerTests : DiagnosticVerifier
+public sealed class FileNameMustMatchTypeNameDiagnosticsAnalyzerTests : DiagnosticAnalyzerVerifier<FileNameMustMatchTypeNameDiagnosticsAnalyzer>
 {
-    protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer()
-    {
-        return new FileNameMustMatchTypeNameDiagnosticsAnalyzer();
-    }
-
     [Fact]
     public Task ClassNameMatchesFileNameIsOkAsync()
     {
@@ -61,7 +55,7 @@ public sealed class FileNameMustMatchTypeNameDiagnosticsAnalyzerTests : Diagnost
 
         DiagnosticResult expected = Result(id: "FFS0040", message: "Should be in a file of the same name as the type", severity: DiagnosticSeverity.Error, line: 1, column: 1);
 
-        return this.VerifyCSharpDiagnosticAsync(source: test, expected);
+        return this.VerifyCSharpDiagnosticAsync(source: test, expected: expected);
     }
 
     [Fact]
@@ -71,7 +65,7 @@ public sealed class FileNameMustMatchTypeNameDiagnosticsAnalyzerTests : Diagnost
 
         DiagnosticResult expected = Result(id: "FFS0040", message: "Should be in a file of the same name as the type", severity: DiagnosticSeverity.Error, line: 1, column: 1);
 
-        return this.VerifyCSharpDiagnosticAsync(source: test, expected);
+        return this.VerifyCSharpDiagnosticAsync(source: test, expected: expected);
     }
 
     [Fact]
@@ -81,7 +75,7 @@ public sealed class FileNameMustMatchTypeNameDiagnosticsAnalyzerTests : Diagnost
 
         DiagnosticResult expected = Result(id: "FFS0040", message: "Should be in a file of the same name as the type", severity: DiagnosticSeverity.Error, line: 1, column: 1);
 
-        return this.VerifyCSharpDiagnosticAsync(source: test, expected);
+        return this.VerifyCSharpDiagnosticAsync(source: test, expected: expected);
     }
 
     [Fact]
@@ -91,7 +85,7 @@ public sealed class FileNameMustMatchTypeNameDiagnosticsAnalyzerTests : Diagnost
 
         DiagnosticResult expected = Result(id: "FFS0040", message: "Should be in a file of the same name as the type", severity: DiagnosticSeverity.Error, line: 1, column: 1);
 
-        return this.VerifyCSharpDiagnosticAsync(source: test, expected);
+        return this.VerifyCSharpDiagnosticAsync(source: test, expected: expected);
     }
 
     [Fact]
@@ -101,6 +95,6 @@ public sealed class FileNameMustMatchTypeNameDiagnosticsAnalyzerTests : Diagnost
 
         DiagnosticResult expected = Result(id: "FFS0040", message: "Should be in a file of the same name as the type", severity: DiagnosticSeverity.Error, line: 1, column: 1);
 
-        return this.VerifyCSharpDiagnosticAsync(source: test, expected);
+        return this.VerifyCSharpDiagnosticAsync(source: test, expected: expected);
     }
 }

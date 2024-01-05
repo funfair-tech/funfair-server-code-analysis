@@ -28,6 +28,8 @@ public abstract partial class DiagnosticVerifier : TestBase
 
     protected static DiagnosticResult Result(string id, string message, DiagnosticSeverity severity, int line, int column)
     {
+        DiagnosticResultLocation location = new(path: "Test0.cs", line: line, column: column);
+
         return new()
                {
                    Id = id,
@@ -35,7 +37,7 @@ public abstract partial class DiagnosticVerifier : TestBase
                    Severity = severity,
                    Locations =
                    [
-                       new(path: "Test0.cs", line: line, column: column)
+                       location
                    ]
                };
     }
@@ -73,8 +75,7 @@ public abstract partial class DiagnosticVerifier : TestBase
                 Assert.True(condition: location.IsInSource, $"Test base does not currently handle diagnostics in metadata locations. Diagnostic in metadata: {diagnostic}\r\n");
 
                 string resultMethodName = GetResultMethodName(diagnostic);
-                LinePosition linePosition = diagnostic.Location.GetLineSpan()
-                                                      .StartLinePosition;
+                LinePosition linePosition = GetStartLinePosition(diagnostic);
 
                 builder = builder.Append(provider: CultureInfo.InvariantCulture, $"{resultMethodName}({linePosition.Line + 1}, {linePosition.Character + 1}, {analyzerType.Name}.{rule.Id})");
             }
@@ -88,9 +89,17 @@ public abstract partial class DiagnosticVerifier : TestBase
                       .TrimEnd(',') + Environment.NewLine;
     }
 
+    private static LinePosition GetStartLinePosition(Diagnostic diagnostic)
+    {
+        return diagnostic.Location.GetLineSpan()
+                         .StartLinePosition;
+    }
+
     private static string GetResultMethodName(Diagnostic diagnostic)
     {
-        return diagnostic.Location.SourceTree!.FilePath.EndsWith(value: ".cs", comparisonType: StringComparison.OrdinalIgnoreCase)
+        SyntaxTree sourceTree = diagnostic.Location.SourceTree ?? throw new InvalidOperationException(message: "Diagnostic has no source location");
+
+        return sourceTree.FilePath.EndsWith(value: ".cs", comparisonType: StringComparison.OrdinalIgnoreCase)
             ? "GetCSharpResultAt"
             : "GetBasicResultAt";
     }
@@ -101,23 +110,22 @@ public abstract partial class DiagnosticVerifier : TestBase
 
     protected Task VerifyCSharpDiagnosticAsync(string source, MetadataReference reference, in DiagnosticResult expected)
     {
-        IReadOnlyList<MetadataReference> refs = [reference];
-        IReadOnlyList<DiagnosticResult> exp = [expected];
+        return this.VerifyCSharpDiagnosticAsync(source: source, [reference], [expected]);
+    }
 
-        return this.VerifyCSharpDiagnosticAsync(source: source, references: refs, expected: exp);
+    protected Task VerifyCSharpDiagnosticAsync(string source)
+    {
+        return this.VerifyCSharpDiagnosticAsync(source: source, Array.Empty<MetadataReference>(), Array.Empty<DiagnosticResult>());
     }
 
     protected Task VerifyCSharpDiagnosticAsync(string source, MetadataReference reference)
     {
-        IReadOnlyList<MetadataReference> refs = [reference];
-        IReadOnlyList<DiagnosticResult> exp = Array.Empty<DiagnosticResult>();
-
-        return this.VerifyCSharpDiagnosticAsync(source: source, references: refs, expected: exp);
+        return this.VerifyCSharpDiagnosticAsync(source: source, [reference], Array.Empty<DiagnosticResult>());
     }
 
-    protected Task VerifyCSharpDiagnosticAsync(string source, params DiagnosticResult[] expected)
+    protected Task VerifyCSharpDiagnosticAsync(string source, in DiagnosticResult expected)
     {
-        return this.VerifyCSharpDiagnosticAsync(source: source, Array.Empty<MetadataReference>(), expected: expected);
+        return this.VerifyCSharpDiagnosticAsync(source: source, Array.Empty<MetadataReference>(), [expected]);
     }
 
     protected Task VerifyCSharpDiagnosticAsync(string source, IReadOnlyList<DiagnosticResult> expected)
@@ -125,16 +133,11 @@ public abstract partial class DiagnosticVerifier : TestBase
         return this.VerifyCSharpDiagnosticAsync(source: source, Array.Empty<MetadataReference>(), expected: expected);
     }
 
-    [SuppressMessage(category: "Meziantou.Analyzer", checkId: "MA0109: Add an overload with a Span or Memory parameter", Justification = "Won't work here")]
-    protected Task VerifyCSharpDiagnosticAsync(string source, MetadataReference[] references, params DiagnosticResult[] expected)
+    protected Task VerifyCSharpDiagnosticAsync(string source, IReadOnlyList<MetadataReference> references)
     {
-        IReadOnlyList<MetadataReference> refs = references;
-        IReadOnlyList<DiagnosticResult> exp = expected;
-
-        return this.VerifyCSharpDiagnosticAsync(source: source, references: refs, expected: exp);
+        return this.VerifyCSharpDiagnosticAsync(source: source, references: references, Array.Empty<DiagnosticResult>());
     }
 
-    [SuppressMessage(category: "Meziantou.Analyzer", checkId: "MA0109: Add an overload with a Span or Memory parameter", Justification = "Won't work here")]
     protected Task VerifyCSharpDiagnosticAsync(string source, MetadataReference references, IReadOnlyList<DiagnosticResult> expected)
     {
         IReadOnlyList<MetadataReference> refs = [references];
@@ -142,7 +145,13 @@ public abstract partial class DiagnosticVerifier : TestBase
         return this.VerifyCSharpDiagnosticAsync(source: source, references: refs, expected: expected);
     }
 
-    [SuppressMessage(category: "Meziantou.Analyzer", checkId: "MA0109: Add an overload with a Span or Memory parameter", Justification = "Won't work here")]
+    protected Task VerifyCSharpDiagnosticAsync(string source, IReadOnlyList<MetadataReference> references, in DiagnosticResult expected)
+    {
+        IReadOnlyList<DiagnosticResult> exp = [expected];
+
+        return this.VerifyCSharpDiagnosticAsync(source: source, references: references, expected: exp);
+    }
+
     protected Task VerifyCSharpDiagnosticAsync(string source, IReadOnlyList<MetadataReference> references, IReadOnlyList<DiagnosticResult> expected)
     {
         DiagnosticAnalyzer diagnostic = AssertReallyNotNull(this.GetCSharpDiagnosticAnalyzer());
@@ -156,21 +165,15 @@ public abstract partial class DiagnosticVerifier : TestBase
                                       expected: expected);
     }
 
-    [SuppressMessage(category: "ReSharper", checkId: "UnusedMember.Global", Justification = "May be needed in future")]
-    [SuppressMessage(category: "Meziantou.Analyzer", checkId: "MA0109: Add an overload with a Span or Memory parameter", Justification = "Won't work here")]
-    protected Task VerifyCSharpDiagnosticAsync(string[] sources, params DiagnosticResult[] expected)
-    {
-        return this.VerifyCSharpDiagnosticAsync(sources: sources, Array.Empty<MetadataReference>(), expected: expected);
-    }
-
-    private Task VerifyCSharpDiagnosticAsync(string[] sources, MetadataReference[] references, params DiagnosticResult[] expected)
+    [SuppressMessage(category: "ReSharper", checkId: "UnusedMember.Local", Justification = "May be needed in future")]
+    private Task VerifyCSharpDiagnosticAsync(IReadOnlyList<string> sources, IReadOnlyList<MetadataReference> references, IReadOnlyList<DiagnosticResult> expected)
     {
         DiagnosticAnalyzer diagnostic = AssertReallyNotNull(this.GetCSharpDiagnosticAnalyzer());
 
         return VerifyDiagnosticsAsync(sources: sources, references: references, language: LanguageNames.CSharp, analyzer: diagnostic, expected: expected);
     }
 
-    private static async Task VerifyDiagnosticsAsync(string[] sources,
+    private static async Task VerifyDiagnosticsAsync(IReadOnlyList<string> sources,
                                                      IReadOnlyList<MetadataReference> references,
                                                      string language,
                                                      DiagnosticAnalyzer analyzer,
@@ -185,10 +188,10 @@ public abstract partial class DiagnosticVerifier : TestBase
 
     #region Actual comparisons and verifications
 
-    private static void VerifyDiagnosticResults(IEnumerable<Diagnostic> actualResults, DiagnosticAnalyzer analyzer, params DiagnosticResult[] expectedResults)
+    private static void VerifyDiagnosticResults(IEnumerable<Diagnostic> actualResults, DiagnosticAnalyzer analyzer, IReadOnlyList<DiagnosticResult> expectedResults)
     {
         Diagnostic[] results = actualResults.ToArray();
-        int expectedCount = expectedResults.Length;
+        int expectedCount = expectedResults.Count;
         int actualCount = results.Length;
 
         if (expectedCount != actualCount)
@@ -200,7 +203,7 @@ public abstract partial class DiagnosticVerifier : TestBase
             Assert.Fail($"Mismatch between number of diagnostics returned, expected \"{expectedCount}\" actual \"{actualCount}\"\r\n\r\nDiagnostics:\r\n{diagnosticsOutput}\r\n");
         }
 
-        for (int i = 0; i < expectedResults.Length; i++)
+        for (int i = 0; i < expectedResults.Count; i++)
         {
             Diagnostic actual = results[i];
             DiagnosticResult expected = expectedResults[i];

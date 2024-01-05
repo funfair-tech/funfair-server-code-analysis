@@ -71,7 +71,7 @@ public sealed class SuppressMessageDiagnosticsAnalyzer : DiagnosticAnalyzer
 
             TypeInfo ti = syntaxNodeAnalysisContext.SemanticModel.GetTypeInfo(expression: methodDeclarationSyntax.Name, cancellationToken: syntaxNodeAnalysisContext.CancellationToken);
 
-            if (StringComparer.Ordinal.Equals(x: ti.Type?.MetadataName, y: sourceClassType.MetadataName))
+            if (!StringComparer.Ordinal.Equals(x: ti.Type?.MetadataName, y: sourceClassType.MetadataName))
             {
                 return;
             }

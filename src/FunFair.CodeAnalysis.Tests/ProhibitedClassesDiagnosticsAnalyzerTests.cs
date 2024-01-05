@@ -1,19 +1,14 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using FunFair.CodeAnalysis.Tests.Helpers;
 using FunFair.CodeAnalysis.Tests.Verifiers;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.Diagnostics;
 using Xunit;
 
 namespace FunFair.CodeAnalysis.Tests;
 
-public sealed class ProhibitedClassesDiagnosticsAnalyzerTests : DiagnosticVerifier
+public sealed class ProhibitedClassesDiagnosticsAnalyzerTests : DiagnosticAnalyzerVerifier<ProhibitedClassesDiagnosticsAnalyzer>
 {
-    protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer()
-    {
-        return new ProhibitedClassesDiagnosticsAnalyzer();
-    }
-
     [Fact]
     public Task AssertFalseForNonBlockingConcurrentDictionaryAsync()
     {
@@ -31,10 +26,7 @@ public sealed class ProhibitedClassesDiagnosticsAnalyzerTests : DiagnosticVerifi
          }
      }";
 
-        return this.VerifyCSharpDiagnosticAsync(source: test,
-        [
-            WellKnownMetadataReferences.NonBlockingConcurrentDictionary
-        ]);
+        return this.VerifyCSharpDiagnosticAsync(source: test, reference: WellKnownMetadataReferences.NonBlockingConcurrentDictionary);
     }
 
     [Fact]
@@ -53,22 +45,13 @@ public sealed class ProhibitedClassesDiagnosticsAnalyzerTests : DiagnosticVerifi
              }
          }
      }";
-        DiagnosticResult expected = new()
-                                    {
-                                        Id = "FFS0031",
-                                        Message = "Use NonBlocking.ConcurrentDictionary  rather than System.Collections.Concurrent.ConcurrentDictionary",
-                                        Severity = DiagnosticSeverity.Error,
-                                        Locations = new[]
-                                                    {
-                                                        new DiagnosticResultLocation(path: "Test0.cs", line: 10, column: 61)
-                                                    }
-                                    };
+        DiagnosticResult expected = Result(id: "FFS0031",
+                                           message: "Use NonBlocking.ConcurrentDictionary rather than System.Collections.Concurrent.ConcurrentDictionary",
+                                           severity: DiagnosticSeverity.Error,
+                                           line: 10,
+                                           column: 61);
 
-        return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                [
-                                                    WellKnownMetadataReferences.ConcurrentDictionary
-                                                ],
-                                                expected);
+        return this.VerifyCSharpDiagnosticAsync(source: test, reference: WellKnownMetadataReferences.ConcurrentDictionary, expected: expected);
     }
 
     [Fact]
@@ -87,22 +70,14 @@ public sealed class ProhibitedClassesDiagnosticsAnalyzerTests : DiagnosticVerifi
              }
          }
      }";
-        DiagnosticResult expected = new()
-                                    {
-                                        Id = "FFS0031",
-                                        Message = "Use NonBlocking.ConcurrentDictionary  rather than System.Collections.Concurrent.ConcurrentDictionary",
-                                        Severity = DiagnosticSeverity.Error,
-                                        Locations = new[]
-                                                    {
-                                                        new DiagnosticResultLocation(path: "Test0.cs", line: 8, column: 14)
-                                                    }
-                                    };
 
-        return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                [
-                                                    WellKnownMetadataReferences.ConcurrentDictionary
-                                                ],
-                                                expected);
+        DiagnosticResult expected = Result(id: "FFS0031",
+                                           message: "Use NonBlocking.ConcurrentDictionary rather than System.Collections.Concurrent.ConcurrentDictionary",
+                                           severity: DiagnosticSeverity.Error,
+                                           line: 8,
+                                           column: 14);
+
+        return this.VerifyCSharpDiagnosticAsync(source: test, reference: WellKnownMetadataReferences.ConcurrentDictionary, expected: expected);
     }
 
     [Fact]
@@ -123,35 +98,22 @@ public sealed class ProhibitedClassesDiagnosticsAnalyzerTests : DiagnosticVerifi
              }
          }
      }";
-        DiagnosticResult[] expected =
-        {
-            new()
-            {
-                Id = "FFS0031",
-                Message = "Use NonBlocking.ConcurrentDictionary  rather than System.Collections.Concurrent.ConcurrentDictionary",
-                Severity = DiagnosticSeverity.Error,
-                Locations = new[]
-                            {
-                                new DiagnosticResultLocation(path: "Test0.cs", line: 8, column: 52)
-                            }
-            },
-            new()
-            {
-                Id = "FFS0031",
-                Message = "Use NonBlocking.ConcurrentDictionary  rather than System.Collections.Concurrent.ConcurrentDictionary",
-                Severity = DiagnosticSeverity.Error,
-                Locations = new[]
-                            {
-                                new DiagnosticResultLocation(path: "Test0.cs", line: 12, column: 35)
-                            }
-            }
-        };
 
-        return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                [
-                                                    WellKnownMetadataReferences.ConcurrentDictionary
-                                                ],
-                                                expected: expected);
+        IReadOnlyList<DiagnosticResult> expected =
+        [
+            Result(id: "FFS0031",
+                   message: "Use NonBlocking.ConcurrentDictionary rather than System.Collections.Concurrent.ConcurrentDictionary",
+                   severity: DiagnosticSeverity.Error,
+                   line: 8,
+                   column: 52),
+            Result(id: "FFS0031",
+                   message: "Use NonBlocking.ConcurrentDictionary rather than System.Collections.Concurrent.ConcurrentDictionary",
+                   severity: DiagnosticSeverity.Error,
+                   line: 12,
+                   column: 35)
+        ];
+
+        return this.VerifyCSharpDiagnosticAsync(source: test, references: WellKnownMetadataReferences.ConcurrentDictionary, expected: expected);
     }
 
     [Fact]
@@ -172,22 +134,17 @@ public sealed class ProhibitedClassesDiagnosticsAnalyzerTests : DiagnosticVerifi
              }
          }
      }";
-        DiagnosticResult expected = new()
-                                    {
-                                        Id = "FFS0031",
-                                        Message = "Use NonBlocking.ConcurrentDictionary  rather than System.Collections.Concurrent.ConcurrentDictionary",
-                                        Severity = DiagnosticSeverity.Error,
-                                        Locations = new[]
-                                                    {
-                                                        new DiagnosticResultLocation(path: "Test0.cs", line: 8, column: 13)
-                                                    }
-                                    };
+        DiagnosticResult expected = Result(id: "FFS0031",
+                                           message: "Use NonBlocking.ConcurrentDictionary rather than System.Collections.Concurrent.ConcurrentDictionary",
+                                           severity: DiagnosticSeverity.Error,
+                                           line: 8,
+                                           column: 13);
 
         return this.VerifyCSharpDiagnosticAsync(source: test,
                                                 [
                                                     WellKnownMetadataReferences.ConcurrentDictionary
                                                 ],
-                                                expected);
+                                                expected: expected);
     }
 
     [Fact]
@@ -206,21 +163,13 @@ public sealed class ProhibitedClassesDiagnosticsAnalyzerTests : DiagnosticVerifi
              }
          }
      }";
-        DiagnosticResult expected = new()
-                                    {
-                                        Id = "FFS0031",
-                                        Message = "Use NonBlocking.ConcurrentDictionary  rather than System.Collections.Concurrent.ConcurrentDictionary",
-                                        Severity = DiagnosticSeverity.Error,
-                                        Locations = new[]
-                                                    {
-                                                        new DiagnosticResultLocation(path: "Test0.cs", line: 8, column: 14)
-                                                    }
-                                    };
 
-        return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                [
-                                                    WellKnownMetadataReferences.ConcurrentDictionary
-                                                ],
-                                                expected);
+        DiagnosticResult expected = Result(id: "FFS0031",
+                                           message: "Use NonBlocking.ConcurrentDictionary rather than System.Collections.Concurrent.ConcurrentDictionary",
+                                           severity: DiagnosticSeverity.Error,
+                                           line: 8,
+                                           column: 14);
+
+        return this.VerifyCSharpDiagnosticAsync(source: test, reference: WellKnownMetadataReferences.ConcurrentDictionary, expected: expected);
     }
 }

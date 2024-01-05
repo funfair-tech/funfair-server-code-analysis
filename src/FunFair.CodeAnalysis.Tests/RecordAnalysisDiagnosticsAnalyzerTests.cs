@@ -2,34 +2,19 @@
 using FunFair.CodeAnalysis.Tests.Helpers;
 using FunFair.CodeAnalysis.Tests.Verifiers;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.Diagnostics;
 using Xunit;
 
 namespace FunFair.CodeAnalysis.Tests;
 
-public sealed class RecordAnalysisDiagnosticsAnalyzerTests : DiagnosticVerifier
+public sealed class RecordAnalysisDiagnosticsAnalyzerTests : DiagnosticAnalyzerVerifier<RecordAnalysisDiagnosticsAnalyzer>
 {
-    protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer()
-    {
-        return new RecordAnalysisDiagnosticsAnalyzer();
-    }
-
     [Fact]
     public Task RecordWithNoModifiersIsAnErrorAsync()
     {
         const string test = "public record Test {}";
-        DiagnosticResult expected = new()
-                                    {
-                                        Id = "FFS0028",
-                                        Message = "Records should be sealed",
-                                        Severity = DiagnosticSeverity.Error,
-                                        Locations = new[]
-                                                    {
-                                                        new DiagnosticResultLocation(path: "Test0.cs", line: 12, column: 25)
-                                                    }
-                                    };
+        DiagnosticResult expected = Result(id: "FFS0028", message: "Records should be sealed", severity: DiagnosticSeverity.Error, line: 12, column: 25);
 
-        return this.VerifyCSharpDiagnosticAsync(source: test, expected);
+        return this.VerifyCSharpDiagnosticAsync(source: test, expected: expected);
     }
 
     [Fact]

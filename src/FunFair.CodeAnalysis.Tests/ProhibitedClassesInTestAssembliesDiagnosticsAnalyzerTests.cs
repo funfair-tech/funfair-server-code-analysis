@@ -2,18 +2,12 @@
 using FunFair.CodeAnalysis.Tests.Helpers;
 using FunFair.CodeAnalysis.Tests.Verifiers;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.Diagnostics;
 using Xunit;
 
 namespace FunFair.CodeAnalysis.Tests;
 
-public sealed class ProhibitedClassesInTestAssembliesDiagnosticsAnalyzerTests : DiagnosticVerifier
+public sealed class ProhibitedClassesInTestAssembliesDiagnosticsAnalyzerTests : DiagnosticAnalyzerVerifier<ProhibitedClassesInTestAssembliesDiagnosticsAnalyzer>
 {
-    protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer()
-    {
-        return new ProhibitedClassesInTestAssembliesDiagnosticsAnalyzer();
-    }
-
     [Fact]
     public Task AssertTrueForConsoleUsageInTestAsync()
     {
@@ -38,7 +32,7 @@ public sealed class ProhibitedClassesInTestAssembliesDiagnosticsAnalyzerTests : 
                                                 [
                                                     WellKnownMetadataReferences.Xunit
                                                 ],
-                                                expected);
+                                                expected: expected);
     }
 
     [Fact]

@@ -35,7 +35,7 @@ public abstract partial class DiagnosticVerifier
 
     #region Get Diagnostics
 
-    private static Task<IReadOnlyList<Diagnostic>> GetSortedDiagnosticsAsync(in ReadOnlySpan<string> sources, IReadOnlyList<MetadataReference> references, string language, DiagnosticAnalyzer analyzer)
+    private static Task<IReadOnlyList<Diagnostic>> GetSortedDiagnosticsAsync(IReadOnlyList<string> sources, IReadOnlyList<MetadataReference> references, string language, DiagnosticAnalyzer analyzer)
     {
         return GetSortedDiagnosticsFromDocumentsAsync(analyzer: analyzer, GetDocuments(sources: sources, references: references, language: language));
     }
@@ -165,7 +165,7 @@ public abstract partial class DiagnosticVerifier
 
     #region Set up compilation and documents
 
-    private static IReadOnlyList<Document> GetDocuments(in ReadOnlySpan<string> sources, IReadOnlyList<MetadataReference> references, string language)
+    private static IReadOnlyList<Document> GetDocuments(IReadOnlyList<string> sources, IReadOnlyList<MetadataReference> references, string language)
     {
         if (!IsSupportedLanguage(language))
         {
@@ -173,9 +173,9 @@ public abstract partial class DiagnosticVerifier
         }
 
         Project project = CreateProject(sources: sources, references: references, language: language);
-        Document[] documents = project.Documents.ToArray();
+        IReadOnlyList<Document> documents = [..project.Documents];
 
-        if (sources.Length != documents.Length)
+        if (sources.Count != documents.Count)
         {
             throw new InvalidOperationException(message: "Amount of sources did not match amount of Documents created");
         }
@@ -198,7 +198,7 @@ public abstract partial class DiagnosticVerifier
         return StringComparer.Ordinal.Equals(x: language, y: LanguageNames.CSharp);
     }
 
-    private static Project CreateProject(in ReadOnlySpan<string> sources, IReadOnlyList<MetadataReference> references, string language = LanguageNames.CSharp)
+    private static Project CreateProject(IReadOnlyList<string> sources, IReadOnlyList<MetadataReference> references, string language = LanguageNames.CSharp)
     {
         const string fileNamePrefix = DEFAULT_FILE_PATH_PREFIX;
         string fileExt = IsCSharp(language)

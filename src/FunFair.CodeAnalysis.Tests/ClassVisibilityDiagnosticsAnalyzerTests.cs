@@ -2,18 +2,12 @@
 using FunFair.CodeAnalysis.Tests.Helpers;
 using FunFair.CodeAnalysis.Tests.Verifiers;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.Diagnostics;
 using Xunit;
 
 namespace FunFair.CodeAnalysis.Tests;
 
-public sealed class ClassVisibilityDiagnosticsAnalyzerTests : DiagnosticVerifier
+public sealed class ClassVisibilityDiagnosticsAnalyzerTests : DiagnosticAnalyzerVerifier<ClassVisibilityDiagnosticsAnalyzer>
 {
-    protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer()
-    {
-        return new ClassVisibilityDiagnosticsAnalyzer();
-    }
-
     [Fact]
     public Task ClassThatHasNothingToDoWithTestsIsNotAnErrorAsync()
     {

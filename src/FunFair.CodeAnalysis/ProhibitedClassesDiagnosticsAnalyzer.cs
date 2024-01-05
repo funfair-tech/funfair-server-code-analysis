@@ -17,7 +17,7 @@ public sealed class ProhibitedClassesDiagnosticsAnalyzer : DiagnosticAnalyzer
     [
         Build(ruleId: Rules.RuleDontUseConcurrentDictionary,
               title: "Avoid use of System.Collections.Concurrent.ConcurrentDictionary class",
-              message: "Use NonBlocking.ConcurrentDictionary  rather than System.Collections.Concurrent.ConcurrentDictionary",
+              message: "Use NonBlocking.ConcurrentDictionary rather than System.Collections.Concurrent.ConcurrentDictionary",
               sourceClass: "System.Collections.Concurrent.ConcurrentDictionary`2")
     ];
 

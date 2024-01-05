@@ -2,18 +2,12 @@
 using FunFair.CodeAnalysis.Tests.Helpers;
 using FunFair.CodeAnalysis.Tests.Verifiers;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.Diagnostics;
 using Xunit;
 
 namespace FunFair.CodeAnalysis.Tests;
 
-public sealed class TestClassAnalysisDiagnosticsAnalyzerTests : DiagnosticVerifier
+public sealed class TestClassAnalysisDiagnosticsAnalyzerTests : DiagnosticAnalyzerVerifier<TestClassAnalysisDiagnosticsAnalyzer>
 {
-    protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer()
-    {
-        return new TestClassAnalysisDiagnosticsAnalyzer();
-    }
-
     [Fact]
     public Task ClassThatHasNothingToDoWithTestsIsNotAnErrorAsync()
     {
@@ -45,22 +39,9 @@ using Xunit;
             {
             }
 }";
-        DiagnosticResult expected = new()
-                                    {
-                                        Id = "FFS0013",
-                                        Message = "Test classes should be derived from TestBase",
-                                        Severity = DiagnosticSeverity.Error,
-                                        Locations = new[]
-                                                    {
-                                                        new DiagnosticResultLocation(path: "Test0.cs", line: 6, column: 13)
-                                                    }
-                                    };
+        DiagnosticResult expected = Result(id: "FFS0013", message: "Test classes should be derived from TestBase", severity: DiagnosticSeverity.Error, line: 6, column: 13);
 
-        return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                [
-                                                    WellKnownMetadataReferences.Xunit
-                                                ],
-                                                expected);
+        return this.VerifyCSharpDiagnosticAsync(source: test, reference: WellKnownMetadataReferences.Xunit, expected: expected);
     }
 
     [Fact]
@@ -128,22 +109,13 @@ using Xunit;
             {
             }
 }";
-        DiagnosticResult expected = new()
-                                    {
-                                        Id = "FFS0013",
-                                        Message = "Test classes should be derived from TestBase",
-                                        Severity = DiagnosticSeverity.Error,
-                                        Locations = new[]
-                                                    {
-                                                        new DiagnosticResultLocation(path: "Test0.cs", line: 6, column: 13)
-                                                    }
-                                    };
+        DiagnosticResult expected = Result(id: "FFS0013", message: "Test classes should be derived from TestBase", severity: DiagnosticSeverity.Error, line: 6, column: 13);
 
         return this.VerifyCSharpDiagnosticAsync(source: test,
                                                 [
                                                     WellKnownMetadataReferences.Xunit
                                                 ],
-                                                expected);
+                                                expected: expected);
     }
 
     [Fact]

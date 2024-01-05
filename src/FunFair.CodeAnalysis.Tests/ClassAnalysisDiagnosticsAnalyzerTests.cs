@@ -2,18 +2,12 @@
 using FunFair.CodeAnalysis.Tests.Helpers;
 using FunFair.CodeAnalysis.Tests.Verifiers;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.Diagnostics;
 using Xunit;
 
 namespace FunFair.CodeAnalysis.Tests;
 
-public sealed class ClassAnalysisDiagnosticsAnalyzerTests : DiagnosticVerifier
+public sealed class ClassAnalysisDiagnosticsAnalyzerTests : DiagnosticAnalyzerVerifier<ClassAnalysisDiagnosticsAnalyzer>
 {
-    protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer()
-    {
-        return new ClassAnalysisDiagnosticsAnalyzer();
-    }
-
     [Fact]
     public Task AbstractClassNotAnErrorAsync()
     {
@@ -28,7 +22,7 @@ public sealed class ClassAnalysisDiagnosticsAnalyzerTests : DiagnosticVerifier
         const string test = "public class Test {}";
         DiagnosticResult expected = Result(id: "FFS0012", message: "Classes should be static, sealed or abstract", severity: DiagnosticSeverity.Error, line: 12, column: 25);
 
-        return this.VerifyCSharpDiagnosticAsync(source: test, expected);
+        return this.VerifyCSharpDiagnosticAsync(source: test, expected: expected);
     }
 
     [Fact]

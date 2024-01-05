@@ -2,18 +2,12 @@
 using FunFair.CodeAnalysis.Tests.Helpers;
 using FunFair.CodeAnalysis.Tests.Verifiers;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.Diagnostics;
 using Xunit;
 
 namespace FunFair.CodeAnalysis.Tests;
 
-public sealed class ArgumentExceptionAnalysisDiagnosticsAnalyzerTest : DiagnosticVerifier
+public sealed class ArgumentExceptionAnalysisDiagnosticsAnalyzerTest : DiagnosticAnalyzerVerifier<ArgumentExceptionAnalysisDiagnosticsAnalyzer>
 {
-    protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer()
-    {
-        return new ArgumentExceptionAnalysisDiagnosticsAnalyzer();
-    }
-
     [Fact]
     public Task ArgumentExceptionWhenParameterLessConstructorUsedCausesErrorAsync()
     {
@@ -30,7 +24,7 @@ public sealed class Test {
 
         DiagnosticResult expected = Result(id: "FFS0016", message: "Argument Exceptions should pass parameter name", severity: DiagnosticSeverity.Error, line: 8, column: 17);
 
-        return this.VerifyCSharpDiagnosticAsync(source: test, expected);
+        return this.VerifyCSharpDiagnosticAsync(source: test, expected: expected);
     }
 
     [Fact]
@@ -49,7 +43,7 @@ public sealed class Test {
 
         DiagnosticResult expected = Result(id: "FFS0016", message: "Argument Exceptions should pass parameter name", severity: DiagnosticSeverity.Error, line: 8, column: 17);
 
-        return this.VerifyCSharpDiagnosticAsync(source: test, expected);
+        return this.VerifyCSharpDiagnosticAsync(source: test, expected: expected);
     }
 
     [Fact]
@@ -104,7 +98,7 @@ public sealed class Test {
 
         DiagnosticResult expected = Result(id: "FFS0016", message: "Argument Exceptions should pass parameter name", severity: DiagnosticSeverity.Error, line: 8, column: 17);
 
-        return this.VerifyCSharpDiagnosticAsync(source: test, expected);
+        return this.VerifyCSharpDiagnosticAsync(source: test, expected: expected);
     }
 
     [Fact]
@@ -123,7 +117,7 @@ public sealed class Test {
 
         DiagnosticResult expected = Result(id: "FFS0016", message: "Argument Exceptions should pass parameter name", severity: DiagnosticSeverity.Error, line: 8, column: 17);
 
-        return this.VerifyCSharpDiagnosticAsync(source: test, expected);
+        return this.VerifyCSharpDiagnosticAsync(source: test, expected: expected);
     }
 
     [Fact]
@@ -178,7 +172,7 @@ public sealed class Test {
 
         DiagnosticResult expected = Result(id: "FFS0016", message: "Argument Exceptions should pass parameter name", severity: DiagnosticSeverity.Error, line: 8, column: 17);
 
-        return this.VerifyCSharpDiagnosticAsync(source: test, expected);
+        return this.VerifyCSharpDiagnosticAsync(source: test, expected: expected);
     }
 
     [Fact]
@@ -197,7 +191,7 @@ public sealed class Test {
 
         DiagnosticResult expected = Result(id: "FFS0016", message: "Argument Exceptions should pass parameter name", severity: DiagnosticSeverity.Error, line: 8, column: 17);
 
-        return this.VerifyCSharpDiagnosticAsync(source: test, expected);
+        return this.VerifyCSharpDiagnosticAsync(source: test, expected: expected);
     }
 
     [Fact]
