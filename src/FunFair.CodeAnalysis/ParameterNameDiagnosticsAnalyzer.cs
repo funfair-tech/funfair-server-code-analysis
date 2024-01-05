@@ -19,12 +19,12 @@ public sealed class ParameterNameDiagnosticsAnalyzer : DiagnosticAnalyzer
     private static readonly IReadOnlyList<NameSanitationSpec> NameSpecifications =
     [
         Build(ruleId: Rules.RuleLoggerParametersShouldBeCalledLogger,
-              title: @"ILogger parameters should be called 'logger'",
+              title: "ILogger parameters should be called 'logger'",
               message: "ILogger parameters should be called 'logger'",
               sourceClass: "Microsoft.Extensions.Logging.ILogger",
               whitelistedParameterName: "logger"),
         Build(ruleId: Rules.RuleLoggerParametersShouldBeCalledLogger,
-              title: @"ILogger parameters should be called 'logger'",
+              title: "ILogger parameters should be called 'logger'",
               message: "ILogger parameters should be called 'logger'",
               sourceClass: "Microsoft.Extensions.Logging.ILogger<TCategoryName>",
               whitelistedParameterName: "logger")
@@ -88,7 +88,7 @@ public sealed class ParameterNameDiagnosticsAnalyzer : DiagnosticAnalyzer
     {
         foreach (NameSanitationSpec ns in NameSpecifications)
         {
-            if (ns.SourceClass == fullTypeName)
+            if (StringComparer.Ordinal.Equals(x: ns.SourceClass, y: fullTypeName))
             {
                 return ns;
             }

@@ -14,12 +14,12 @@ namespace FunFair.CodeAnalysis;
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public sealed class OneTypePerDocumentAnalysisDiagnosticsAnalyzer : DiagnosticAnalyzer
 {
-    private const string ENUM_TYPE_PREFIX = @"enum:";
-    private const string INTERFACE_TYPE_PREFIX = @"interface:";
-    private const string STRUCT_TYPE_PREFIX = @"struct:";
-    private const string RECORD_TYPE_PREFIX = @"record:";
-    private const string STATIC_TYPE_PREFIX = @"static:";
-    private const string CLASS_TYPE_PREFIX = @"class:";
+    private const string ENUM_TYPE_PREFIX = "enum:";
+    private const string INTERFACE_TYPE_PREFIX = "interface:";
+    private const string STRUCT_TYPE_PREFIX = "struct:";
+    private const string RECORD_TYPE_PREFIX = "record:";
+    private const string STATIC_TYPE_PREFIX = "static:";
+    private const string CLASS_TYPE_PREFIX = "class:";
 
     private static readonly DiagnosticDescriptor Rule = RuleHelpers.CreateRule(code: Rules.RuleOnlyOneTypeDefinedPerFile,
                                                                                category: Categories.Files,

@@ -17,7 +17,7 @@ public sealed class NullableDirectiveDiagnosticsAnalyzerTests : DiagnosticVerifi
     [Fact]
     public Task NullableDisableIsAnErrorAsync()
     {
-        const string test = @"#nullable disable";
+        const string test = "#nullable disable";
 
         DiagnosticResult expected = new()
                                     {
@@ -36,7 +36,7 @@ public sealed class NullableDirectiveDiagnosticsAnalyzerTests : DiagnosticVerifi
     [Fact]
     public Task NullableRestoreIsAnErrorAsync()
     {
-        const string test = @"#nullable restore";
+        const string test = "#nullable restore";
 
         DiagnosticResult expected = new()
                                     {
@@ -55,7 +55,7 @@ public sealed class NullableDirectiveDiagnosticsAnalyzerTests : DiagnosticVerifi
     [Fact]
     public Task NullableEnableIsAnErrorAsync()
     {
-        const string test = @"#nullable enable";
+        const string test = "#nullable enable";
 
         DiagnosticResult expected = new()
                                     {

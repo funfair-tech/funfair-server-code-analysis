@@ -17,7 +17,7 @@ public sealed class StructAnalysisDiagnosticsAnalyzerTests : DiagnosticVerifier
     [Fact]
     public Task NonReadOnlyStructIsAnErrorAsync()
     {
-        const string test = @"public struct Test {}";
+        const string test = "public struct Test {}";
         DiagnosticResult expected = new()
                                     {
                                         Id = "FFS0011",
@@ -35,7 +35,7 @@ public sealed class StructAnalysisDiagnosticsAnalyzerTests : DiagnosticVerifier
     [Fact]
     public Task ReadOnlyStructNotAnErrorAsync()
     {
-        const string test = @"public readonly struct Test {}";
+        const string test = "public readonly struct Test {}";
 
         return this.VerifyCSharpDiagnosticAsync(test);
     }

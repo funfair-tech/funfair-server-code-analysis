@@ -17,7 +17,7 @@ public sealed class ClassAnalysisDiagnosticsAnalyzerTests : DiagnosticVerifier
     [Fact]
     public Task AbstractClassNotAnErrorAsync()
     {
-        const string test = @"public abstract class Test {}";
+        const string test = "public abstract class Test {}";
 
         return this.VerifyCSharpDiagnosticAsync(test);
     }
@@ -25,7 +25,7 @@ public sealed class ClassAnalysisDiagnosticsAnalyzerTests : DiagnosticVerifier
     [Fact]
     public Task ClassWithNoModifiersIsAnErrorAsync()
     {
-        const string test = @"public class Test {}";
+        const string test = "public class Test {}";
         DiagnosticResult expected = new()
                                     {
                                         Id = "FFS0012",
@@ -43,7 +43,7 @@ public sealed class ClassAnalysisDiagnosticsAnalyzerTests : DiagnosticVerifier
     [Fact]
     public Task SealedClassNotAnErrorAsync()
     {
-        const string test = @"public sealed class Test {}";
+        const string test = "public sealed class Test {}";
 
         return this.VerifyCSharpDiagnosticAsync(test);
     }
@@ -51,7 +51,7 @@ public sealed class ClassAnalysisDiagnosticsAnalyzerTests : DiagnosticVerifier
     [Fact]
     public Task StaticClassNotAnErrorAsync()
     {
-        const string test = @"public static class Test {}";
+        const string test = "public static class Test {}";
 
         return this.VerifyCSharpDiagnosticAsync(test);
     }

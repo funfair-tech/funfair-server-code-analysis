@@ -17,7 +17,7 @@ public sealed class OneTypePerDocumentAnalysisDiagnosticsAnalyzerTests : Diagnos
     [Fact]
     public Task OneClassDefinedInFileOkAsync()
     {
-        const string test = @"public sealed class Test {}";
+        const string test = "public sealed class Test {}";
 
         return this.VerifyCSharpDiagnosticAsync(test);
     }
@@ -276,7 +276,7 @@ public interface Test1 {}
     [Fact]
     public Task OneStructDefinedInFileOkAsync()
     {
-        const string test = @"public struct Test {}";
+        const string test = "public struct Test {}";
 
         return this.VerifyCSharpDiagnosticAsync(test);
     }
@@ -284,7 +284,7 @@ public interface Test1 {}
     [Fact]
     public Task OneRecordDefinedInFileOkAsync()
     {
-        const string test = @"public sealed record Test {}";
+        const string test = "public sealed record Test {}";
 
         return this.VerifyCSharpDiagnosticAsync(test);
     }
@@ -292,7 +292,7 @@ public interface Test1 {}
     [Fact]
     public Task OneInterfaceDefinedInFileOkAsync()
     {
-        const string test = @"public interface ITest {}";
+        const string test = "public interface ITest {}";
 
         return this.VerifyCSharpDiagnosticAsync(test);
     }

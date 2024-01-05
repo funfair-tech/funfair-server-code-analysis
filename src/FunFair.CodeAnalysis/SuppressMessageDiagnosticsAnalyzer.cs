@@ -24,6 +24,7 @@ public sealed class SuppressMessageDiagnosticsAnalyzer : DiagnosticAnalyzer
                                                                                                            title: "SuppressMessage must not have a TODO Justification",
                                                                                                            message: "SuppressMessage must not have a TODO Justification");
 
+    [SuppressMessage(category: "Nullable.Extended.Analyzer", checkId: "NX0001: Suppression of NullForgiving operator is not required", Justification = "False positive")]
     private static readonly string SuppressMessageFullName = typeof(SuppressMessageAttribute).FullName!;
 
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => SupportedDiagnosisList.Build(RuleMustHaveJustification, RuleMustNotHaveTodoJustification);
@@ -52,8 +53,7 @@ public sealed class SuppressMessageDiagnosticsAnalyzer : DiagnosticAnalyzer
             }
 
             compilationStartContext.RegisterSyntaxNodeAction(action: syntaxNodeAnalysisContext =>
-                                                                         MustDeriveFromTestBase(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
-                                                                                                sourceClassType: sourceClassType),
+                                                                         MustDeriveFromTestBase(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, sourceClassType: sourceClassType),
                                                              SyntaxKind.Attribute);
         }
 
@@ -69,15 +69,15 @@ public sealed class SuppressMessageDiagnosticsAnalyzer : DiagnosticAnalyzer
                 return;
             }
 
-            TypeInfo ti = syntaxNodeAnalysisContext.SemanticModel.GetTypeInfo(expression: methodDeclarationSyntax.Name,
-                                                                              cancellationToken: syntaxNodeAnalysisContext.CancellationToken);
+            TypeInfo ti = syntaxNodeAnalysisContext.SemanticModel.GetTypeInfo(expression: methodDeclarationSyntax.Name, cancellationToken: syntaxNodeAnalysisContext.CancellationToken);
 
-            if (ti.Type?.MetadataName != sourceClassType.MetadataName)
+            if (StringComparer.Ordinal.Equals(x: ti.Type?.MetadataName, y: sourceClassType.MetadataName))
             {
                 return;
             }
 
-            AttributeArgumentSyntax? justification = methodDeclarationSyntax.ArgumentList?.Arguments.FirstOrDefault(k => k.NameEquals?.Name.Identifier.Text == "Justification");
+            AttributeArgumentSyntax? justification =
+                methodDeclarationSyntax.ArgumentList?.Arguments.FirstOrDefault(k => StringComparer.Ordinal.Equals(x: k.NameEquals?.Name.Identifier.Text, y: "Justification"));
 
             if (justification is null)
             {

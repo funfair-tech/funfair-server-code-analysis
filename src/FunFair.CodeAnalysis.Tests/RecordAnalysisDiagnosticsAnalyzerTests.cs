@@ -17,7 +17,7 @@ public sealed class RecordAnalysisDiagnosticsAnalyzerTests : DiagnosticVerifier
     [Fact]
     public Task RecordWithNoModifiersIsAnErrorAsync()
     {
-        const string test = @"public record Test {}";
+        const string test = "public record Test {}";
         DiagnosticResult expected = new()
                                     {
                                         Id = "FFS0028",
@@ -35,7 +35,7 @@ public sealed class RecordAnalysisDiagnosticsAnalyzerTests : DiagnosticVerifier
     [Fact]
     public Task SealedRecordNotAnErrorAsync()
     {
-        const string test = @"public sealed record Test {}";
+        const string test = "public sealed record Test {}";
 
         return this.VerifyCSharpDiagnosticAsync(test);
     }

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using FunFair.CodeAnalysis.Extensions;
 using FunFair.CodeAnalysis.Helpers;
@@ -80,8 +81,7 @@ public sealed class ConstructorGenericParameterTypeDiagnosticsAnalyser : Diagnos
                                                   ConstructorDeclarationSyntax constructorDeclarationSyntax,
                                                   ClassDeclarationSyntax parentSymbolForClassForConstructor)
     {
-        ISymbol classForConstructor =
-            syntaxNodeAnalysisContext.SemanticModel.GetDeclaredSymbol(declarationSyntax: parentSymbolForClassForConstructor, cancellationToken: syntaxNodeAnalysisContext.CancellationToken)!;
+        ISymbol classForConstructor = GetDeclaredSymbol(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, parentSymbolForClassForConstructor: parentSymbolForClassForConstructor);
         string className = classForConstructor.ToDisplayString();
 
         bool needed = IsNeeded(parentSymbolForClassForConstructor: parentSymbolForClassForConstructor,
@@ -92,6 +92,13 @@ public sealed class ConstructorGenericParameterTypeDiagnosticsAnalyser : Diagnos
         {
             CheckParameter(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, parameterSyntax: parameterSyntax, isProtected: needed, className: className);
         }
+    }
+
+    [SuppressMessage(category: "Nullable.Extended.Analyzer", checkId: "NX0001: Suppression of NullForgiving operator is not required", Justification = "False positive")]
+    private static INamedTypeSymbol GetDeclaredSymbol(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, ClassDeclarationSyntax parentSymbolForClassForConstructor)
+    {
+        // TODO: consider throwing
+        return syntaxNodeAnalysisContext.SemanticModel.GetDeclaredSymbol(declarationSyntax: parentSymbolForClassForConstructor, cancellationToken: syntaxNodeAnalysisContext.CancellationToken)!;
     }
 
     private static bool IsNeeded(ClassDeclarationSyntax parentSymbolForClassForConstructor, ISymbol classForConstructor, ConstructorDeclarationSyntax constructorDeclarationSyntax)

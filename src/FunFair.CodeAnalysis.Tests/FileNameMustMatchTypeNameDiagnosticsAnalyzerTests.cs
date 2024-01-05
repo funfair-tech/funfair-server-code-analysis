@@ -17,7 +17,7 @@ public sealed class FileNameMustMatchTypeNameDiagnosticsAnalyzerTests : Diagnost
     [Fact]
     public Task ClassNameMatchesFileNameIsOkAsync()
     {
-        const string test = @"public sealed class Test0 {}";
+        const string test = "public sealed class Test0 {}";
 
         return this.VerifyCSharpDiagnosticAsync(test);
     }
@@ -25,7 +25,7 @@ public sealed class FileNameMustMatchTypeNameDiagnosticsAnalyzerTests : Diagnost
     [Fact]
     public Task RecordNameMatchesFileNameIsOkAsync()
     {
-        const string test = @"public sealed record Test0 {}";
+        const string test = "public sealed record Test0 {}";
 
         return this.VerifyCSharpDiagnosticAsync(test);
     }
@@ -33,7 +33,7 @@ public sealed class FileNameMustMatchTypeNameDiagnosticsAnalyzerTests : Diagnost
     [Fact]
     public Task EnumMatchesFileNameIsOkAsync()
     {
-        const string test = @"public enum Test0 {}";
+        const string test = "public enum Test0 {}";
 
         return this.VerifyCSharpDiagnosticAsync(test);
     }
@@ -41,7 +41,7 @@ public sealed class FileNameMustMatchTypeNameDiagnosticsAnalyzerTests : Diagnost
     [Fact]
     public Task InterfaceMatchesFileNameIsOkAsync()
     {
-        const string test = @"public interface Test0 {}";
+        const string test = "public interface Test0 {}";
 
         return this.VerifyCSharpDiagnosticAsync(test);
     }
@@ -49,7 +49,7 @@ public sealed class FileNameMustMatchTypeNameDiagnosticsAnalyzerTests : Diagnost
     [Fact]
     public Task StructMatchesFileNameIsOkAsync()
     {
-        const string test = @"public readonly struct Test0 {}";
+        const string test = "public readonly struct Test0 {}";
 
         return this.VerifyCSharpDiagnosticAsync(test);
     }
@@ -57,7 +57,7 @@ public sealed class FileNameMustMatchTypeNameDiagnosticsAnalyzerTests : Diagnost
     [Fact]
     public Task ClassNameDoesNotMatchFileNameIsAnErrorAsync()
     {
-        const string test = @"public sealed class Example {}";
+        const string test = "public sealed class Example {}";
 
         return this.VerifyCSharpDiagnosticAsync(source: test,
                                                 new DiagnosticResult
@@ -75,7 +75,7 @@ public sealed class FileNameMustMatchTypeNameDiagnosticsAnalyzerTests : Diagnost
     [Fact]
     public Task RecordNameDoesNotMatchFileNameIsAnErrorAsync()
     {
-        const string test = @"public sealed record Example {}";
+        const string test = "public sealed record Example {}";
 
         return this.VerifyCSharpDiagnosticAsync(source: test,
                                                 new DiagnosticResult
@@ -93,7 +93,7 @@ public sealed class FileNameMustMatchTypeNameDiagnosticsAnalyzerTests : Diagnost
     [Fact]
     public Task EnumNameDoesNotMatchFileNameIsAnErrorAsync()
     {
-        const string test = @"public enum Example {}";
+        const string test = "public enum Example {}";
 
         return this.VerifyCSharpDiagnosticAsync(source: test,
                                                 new DiagnosticResult
@@ -111,7 +111,7 @@ public sealed class FileNameMustMatchTypeNameDiagnosticsAnalyzerTests : Diagnost
     [Fact]
     public Task StructNameDoesNotMatchFileNameIsAnErrorAsync()
     {
-        const string test = @"public readonly struct Example {}";
+        const string test = "public readonly struct Example {}";
 
         return this.VerifyCSharpDiagnosticAsync(source: test,
                                                 new DiagnosticResult
@@ -129,7 +129,7 @@ public sealed class FileNameMustMatchTypeNameDiagnosticsAnalyzerTests : Diagnost
     [Fact]
     public Task InterfaceNameDoesNotMatchFileNameIsAnErrorAsync()
     {
-        const string test = @"public interface Example {}";
+        const string test = "public interface Example {}";
 
         return this.VerifyCSharpDiagnosticAsync(source: test,
                                                 new DiagnosticResult

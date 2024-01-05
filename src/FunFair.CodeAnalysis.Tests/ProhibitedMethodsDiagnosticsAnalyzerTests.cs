@@ -35,7 +35,7 @@ public sealed class ProhibitedMethodsDiagnosticsAnalyzerTests : DiagnosticVerifi
         DiagnosticResult expected = new()
                                     {
                                         Id = "FFS0001",
-                                        Message = @"Call IDateTimeSource.UtcNow() rather than DateTime.Now",
+                                        Message = "Call IDateTimeSource.UtcNow() rather than DateTime.Now",
                                         Severity = DiagnosticSeverity.Error,
                                         Locations = new[]
                                                     {
@@ -67,7 +67,7 @@ public sealed class ProhibitedMethodsDiagnosticsAnalyzerTests : DiagnosticVerifi
         DiagnosticResult expected = new()
                                     {
                                         Id = "FFS0001",
-                                        Message = @"Call IDateTimeSource.UtcNow() rather than DateTime.Now",
+                                        Message = "Call IDateTimeSource.UtcNow() rather than DateTime.Now",
                                         Severity = DiagnosticSeverity.Error,
                                         Locations = new[]
                                                     {
@@ -97,7 +97,7 @@ public sealed class ProhibitedMethodsDiagnosticsAnalyzerTests : DiagnosticVerifi
         DiagnosticResult expected = new()
                                     {
                                         Id = "FFS0001",
-                                        Message = @"Call IDateTimeSource.UtcNow() rather than DateTime.Now",
+                                        Message = "Call IDateTimeSource.UtcNow() rather than DateTime.Now",
                                         Severity = DiagnosticSeverity.Error,
                                         Locations = new[]
                                                     {
@@ -146,7 +146,7 @@ public sealed class ProhibitedMethodsDiagnosticsAnalyzerTests : DiagnosticVerifi
         DiagnosticResult expected = new()
                                     {
                                         Id = "FFS0001",
-                                        Message = @"Call IDateTimeSource.UtcNow() rather than DateTime.Now",
+                                        Message = "Call IDateTimeSource.UtcNow() rather than DateTime.Now",
                                         Severity = DiagnosticSeverity.Error,
                                         Locations = new[]
                                                     {
@@ -179,7 +179,7 @@ public sealed class ProhibitedMethodsDiagnosticsAnalyzerTests : DiagnosticVerifi
         DiagnosticResult expected = new()
                                     {
                                         Id = "FFS0001",
-                                        Message = @"Call IDateTimeSource.UtcNow() rather than DateTime.Now",
+                                        Message = "Call IDateTimeSource.UtcNow() rather than DateTime.Now",
                                         Severity = DiagnosticSeverity.Error,
                                         Locations = new[]
                                                     {
@@ -209,7 +209,7 @@ public sealed class ProhibitedMethodsDiagnosticsAnalyzerTests : DiagnosticVerifi
         DiagnosticResult expected = new()
                                     {
                                         Id = "FFS0004",
-                                        Message = @"Call IDateTimeSource.UtcNow() rather than DateTimeOffset.Now",
+                                        Message = "Call IDateTimeSource.UtcNow() rather than DateTimeOffset.Now",
                                         Severity = DiagnosticSeverity.Error,
                                         Locations = new[]
                                                     {
@@ -239,7 +239,7 @@ public sealed class ProhibitedMethodsDiagnosticsAnalyzerTests : DiagnosticVerifi
         DiagnosticResult expected = new()
                                     {
                                         Id = "FFS0005",
-                                        Message = @"Call IDateTimeSource.UtcNow() rather than DateTimeOffset.UtcNow",
+                                        Message = "Call IDateTimeSource.UtcNow() rather than DateTimeOffset.UtcNow",
                                         Severity = DiagnosticSeverity.Error,
                                         Locations = new[]
                                                     {
@@ -269,7 +269,7 @@ public sealed class ProhibitedMethodsDiagnosticsAnalyzerTests : DiagnosticVerifi
         DiagnosticResult expected = new()
                                     {
                                         Id = "FFS0003",
-                                        Message = @"Call IDateTimeSource.UtcNow().Date rather than DateTime.Today",
+                                        Message = "Call IDateTimeSource.UtcNow().Date rather than DateTime.Today",
                                         Severity = DiagnosticSeverity.Error,
                                         Locations = new[]
                                                     {
@@ -299,7 +299,7 @@ public sealed class ProhibitedMethodsDiagnosticsAnalyzerTests : DiagnosticVerifi
         DiagnosticResult expected = new()
                                     {
                                         Id = "FFS0002",
-                                        Message = @"Call IDateTimeSource.UtcNow() rather than DateTime.UtcNow",
+                                        Message = "Call IDateTimeSource.UtcNow() rather than DateTime.UtcNow",
                                         Severity = DiagnosticSeverity.Error,
                                         Locations = new[]
                                                     {
@@ -337,7 +337,7 @@ public sealed class ProhibitedMethodsDiagnosticsAnalyzerTests : DiagnosticVerifi
         DiagnosticResult expected = new()
                                     {
                                         Id = "FFS0006",
-                                        Message = @"Only use ISqlServerDatabase.ExecuteArbitrarySqlAsync in integration tests",
+                                        Message = "Only use ISqlServerDatabase.ExecuteArbitrarySqlAsync in integration tests",
                                         Severity = DiagnosticSeverity.Error,
                                         Locations = new[]
                                                     {
@@ -351,7 +351,7 @@ public sealed class ProhibitedMethodsDiagnosticsAnalyzerTests : DiagnosticVerifi
     [Fact]
     public Task NoErrorsReportedAsync()
     {
-        const string test = @"";
+        const string test = "";
 
         return this.VerifyCSharpDiagnosticAsync(test);
     }
@@ -389,7 +389,7 @@ public sealed class ProhibitedMethodsDiagnosticsAnalyzerTests : DiagnosticVerifi
         DiagnosticResult expected = new()
                                     {
                                         Id = "FFS0007",
-                                        Message = @"Only use ISqlServerDatabase.QueryArbitrarySqlAsync in integration tests",
+                                        Message = "Only use ISqlServerDatabase.QueryArbitrarySqlAsync in integration tests",
                                         Severity = DiagnosticSeverity.Error,
                                         Locations = new[]
                                                     {
@@ -427,7 +427,7 @@ public sealed class ProhibitedMethodsDiagnosticsAnalyzerTests : DiagnosticVerifi
         DiagnosticResult expected = new()
                                     {
                                         Id = "FFS0007",
-                                        Message = @"Only use ISqlServerDatabase.QueryArbitrarySqlAsync in integration tests",
+                                        Message = "Only use ISqlServerDatabase.QueryArbitrarySqlAsync in integration tests",
                                         Severity = DiagnosticSeverity.Error,
                                         Locations = new[]
                                                     {
@@ -456,7 +456,7 @@ public sealed class ProhibitedMethodsDiagnosticsAnalyzerTests : DiagnosticVerifi
         DiagnosticResult expected = new()
                                     {
                                         Id = "FFS0026",
-                                        Message = @"Use RemoteIpAddressRetriever",
+                                        Message = "Use RemoteIpAddressRetriever",
                                         Severity = DiagnosticSeverity.Error,
                                         Locations = new[]
                                                     {
@@ -494,7 +494,7 @@ public sealed class ProhibitedMethodsDiagnosticsAnalyzerTests : DiagnosticVerifi
         DiagnosticResult expected = new()
                                     {
                                         Id = "FFS0026",
-                                        Message = @"Use RemoteIpAddressRetriever",
+                                        Message = "Use RemoteIpAddressRetriever",
                                         Severity = DiagnosticSeverity.Error,
                                         Locations = new[]
                                                     {
@@ -530,7 +530,7 @@ public sealed class ProhibitedMethodsDiagnosticsAnalyzerTests : DiagnosticVerifi
         DiagnosticResult expected = new()
                                     {
                                         Id = "FFS0037",
-                                        Message = @"Use new Guid() with constant guids or Guid.TryParse everywhere else",
+                                        Message = "Use new Guid() with constant guids or Guid.TryParse everywhere else",
                                         Severity = DiagnosticSeverity.Error,
                                         Locations = new[]
                                                     {

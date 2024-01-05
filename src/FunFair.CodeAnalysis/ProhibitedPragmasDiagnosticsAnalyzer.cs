@@ -17,16 +17,16 @@ namespace FunFair.CodeAnalysis;
 public sealed class ProhibitedPragmasDiagnosticsAnalyzer : DiagnosticAnalyzer
 {
     private static readonly string[] AllowedWarnings =
-    {
+    [
         // Xml Docs
         "1591"
-    };
+    ];
 
     private static readonly string[] AllowedInTestWarnings =
-    {
+    [
         // Comparison made to same variable; did you mean to compare something else?
-        @"1718"
-    };
+        "1718"
+    ];
 
     private static readonly DiagnosticDescriptor Rule = RuleHelpers.CreateRule(code: Rules.RuleDontDisableWarnings,
                                                                                category: Categories.IllegalPragmas,

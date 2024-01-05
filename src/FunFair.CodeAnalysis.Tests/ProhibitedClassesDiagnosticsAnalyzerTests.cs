@@ -56,7 +56,7 @@ public sealed class ProhibitedClassesDiagnosticsAnalyzerTests : DiagnosticVerifi
         DiagnosticResult expected = new()
                                     {
                                         Id = "FFS0031",
-                                        Message = @"Use NonBlocking.ConcurrentDictionary  rather than System.Collections.Concurrent.ConcurrentDictionary",
+                                        Message = "Use NonBlocking.ConcurrentDictionary  rather than System.Collections.Concurrent.ConcurrentDictionary",
                                         Severity = DiagnosticSeverity.Error,
                                         Locations = new[]
                                                     {
@@ -90,7 +90,7 @@ public sealed class ProhibitedClassesDiagnosticsAnalyzerTests : DiagnosticVerifi
         DiagnosticResult expected = new()
                                     {
                                         Id = "FFS0031",
-                                        Message = @"Use NonBlocking.ConcurrentDictionary  rather than System.Collections.Concurrent.ConcurrentDictionary",
+                                        Message = "Use NonBlocking.ConcurrentDictionary  rather than System.Collections.Concurrent.ConcurrentDictionary",
                                         Severity = DiagnosticSeverity.Error,
                                         Locations = new[]
                                                     {
@@ -128,7 +128,7 @@ public sealed class ProhibitedClassesDiagnosticsAnalyzerTests : DiagnosticVerifi
             new()
             {
                 Id = "FFS0031",
-                Message = @"Use NonBlocking.ConcurrentDictionary  rather than System.Collections.Concurrent.ConcurrentDictionary",
+                Message = "Use NonBlocking.ConcurrentDictionary  rather than System.Collections.Concurrent.ConcurrentDictionary",
                 Severity = DiagnosticSeverity.Error,
                 Locations = new[]
                             {
@@ -138,7 +138,7 @@ public sealed class ProhibitedClassesDiagnosticsAnalyzerTests : DiagnosticVerifi
             new()
             {
                 Id = "FFS0031",
-                Message = @"Use NonBlocking.ConcurrentDictionary  rather than System.Collections.Concurrent.ConcurrentDictionary",
+                Message = "Use NonBlocking.ConcurrentDictionary  rather than System.Collections.Concurrent.ConcurrentDictionary",
                 Severity = DiagnosticSeverity.Error,
                 Locations = new[]
                             {
@@ -175,7 +175,7 @@ public sealed class ProhibitedClassesDiagnosticsAnalyzerTests : DiagnosticVerifi
         DiagnosticResult expected = new()
                                     {
                                         Id = "FFS0031",
-                                        Message = @"Use NonBlocking.ConcurrentDictionary  rather than System.Collections.Concurrent.ConcurrentDictionary",
+                                        Message = "Use NonBlocking.ConcurrentDictionary  rather than System.Collections.Concurrent.ConcurrentDictionary",
                                         Severity = DiagnosticSeverity.Error,
                                         Locations = new[]
                                                     {
@@ -209,7 +209,7 @@ public sealed class ProhibitedClassesDiagnosticsAnalyzerTests : DiagnosticVerifi
         DiagnosticResult expected = new()
                                     {
                                         Id = "FFS0031",
-                                        Message = @"Use NonBlocking.ConcurrentDictionary  rather than System.Collections.Concurrent.ConcurrentDictionary",
+                                        Message = "Use NonBlocking.ConcurrentDictionary  rather than System.Collections.Concurrent.ConcurrentDictionary",
                                         Severity = DiagnosticSeverity.Error,
                                         Locations = new[]
                                                     {

@@ -17,7 +17,7 @@ public sealed class DebuggerDisplayAnalysisDiagnosticsAnalyzerTest : DiagnosticV
     [Fact]
     public Task RecordWithDebuggerDisplayIsAnErrorAsync()
     {
-        const string test = @"public sealed record Test {}";
+        const string test = "public sealed record Test {}";
         DiagnosticResult expected = new()
                                     {
                                         Id = "FFS0038",
@@ -35,7 +35,7 @@ public sealed class DebuggerDisplayAnalysisDiagnosticsAnalyzerTest : DiagnosticV
     [Fact]
     public Task RecordStructWithNoDebuggerDisplayIsAnErrorAsync()
     {
-        const string test = @"public readonly record struct Test {  }";
+        const string test = "public readonly record struct Test {  }";
         DiagnosticResult expected = new()
                                     {
                                         Id = "FFS0038",

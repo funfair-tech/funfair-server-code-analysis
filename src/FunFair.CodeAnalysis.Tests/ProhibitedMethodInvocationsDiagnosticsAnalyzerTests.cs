@@ -54,7 +54,7 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzerTests : Diagno
         DiagnosticResult expected = new()
                                     {
                                         Id = "FFS0010",
-                                        Message = @"Only use Assert.False with message parameter",
+                                        Message = "Only use Assert.False with message parameter",
                                         Severity = DiagnosticSeverity.Error,
                                         Locations = new[]
                                                     {
@@ -109,7 +109,7 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzerTests : Diagno
         DiagnosticResult expected = new()
                                     {
                                         Id = "FFS0009",
-                                        Message = @"Only use Assert.True with message parameter",
+                                        Message = "Only use Assert.True with message parameter",
                                         Severity = DiagnosticSeverity.Error,
                                         Locations = new[]
                                                     {
@@ -143,7 +143,7 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzerTests : Diagno
         DiagnosticResult expected = new()
                                     {
                                         Id = "FFS0032",
-                                        Message = @"Don't use any of the built in AddOrUpdate methods, instead FunFair.Common.Extensions.ConcurrentDictionaryExtensions.AddOrUpdate can be used",
+                                        Message = "Don't use any of the built in AddOrUpdate methods, instead FunFair.Common.Extensions.ConcurrentDictionaryExtensions.AddOrUpdate can be used",
                                         Severity = DiagnosticSeverity.Error,
                                         Locations = new[]
                                                     {
@@ -177,7 +177,7 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzerTests : Diagno
         DiagnosticResult expected = new()
                                     {
                                         Id = "FFS0032",
-                                        Message = @"Don't use any of the built in AddOrUpdate methods, instead FunFair.Common.Extensions.ConcurrentDictionaryExtensions.AddOrUpdate can be used",
+                                        Message = "Don't use any of the built in AddOrUpdate methods, instead FunFair.Common.Extensions.ConcurrentDictionaryExtensions.AddOrUpdate can be used",
                                         Severity = DiagnosticSeverity.Error,
                                         Locations = new[]
                                                     {
@@ -218,7 +218,7 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzerTests : Diagno
         DiagnosticResult expected = new()
                                     {
                                         Id = "FFS0032",
-                                        Message = @"Don't use any of the built in AddOrUpdate methods, instead FunFair.Common.Extensions.ConcurrentDictionaryExtensions.AddOrUpdate can be used",
+                                        Message = "Don't use any of the built in AddOrUpdate methods, instead FunFair.Common.Extensions.ConcurrentDictionaryExtensions.AddOrUpdate can be used",
                                         Severity = DiagnosticSeverity.Error,
                                         Locations = new[]
                                                     {
@@ -256,7 +256,7 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzerTests : Diagno
         DiagnosticResult expected = new()
                                     {
                                         Id = "FFS0032",
-                                        Message = @"Don't use any of the built in AddOrUpdate methods, instead FunFair.Common.Extensions.ConcurrentDictionaryExtensions.AddOrUpdate can be used",
+                                        Message = "Don't use any of the built in AddOrUpdate methods, instead FunFair.Common.Extensions.ConcurrentDictionaryExtensions.AddOrUpdate can be used",
                                         Severity = DiagnosticSeverity.Error,
                                         Locations = new[]
                                                     {
@@ -290,7 +290,7 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzerTests : Diagno
         DiagnosticResult expected = new()
                                     {
                                         Id = "FFS0033",
-                                        Message = @"Don't use any of the built in GetOrAdd methods, instead FunFair.Common.Extensions.ConcurrentDictionaryExtensions.GetOrAdd can be used",
+                                        Message = "Don't use any of the built in GetOrAdd methods, instead FunFair.Common.Extensions.ConcurrentDictionaryExtensions.GetOrAdd can be used",
                                         Severity = DiagnosticSeverity.Error,
                                         Locations = new[]
                                                     {
@@ -327,7 +327,7 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzerTests : Diagno
         DiagnosticResult expected = new()
                                     {
                                         Id = "FFS0033",
-                                        Message = @"Don't use any of the built in GetOrAdd methods, instead FunFair.Common.Extensions.ConcurrentDictionaryExtensions.GetOrAdd can be used",
+                                        Message = "Don't use any of the built in GetOrAdd methods, instead FunFair.Common.Extensions.ConcurrentDictionaryExtensions.GetOrAdd can be used",
                                         Severity = DiagnosticSeverity.Error,
                                         Locations = new[]
                                                     {

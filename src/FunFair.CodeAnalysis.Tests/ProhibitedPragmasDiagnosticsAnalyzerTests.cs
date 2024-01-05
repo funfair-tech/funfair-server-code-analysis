@@ -17,7 +17,7 @@ public sealed class ProhibitedPragmasDiagnosticsAnalyzerTests : DiagnosticVerifi
     [Fact]
     public Task AllowedWarningIsNotAnErrorAsync()
     {
-        const string test = @"#pragma warning disable 1591";
+        const string test = "#pragma warning disable 1591";
 
         return this.VerifyCSharpDiagnosticAsync(test);
     }
@@ -25,7 +25,7 @@ public sealed class ProhibitedPragmasDiagnosticsAnalyzerTests : DiagnosticVerifi
     [Fact]
     public Task BannedWarningCannotBeDisabledAsync()
     {
-        const string test = @"#pragma warning disable 1234";
+        const string test = "#pragma warning disable 1234";
         DiagnosticResult expected = new()
                                     {
                                         Id = "FFS0008",
@@ -73,7 +73,7 @@ public sealed class ProhibitedPragmasDiagnosticsAnalyzerTests : DiagnosticVerifi
     [Fact]
     public Task NoErrorsReportedAsync()
     {
-        const string test = @"";
+        const string test = "";
 
         return this.VerifyCSharpDiagnosticAsync(test);
     }
@@ -81,7 +81,7 @@ public sealed class ProhibitedPragmasDiagnosticsAnalyzerTests : DiagnosticVerifi
     [Fact]
     public Task RestoringBannedWarningIsNotAnErrorAsync()
     {
-        const string test = @"#pragma warning restore 1234";
+        const string test = "#pragma warning restore 1234";
         DiagnosticResult expected = new()
                                     {
                                         Id = "FFS0008",

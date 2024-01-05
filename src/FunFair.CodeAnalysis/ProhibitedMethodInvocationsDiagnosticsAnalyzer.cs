@@ -17,9 +17,9 @@ namespace FunFair.CodeAnalysis;
 public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzer : DiagnosticAnalyzer
 {
     private static readonly ProhibitedMethodsSpec[] BannedMethods =
-    {
+    [
         new(ruleId: Rules.RuleDontUseAssertTrueWithoutMessage,
-            title: @"Avoid use of assert method without message",
+            title: "Avoid use of assert method without message",
             message: "Only use Assert.True with message parameter",
             sourceClass: "Xunit.Assert",
             bannedMethod: "True",
@@ -29,7 +29,7 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzer : DiagnosticA
                 ]
             ]),
         new(ruleId: Rules.RuleDontUseAssertFalseWithoutMessage,
-            title: @"Avoid use of assert method without message",
+            title: "Avoid use of assert method without message",
             message: "Only use Assert.False with message parameter",
             sourceClass: "Xunit.Assert",
             bannedMethod: "False",
@@ -39,7 +39,7 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzer : DiagnosticA
                 ]
             ]),
         new(ruleId: Rules.RuleDontUseBuildInAddOrUpdateConcurrentDictionary,
-            title: @"Avoid use of the built in AddOrUpdate methods",
+            title: "Avoid use of the built in AddOrUpdate methods",
             message: "Don't use any of the built in AddOrUpdate methods, instead FunFair.Common.Extensions.ConcurrentDictionaryExtensions.AddOrUpdate can be used",
             sourceClass: "NonBlocking.ConcurrentDictionary`2",
             bannedMethod: "AddOrUpdate",
@@ -51,7 +51,7 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzer : DiagnosticA
                 ]
             ]),
         new(ruleId: Rules.RuleDontUseBuildInAddOrUpdateConcurrentDictionary,
-            title: @"Avoid use of the built in AddOrUpdate methods",
+            title: "Avoid use of the built in AddOrUpdate methods",
             message: "Don't use any of the built in AddOrUpdate methods, instead FunFair.Common.Extensions.ConcurrentDictionaryExtensions.AddOrUpdate can be used",
             sourceClass: "NonBlocking.ConcurrentDictionary`2",
             bannedMethod: "AddOrUpdate",
@@ -63,7 +63,7 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzer : DiagnosticA
                 ]
             ]),
         new(ruleId: Rules.RuleDontUseBuildInGetOrAddConcurrentDictionary,
-            title: @"Avoid use of the built in GetOrAdd methods",
+            title: "Avoid use of the built in GetOrAdd methods",
             message: "Don't use any of the built in GetOrAdd methods, instead FunFair.Common.Extensions.ConcurrentDictionaryExtensions.GetOrAdd can be used",
             sourceClass: "NonBlocking.ConcurrentDictionary`2",
             bannedMethod: "GetOrAdd",
@@ -73,7 +73,7 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzer : DiagnosticA
                     "System.Func<TKey, TValue>"
                 ]
             ])
-    };
+    ];
 
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
         BannedMethods.Select(selector: r => r.Rule)

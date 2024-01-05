@@ -69,7 +69,7 @@ public sealed class ForcedMethodParametersInvocationsDiagnosticsAnalyzerTests : 
         DiagnosticResult expected = new()
                                     {
                                         Id = "FFS0015",
-                                        Message = @"Only use JsonSerializer.Deserialize with own JsonSerializerOptions",
+                                        Message = "Only use JsonSerializer.Deserialize with own JsonSerializerOptions",
                                         Severity = DiagnosticSeverity.Error,
                                         Locations = new[]
                                                     {
@@ -136,7 +136,7 @@ public sealed class ForcedMethodParametersInvocationsDiagnosticsAnalyzerTests : 
         DiagnosticResult expected = new()
                                     {
                                         Id = "FFS0018",
-                                        Message = @"Only use Received with expected call count",
+                                        Message = "Only use Received with expected call count",
                                         Severity = DiagnosticSeverity.Error,
                                         Locations = new[]
                                                     {
@@ -205,7 +205,7 @@ public sealed class ForcedMethodParametersInvocationsDiagnosticsAnalyzerTests : 
         DiagnosticResult expected = new()
                                     {
                                         Id = "FFS0014",
-                                        Message = @"Only use JsonSerializer.Serialize with own JsonSerializerOptions",
+                                        Message = "Only use JsonSerializer.Serialize with own JsonSerializerOptions",
                                         Severity = DiagnosticSeverity.Error,
                                         Locations = new[]
                                                     {

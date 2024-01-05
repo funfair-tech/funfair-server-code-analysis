@@ -35,7 +35,7 @@ public sealed class ProhibitedClassesInTestAssembliesDiagnosticsAnalyzerTests : 
         DiagnosticResult expected = new()
                                     {
                                         Id = "FFS0041",
-                                        Message = @"Use ITestOutputHelper rather than System.Console in test projects",
+                                        Message = "Use ITestOutputHelper rather than System.Console in test projects",
                                         Severity = DiagnosticSeverity.Error,
                                         Locations = new[]
                                                     {

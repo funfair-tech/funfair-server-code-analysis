@@ -16,53 +16,53 @@ namespace FunFair.CodeAnalysis;
 public sealed class ProhibitedMethodsDiagnosticsAnalyzer : DiagnosticAnalyzer
 {
     private static readonly ProhibitedMethodsSpec[] BannedMethods =
-    {
+    [
         new(ruleId: Rules.RuleDontUseDateTimeNow,
-            title: @"Avoid use of DateTime methods",
+            title: "Avoid use of DateTime methods",
             message: "Call IDateTimeSource.UtcNow() rather than DateTime.Now",
             sourceClass: "System.DateTime",
             bannedMethod: "Now"),
         new(ruleId: Rules.RuleDontUseDateTimeUtcNow,
-            title: @"Avoid use of DateTime methods",
+            title: "Avoid use of DateTime methods",
             message: "Call IDateTimeSource.UtcNow() rather than DateTime.UtcNow",
             sourceClass: "System.DateTime",
             bannedMethod: "UtcNow"),
         new(ruleId: Rules.RuleDontUseDateTimeToday,
-            title: @"Avoid use of DateTime methods",
+            title: "Avoid use of DateTime methods",
             message: "Call IDateTimeSource.UtcNow().Date rather than DateTime.Today",
             sourceClass: "System.DateTime",
             bannedMethod: "Today"),
         new(ruleId: Rules.RuleDontUseDateTimeOffsetNow,
-            title: @"Avoid use of DateTime methods",
+            title: "Avoid use of DateTime methods",
             message: "Call IDateTimeSource.UtcNow() rather than DateTimeOffset.Now",
             sourceClass: "System.DateTimeOffset",
             bannedMethod: "Now"),
         new(ruleId: Rules.RuleDontUseDateTimeOffsetUtcNow,
-            title: @"Avoid use of DateTime methods",
+            title: "Avoid use of DateTime methods",
             message: "Call IDateTimeSource.UtcNow() rather than DateTimeOffset.UtcNow",
             sourceClass: "System.DateTimeOffset",
             bannedMethod: "UtcNow"),
         new(ruleId: Rules.RuleDontUseArbitrarySql,
-            title: @"Avoid use of inline SQL statements",
+            title: "Avoid use of inline SQL statements",
             message: "Only use ISqlServerDatabase.ExecuteArbitrarySqlAsync in integration tests",
             sourceClass: "FunFair.Common.Data.ISqlServerDatabase",
             bannedMethod: "ExecuteArbitrarySqlAsync"),
         new(ruleId: Rules.RuleDontUseArbitrarySqlForQueries,
-            title: @"Avoid use of inline SQL statements",
+            title: "Avoid use of inline SQL statements",
             message: "Only use ISqlServerDatabase.QueryArbitrarySqlAsync in integration tests",
             sourceClass: "FunFair.Common.Data.ISqlServerDatabase",
             bannedMethod: "QueryArbitrarySqlAsync"),
         new(ruleId: Rules.RuleDontReadRemoteIpAddressDirectlyFromConnection,
-            title: @"Use RemoteIpAddressRetriever instead of getting RemoteIpAddress directly from the HttpRequest",
+            title: "Use RemoteIpAddressRetriever instead of getting RemoteIpAddress directly from the HttpRequest",
             message: "Use RemoteIpAddressRetriever",
             sourceClass: "Microsoft.AspNetCore.Http.ConnectionInfo",
             bannedMethod: "RemoteIpAddress"),
         new(ruleId: Rules.RuleDontUseGuidParse,
-            title: @"Use new Guid() with constant guids or Guid.TryParse everywhere else",
+            title: "Use new Guid() with constant guids or Guid.TryParse everywhere else",
             message: "Use new Guid() with constant guids or Guid.TryParse everywhere else",
             sourceClass: "System.Guid",
             bannedMethod: "Parse")
-    };
+    ];
 
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
         BannedMethods.Select(selector: r => r.Rule)
@@ -85,8 +85,7 @@ public sealed class ProhibitedMethodsDiagnosticsAnalyzer : DiagnosticAnalyzer
         public void PerformCheck(CompilationStartAnalysisContext compilationStartContext)
         {
             compilationStartContext.RegisterSyntaxNodeAction(
-                action: syntaxNodeAnalysisContext =>
-                            this.LookForBannedMethods(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, compilation: compilationStartContext.Compilation),
+                action: syntaxNodeAnalysisContext => this.LookForBannedMethods(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, compilation: compilationStartContext.Compilation),
                 SyntaxKind.PointerMemberAccessExpression,
                 SyntaxKind.SimpleMemberAccessExpression);
         }
@@ -100,26 +99,18 @@ public sealed class ProhibitedMethodsDiagnosticsAnalyzer : DiagnosticAnalyzer
                 return;
             }
 
-            this.ReportAnyBannedSymbols(typeInfo: typeInfo,
-                                        invocation: memberAccessExpressionSyntax,
-                                        syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
-                                        compilation: compilation);
+            this.ReportAnyBannedSymbols(typeInfo: typeInfo, invocation: memberAccessExpressionSyntax, syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, compilation: compilation);
         }
 
         private void LookForBannedMethods(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, Compilation compilation)
         {
             if (syntaxNodeAnalysisContext.Node is MemberAccessExpressionSyntax memberAccessExpressionSyntax)
             {
-                this.LookForBannedMethod(memberAccessExpressionSyntax: memberAccessExpressionSyntax,
-                                         syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
-                                         compilation: compilation);
+                this.LookForBannedMethod(memberAccessExpressionSyntax: memberAccessExpressionSyntax, syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, compilation: compilation);
             }
         }
 
-        private void ReportAnyBannedSymbols(INamedTypeSymbol typeInfo,
-                                            MemberAccessExpressionSyntax invocation,
-                                            in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext,
-                                            Compilation compilation)
+        private void ReportAnyBannedSymbols(INamedTypeSymbol typeInfo, MemberAccessExpressionSyntax invocation, in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, Compilation compilation)
         {
             Dictionary<string, INamedTypeSymbol> cachedSymbols = this.LoadCachedSymbols(compilation);
 

@@ -20,11 +20,11 @@ public sealed class ArgumentExceptionAnalysisDiagnosticsAnalyzer : DiagnosticAna
                                                                                message: "Argument Exceptions should pass parameter name");
 
     private static readonly string[] ArgumentExceptions =
-    {
+    [
         "System.ArgumentException",
         "System.ArgumentNullException",
         "System.ArgumentOutOfRangeException"
-    };
+    ];
 
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => SupportedDiagnosisList.Build(Rule);
 
@@ -70,7 +70,7 @@ public sealed class ArgumentExceptionAnalysisDiagnosticsAnalyzer : DiagnosticAna
 
     private static bool HasParamNameParameter(IMethodSymbol methodSymbol)
     {
-        return methodSymbol.Parameters.Any(parameter => parameter.Name == "paramName");
+        return methodSymbol.Parameters.Any(parameter => StringComparer.Ordinal.Equals(x: parameter.Name, y: "paramName"));
     }
 
     private static bool IsArgumentException(ITypeSymbol? methodSymbolReceiverType)
