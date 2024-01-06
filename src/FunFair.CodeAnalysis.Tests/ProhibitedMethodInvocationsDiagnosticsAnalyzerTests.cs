@@ -107,7 +107,8 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzerTests : Diagno
          }
      }";
         DiagnosticResult expected = Result(id: "FFS0032",
-                                           message: "Don't use any of the built in AddOrUpdate methods, instead FunFair.Common.Extensions.ConcurrentDictionaryExtensions.AddOrUpdate can be used",
+                                           message:
+                                           "Don't use any of the built in AddOrUpdate methods, instead FunFair.Common.Extensions.ConcurrentDictionaryExtensions.AddOrUpdate can be used",
                                            severity: DiagnosticSeverity.Error,
                                            line: 10,
                                            column: 18);
@@ -132,7 +133,8 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzerTests : Diagno
          }
      }";
         DiagnosticResult expected = Result(id: "FFS0032",
-                                           message: "Don't use any of the built in AddOrUpdate methods, instead FunFair.Common.Extensions.ConcurrentDictionaryExtensions.AddOrUpdate can be used",
+                                           message:
+                                           "Don't use any of the built in AddOrUpdate methods, instead FunFair.Common.Extensions.ConcurrentDictionaryExtensions.AddOrUpdate can be used",
                                            severity: DiagnosticSeverity.Error,
                                            line: 10,
                                            column: 18);
@@ -168,7 +170,8 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzerTests : Diagno
      }";
 
         DiagnosticResult expected = Result(id: "FFS0032",
-                                           message: "Don't use any of the built in AddOrUpdate methods, instead FunFair.Common.Extensions.ConcurrentDictionaryExtensions.AddOrUpdate can be used",
+                                           message:
+                                           "Don't use any of the built in AddOrUpdate methods, instead FunFair.Common.Extensions.ConcurrentDictionaryExtensions.AddOrUpdate can be used",
                                            severity: DiagnosticSeverity.Error,
                                            line: 16,
                                            column: 18);
@@ -201,7 +204,8 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzerTests : Diagno
      }";
 
         DiagnosticResult expected = Result(id: "FFS0032",
-                                           message: "Don't use any of the built in AddOrUpdate methods, instead FunFair.Common.Extensions.ConcurrentDictionaryExtensions.AddOrUpdate can be used",
+                                           message:
+                                           "Don't use any of the built in AddOrUpdate methods, instead FunFair.Common.Extensions.ConcurrentDictionaryExtensions.AddOrUpdate can be used",
                                            severity: DiagnosticSeverity.Error,
                                            line: 13,
                                            column: 18);
@@ -226,7 +230,8 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzerTests : Diagno
          }
      }";
         DiagnosticResult expected = Result(id: "FFS0033",
-                                           message: "Don't use any of the built in GetOrAdd methods, instead FunFair.Common.Extensions.ConcurrentDictionaryExtensions.GetOrAdd can be used",
+                                           message:
+                                           "Don't use any of the built in GetOrAdd methods, instead FunFair.Common.Extensions.ConcurrentDictionaryExtensions.GetOrAdd can be used",
                                            severity: DiagnosticSeverity.Error,
                                            line: 10,
                                            column: 18);
@@ -254,7 +259,8 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzerTests : Diagno
          }
      }";
         DiagnosticResult expected = Result(id: "FFS0033",
-                                           message: "Don't use any of the built in GetOrAdd methods, instead FunFair.Common.Extensions.ConcurrentDictionaryExtensions.GetOrAdd can be used",
+                                           message:
+                                           "Don't use any of the built in GetOrAdd methods, instead FunFair.Common.Extensions.ConcurrentDictionaryExtensions.GetOrAdd can be used",
                                            severity: DiagnosticSeverity.Error,
                                            line: 13,
                                            column: 18);

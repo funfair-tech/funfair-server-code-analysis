@@ -22,14 +22,14 @@ internal static class CompilationExtensions
 
     private static bool Matches(IReadOnlyList<string> assemblyNames, AssemblyIdentity assembly)
     {
-        return assemblyNames.Contains(assembly.Name, StringComparer.OrdinalIgnoreCase);
+        return assemblyNames.Contains(value: assembly.Name, comparer: StringComparer.OrdinalIgnoreCase);
     }
 
     public static bool IsTestAssembly(this Compilation compilation)
     {
         try
         {
-            return compilation.ReferencedAssemblyNames.Any(assemblyName => Matches(TestAssemblies, assemblyName));
+            return compilation.ReferencedAssemblyNames.Any(assemblyName => Matches(assemblyNames: TestAssemblies, assembly: assemblyName));
         }
         catch (Exception exception)
         {
@@ -44,7 +44,7 @@ internal static class CompilationExtensions
     {
         try
         {
-            return compilation.ReferencedAssemblyNames.Any(assemblyName => Matches(UnitTestAssemblies, assemblyName));
+            return compilation.ReferencedAssemblyNames.Any(assemblyName => Matches(assemblyNames: UnitTestAssemblies, assembly: assemblyName));
         }
         catch (Exception exception)
         {

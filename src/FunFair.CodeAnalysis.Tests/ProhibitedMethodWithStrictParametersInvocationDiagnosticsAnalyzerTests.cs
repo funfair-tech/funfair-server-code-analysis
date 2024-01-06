@@ -6,7 +6,8 @@ using Xunit;
 
 namespace FunFair.CodeAnalysis.Tests;
 
-public sealed class ProhibitedMethodWithStrictParametersInvocationDiagnosticsAnalyzerTests : DiagnosticAnalyzerVerifier<ProhibitedMethodWithStrictParametersInvocationDiagnosticsAnalyzer>
+public sealed class
+    ProhibitedMethodWithStrictParametersInvocationDiagnosticsAnalyzerTests : DiagnosticAnalyzerVerifier<ProhibitedMethodWithStrictParametersInvocationDiagnosticsAnalyzer>
 {
     [Fact]
     public Task NSubstituteExtensionsReceivedWithExpectedCallCountIsPassingAsync()
@@ -132,7 +133,11 @@ public sealed class ProhibitedMethodWithStrictParametersInvocationDiagnosticsAna
          }
      }";
 
-        DiagnosticResult expected = Result(id: "FFS0034", message: "Only use AddJsonFile with reloadOnChange set to false", severity: DiagnosticSeverity.Error, line: 10, column: 47);
+        DiagnosticResult expected = Result(id: "FFS0034",
+                                           message: "Only use AddJsonFile with reloadOnChange set to false",
+                                           severity: DiagnosticSeverity.Error,
+                                           line: 10,
+                                           column: 47);
 
         return this.VerifyCSharpDiagnosticAsync(source: test,
                                                 [
@@ -163,7 +168,11 @@ public sealed class ProhibitedMethodWithStrictParametersInvocationDiagnosticsAna
          }
      }";
 
-        DiagnosticResult expected = Result(id: "FFS0034", message: "Only use AddJsonFile with reloadOnChange set to false", severity: DiagnosticSeverity.Error, line: 10, column: 47);
+        DiagnosticResult expected = Result(id: "FFS0034",
+                                           message: "Only use AddJsonFile with reloadOnChange set to false",
+                                           severity: DiagnosticSeverity.Error,
+                                           line: 10,
+                                           column: 47);
 
         return this.VerifyCSharpDiagnosticAsync(source: test,
                                                 [

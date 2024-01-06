@@ -57,7 +57,11 @@ public sealed class ForcedMethodParametersInvocationsDiagnosticsAnalyzerTests : 
         }
     }";
 
-        DiagnosticResult expected = Result(id: "FFS0015", message: "Only use JsonSerializer.Deserialize with own JsonSerializerOptions", severity: DiagnosticSeverity.Error, line: 15, column: 29);
+        DiagnosticResult expected = Result(id: "FFS0015",
+                                           message: "Only use JsonSerializer.Deserialize with own JsonSerializerOptions",
+                                           severity: DiagnosticSeverity.Error,
+                                           line: 15,
+                                           column: 29);
 
         return this.VerifyCSharpDiagnosticAsync(source: test, reference: WellKnownMetadataReferences.JsonSerializer, expected: expected);
     }
@@ -163,7 +167,11 @@ public sealed class ForcedMethodParametersInvocationsDiagnosticsAnalyzerTests : 
         }
     }";
 
-        DiagnosticResult expected = Result(id: "FFS0014", message: "Only use JsonSerializer.Serialize with own JsonSerializerOptions", severity: DiagnosticSeverity.Error, line: 15, column: 34);
+        DiagnosticResult expected = Result(id: "FFS0014",
+                                           message: "Only use JsonSerializer.Serialize with own JsonSerializerOptions",
+                                           severity: DiagnosticSeverity.Error,
+                                           line: 15,
+                                           column: 34);
 
         return this.VerifyCSharpDiagnosticAsync(source: test, reference: WellKnownMetadataReferences.JsonSerializer, expected: expected);
     }

@@ -85,7 +85,8 @@ public sealed class DebuggerDisplayAnalysisDiagnosticsAnalyzer : DiagnosticAnaly
     private static bool HasDebuggerDisplayAttribute(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, in SyntaxList<AttributeListSyntax> attributeLists)
     {
         return attributeLists.SelectMany(selector: al => al.Attributes)
-                             .Select(attribute => syntaxNodeAnalysisContext.SemanticModel.GetTypeInfo(attributeSyntax: attribute, cancellationToken: syntaxNodeAnalysisContext.CancellationToken))
+                             .Select(attribute => syntaxNodeAnalysisContext.SemanticModel.GetTypeInfo(attributeSyntax: attribute,
+                                                                                                      cancellationToken: syntaxNodeAnalysisContext.CancellationToken))
                              .Select(ti => ti.Type)
                              .RemoveNulls()
                              .Any(ti => IsDebuggerDisplayAttribute(ti.ToDisplayString()));

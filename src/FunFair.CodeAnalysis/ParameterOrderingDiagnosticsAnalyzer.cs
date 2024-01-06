@@ -95,7 +95,8 @@ public sealed class ParameterOrderingDiagnosticsAnalyzer : DiagnosticAnalyzer
                                                                                       index: index,
                                                                                       ParameterHelpers.GetFullTypeName(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
                                                                                                                        parameterSyntax: parameter,
-                                                                                                                       cancellationToken: syntaxNodeAnalysisContext.CancellationToken)!))
+                                                                                                                       cancellationToken: syntaxNodeAnalysisContext
+                                                                                                                           .CancellationToken)!))
         ];
     }
 

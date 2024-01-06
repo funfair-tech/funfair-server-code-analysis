@@ -6,7 +6,8 @@ using Xunit;
 
 namespace FunFair.CodeAnalysis.Tests;
 
-public sealed class ReThrowingExceptionShouldSpecifyInnerExceptionDiagnosticsAnalyzerTests : DiagnosticAnalyzerVerifier<ReThrowingExceptionShouldSpecifyInnerExceptionDiagnosticsAnalyzer>
+public sealed class
+    ReThrowingExceptionShouldSpecifyInnerExceptionDiagnosticsAnalyzerTests : DiagnosticAnalyzerVerifier<ReThrowingExceptionShouldSpecifyInnerExceptionDiagnosticsAnalyzer>
 {
     [Fact]
     public Task ReThrowingExceptionShouldNotTriggerErrorAsync()

@@ -87,7 +87,9 @@ public sealed class ForceMethodParametersInvocationsDiagnosticsAnalyzer : Diagno
 
         foreach (ForcedMethodsSpec prohibitedMethod in forcedMethods)
         {
-            if (!IsInvocationAllowed(invocationArguments: memberSymbol, argumentsInvokedCount: invocation.ArgumentList.Arguments.Count, requiredArgumentsCount: prohibitedMethod.RequiredArgumentCount))
+            if (!IsInvocationAllowed(invocationArguments: memberSymbol,
+                                     argumentsInvokedCount: invocation.ArgumentList.Arguments.Count,
+                                     requiredArgumentsCount: prohibitedMethod.RequiredArgumentCount))
             {
                 invocation.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: prohibitedMethod.Rule);
             }

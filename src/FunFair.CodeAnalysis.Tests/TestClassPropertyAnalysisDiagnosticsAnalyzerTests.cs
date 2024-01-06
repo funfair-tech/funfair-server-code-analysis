@@ -32,7 +32,11 @@ public sealed class Test : TestBase {
 
 }";
 
-        DiagnosticResult expected = Result(id: "FFS0036", message: "Properties in test classes should be read-only or const", severity: DiagnosticSeverity.Error, line: 6, column: 5);
+        DiagnosticResult expected = Result(id: "FFS0036",
+                                           message: "Properties in test classes should be read-only or const",
+                                           severity: DiagnosticSeverity.Error,
+                                           line: 6,
+                                           column: 5);
 
         return this.VerifyCSharpDiagnosticAsync(source: test,
                                                 [
@@ -142,7 +146,11 @@ public sealed class Test : TestBase {
 
 }";
 
-        DiagnosticResult expected = Result(id: "FFS0036", message: "Properties in test classes should be read-only or const", severity: DiagnosticSeverity.Error, line: 10, column: 5);
+        DiagnosticResult expected = Result(id: "FFS0036",
+                                           message: "Properties in test classes should be read-only or const",
+                                           severity: DiagnosticSeverity.Error,
+                                           line: 10,
+                                           column: 5);
 
         return this.VerifyCSharpDiagnosticAsync(source: test,
                                                 [
@@ -176,7 +184,11 @@ public sealed class Test : TestBase {
     }
 }";
 
-        DiagnosticResult expected = Result(id: "FFS0036", message: "Properties in test classes should be read-only or const", severity: DiagnosticSeverity.Error, line: 10, column: 5);
+        DiagnosticResult expected = Result(id: "FFS0036",
+                                           message: "Properties in test classes should be read-only or const",
+                                           severity: DiagnosticSeverity.Error,
+                                           line: 10,
+                                           column: 5);
 
         return this.VerifyCSharpDiagnosticAsync(source: test,
                                                 [

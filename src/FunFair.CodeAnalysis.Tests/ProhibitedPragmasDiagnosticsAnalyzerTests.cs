@@ -20,7 +20,11 @@ public sealed class ProhibitedPragmasDiagnosticsAnalyzerTests : DiagnosticAnalyz
     public Task BannedWarningCannotBeDisabledAsync()
     {
         const string test = "#pragma warning disable 1234";
-        DiagnosticResult expected = Result(id: "FFS0008", message: "Don't disable warnings using #pragma warning disable", severity: DiagnosticSeverity.Error, line: 12, column: 25);
+        DiagnosticResult expected = Result(id: "FFS0008",
+                                           message: "Don't disable warnings using #pragma warning disable",
+                                           severity: DiagnosticSeverity.Error,
+                                           line: 12,
+                                           column: 25);
 
         return this.VerifyCSharpDiagnosticAsync(source: test, expected: expected);
     }
@@ -58,7 +62,11 @@ public sealed class ProhibitedPragmasDiagnosticsAnalyzerTests : DiagnosticAnalyz
     public Task RestoringBannedWarningIsNotAnErrorAsync()
     {
         const string test = "#pragma warning restore 1234";
-        DiagnosticResult expected = Result(id: "FFS0008", message: "Don't disable warnings using #pragma warning disable", severity: DiagnosticSeverity.Error, line: 12, column: 25);
+        DiagnosticResult expected = Result(id: "FFS0008",
+                                           message: "Don't disable warnings using #pragma warning disable",
+                                           severity: DiagnosticSeverity.Error,
+                                           line: 12,
+                                           column: 25);
 
         return this.VerifyCSharpDiagnosticAsync(source: test, expected: expected);
     }
