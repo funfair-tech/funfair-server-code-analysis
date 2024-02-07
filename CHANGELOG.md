@@ -9,6 +9,14 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 ### Added
 ### Fixed
 ### Changed
+### Removed
+### Deployment Changes
+
+<!--
+Releases that have at least been deployed to staging, BUT NOT necessarily released to live.  Changes should be moved from [Unreleased] into here as they are merged into the appropriate release branch
+-->
+## [7.0.7] - 2024-02-07
+### Changed
 - Dependencies - Updated xunit.analyzers to 1.10.0
 - Dependencies - Updated xunit to 2.6.6
 - Dependencies - Updated FunFair.Test.Common to 6.1.39.333
@@ -16,12 +24,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 - Dependencies - Updated SonarAnalyzer.CSharp to 9.19.0.84025
 - Dependencies - Updated Microsoft.NET.Test.Sdk to 17.9.0
 - Dependencies - Updated Meziantou.Analyzer to 2.0.140
-### Removed
-### Deployment Changes
 
-<!--
-Releases that have at least been deployed to staging, BUT NOT necessarily released to live.  Changes should be moved from [Unreleased] into here as they are merged into the appropriate release branch
--->
 ## [7.0.6] - 2024-01-06
 ### Changed
 - Dependencies - Updated Microsoft.VisualStudio.Threading.Analyzers to 17.8.14
