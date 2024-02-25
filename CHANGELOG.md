@@ -16,6 +16,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 - Dependencies - Updated xunit to 2.7.0
 - SDK - Updated DotNet SDK to 8.0.201
 - Dependencies - Updated Meziantou.Analyzer to 2.0.145
+- Dependencies - Updated TeamCity.VSTest.TestAdapter to 1.0.40
 ### Removed
 ### Deployment Changes
 
