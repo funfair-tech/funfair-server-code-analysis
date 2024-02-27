@@ -44,7 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Credfeto.Enumeration.Source.Generation.Attributes" Version="1.1.2.267" />
-    <PackageReference Include="FunFair.Test.Common" Version="6.1.41.357" />
+    <PackageReference Include="FunFair.Test.Common" Version="6.1.42.380" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.8.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="8.0.0.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.9.0" />
