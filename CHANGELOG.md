@@ -11,6 +11,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 ### Changed
 - Dependencies - Updated FunFair.Test.Common to 6.1.42.380
 - Dependencies - Updated Microsoft.CodeAnalysis.CSharp to 4.9.2
+- Dependencies - Updated SonarAnalyzer.CSharp to 9.21.0.86780
 ### Removed
 ### Deployment Changes
 
