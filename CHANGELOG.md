@@ -9,16 +9,19 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 ### Added
 ### Fixed
 ### Changed
-- Dependencies - Updated Microsoft.CodeAnalysis.CSharp to 4.9.2
-- Dependencies - Updated SonarAnalyzer.CSharp to 9.21.0.86780
-- Dependencies - Updated FunFair.Test.Common to 6.1.44.386
-- Dependencies - Updated Credfeto.Enumeration.Source.Generation to 1.1.3.296
 ### Removed
 ### Deployment Changes
 
 <!--
 Releases that have at least been deployed to staging, BUT NOT necessarily released to live.  Changes should be moved from [Unreleased] into here as they are merged into the appropriate release branch
 -->
+## [7.0.10] - 2024-03-08
+### Changed
+- Dependencies - Updated Microsoft.CodeAnalysis.CSharp to 4.9.2
+- Dependencies - Updated SonarAnalyzer.CSharp to 9.21.0.86780
+- Dependencies - Updated FunFair.Test.Common to 6.1.44.386
+- Dependencies - Updated Credfeto.Enumeration.Source.Generation to 1.1.3.296
+
 ## [7.0.9] - 2024-02-27
 ### Changed
 - Dependencies - Updated FunFair.Test.Common to 6.1.41.357
