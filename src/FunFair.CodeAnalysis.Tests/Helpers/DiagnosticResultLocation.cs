@@ -4,7 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 namespace FunFair.CodeAnalysis.Tests.Helpers;
 
 [SuppressMessage(category: "Microsoft.Performance", checkId: "CA1815:OverrideEqualsAndOperatorEqualsOnValueTypes", Justification = "Test code")]
-public readonly struct DiagnosticResultLocation
+public readonly record struct DiagnosticResultLocation
 {
     public DiagnosticResultLocation(string path, int line, int column)
     {
