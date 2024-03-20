@@ -9,17 +9,20 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 ### Added
 ### Fixed
 ### Changed
-- Dependencies - Updated FunFair.Test.Common to 6.1.45.389
-- Dependencies - Updated Credfeto.Enumeration.Source.Generation to 1.1.4.303
-- Dependencies - Updated coverlet to 6.0.2
-- SDK - Updated DotNet SDK to 8.0.203
-- Dependencies - Updated Meziantou.Analyzer to 2.0.146
 ### Removed
 ### Deployment Changes
 
 <!--
 Releases that have at least been deployed to staging, BUT NOT necessarily released to live.  Changes should be moved from [Unreleased] into here as they are merged into the appropriate release branch
 -->
+## [7.0.11] - 2024-03-20
+### Changed
+- Dependencies - Updated FunFair.Test.Common to 6.1.45.389
+- Dependencies - Updated Credfeto.Enumeration.Source.Generation to 1.1.4.303
+- Dependencies - Updated coverlet to 6.0.2
+- SDK - Updated DotNet SDK to 8.0.203
+- Dependencies - Updated Meziantou.Analyzer to 2.0.146
+
 ## [7.0.10] - 2024-03-08
 ### Changed
 - Dependencies - Updated Microsoft.CodeAnalysis.CSharp to 4.9.2
