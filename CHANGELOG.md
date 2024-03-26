@@ -9,16 +9,19 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 ### Added
 ### Fixed
 ### Changed
-- Dependencies - Updated Roslynator.Analyzers to 4.12.0
-- Dependencies - Updated FunFair.Test.Common to 6.1.46.400
-- Dependencies - Updated SonarAnalyzer.CSharp to 9.23.0.88079
-- Dependencies - Updated Credfeto.Enumeration.Source.Generation to 1.1.5.315
 ### Removed
 ### Deployment Changes
 
 <!--
 Releases that have at least been deployed to staging, BUT NOT necessarily released to live.  Changes should be moved from [Unreleased] into here as they are merged into the appropriate release branch
 -->
+## [7.0.12] - 2024-03-26
+### Changed
+- Dependencies - Updated Roslynator.Analyzers to 4.12.0
+- Dependencies - Updated FunFair.Test.Common to 6.1.46.400
+- Dependencies - Updated SonarAnalyzer.CSharp to 9.23.0.88079
+- Dependencies - Updated Credfeto.Enumeration.Source.Generation to 1.1.5.315
+
 ## [7.0.11] - 2024-03-20
 ### Changed
 - Dependencies - Updated FunFair.Test.Common to 6.1.45.389
