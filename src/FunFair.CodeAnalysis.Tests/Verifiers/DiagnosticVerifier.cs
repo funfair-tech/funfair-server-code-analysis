@@ -30,13 +30,12 @@ public abstract partial class DiagnosticVerifier : TestBase
     {
         DiagnosticResultLocation location = new(path: "Test0.cs", line: line, column: column);
 
-        return new(Id: id,
-                   Message: message,
-                   Severity: severity,
-                   Locations:
-                   [
+        return new([
                        location
-                   ]);
+                   ],
+                   Severity: severity,
+                   Id: id,
+                   Message: message);
     }
 
     #region Formatting Diagnostics
@@ -74,8 +73,7 @@ public abstract partial class DiagnosticVerifier : TestBase
                 string resultMethodName = GetResultMethodName(diagnostic);
                 LinePosition linePosition = GetStartLinePosition(diagnostic);
 
-                builder = builder.Append(provider: CultureInfo.InvariantCulture,
-                                         $"{resultMethodName}({linePosition.Line + 1}, {linePosition.Character + 1}, {analyzerType.Name}.{rule.Id})");
+                builder = builder.Append(provider: CultureInfo.InvariantCulture, $"{resultMethodName}({linePosition.Line + 1}, {linePosition.Character + 1}, {analyzerType.Name}.{rule.Id})");
             }
 
             builder = builder.Append(value: ',')
