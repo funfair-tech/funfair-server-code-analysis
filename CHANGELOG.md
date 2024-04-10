@@ -9,15 +9,18 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 ### Added
 ### Fixed
 ### Changed
-- Dependencies - Updated FunFair.Test.Common to 6.1.48.414
-- Dependencies - Updated SonarAnalyzer.CSharp to 9.23.1.88495
-- SDK - Updated DotNet SDK to 8.0.204
 ### Removed
 ### Deployment Changes
 
 <!--
 Releases that have at least been deployed to staging, BUT NOT necessarily released to live.  Changes should be moved from [Unreleased] into here as they are merged into the appropriate release branch
 -->
+## [7.0.13] - 2024-04-10
+### Changed
+- Dependencies - Updated FunFair.Test.Common to 6.1.48.414
+- Dependencies - Updated SonarAnalyzer.CSharp to 9.23.1.88495
+- SDK - Updated DotNet SDK to 8.0.204
+
 ## [7.0.12] - 2024-03-26
 ### Changed
 - Dependencies - Updated Roslynator.Analyzers to 4.12.0
