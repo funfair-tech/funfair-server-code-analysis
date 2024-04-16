@@ -31,9 +31,7 @@ public sealed class ParameterNameDiagnosticsAnalyzer : DiagnosticAnalyzer
               whitelistedParameterName: "logger")
     ];
 
-    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
-        NameSpecifications.Select(selector: r => r.Rule)
-                          .ToImmutableArray();
+    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => [..NameSpecifications.Select(selector: r => r.Rule)];
 
     public override void Initialize(AnalysisContext context)
     {
@@ -60,9 +58,7 @@ public sealed class ParameterNameDiagnosticsAnalyzer : DiagnosticAnalyzer
 
     private static void MustHaveASaneName(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, ParameterSyntax parameterSyntax, CancellationToken cancellationToken)
     {
-        string? fullTypeName = ParameterHelpers.GetFullTypeName(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
-                                                                parameterSyntax: parameterSyntax,
-                                                                cancellationToken: cancellationToken);
+        string? fullTypeName = ParameterHelpers.GetFullTypeName(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, parameterSyntax: parameterSyntax, cancellationToken: cancellationToken);
 
         if (fullTypeName is null)
         {

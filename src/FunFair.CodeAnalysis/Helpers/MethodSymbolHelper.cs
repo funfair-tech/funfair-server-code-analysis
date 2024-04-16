@@ -58,11 +58,13 @@ internal static class MethodSymbolHelper
 
     private static ImmutableArray<ISymbol> BuildSymbolsWithBaseTypes(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, INamedTypeSymbol sourceType, string fullName)
     {
-        return LookupSymbols(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, sourceType: sourceType, fullName: fullName)
-               .Concat(sourceType.BaseClasses()
-                                 .SelectMany(baseType => LookupSymbols(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, sourceType: baseType, fullName: fullName)))
-               .Concat(sourceType.AllInterfaces.SelectMany(interfaceType => LookupSymbols(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, sourceType: interfaceType, fullName: fullName)))
-               .ToImmutableArray();
+        return
+        [
+            ..LookupSymbols(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, sourceType: sourceType, fullName: fullName)
+              .Concat(sourceType.BaseClasses()
+                                .SelectMany(baseType => LookupSymbols(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, sourceType: baseType, fullName: fullName)))
+              .Concat(sourceType.AllInterfaces.SelectMany(interfaceType => LookupSymbols(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, sourceType: interfaceType, fullName: fullName)))
+        ];
     }
 
     private static ImmutableArray<ISymbol> LookupSymbols(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, INamedTypeSymbol sourceType, string fullName)

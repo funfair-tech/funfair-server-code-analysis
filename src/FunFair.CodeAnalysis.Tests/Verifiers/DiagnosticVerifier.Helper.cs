@@ -35,10 +35,7 @@ public abstract partial class DiagnosticVerifier
 
     #region Get Diagnostics
 
-    private static Task<IReadOnlyList<Diagnostic>> GetSortedDiagnosticsAsync(IReadOnlyList<string> sources,
-                                                                             IReadOnlyList<MetadataReference> references,
-                                                                             string language,
-                                                                             DiagnosticAnalyzer analyzer)
+    private static Task<IReadOnlyList<Diagnostic>> GetSortedDiagnosticsAsync(IReadOnlyList<string> sources, IReadOnlyList<MetadataReference> references, string language, DiagnosticAnalyzer analyzer)
     {
         return GetSortedDiagnosticsFromDocumentsAsync(analyzer: analyzer, GetDocuments(sources: sources, references: references, language: language));
     }
@@ -47,7 +44,7 @@ public abstract partial class DiagnosticVerifier
     {
         HashSet<Project> projects = BuildProjects(documents);
 
-        IReadOnlyList<Diagnostic> diagnostics = Array.Empty<Diagnostic>();
+        IReadOnlyList<Diagnostic> diagnostics = [];
 
         foreach (Project project in projects)
         {
@@ -81,7 +78,7 @@ public abstract partial class DiagnosticVerifier
 
     private static CompilationWithAnalyzers CreateCompilationWithAnalyzers(DiagnosticAnalyzer analyzer, Compilation compilation)
     {
-        return compilation.WithAnalyzers(ImmutableArray.Create(analyzer), options: null);
+        return compilation.WithAnalyzers([analyzer], options: null);
     }
 
     private static async Task<IReadOnlyList<Diagnostic>> CollectDiagnosticsAsync(IReadOnlyList<Document> documents, CompilationWithAnalyzers compilationWithAnalyzers)
@@ -97,8 +94,7 @@ public abstract partial class DiagnosticVerifier
 
         foreach (Diagnostic diagnostic in diagnostics)
         {
-            bool add = diagnostic.Location == Location.None || diagnostic.Location.IsInMetadata ||
-                       await ShouldAddDocumentDiagnosticAsync(documents: documents, diagnostic: diagnostic);
+            bool add = diagnostic.Location == Location.None || diagnostic.Location.IsInMetadata || await ShouldAddDocumentDiagnosticAsync(documents: documents, diagnostic: diagnostic);
 
             if (add)
             {
@@ -153,17 +149,18 @@ public abstract partial class DiagnosticVerifier
     {
         return !compilerError.ToString()
                              .Contains(value: "netstandard", comparisonType: StringComparison.Ordinal) && !compilerError.ToString()
-            .Contains(value: "static 'Main' method", comparisonType: StringComparison.Ordinal) && !compilerError.ToString()
-                                                                                                                .Contains(value: "CS1002",
-                                                                                                                    comparisonType: StringComparison.Ordinal) && !compilerError
-            .ToString()
-            .Contains(value: "CS1702", comparisonType: StringComparison.Ordinal);
+                                                                                                                        .Contains(value: "static 'Main' method",
+                                                                                                                                  comparisonType: StringComparison.Ordinal) && !compilerError.ToString()
+            .Contains(value: "CS1002", comparisonType: StringComparison.Ordinal) && !compilerError.ToString()
+                                                                                                  .Contains(value: "CS1702", comparisonType: StringComparison.Ordinal);
     }
 
     private static IReadOnlyList<Diagnostic> SortDiagnostics(IEnumerable<Diagnostic> diagnostics)
     {
-        return diagnostics.OrderBy(keySelector: d => d.Location.SourceSpan.Start)
-                          .ToArray();
+        return
+        [
+            ..diagnostics.OrderBy(keySelector: d => d.Location.SourceSpan.Start)
+        ];
     }
 
     #endregion

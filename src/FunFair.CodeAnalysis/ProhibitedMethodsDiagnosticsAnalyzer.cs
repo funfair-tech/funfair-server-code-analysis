@@ -64,9 +64,7 @@ public sealed class ProhibitedMethodsDiagnosticsAnalyzer : DiagnosticAnalyzer
               bannedMethod: "Parse")
     ];
 
-    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
-        BannedMethods.Select(selector: r => r.Rule)
-                     .ToImmutableArray();
+    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => [..BannedMethods.Select(selector: r => r.Rule)];
 
     public override void Initialize(AnalysisContext context)
     {
@@ -90,8 +88,7 @@ public sealed class ProhibitedMethodsDiagnosticsAnalyzer : DiagnosticAnalyzer
         public void PerformCheck(CompilationStartAnalysisContext compilationStartContext)
         {
             compilationStartContext.RegisterSyntaxNodeAction(
-                action: syntaxNodeAnalysisContext =>
-                            this.LookForBannedMethods(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, compilation: compilationStartContext.Compilation),
+                action: syntaxNodeAnalysisContext => this.LookForBannedMethods(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, compilation: compilationStartContext.Compilation),
                 SyntaxKind.PointerMemberAccessExpression,
                 SyntaxKind.SimpleMemberAccessExpression);
         }
@@ -105,26 +102,18 @@ public sealed class ProhibitedMethodsDiagnosticsAnalyzer : DiagnosticAnalyzer
                 return;
             }
 
-            this.ReportAnyBannedSymbols(typeInfo: typeInfo,
-                                        invocation: memberAccessExpressionSyntax,
-                                        syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
-                                        compilation: compilation);
+            this.ReportAnyBannedSymbols(typeInfo: typeInfo, invocation: memberAccessExpressionSyntax, syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, compilation: compilation);
         }
 
         private void LookForBannedMethods(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, Compilation compilation)
         {
             if (syntaxNodeAnalysisContext.Node is MemberAccessExpressionSyntax memberAccessExpressionSyntax)
             {
-                this.LookForBannedMethod(memberAccessExpressionSyntax: memberAccessExpressionSyntax,
-                                         syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
-                                         compilation: compilation);
+                this.LookForBannedMethod(memberAccessExpressionSyntax: memberAccessExpressionSyntax, syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, compilation: compilation);
             }
         }
 
-        private void ReportAnyBannedSymbols(INamedTypeSymbol typeInfo,
-                                            MemberAccessExpressionSyntax invocation,
-                                            in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext,
-                                            Compilation compilation)
+        private void ReportAnyBannedSymbols(INamedTypeSymbol typeInfo, MemberAccessExpressionSyntax invocation, in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, Compilation compilation)
         {
             Dictionary<string, INamedTypeSymbol> cachedSymbols = this.LoadCachedSymbols(compilation);
 

@@ -111,27 +111,27 @@ public abstract partial class DiagnosticVerifier : TestBase
 
     protected Task VerifyCSharpDiagnosticAsync(string source)
     {
-        return this.VerifyCSharpDiagnosticAsync(source: source, Array.Empty<MetadataReference>(), Array.Empty<DiagnosticResult>());
+        return this.VerifyCSharpDiagnosticAsync(source: source, [], []);
     }
 
     protected Task VerifyCSharpDiagnosticAsync(string source, MetadataReference reference)
     {
-        return this.VerifyCSharpDiagnosticAsync(source: source, [reference], Array.Empty<DiagnosticResult>());
+        return this.VerifyCSharpDiagnosticAsync(source: source, [reference], []);
     }
 
     protected Task VerifyCSharpDiagnosticAsync(string source, in DiagnosticResult expected)
     {
-        return this.VerifyCSharpDiagnosticAsync(source: source, Array.Empty<MetadataReference>(), [expected]);
+        return this.VerifyCSharpDiagnosticAsync(source: source, [], [expected]);
     }
 
     protected Task VerifyCSharpDiagnosticAsync(string source, IReadOnlyList<DiagnosticResult> expected)
     {
-        return this.VerifyCSharpDiagnosticAsync(source: source, Array.Empty<MetadataReference>(), expected: expected);
+        return this.VerifyCSharpDiagnosticAsync(source: source, [], expected: expected);
     }
 
     protected Task VerifyCSharpDiagnosticAsync(string source, IReadOnlyList<MetadataReference> references)
     {
-        return this.VerifyCSharpDiagnosticAsync(source: source, references: references, Array.Empty<DiagnosticResult>());
+        return this.VerifyCSharpDiagnosticAsync(source: source, references: references, []);
     }
 
     protected Task VerifyCSharpDiagnosticAsync(string source, MetadataReference references, IReadOnlyList<DiagnosticResult> expected)
@@ -193,7 +193,7 @@ public abstract partial class DiagnosticVerifier : TestBase
         if (expectedCount != actualCount)
         {
             string diagnosticsOutput = results.Length != 0
-                ? FormatDiagnostics(analyzer: analyzer, results.ToArray())
+                ? FormatDiagnostics(analyzer: analyzer, [.. results])
                 : "    NONE.";
 
             Assert.Fail($"Mismatch between number of diagnostics returned, expected \"{expectedCount}\" actual \"{actualCount}\"\r\n\r\nDiagnostics:\r\n{diagnosticsOutput}\r\n");
@@ -237,15 +237,14 @@ public abstract partial class DiagnosticVerifier : TestBase
 
     private static void VerifyAdditionalDiagnosticLocations(DiagnosticAnalyzer analyzer, Diagnostic actual, in DiagnosticResult expected)
     {
-        Location[] additionalLocations = actual.AdditionalLocations.ToArray();
+        IReadOnlyList<Location> additionalLocations = [.. actual.AdditionalLocations];
 
-        if (additionalLocations.Length != expected.Locations.Count - 1)
+        if (additionalLocations.Count != expected.Locations.Count - 1)
         {
-            Assert.Fail(
-                $"Expected {expected.Locations.Count - 1} additional locations but got {additionalLocations.Length} for Diagnostic:\r\n    {FormatDiagnostics(analyzer: analyzer, actual)}\r\n");
+            Assert.Fail($"Expected {expected.Locations.Count - 1} additional locations but got {additionalLocations.Count} for Diagnostic:\r\n    {FormatDiagnostics(analyzer: analyzer, actual)}\r\n");
         }
 
-        for (int j = 0; j < additionalLocations.Length; ++j)
+        for (int j = 0; j < additionalLocations.Count; ++j)
         {
             VerifyDiagnosticLocation(analyzer: analyzer, diagnostic: actual, additionalLocations[j], expected.Locations[j + 1]);
         }

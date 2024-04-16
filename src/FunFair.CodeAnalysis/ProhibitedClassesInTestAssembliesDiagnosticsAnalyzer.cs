@@ -24,9 +24,7 @@ public sealed class ProhibitedClassesInTestAssembliesDiagnosticsAnalyzer : Diagn
               sourceClass: "System.Console")
     ];
 
-    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
-        BannedClasses.Select(selector: r => r.Rule)
-                     .ToImmutableArray();
+    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => [..BannedClasses.Select(selector: r => r.Rule)];
 
     public override void Initialize(AnalysisContext context)
     {

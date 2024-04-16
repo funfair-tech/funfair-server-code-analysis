@@ -49,9 +49,7 @@ public sealed class ForceMethodParametersInvocationsDiagnosticsAnalyzer : Diagno
               requiredArgumentCount: 1)
     ];
 
-    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
-        ForcedMethods.Select(selector: r => r.Rule)
-                     .ToImmutableArray();
+    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => [..ForcedMethods.Select(selector: r => r.Rule)];
 
     public override void Initialize(AnalysisContext context)
     {
@@ -87,9 +85,7 @@ public sealed class ForceMethodParametersInvocationsDiagnosticsAnalyzer : Diagno
 
         foreach (ForcedMethodsSpec prohibitedMethod in forcedMethods)
         {
-            if (!IsInvocationAllowed(invocationArguments: memberSymbol,
-                                     argumentsInvokedCount: invocation.ArgumentList.Arguments.Count,
-                                     requiredArgumentsCount: prohibitedMethod.RequiredArgumentCount))
+            if (!IsInvocationAllowed(invocationArguments: memberSymbol, argumentsInvokedCount: invocation.ArgumentList.Arguments.Count, requiredArgumentsCount: prohibitedMethod.RequiredArgumentCount))
             {
                 invocation.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: prohibitedMethod.Rule);
             }

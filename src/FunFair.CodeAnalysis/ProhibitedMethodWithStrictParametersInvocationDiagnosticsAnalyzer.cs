@@ -39,9 +39,7 @@ public sealed class ProhibitedMethodWithStrictParametersInvocationDiagnosticsAna
               ])
     ];
 
-    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
-        ForcedMethods.Select(selector: r => r.Rule)
-                     .ToImmutableArray();
+    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => [..ForcedMethods.Select(selector: r => r.Rule)];
 
     public override void Initialize(AnalysisContext context)
     {
@@ -114,9 +112,7 @@ public sealed class ProhibitedMethodWithStrictParametersInvocationDiagnosticsAna
         // ! Nullable is guaranteed to be not null here
         return !prohibitedMethod.BannedSignatures.SelectMany(collectionSelector: bannedSignature => bannedSignature,
                                                              resultSelector: (bannedSignature, parameterSpec) => (bannedSignature, parameterSpec))
-                                .Select(t => (t,
-                                            parameter: parameters.FirstOrDefault(
-                                                predicate: param => StringComparer.Ordinal.Equals(x: param.MetadataName, y: t.parameterSpec.Name))))
+                                .Select(t => (t, parameter: parameters.FirstOrDefault(predicate: param => StringComparer.Ordinal.Equals(x: param.MetadataName, y: t.parameterSpec.Name))))
                                 .Where(t => t.parameter is not null)
                                 .Select(t => (t, argument: arguments.Arguments[t.parameter!.Ordinal]))
                                 .Where(t => StringComparer.Ordinal.Equals(t.argument.Expression.ToFullString(), y: t.t.t.parameterSpec.Value) && StringComparer.Ordinal.Equals(
@@ -132,12 +128,7 @@ public sealed class ProhibitedMethodWithStrictParametersInvocationDiagnosticsAna
         return new(name: name, type: type, value: value);
     }
 
-    private static ProhibitedMethodsSpec Build(string ruleId,
-                                               string title,
-                                               string message,
-                                               string sourceClass,
-                                               string forcedMethod,
-                                               IReadOnlyList<IReadOnlyList<ParameterSpec>> bannedSignatures)
+    private static ProhibitedMethodsSpec Build(string ruleId, string title, string message, string sourceClass, string forcedMethod, IReadOnlyList<IReadOnlyList<ParameterSpec>> bannedSignatures)
     {
         return new(ruleId: ruleId, title: title, message: message, sourceClass: sourceClass, forcedMethod: forcedMethod, bannedSignatures: bannedSignatures);
     }
@@ -162,12 +153,7 @@ public sealed class ProhibitedMethodWithStrictParametersInvocationDiagnosticsAna
     [DebuggerDisplay("{Rule.Id} {Rule.Title} Class {SourceClass} Forced Method: {ForcedMethod}")]
     private readonly record struct ProhibitedMethodsSpec
     {
-        public ProhibitedMethodsSpec(string ruleId,
-                                     string title,
-                                     string message,
-                                     string sourceClass,
-                                     string forcedMethod,
-                                     IReadOnlyList<IReadOnlyList<ParameterSpec>> bannedSignatures)
+        public ProhibitedMethodsSpec(string ruleId, string title, string message, string sourceClass, string forcedMethod, IReadOnlyList<IReadOnlyList<ParameterSpec>> bannedSignatures)
         {
             this.SourceClass = sourceClass;
             this.ForcedMethod = forcedMethod;

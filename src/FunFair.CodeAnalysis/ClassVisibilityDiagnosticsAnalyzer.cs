@@ -29,9 +29,7 @@ public sealed class ClassVisibilityDiagnosticsAnalyzer : DiagnosticAnalyzer
               visibility: SyntaxKind.SealedKeyword)
     ];
 
-    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
-        Classes.Select(c => c.Rule)
-               .ToImmutableArray();
+    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => [..Classes.Select(c => c.Rule)];
 
     public override void Initialize(AnalysisContext context)
     {
@@ -55,8 +53,7 @@ public sealed class ClassVisibilityDiagnosticsAnalyzer : DiagnosticAnalyzer
 
         foreach (ConfiguredClass classDefinition in Classes)
         {
-            if (classDefinition.TypeMatchesClass(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext) &&
-                !classDefinition.HasCorrectClassModifier(classDeclarationSyntax: classDeclarationSyntax))
+            if (classDefinition.TypeMatchesClass(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext) && !classDefinition.HasCorrectClassModifier(classDeclarationSyntax: classDeclarationSyntax))
             {
                 classDeclarationSyntax.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: classDefinition.Rule);
             }
