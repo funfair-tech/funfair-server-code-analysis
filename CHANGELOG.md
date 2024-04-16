@@ -15,6 +15,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 - Dependencies - Updated xunit.runner.visualstudio to 2.5.8
 - Dependencies - Updated xunit to 2.7.1
 - Dependencies - Updated FunFair.Test.Common to 6.1.50.439
+- Dependencies - Updated Roslynator.Analyzers to 4.12.1
 ### Removed
 ### Deployment Changes
 
