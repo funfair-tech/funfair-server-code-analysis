@@ -17,6 +17,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 - Dependencies - Updated Roslynator.Analyzers to 4.12.1
 - Dependencies - Updated Meziantou.Analyzer to 2.0.149
 - Dependencies - Updated SmartAnalyzers.CSharpExtensions.Annotations to 4.2.10
+- Dependencies - Updated Credfeto.Enumeration to 1.1.6.354
 ### Removed
 ### Deployment Changes
 
