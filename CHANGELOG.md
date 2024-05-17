@@ -9,6 +9,14 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 ### Added
 ### Fixed
 ### Changed
+### Removed
+### Deployment Changes
+
+<!--
+Releases that have at least been deployed to staging, BUT NOT necessarily released to live.  Changes should be moved from [Unreleased] into here as they are merged into the appropriate release branch
+-->
+## [7.0.15] - 2024-05-17
+### Changed
 - SDK - Updated DotNet SDK to 8.0.300
 - Dependencies - Updated Credfeto.Enumeration to 1.1.7.384
 - Dependencies - Updated Meziantou.Analyzer to 2.0.150
@@ -19,12 +27,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 - Dependencies - Updated xunit.runner.visualstudio to 2.8.0
 - Dependencies - Updated xunit to 2.8.0
 - Dependencies - Updated FunFair.Test.Common to 6.1.55.490
-### Removed
-### Deployment Changes
 
-<!--
-Releases that have at least been deployed to staging, BUT NOT necessarily released to live.  Changes should be moved from [Unreleased] into here as they are merged into the appropriate release branch
--->
 ## [7.0.14] - 2024-04-20
 ### Changed
 - Dependencies - Updated SonarAnalyzer.CSharp to 9.23.2.88755
