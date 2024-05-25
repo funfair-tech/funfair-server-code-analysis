@@ -10,6 +10,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 ### Fixed
 ### Changed
 - Dependencies - Updated Meziantou.Analyzer to 2.0.153
+- Dependencies - Updated xunit.runner.visualstudio to 2.8.1
 ### Removed
 ### Deployment Changes
 
