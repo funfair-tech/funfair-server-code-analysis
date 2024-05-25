@@ -48,8 +48,8 @@
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.9.2" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="8.0.0.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.10.0" />
-    <PackageReference Include="xunit" Version="2.8.0" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.8.0" />
+    <PackageReference Include="xunit" Version="2.8.1" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.8.1" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="AsyncFixer" Version="1.6.0" PrivateAssets="All" ExcludeAssets="runtime" />
@@ -69,6 +69,6 @@
     <PackageReference Include="SonarAnalyzer.CSharp" Version="9.25.1.91650" PrivateAssets="All" ExcludeAssets="runtime" />
     <PackageReference Include="SourceLink.Create.CommandLine" Version="2.8.3" PrivateAssets="All" ExcludeAssets="runtime" />
     <PackageReference Include="ToStringWithoutOverrideAnalyzer" Version="0.6.0" PrivateAssets="All" ExcludeAssets="runtime" />
-    <PackageReference Include="xunit.analyzers" Version="1.13.0" PrivateAssets="All" ExcludeAssets="runtime" />
+    <PackageReference Include="xunit.analyzers" Version="1.14.0" PrivateAssets="All" ExcludeAssets="runtime" />
   </ItemGroup>
 </Project>
