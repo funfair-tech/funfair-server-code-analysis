@@ -35,12 +35,15 @@ public abstract partial class DiagnosticVerifier
 
     #region Get Diagnostics
 
-    private static Task<IReadOnlyList<Diagnostic>> GetSortedDiagnosticsAsync(IReadOnlyList<string> sources, IReadOnlyList<MetadataReference> references, string language, DiagnosticAnalyzer analyzer)
+    private static ValueTask<IReadOnlyList<Diagnostic>> GetSortedDiagnosticsAsync(IReadOnlyList<string> sources,
+                                                                                  IReadOnlyList<MetadataReference> references,
+                                                                                  string language,
+                                                                                  DiagnosticAnalyzer analyzer)
     {
         return GetSortedDiagnosticsFromDocumentsAsync(analyzer: analyzer, GetDocuments(sources: sources, references: references, language: language));
     }
 
-    protected static async Task<IReadOnlyList<Diagnostic>> GetSortedDiagnosticsFromDocumentsAsync(DiagnosticAnalyzer analyzer, IReadOnlyList<Document> documents)
+    protected static async ValueTask<IReadOnlyList<Diagnostic>> GetSortedDiagnosticsFromDocumentsAsync(DiagnosticAnalyzer analyzer, IReadOnlyList<Document> documents)
     {
         HashSet<Project> projects = BuildProjects(documents);
 
@@ -81,14 +84,14 @@ public abstract partial class DiagnosticVerifier
         return compilation.WithAnalyzers([analyzer], options: null);
     }
 
-    private static async Task<IReadOnlyList<Diagnostic>> CollectDiagnosticsAsync(IReadOnlyList<Document> documents, CompilationWithAnalyzers compilationWithAnalyzers)
+    private static async ValueTask<IReadOnlyList<Diagnostic>> CollectDiagnosticsAsync(IReadOnlyList<Document> documents, CompilationWithAnalyzers compilationWithAnalyzers)
     {
         ImmutableArray<Diagnostic> diagnostics = await compilationWithAnalyzers.GetAnalyzerDiagnosticsAsync(CancellationToken.None);
 
         return await ExtractDiagnosticsAsync(documents: documents, diagnostics: diagnostics);
     }
 
-    private static async Task<IReadOnlyList<Diagnostic>> ExtractDiagnosticsAsync(IReadOnlyList<Document> documents, IReadOnlyList<Diagnostic> diagnostics)
+    private static async ValueTask<IReadOnlyList<Diagnostic>> ExtractDiagnosticsAsync(IReadOnlyList<Document> documents, IReadOnlyList<Diagnostic> diagnostics)
     {
         List<Diagnostic> results = [];
 
@@ -105,7 +108,7 @@ public abstract partial class DiagnosticVerifier
         return results;
     }
 
-    private static async Task<bool> ShouldAddDocumentDiagnosticAsync(IReadOnlyList<Document> documents, Diagnostic diagnostic)
+    private static async ValueTask<bool> ShouldAddDocumentDiagnosticAsync(IReadOnlyList<Document> documents, Diagnostic diagnostic)
     {
         foreach (Document document in documents)
         {
@@ -120,7 +123,7 @@ public abstract partial class DiagnosticVerifier
         return false;
     }
 
-    private static async Task<bool> ShouldAddDiagnosticAsync(Document document, Diagnostic diagnostic)
+    private static async ValueTask<bool> ShouldAddDiagnosticAsync(Document document, Diagnostic diagnostic)
     {
         SyntaxTree? tree = await document.GetSyntaxTreeAsync(CancellationToken.None);
 

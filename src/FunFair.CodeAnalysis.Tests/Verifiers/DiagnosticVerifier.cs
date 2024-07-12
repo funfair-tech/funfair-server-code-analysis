@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -159,14 +158,6 @@ public abstract partial class DiagnosticVerifier : TestBase
                                       language: LanguageNames.CSharp,
                                       analyzer: diagnostic,
                                       expected: expected);
-    }
-
-    [SuppressMessage(category: "ReSharper", checkId: "UnusedMember.Local", Justification = "May be needed in future")]
-    private Task VerifyCSharpDiagnosticAsync(IReadOnlyList<string> sources, IReadOnlyList<MetadataReference> references, IReadOnlyList<DiagnosticResult> expected)
-    {
-        DiagnosticAnalyzer diagnostic = AssertReallyNotNull(this.GetCSharpDiagnosticAnalyzer());
-
-        return VerifyDiagnosticsAsync(sources: sources, references: references, language: LanguageNames.CSharp, analyzer: diagnostic, expected: expected);
     }
 
     private static async Task VerifyDiagnosticsAsync(IReadOnlyList<string> sources,

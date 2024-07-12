@@ -154,7 +154,7 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzer : DiagnosticA
 
         private static IReadOnlyDictionary<ProhibitedMethodsSpec, IReadOnlyList<IMethodSymbol>> BuildCachedSymbols(Compilation compilation)
         {
-            Dictionary<ProhibitedMethodsSpec, IReadOnlyList<IMethodSymbol>> cachedSymbols = new();
+            Dictionary<ProhibitedMethodsSpec, IReadOnlyList<IMethodSymbol>> cachedSymbols = [];
 
             foreach (ProhibitedMethodsSpec rule in BannedMethods)
             {
