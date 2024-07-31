@@ -9,6 +9,14 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 ### Added
 ### Fixed
 ### Changed
+### Removed
+### Deployment Changes
+
+<!--
+Releases that have at least been deployed to staging, BUT NOT necessarily released to live.  Changes should be moved from [Unreleased] into here as they are merged into the appropriate release branch
+-->
+## [7.0.19] - 2024-07-31
+### Changed
 - Dependencies - Updated CSharpIsNullAnalyzer to 0.1.593
 - Dependencies - Updated xunit.analyzers to 1.15.0
 - Dependencies - Updated xunit.runner.visualstudio to 2.8.2
@@ -17,12 +25,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 - Dependencies - Updated Meziantou.Analyzer to 2.0.160
 - Dependencies - Updated FunFair.Test.Common to 6.1.62.556
 - Dependencies - Updated SonarAnalyzer.CSharp to 9.29.0.95321
-### Removed
-### Deployment Changes
 
-<!--
-Releases that have at least been deployed to staging, BUT NOT necessarily released to live.  Changes should be moved from [Unreleased] into here as they are merged into the appropriate release branch
--->
 ## [7.0.18] - 2024-06-12
 ### Changed
 - Dependencies - Updated Meziantou.Analyzer to 2.0.155
