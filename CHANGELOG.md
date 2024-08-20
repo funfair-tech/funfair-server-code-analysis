@@ -10,6 +10,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 ### Fixed
 ### Changed
 - Dependencies - Updated FunFair.Test.Common to 6.1.66.617
+- Dependencies - Updated Microsoft.NET.Test.Sdk to 17.11.0
 ### Removed
 ### Deployment Changes
 
