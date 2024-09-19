@@ -11,6 +11,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 ### Changed
 - Dependencies - Updated FunFair.Test.Common to 6.1.69.630
 - Dependencies - Updated Roslynator.Analyzers to 4.12.5
+- SDK - Updated to DotNet 9.0 RC1
 ### Removed
 ### Deployment Changes
 
