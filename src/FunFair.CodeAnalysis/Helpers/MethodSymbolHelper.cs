@@ -16,7 +16,9 @@ internal static class MethodSymbolHelper
         if (invocation.Expression is MemberAccessExpressionSyntax memberAccessExpressionSyntax)
         {
             return GetSimpleMemberSymbol(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, memberAccessExpressionSyntax: memberAccessExpressionSyntax) ??
-                   ResolveExtensionMethodUsedByConstructor(invocation: invocation, syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, memberAccessExpressionSyntax: memberAccessExpressionSyntax);
+                   ResolveExtensionMethodUsedByConstructor(invocation: invocation,
+                                                           syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
+                                                           memberAccessExpressionSyntax: memberAccessExpressionSyntax);
         }
 
         return null;
@@ -63,7 +65,8 @@ internal static class MethodSymbolHelper
             ..LookupSymbols(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, sourceType: sourceType, fullName: fullName)
               .Concat(sourceType.BaseClasses()
                                 .SelectMany(baseType => LookupSymbols(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, sourceType: baseType, fullName: fullName)))
-              .Concat(sourceType.AllInterfaces.SelectMany(interfaceType => LookupSymbols(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, sourceType: interfaceType, fullName: fullName)))
+              .Concat(sourceType.AllInterfaces.SelectMany(
+                          interfaceType => LookupSymbols(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, sourceType: interfaceType, fullName: fullName)))
         ];
     }
 

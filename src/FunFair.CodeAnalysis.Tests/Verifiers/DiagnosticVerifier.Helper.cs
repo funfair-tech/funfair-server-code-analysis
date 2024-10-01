@@ -97,7 +97,8 @@ public abstract partial class DiagnosticVerifier
 
         foreach (Diagnostic diagnostic in diagnostics)
         {
-            bool add = diagnostic.Location == Location.None || diagnostic.Location.IsInMetadata || await ShouldAddDocumentDiagnosticAsync(documents: documents, diagnostic: diagnostic);
+            bool add = diagnostic.Location == Location.None || diagnostic.Location.IsInMetadata ||
+                       await ShouldAddDocumentDiagnosticAsync(documents: documents, diagnostic: diagnostic);
 
             if (add)
             {
@@ -152,10 +153,11 @@ public abstract partial class DiagnosticVerifier
     {
         return !compilerError.ToString()
                              .Contains(value: "netstandard", comparisonType: StringComparison.Ordinal) && !compilerError.ToString()
-                                                                                                                        .Contains(value: "static 'Main' method",
-                                                                                                                                  comparisonType: StringComparison.Ordinal) && !compilerError.ToString()
-            .Contains(value: "CS1002", comparisonType: StringComparison.Ordinal) && !compilerError.ToString()
-                                                                                                  .Contains(value: "CS1702", comparisonType: StringComparison.Ordinal);
+            .Contains(value: "static 'Main' method", comparisonType: StringComparison.Ordinal) && !compilerError.ToString()
+                                                                                                                .Contains(value: "CS1002",
+                                                                                                                    comparisonType: StringComparison.Ordinal) && !compilerError
+            .ToString()
+            .Contains(value: "CS1702", comparisonType: StringComparison.Ordinal);
     }
 
     private static IReadOnlyList<Diagnostic> SortDiagnostics(IEnumerable<Diagnostic> diagnostics)

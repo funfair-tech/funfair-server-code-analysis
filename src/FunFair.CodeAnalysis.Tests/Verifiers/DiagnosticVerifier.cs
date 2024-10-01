@@ -72,7 +72,8 @@ public abstract partial class DiagnosticVerifier : TestBase
                 string resultMethodName = GetResultMethodName(diagnostic);
                 LinePosition linePosition = GetStartLinePosition(diagnostic);
 
-                builder = builder.Append(provider: CultureInfo.InvariantCulture, $"{resultMethodName}({linePosition.Line + 1}, {linePosition.Character + 1}, {analyzerType.Name}.{rule.Id})");
+                builder = builder.Append(provider: CultureInfo.InvariantCulture,
+                                         $"{resultMethodName}({linePosition.Line + 1}, {linePosition.Character + 1}, {analyzerType.Name}.{rule.Id})");
             }
 
             builder = builder.Append(value: ',')
@@ -232,7 +233,8 @@ public abstract partial class DiagnosticVerifier : TestBase
 
         if (additionalLocations.Count != expected.Locations.Count - 1)
         {
-            Assert.Fail($"Expected {expected.Locations.Count - 1} additional locations but got {additionalLocations.Count} for Diagnostic:\r\n    {FormatDiagnostics(analyzer: analyzer, actual)}\r\n");
+            Assert.Fail(
+                $"Expected {expected.Locations.Count - 1} additional locations but got {additionalLocations.Count} for Diagnostic:\r\n    {FormatDiagnostics(analyzer: analyzer, actual)}\r\n");
         }
 
         for (int j = 0; j < additionalLocations.Count; ++j)
