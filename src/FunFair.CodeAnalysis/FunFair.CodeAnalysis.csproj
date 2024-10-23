@@ -1,9 +1,17 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
+    <AnalysisLevel>latest</AnalysisLevel>
+    <AnalysisMode>AllEnabledByDefault</AnalysisMode>
+    <CodeAnalysisRuleSet>$(SolutionDir)\CodeAnalysis.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
     <DebuggerSupport>true</DebuggerSupport>
+    <Description>Code analysis rules that are used throught FunFair dotnet packages to pick up common issues that are encountered.</Description>
+    <DevelopmentDependency>true</DevelopmentDependency>
     <DisableImplicitNuGetFallbackFolder>true</DisableImplicitNuGetFallbackFolder>
     <EnableMicrosoftExtensionsConfigurationBinderSourceGenerator>true</EnableMicrosoftExtensionsConfigurationBinderSourceGenerator>
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
     <EnablePackageValidation>true</EnablePackageValidation>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
     <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
     <Features>strict;flow-analysis</Features>
     <GenerateNeutralResourcesLanguageAttribute>true</GenerateNeutralResourcesLanguageAttribute>
@@ -18,6 +26,8 @@
     <IsPublishable>false</IsPublishable>
     <JsonSerializerIsReflectionEnabledByDefault>false</JsonSerializerIsReflectionEnabledByDefault>
     <LangVersion>latest</LangVersion>
+    <NeutralLanguage>en-GB</NeutralLanguage>
+    <NoPackageAnalysis>true</NoPackageAnalysis>
     <NoWarn />
     <NuGetAudit>true</NuGetAudit>
     <NuGetAuditLevel>low</NuGetAuditLevel>
@@ -26,6 +36,8 @@
     <OptimizationPreference>speed</OptimizationPreference>
     <OutputType>Library</OutputType>
     <PackAsTool>false</PackAsTool>
+    <PackageTags>FunFair CodeAnalysis, CSharp, Roslyn, analyzers</PackageTags>
+    <RepositoryUrl>https://github.com/funfair-tech/funfair-server-code-analysis</RepositoryUrl>
     <RunAOTCompilation>false</RunAOTCompilation>
     <SymbolPackageFormat>symbols.nupkg</SymbolPackageFormat>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -40,22 +52,6 @@
     <IsTrimmable>true</IsTrimmable>
   </PropertyGroup>
   <Import Project="$(SolutionDir)FunFair.props" />
-  <PropertyGroup>
-    <Description>Code analysis rules that are used throught FunFair dotnet packages to pick up common issues that are encountered.</Description>
-    <DevelopmentDependency>true</DevelopmentDependency>
-    <NeutralLanguage>en-GB</NeutralLanguage>
-    <NoPackageAnalysis>true</NoPackageAnalysis>
-    <PackageTags>FunFair CodeAnalysis, CSharp, Roslyn, analyzers</PackageTags>
-    <RepositoryUrl>https://github.com/funfair-tech/funfair-server-code-analysis</RepositoryUrl>
-  </PropertyGroup>
-  <PropertyGroup>
-    <AnalysisLevel>latest</AnalysisLevel>
-    <AnalysisMode>AllEnabledByDefault</AnalysisMode>
-    <CodeAnalysisRuleSet>$(SolutionDir)\CodeAnalysis.ruleset</CodeAnalysisRuleSet>
-    <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
-    <EnableNETAnalyzers>true</EnableNETAnalyzers>
-    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
-  </PropertyGroup>
   <Import Project="$(SolutionDir)Analyzer.props" />
   <ItemGroup>
     <PackageReference Include="AsyncFixer" Version="1.6.0" PrivateAssets="All" ExcludeAssets="runtime" />
