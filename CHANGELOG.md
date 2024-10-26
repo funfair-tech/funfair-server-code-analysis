@@ -9,16 +9,19 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 ### Added
 ### Fixed
 ### Changed
-- Dependencies - Updated Credfeto.Enumeration to 1.1.15.626
-- Dependencies - Updated Meziantou.Analyzer to 2.0.176
-- Dependencies - Updated FunFair.Test.Common to 6.1.229.911
-- Dependencies - Updated Roslynator.Analyzers to 4.12.9
 ### Removed
 ### Deployment Changes
 
 <!--
 Releases that have at least been deployed to staging, BUT NOT necessarily released to live.  Changes should be moved from [Unreleased] into here as they are merged into the appropriate release branch
 -->
+## [7.0.25] - 2024-10-26
+### Changed
+- Dependencies - Updated Credfeto.Enumeration to 1.1.15.626
+- Dependencies - Updated Meziantou.Analyzer to 2.0.176
+- Dependencies - Updated FunFair.Test.Common to 6.1.229.911
+- Dependencies - Updated Roslynator.Analyzers to 4.12.9
+
 ## [7.0.24] - 2024-10-19
 ### Changed
 - SDK - Updated to DotNet 9.0 RC1
