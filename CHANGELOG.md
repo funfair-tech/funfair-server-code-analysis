@@ -9,13 +9,16 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 ### Added
 ### Fixed
 ### Changed
-- SDK - Updated DotNet SDK to 9.0.100
 ### Removed
 ### Deployment Changes
 
 <!--
 Releases that have at least been deployed to staging, BUT NOT necessarily released to live.  Changes should be moved from [Unreleased] into here as they are merged into the appropriate release branch
 -->
+## [7.0.34] - 2024-11-13
+### Changed
+- SDK - Updated DotNet SDK to 9.0.100
+
 ## [7.0.33] - 2024-11-13
 ### Changed
 - Dependencies - Updated FunFair.Test.Common to 6.1.238.970
