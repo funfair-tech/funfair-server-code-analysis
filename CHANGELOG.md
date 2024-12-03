@@ -9,13 +9,16 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 ### Added
 ### Fixed
 ### Changed
-- Dependencies - Updated Credfeto.Enumeration to 1.2.39.744
 ### Removed
 ### Deployment Changes
 
 <!--
 Releases that have at least been deployed to staging, BUT NOT necessarily released to live.  Changes should be moved from [Unreleased] into here as they are merged into the appropriate release branch
 -->
+## [7.0.49] - 2024-12-03
+### Changed
+- Dependencies - Updated Credfeto.Enumeration to 1.2.39.744
+
 ## [7.0.48] - 2024-12-02
 ### Changed
 - Dependencies - Updated Credfeto.Enumeration to 1.2.38.742
