@@ -52,7 +52,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Credfeto.Enumeration.Source.Generation.Attributes" Version="1.2.43.772" />
-    <PackageReference Include="FunFair.Test.Common" Version="6.1.239.979" />
+    <PackageReference Include="FunFair.Test.Common" Version="6.1.240.1022" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.12.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="9.0.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
