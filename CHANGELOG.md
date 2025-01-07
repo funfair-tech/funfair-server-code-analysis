@@ -9,14 +9,17 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 ### Added
 ### Fixed
 ### Changed
-- Dependencies - Updated FunFair.Test.Common to 6.1.242.1044
-- Dependencies - Updated Credfeto.Enumeration to 1.2.50.814
 ### Removed
 ### Deployment Changes
 
 <!--
 Releases that have at least been deployed to staging, BUT NOT necessarily released to live.  Changes should be moved from [Unreleased] into here as they are merged into the appropriate release branch
 -->
+## [7.0.53] - 2025-01-07
+### Changed
+- Dependencies - Updated FunFair.Test.Common to 6.1.242.1044
+- Dependencies - Updated Credfeto.Enumeration to 1.2.50.814
+
 ## [7.0.52] - 2025-01-02
 ### Changed
 - Dependencies - Updated Microsoft.CodeAnalysis.CSharp to 4.12.0
