@@ -9,13 +9,16 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 ### Added
 ### Fixed
 ### Changed
-- SDK - Updated DotNet SDK to 9.0.102
 ### Removed
 ### Deployment Changes
 
 <!--
 Releases that have at least been deployed to staging, BUT NOT necessarily released to live.  Changes should be moved from [Unreleased] into here as they are merged into the appropriate release branch
 -->
+## [7.0.55] - 2025-01-15
+### Changed
+- SDK - Updated DotNet SDK to 9.0.102
+
 ## [7.0.54] - 2025-01-09
 ### Changed
 - Dependencies - Updated Microsoft.Sbom.Targets to 3.0.1
