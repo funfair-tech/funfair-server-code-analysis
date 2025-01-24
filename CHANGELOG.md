@@ -9,14 +9,17 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 ### Added
 ### Fixed
 ### Changed
-- Dependencies - Updated FunFair.Test.Common to 6.1.250.1092
-- Dependencies - Updated Credfeto.Enumeration to 1.2.59.872
 ### Removed
 ### Deployment Changes
 
 <!--
 Releases that have at least been deployed to staging, BUT NOT necessarily released to live.  Changes should be moved from [Unreleased] into here as they are merged into the appropriate release branch
 -->
+## [7.0.62] - 2025-01-24
+### Changed
+- Dependencies - Updated FunFair.Test.Common to 6.1.250.1092
+- Dependencies - Updated Credfeto.Enumeration to 1.2.59.872
+
 ## [7.0.60] - 2025-01-23
 ### Changed
 - Dependencies - Updated Credfeto.Enumeration to 1.2.58.866
