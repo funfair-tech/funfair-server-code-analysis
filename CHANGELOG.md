@@ -9,6 +9,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 ### Added
 ### Fixed
 ### Changed
+- Dependencies - Updated FunFair.Test.Common to 6.1.251.1096
 ### Removed
 ### Deployment Changes
 
