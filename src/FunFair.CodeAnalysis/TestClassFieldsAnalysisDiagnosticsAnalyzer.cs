@@ -11,10 +11,12 @@ namespace FunFair.CodeAnalysis;
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public sealed class TestClassFieldsAnalysisDiagnosticsAnalyzer : DiagnosticAnalyzer
 {
-    private static readonly DiagnosticDescriptor Rule = RuleHelpers.CreateRule(code: Rules.RuleTestClassesShouldNotDefineMutableFields,
-                                                                               category: Categories.Classes,
-                                                                               title: "Fields in test classes should be read-only or const",
-                                                                               message: "Fields in test classes should be read-only or const");
+    private static readonly DiagnosticDescriptor Rule = RuleHelpers.CreateRule(
+        code: Rules.RuleTestClassesShouldNotDefineMutableFields,
+        category: Categories.Classes,
+        title: "Fields in test classes should be read-only or const",
+        message: "Fields in test classes should be read-only or const"
+    );
 
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => SupportedDiagnosisList.Build(Rule);
 

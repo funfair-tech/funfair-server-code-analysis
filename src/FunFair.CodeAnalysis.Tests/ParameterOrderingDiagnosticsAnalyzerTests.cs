@@ -11,7 +11,8 @@ public sealed class ParameterOrderingDiagnosticsAnalyzerTests : DiagnosticAnalyz
     [Fact]
     public Task GenericLoggerAsLastParameterIsNotAnErrorAsync()
     {
-        const string test = @"
+        const string test =
+            @"
             using Microsoft.Extensions.Logging;
 
             public sealed class Test {
@@ -27,7 +28,8 @@ public sealed class ParameterOrderingDiagnosticsAnalyzerTests : DiagnosticAnalyz
     [Fact]
     public Task GenericLoggerAsOnlyParameterIsNotAnErrorAsync()
     {
-        const string test = @"
+        const string test =
+            @"
             using Microsoft.Extensions.Logging;
 
             public sealed class Test {
@@ -43,7 +45,8 @@ public sealed class ParameterOrderingDiagnosticsAnalyzerTests : DiagnosticAnalyz
     [Fact]
     public Task GenericLoggerParameterShouldBeLastWhenNoCancellationTokenAsync()
     {
-        const string test = @"
+        const string test =
+            @"
             using Microsoft.Extensions.Logging;
 
             public sealed class Test {
@@ -61,7 +64,8 @@ public sealed class ParameterOrderingDiagnosticsAnalyzerTests : DiagnosticAnalyz
     [Fact]
     public Task GenericLoggerParameterShouldBeNextLastWhenCancellationTokenAsync()
     {
-        const string test = @"
+        const string test =
+            @"
             using System.Threading;
             using Microsoft.Extensions.Logging;
 
@@ -74,18 +78,14 @@ public sealed class ParameterOrderingDiagnosticsAnalyzerTests : DiagnosticAnalyz
 
         DiagnosticResult expected = Result(id: "FFS0020", message: "Parameter 'logger' must be parameter 2", severity: DiagnosticSeverity.Error, line: 7, column: 30);
 
-        return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                [
-                                                    WellKnownMetadataReferences.GenericLogger,
-                                                    WellKnownMetadataReferences.CancellationToken
-                                                ],
-                                                expected: expected);
+        return this.VerifyCSharpDiagnosticAsync(source: test, [WellKnownMetadataReferences.GenericLogger, WellKnownMetadataReferences.CancellationToken], expected: expected);
     }
 
     [Fact]
     public Task LoggerAsLastParameterIsNotAnErrorAsync()
     {
-        const string test = @"
+        const string test =
+            @"
             using Microsoft.Extensions.Logging;
 
             public sealed class Test {
@@ -101,7 +101,8 @@ public sealed class ParameterOrderingDiagnosticsAnalyzerTests : DiagnosticAnalyz
     [Fact]
     public Task LoggerAsOnlyParameterIsNotAnErrorAsync()
     {
-        const string test = @"
+        const string test =
+            @"
             using Microsoft.Extensions.Logging;
 
             public sealed class Test {
@@ -117,7 +118,8 @@ public sealed class ParameterOrderingDiagnosticsAnalyzerTests : DiagnosticAnalyz
     [Fact]
     public Task LoggerExtensionMethodIsValidAsFirstParameterAsync()
     {
-        const string test = @"
+        const string test =
+            @"
             using Microsoft.Extensions.Logging;
 
             public static class Test {
@@ -133,7 +135,8 @@ public sealed class ParameterOrderingDiagnosticsAnalyzerTests : DiagnosticAnalyz
     [Fact]
     public Task LoggerParameterShouldBeLastWhenNoCancellationTokenAsync()
     {
-        const string test = @"
+        const string test =
+            @"
             using Microsoft.Extensions.Logging;
 
             public sealed class Test {
@@ -151,7 +154,8 @@ public sealed class ParameterOrderingDiagnosticsAnalyzerTests : DiagnosticAnalyz
     [Fact]
     public Task LoggerParameterShouldBeNextLastWhenCancellationTokenAsync()
     {
-        const string test = @"
+        const string test =
+            @"
             using System.Threading;
             using Microsoft.Extensions.Logging;
 
@@ -164,11 +168,6 @@ public sealed class ParameterOrderingDiagnosticsAnalyzerTests : DiagnosticAnalyz
 
         DiagnosticResult expected = Result(id: "FFS0020", message: "Parameter 'logger' must be parameter 2", severity: DiagnosticSeverity.Error, line: 7, column: 30);
 
-        return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                [
-                                                    WellKnownMetadataReferences.GenericLogger,
-                                                    WellKnownMetadataReferences.CancellationToken
-                                                ],
-                                                expected: expected);
+        return this.VerifyCSharpDiagnosticAsync(source: test, [WellKnownMetadataReferences.GenericLogger, WellKnownMetadataReferences.CancellationToken], expected: expected);
     }
 }

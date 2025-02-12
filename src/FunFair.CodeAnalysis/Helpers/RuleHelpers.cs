@@ -10,19 +10,19 @@ internal static class RuleHelpers
         LiteralString translatableTitle = new(title);
         LiteralString translatableMessage = UseTitleForMessage(title: title, message: message, translatableTitle: translatableTitle);
 
-        return new(id: code,
-                   title: translatableTitle,
-                   messageFormat: translatableMessage,
-                   category: category,
-                   defaultSeverity: DiagnosticSeverity.Error,
-                   isEnabledByDefault: true,
-                   description: translatableMessage);
+        return new(
+            id: code,
+            title: translatableTitle,
+            messageFormat: translatableMessage,
+            category: category,
+            defaultSeverity: DiagnosticSeverity.Error,
+            isEnabledByDefault: true,
+            description: translatableMessage
+        );
     }
 
     private static LiteralString UseTitleForMessage(string title, string message, LiteralString translatableTitle)
     {
-        return StringComparer.Ordinal.Equals(x: message, y: title)
-            ? translatableTitle
-            : new(message);
+        return StringComparer.Ordinal.Equals(x: message, y: title) ? translatableTitle : new(message);
     }
 }

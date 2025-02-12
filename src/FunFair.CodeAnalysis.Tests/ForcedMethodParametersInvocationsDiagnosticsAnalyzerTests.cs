@@ -11,7 +11,8 @@ public sealed class ForcedMethodParametersInvocationsDiagnosticsAnalyzerTests : 
     [Fact]
     public Task DeserializerWithJsonSerializerOptionsIsAllowedAsync()
     {
-        const string test = @"
+        const string test =
+            @"
     using System.Text.Json;
     using System.Text.Json.Serialization;
 
@@ -38,7 +39,8 @@ public sealed class ForcedMethodParametersInvocationsDiagnosticsAnalyzerTests : 
     [Fact]
     public Task DeserializerWithoutJsonSerializerOptionsIsNotAllowedAsync()
     {
-        const string test = @"
+        const string test =
+            @"
     using System.Text.Json;
 
     namespace ConsoleApplication1
@@ -57,11 +59,7 @@ public sealed class ForcedMethodParametersInvocationsDiagnosticsAnalyzerTests : 
         }
     }";
 
-        DiagnosticResult expected = Result(id: "FFS0015",
-                                           message: "Only use JsonSerializer.Deserialize with own JsonSerializerOptions",
-                                           severity: DiagnosticSeverity.Error,
-                                           line: 15,
-                                           column: 29);
+        DiagnosticResult expected = Result(id: "FFS0015", message: "Only use JsonSerializer.Deserialize with own JsonSerializerOptions", severity: DiagnosticSeverity.Error, line: 15, column: 29);
 
         return this.VerifyCSharpDiagnosticAsync(source: test, reference: WellKnownMetadataReferences.JsonSerializer, expected: expected);
     }
@@ -69,7 +67,8 @@ public sealed class ForcedMethodParametersInvocationsDiagnosticsAnalyzerTests : 
     [Fact]
     public Task NSubstituteExtensionsReceivedWithExpectedCallCountIsPassingAsync()
     {
-        const string test = @"
+        const string test =
+            @"
      using NSubstitute;
 
      namespace ConsoleApplication1
@@ -94,7 +93,8 @@ public sealed class ForcedMethodParametersInvocationsDiagnosticsAnalyzerTests : 
     [Fact]
     public Task NSubstituteExtensionsReceivedWithoutExpectedCallCountIsBannedAsync()
     {
-        const string test = @"
+        const string test =
+            @"
      using NSubstitute;
 
      namespace ConsoleApplication1
@@ -121,7 +121,8 @@ public sealed class ForcedMethodParametersInvocationsDiagnosticsAnalyzerTests : 
     [Fact]
     public Task SerializerWithJsonSerializerOptionsIsAllowedAsync()
     {
-        const string test = @"
+        const string test =
+            @"
     using System.Text.Json;
     using System.Text.Json.Serialization
 
@@ -148,7 +149,8 @@ public sealed class ForcedMethodParametersInvocationsDiagnosticsAnalyzerTests : 
     [Fact]
     public Task SerializerWithoutJsonSerializerOptionsIsNotAllowedAsync()
     {
-        const string test = @"
+        const string test =
+            @"
     using System.Text.Json;
 
     namespace ConsoleApplication1
@@ -167,11 +169,7 @@ public sealed class ForcedMethodParametersInvocationsDiagnosticsAnalyzerTests : 
         }
     }";
 
-        DiagnosticResult expected = Result(id: "FFS0014",
-                                           message: "Only use JsonSerializer.Serialize with own JsonSerializerOptions",
-                                           severity: DiagnosticSeverity.Error,
-                                           line: 15,
-                                           column: 34);
+        DiagnosticResult expected = Result(id: "FFS0014", message: "Only use JsonSerializer.Serialize with own JsonSerializerOptions", severity: DiagnosticSeverity.Error, line: 15, column: 34);
 
         return this.VerifyCSharpDiagnosticAsync(source: test, reference: WellKnownMetadataReferences.JsonSerializer, expected: expected);
     }

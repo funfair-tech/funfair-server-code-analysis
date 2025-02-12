@@ -18,13 +18,15 @@ public sealed class ProhibitedClassesInTestAssembliesDiagnosticsAnalyzer : Diagn
 {
     private static readonly IReadOnlyList<ProhibitedClassSpec> BannedClasses =
     [
-        Build(ruleId: Rules.RuleDontUseSystemConsoleInTestProjects,
-              title: "Avoid use of System.Console class",
-              message: "Use ITestOutputHelper rather than System.Console in test projects",
-              sourceClass: "System.Console")
+        Build(
+            ruleId: Rules.RuleDontUseSystemConsoleInTestProjects,
+            title: "Avoid use of System.Console class",
+            message: "Use ITestOutputHelper rather than System.Console in test projects",
+            sourceClass: "System.Console"
+        ),
     ];
 
-    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => [..BannedClasses.Select(selector: r => r.Rule)];
+    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => [.. BannedClasses.Select(selector: r => r.Rule)];
 
     public override void Initialize(AnalysisContext context)
     {
@@ -49,10 +51,10 @@ public sealed class ProhibitedClassesInTestAssembliesDiagnosticsAnalyzer : Diagn
         {
             if (compilationStartContext.Compilation.IsUnitTestAssembly())
             {
-                compilationStartContext.RegisterSyntaxNodeAction(action: syntaxNodeAnalysisContext =>
-                                                                             this.LookForBannedClasses(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
-                                                                                                       compilation: compilationStartContext.Compilation),
-                                                                 SyntaxKind.InvocationExpression);
+                compilationStartContext.RegisterSyntaxNodeAction(
+                    action: syntaxNodeAnalysisContext => this.LookForBannedClasses(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, compilation: compilationStartContext.Compilation),
+                    SyntaxKind.InvocationExpression
+                );
             }
         }
 
@@ -135,9 +137,7 @@ public sealed class ProhibitedClassesInTestAssembliesDiagnosticsAnalyzer : Diagn
                 return null;
             }
 
-            return cachedSymbols.TryGetValue(key: fullName, out INamedTypeSymbol? _)
-                ? fullName
-                : null;
+            return cachedSymbols.TryGetValue(key: fullName, out INamedTypeSymbol? _) ? fullName : null;
         }
     }
 

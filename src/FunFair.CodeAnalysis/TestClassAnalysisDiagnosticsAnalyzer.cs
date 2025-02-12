@@ -11,10 +11,12 @@ namespace FunFair.CodeAnalysis;
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public sealed class TestClassAnalysisDiagnosticsAnalyzer : DiagnosticAnalyzer
 {
-    private static readonly DiagnosticDescriptor Rule = RuleHelpers.CreateRule(code: Rules.RuleTestClassesShouldBeStaticSealedOrAbstractDerivedFromTestBase,
-                                                                               category: Categories.Classes,
-                                                                               title: "Test classes should be derived from TestBase",
-                                                                               message: "Test classes should be derived from TestBase");
+    private static readonly DiagnosticDescriptor Rule = RuleHelpers.CreateRule(
+        code: Rules.RuleTestClassesShouldBeStaticSealedOrAbstractDerivedFromTestBase,
+        category: Categories.Classes,
+        title: "Test classes should be derived from TestBase",
+        message: "Test classes should be derived from TestBase"
+    );
 
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => SupportedDiagnosisList.Build(Rule);
 
@@ -46,7 +48,7 @@ public sealed class TestClassAnalysisDiagnosticsAnalyzer : DiagnosticAnalyzer
 
     private static bool IsTestMethodInClassNotDerivedFromTestBase(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, MethodDeclarationSyntax methodDeclarationSyntax)
     {
-        return TestDetection.IsTestMethod(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, methodDeclarationSyntax: methodDeclarationSyntax) &&
-               !TestDetection.IsDerivedFromTestBase(syntaxNodeAnalysisContext);
+        return TestDetection.IsTestMethod(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, methodDeclarationSyntax: methodDeclarationSyntax)
+            && !TestDetection.IsDerivedFromTestBase(syntaxNodeAnalysisContext);
     }
 }

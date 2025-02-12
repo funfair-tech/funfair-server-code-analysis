@@ -11,7 +11,8 @@ public sealed class TestClassPropertyAnalysisDiagnosticsAnalyzerTests : Diagnost
     [Fact]
     public Task NonTestClassAllowedMutablePropertiesAsync()
     {
-        const string test = @"
+        const string test =
+            @"
 public sealed class NormalClass {
     public int TestValue {get; set;}
 
@@ -23,7 +24,8 @@ public sealed class NormalClass {
     [Fact]
     public Task TestClassProhibitedMutablePropertyAsync()
     {
-        const string test = @"
+        const string test =
+            @"
 using FunFair.Test.Common;
 
 public sealed class Test : TestBase {
@@ -32,24 +34,16 @@ public sealed class Test : TestBase {
 
 }";
 
-        DiagnosticResult expected = Result(id: "FFS0036",
-                                           message: "Properties in test classes should be read-only or const",
-                                           severity: DiagnosticSeverity.Error,
-                                           line: 6,
-                                           column: 5);
+        DiagnosticResult expected = Result(id: "FFS0036", message: "Properties in test classes should be read-only or const", severity: DiagnosticSeverity.Error, line: 6, column: 5);
 
-        return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                [
-                                                    WellKnownMetadataReferences.Xunit,
-                                                    WellKnownMetadataReferences.FunFairTestCommon
-                                                ],
-                                                expected: expected);
+        return this.VerifyCSharpDiagnosticAsync(source: test, [WellKnownMetadataReferences.Xunit, WellKnownMetadataReferences.FunFairTestCommon], expected: expected);
     }
 
     [Fact]
     public Task TestClassAllowedGetOnlyPropertyAsync()
     {
-        const string test = @"
+        const string test =
+            @"
 using FunFair.Test.Common;
 
 public sealed class Test : TestBase {
@@ -62,17 +56,14 @@ public sealed class Test : TestBase {
 
 }";
 
-        return this.VerifyCSharpDiagnosticAsync(source: test,
-        [
-            WellKnownMetadataReferences.Xunit,
-            WellKnownMetadataReferences.FunFairTestCommon
-        ]);
+        return this.VerifyCSharpDiagnosticAsync(source: test, [WellKnownMetadataReferences.Xunit, WellKnownMetadataReferences.FunFairTestCommon]);
     }
 
     [Fact]
     public Task TestClassAllowedGetOnlyPropertyWithLambdaAsync()
     {
-        const string test = @"
+        const string test =
+            @"
 using FunFair.Test.Common;
 
 public sealed class Test : TestBase {
@@ -81,17 +72,14 @@ public sealed class Test : TestBase {
 
 }";
 
-        return this.VerifyCSharpDiagnosticAsync(source: test,
-        [
-            WellKnownMetadataReferences.Xunit,
-            WellKnownMetadataReferences.FunFairTestCommon
-        ]);
+        return this.VerifyCSharpDiagnosticAsync(source: test, [WellKnownMetadataReferences.Xunit, WellKnownMetadataReferences.FunFairTestCommon]);
     }
 
     [Fact]
     public Task TestClassAllowedGetOnlyPropertyWithCompileTimeAsync()
     {
-        const string test = @"
+        const string test =
+            @"
 using FunFair.Test.Common;
 
 public sealed class Test : TestBase {
@@ -100,17 +88,14 @@ public sealed class Test : TestBase {
 
 }";
 
-        return this.VerifyCSharpDiagnosticAsync(source: test,
-        [
-            WellKnownMetadataReferences.Xunit,
-            WellKnownMetadataReferences.FunFairTestCommon
-        ]);
+        return this.VerifyCSharpDiagnosticAsync(source: test, [WellKnownMetadataReferences.Xunit, WellKnownMetadataReferences.FunFairTestCommon]);
     }
 
     [Fact]
     public Task TestClassAllowedGetOnlyPropertyWithExplicitBodyAsync()
     {
-        const string test = @"
+        const string test =
+            @"
 using FunFair.Test.Common;
 
 public sealed class Test : TestBase {
@@ -123,17 +108,14 @@ public sealed class Test : TestBase {
         }
 }";
 
-        return this.VerifyCSharpDiagnosticAsync(source: test,
-        [
-            WellKnownMetadataReferences.Xunit,
-            WellKnownMetadataReferences.FunFairTestCommon
-        ]);
+        return this.VerifyCSharpDiagnosticAsync(source: test, [WellKnownMetadataReferences.Xunit, WellKnownMetadataReferences.FunFairTestCommon]);
     }
 
     [Fact]
     public Task TestClassAllowedInitOnlyPropertyAsync()
     {
-        const string test = @"
+        const string test =
+            @"
 using FunFair.Test.Common;
 
 public sealed class Test : TestBase {
@@ -146,24 +128,16 @@ public sealed class Test : TestBase {
 
 }";
 
-        DiagnosticResult expected = Result(id: "FFS0036",
-                                           message: "Properties in test classes should be read-only or const",
-                                           severity: DiagnosticSeverity.Error,
-                                           line: 10,
-                                           column: 5);
+        DiagnosticResult expected = Result(id: "FFS0036", message: "Properties in test classes should be read-only or const", severity: DiagnosticSeverity.Error, line: 10, column: 5);
 
-        return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                [
-                                                    WellKnownMetadataReferences.Xunit,
-                                                    WellKnownMetadataReferences.FunFairTestCommon
-                                                ],
-                                                expected: expected);
+        return this.VerifyCSharpDiagnosticAsync(source: test, [WellKnownMetadataReferences.Xunit, WellKnownMetadataReferences.FunFairTestCommon], expected: expected);
     }
 
     [Fact]
     public Task TestClassProhibitedMutablePropertyWithExplicitBodyAsync()
     {
-        const string test = @"
+        const string test =
+            @"
 using FunFair.Test.Common;
 
 public sealed class Test : TestBase {
@@ -184,17 +158,8 @@ public sealed class Test : TestBase {
     }
 }";
 
-        DiagnosticResult expected = Result(id: "FFS0036",
-                                           message: "Properties in test classes should be read-only or const",
-                                           severity: DiagnosticSeverity.Error,
-                                           line: 10,
-                                           column: 5);
+        DiagnosticResult expected = Result(id: "FFS0036", message: "Properties in test classes should be read-only or const", severity: DiagnosticSeverity.Error, line: 10, column: 5);
 
-        return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                [
-                                                    WellKnownMetadataReferences.Xunit,
-                                                    WellKnownMetadataReferences.FunFairTestCommon
-                                                ],
-                                                expected: expected);
+        return this.VerifyCSharpDiagnosticAsync(source: test, [WellKnownMetadataReferences.Xunit, WellKnownMetadataReferences.FunFairTestCommon], expected: expected);
     }
 }

@@ -12,7 +12,8 @@ public sealed class ProhibitedClassesDiagnosticsAnalyzerTests : DiagnosticAnalyz
     [Fact]
     public Task AssertFalseForNonBlockingConcurrentDictionaryAsync()
     {
-        const string test = @"
+        const string test =
+            @"
      using NonBlocking;
 
      namespace ConsoleApplication1
@@ -32,7 +33,8 @@ public sealed class ProhibitedClassesDiagnosticsAnalyzerTests : DiagnosticAnalyz
     [Fact]
     public Task AssertTrueForCreationOfNewInstanceWithMessageIsBannedAsync()
     {
-        const string test = @"
+        const string test =
+            @"
      using System.Collections.Concurrent;
 
      namespace ConsoleApplication1
@@ -45,11 +47,13 @@ public sealed class ProhibitedClassesDiagnosticsAnalyzerTests : DiagnosticAnalyz
              }
          }
      }";
-        DiagnosticResult expected = Result(id: "FFS0031",
-                                           message: "Use NonBlocking.ConcurrentDictionary rather than System.Collections.Concurrent.ConcurrentDictionary",
-                                           severity: DiagnosticSeverity.Error,
-                                           line: 10,
-                                           column: 61);
+        DiagnosticResult expected = Result(
+            id: "FFS0031",
+            message: "Use NonBlocking.ConcurrentDictionary rather than System.Collections.Concurrent.ConcurrentDictionary",
+            severity: DiagnosticSeverity.Error,
+            line: 10,
+            column: 61
+        );
 
         return this.VerifyCSharpDiagnosticAsync(source: test, reference: WellKnownMetadataReferences.ConcurrentDictionary, expected: expected);
     }
@@ -57,7 +61,8 @@ public sealed class ProhibitedClassesDiagnosticsAnalyzerTests : DiagnosticAnalyz
     [Fact]
     public Task AssertTrueForParameterInMethodDeclarationWithMessageIsBannedAsync()
     {
-        const string test = @"
+        const string test =
+            @"
      using System.Collections.Concurrent;
 
      namespace ConsoleApplication1
@@ -71,11 +76,13 @@ public sealed class ProhibitedClassesDiagnosticsAnalyzerTests : DiagnosticAnalyz
          }
      }";
 
-        DiagnosticResult expected = Result(id: "FFS0031",
-                                           message: "Use NonBlocking.ConcurrentDictionary rather than System.Collections.Concurrent.ConcurrentDictionary",
-                                           severity: DiagnosticSeverity.Error,
-                                           line: 8,
-                                           column: 14);
+        DiagnosticResult expected = Result(
+            id: "FFS0031",
+            message: "Use NonBlocking.ConcurrentDictionary rather than System.Collections.Concurrent.ConcurrentDictionary",
+            severity: DiagnosticSeverity.Error,
+            line: 8,
+            column: 14
+        );
 
         return this.VerifyCSharpDiagnosticAsync(source: test, reference: WellKnownMetadataReferences.ConcurrentDictionary, expected: expected);
     }
@@ -83,7 +90,8 @@ public sealed class ProhibitedClassesDiagnosticsAnalyzerTests : DiagnosticAnalyz
     [Fact]
     public Task AssertTrueForFieldDeclarationMessageIsBannedAsync()
     {
-        const string test = @"
+        const string test =
+            @"
      using System.Collections.Concurrent;
 
      namespace ConsoleApplication1
@@ -101,16 +109,20 @@ public sealed class ProhibitedClassesDiagnosticsAnalyzerTests : DiagnosticAnalyz
 
         IReadOnlyList<DiagnosticResult> expected =
         [
-            Result(id: "FFS0031",
-                   message: "Use NonBlocking.ConcurrentDictionary rather than System.Collections.Concurrent.ConcurrentDictionary",
-                   severity: DiagnosticSeverity.Error,
-                   line: 8,
-                   column: 52),
-            Result(id: "FFS0031",
-                   message: "Use NonBlocking.ConcurrentDictionary rather than System.Collections.Concurrent.ConcurrentDictionary",
-                   severity: DiagnosticSeverity.Error,
-                   line: 12,
-                   column: 35)
+            Result(
+                id: "FFS0031",
+                message: "Use NonBlocking.ConcurrentDictionary rather than System.Collections.Concurrent.ConcurrentDictionary",
+                severity: DiagnosticSeverity.Error,
+                line: 8,
+                column: 52
+            ),
+            Result(
+                id: "FFS0031",
+                message: "Use NonBlocking.ConcurrentDictionary rather than System.Collections.Concurrent.ConcurrentDictionary",
+                severity: DiagnosticSeverity.Error,
+                line: 12,
+                column: 35
+            ),
         ];
 
         return this.VerifyCSharpDiagnosticAsync(source: test, references: WellKnownMetadataReferences.ConcurrentDictionary, expected: expected);
@@ -119,7 +131,8 @@ public sealed class ProhibitedClassesDiagnosticsAnalyzerTests : DiagnosticAnalyz
     [Fact]
     public Task AssertTrueForPropertyDeclarationMessageIsBannedAsync()
     {
-        const string test = @"
+        const string test =
+            @"
      using System.Collections.Concurrent;
 
      namespace ConsoleApplication1
@@ -134,23 +147,22 @@ public sealed class ProhibitedClassesDiagnosticsAnalyzerTests : DiagnosticAnalyz
              }
          }
      }";
-        DiagnosticResult expected = Result(id: "FFS0031",
-                                           message: "Use NonBlocking.ConcurrentDictionary rather than System.Collections.Concurrent.ConcurrentDictionary",
-                                           severity: DiagnosticSeverity.Error,
-                                           line: 8,
-                                           column: 13);
+        DiagnosticResult expected = Result(
+            id: "FFS0031",
+            message: "Use NonBlocking.ConcurrentDictionary rather than System.Collections.Concurrent.ConcurrentDictionary",
+            severity: DiagnosticSeverity.Error,
+            line: 8,
+            column: 13
+        );
 
-        return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                [
-                                                    WellKnownMetadataReferences.ConcurrentDictionary
-                                                ],
-                                                expected: expected);
+        return this.VerifyCSharpDiagnosticAsync(source: test, [WellKnownMetadataReferences.ConcurrentDictionary], expected: expected);
     }
 
     [Fact]
     public Task AssertTrueForParameterInConstructorDeclarationWithMessageIsBannedAsync()
     {
-        const string test = @"
+        const string test =
+            @"
      using System.Collections.Concurrent;
 
      namespace ConsoleApplication1
@@ -164,11 +176,13 @@ public sealed class ProhibitedClassesDiagnosticsAnalyzerTests : DiagnosticAnalyz
          }
      }";
 
-        DiagnosticResult expected = Result(id: "FFS0031",
-                                           message: "Use NonBlocking.ConcurrentDictionary rather than System.Collections.Concurrent.ConcurrentDictionary",
-                                           severity: DiagnosticSeverity.Error,
-                                           line: 8,
-                                           column: 14);
+        DiagnosticResult expected = Result(
+            id: "FFS0031",
+            message: "Use NonBlocking.ConcurrentDictionary rather than System.Collections.Concurrent.ConcurrentDictionary",
+            severity: DiagnosticSeverity.Error,
+            line: 8,
+            column: 14
+        );
 
         return this.VerifyCSharpDiagnosticAsync(source: test, reference: WellKnownMetadataReferences.ConcurrentDictionary, expected: expected);
     }

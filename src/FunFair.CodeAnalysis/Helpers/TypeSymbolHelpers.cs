@@ -16,8 +16,6 @@ internal static class TypeSymbolHelpers
 
         string nameSpace = ns.ToDisplayString();
 
-        return string.IsNullOrEmpty(nameSpace)
-            ? null
-            : $"{nameSpace}.{od.MetadataName}";
+        return string.IsNullOrEmpty(nameSpace) ? null : $"{nameSpace}.{od.MetadataName}";
     }
 }

@@ -20,13 +20,15 @@ public sealed class ParameterOrderingDiagnosticsAnalyzer : DiagnosticAnalyzer
     [
         "Microsoft.Extensions.Logging.ILogger<TCategoryName>",
         "Microsoft.Extensions.Logging.ILogger",
-        "System.Threading.CancellationToken"
+        "System.Threading.CancellationToken",
     ];
 
-    private static readonly DiagnosticDescriptor Rule = RuleHelpers.CreateRule(code: Rules.RuleParametersShouldBeInOrder,
-                                                                               category: Categories.Parameters,
-                                                                               title: "Parameters are out of order",
-                                                                               message: "Parameter '{0}' must be parameter {1}");
+    private static readonly DiagnosticDescriptor Rule = RuleHelpers.CreateRule(
+        code: Rules.RuleParametersShouldBeInOrder,
+        category: Categories.Parameters,
+        title: "Parameters are out of order",
+        message: "Parameter '{0}' must be parameter {1}"
+    );
 
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => SupportedDiagnosisList.Build(Rule);
 
@@ -78,10 +80,12 @@ public sealed class ParameterOrderingDiagnosticsAnalyzer : DiagnosticAnalyzer
 
             if (parameterIndex != requiredParameterIndex)
             {
-                matchingParameter.Parameter.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
-                                                              rule: Rule,
-                                                              matchingParameter.Parameter.Identifier.Text,
-                                                              requiredParameterIndex + 1);
+                matchingParameter.Parameter.ReportDiagnostics(
+                    syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
+                    rule: Rule,
+                    matchingParameter.Parameter.Identifier.Text,
+                    requiredParameterIndex + 1
+                );
             }
         }
     }
@@ -91,12 +95,18 @@ public sealed class ParameterOrderingDiagnosticsAnalyzer : DiagnosticAnalyzer
     {
         return
         [
-            ..parameterList.Parameters.Select((parameter, index) => new ParameterItem(parameter: parameter,
-                                                                                      index: index,
-                                                                                      ParameterHelpers.GetFullTypeName(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
-                                                                                                                       parameterSyntax: parameter,
-                                                                                                                       cancellationToken: syntaxNodeAnalysisContext
-                                                                                                                           .CancellationToken)!))
+            .. parameterList.Parameters.Select(
+                (parameter, index) =>
+                    new ParameterItem(
+                        parameter: parameter,
+                        index: index,
+                        ParameterHelpers.GetFullTypeName(
+                            syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
+                            parameterSyntax: parameter,
+                            cancellationToken: syntaxNodeAnalysisContext.CancellationToken
+                        )!
+                    )
+            ),
         ];
     }
 

@@ -17,19 +17,23 @@ public sealed class ClassVisibilityDiagnosticsAnalyzer : DiagnosticAnalyzer
 {
     private static readonly IReadOnlyList<ConfiguredClass> Classes =
     [
-        Build(ruleId: Rules.MockBaseClassInstancesMustBeInternal,
-              title: "MockBase<T> instances must be internal",
-              message: "MockBase<T> instances must be internal",
-              className: "FunFair.Test.Common.Mocks.MockBase<T>",
-              visibility: SyntaxKind.InternalKeyword),
-        Build(ruleId: Rules.MockBaseClassInstancesMustBeSealed,
-              title: "MockBase<T> instances must be sealed",
-              message: "MockBase<T> instances must be sealed",
-              className: "FunFair.Test.Common.Mocks.MockBase<T>",
-              visibility: SyntaxKind.SealedKeyword)
+        Build(
+            ruleId: Rules.MockBaseClassInstancesMustBeInternal,
+            title: "MockBase<T> instances must be internal",
+            message: "MockBase<T> instances must be internal",
+            className: "FunFair.Test.Common.Mocks.MockBase<T>",
+            visibility: SyntaxKind.InternalKeyword
+        ),
+        Build(
+            ruleId: Rules.MockBaseClassInstancesMustBeSealed,
+            title: "MockBase<T> instances must be sealed",
+            message: "MockBase<T> instances must be sealed",
+            className: "FunFair.Test.Common.Mocks.MockBase<T>",
+            visibility: SyntaxKind.SealedKeyword
+        ),
     ];
 
-    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => [..Classes.Select(c => c.Rule)];
+    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => [.. Classes.Select(c => c.Rule)];
 
     public override void Initialize(AnalysisContext context)
     {
@@ -53,8 +57,7 @@ public sealed class ClassVisibilityDiagnosticsAnalyzer : DiagnosticAnalyzer
 
         foreach (ConfiguredClass classDefinition in Classes)
         {
-            if (classDefinition.TypeMatchesClass(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext) &&
-                !classDefinition.HasCorrectClassModifier(classDeclarationSyntax: classDeclarationSyntax))
+            if (classDefinition.TypeMatchesClass(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext) && !classDefinition.HasCorrectClassModifier(classDeclarationSyntax: classDeclarationSyntax))
             {
                 classDeclarationSyntax.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: classDefinition.Rule);
             }
@@ -91,8 +94,7 @@ public sealed class ClassVisibilityDiagnosticsAnalyzer : DiagnosticAnalyzer
 
             string className = this.ClassName;
 
-            return containingType.BaseClasses()
-                                 .Any(s => IsMatchingClass(typeSymbol: s, className: className));
+            return containingType.BaseClasses().Any(s => IsMatchingClass(typeSymbol: s, className: className));
         }
 
         private static bool IsMatchingClass(INamedTypeSymbol typeSymbol, string className)

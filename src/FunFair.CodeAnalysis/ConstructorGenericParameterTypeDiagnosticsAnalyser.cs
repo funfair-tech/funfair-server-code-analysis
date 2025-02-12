@@ -18,30 +18,34 @@ public sealed class ConstructorGenericParameterTypeDiagnosticsAnalyser : Diagnos
 {
     private static readonly IReadOnlyList<TypeCheckSpec> Specifications =
     [
-        Build(ruleId: Rules.LoggerParametersOnBaseClassesShouldNotUseGenericLoggerCategory,
-              title: "ILogger parameters on base classes should not be ILogger<{0}> but ILogger",
-              message: "ILogger parameters on base classes should not be ILogger<{0}> but ILogger",
-              allowedSourceClass: "Microsoft.Extensions.Logging.ILogger",
-              prohibitedClass: "Microsoft.Extensions.Logging.ILogger<TCategoryName>",
-              isProtected: true,
-              matchTypeOnGenericParameters: false),
-        Build(ruleId: Rules.LoggerParametersOnLeafClassesShouldUseGenericLoggerCategory,
-              title: "ILogger parameters on leaf classes should not be ILogger but ILogger<{0}>",
-              message: "ILogger parameters on leaf classes should not be ILogger but ILogger<{0}>",
-              allowedSourceClass: "Microsoft.Extensions.Logging.ILogger<TCategoryName>",
-              prohibitedClass: "Microsoft.Extensions.Logging.ILogger",
-              isProtected: false,
-              matchTypeOnGenericParameters: true)
+        Build(
+            ruleId: Rules.LoggerParametersOnBaseClassesShouldNotUseGenericLoggerCategory,
+            title: "ILogger parameters on base classes should not be ILogger<{0}> but ILogger",
+            message: "ILogger parameters on base classes should not be ILogger<{0}> but ILogger",
+            allowedSourceClass: "Microsoft.Extensions.Logging.ILogger",
+            prohibitedClass: "Microsoft.Extensions.Logging.ILogger<TCategoryName>",
+            isProtected: true,
+            matchTypeOnGenericParameters: false
+        ),
+        Build(
+            ruleId: Rules.LoggerParametersOnLeafClassesShouldUseGenericLoggerCategory,
+            title: "ILogger parameters on leaf classes should not be ILogger but ILogger<{0}>",
+            message: "ILogger parameters on leaf classes should not be ILogger but ILogger<{0}>",
+            allowedSourceClass: "Microsoft.Extensions.Logging.ILogger<TCategoryName>",
+            prohibitedClass: "Microsoft.Extensions.Logging.ILogger",
+            isProtected: false,
+            matchTypeOnGenericParameters: true
+        ),
     ];
 
-    private static readonly DiagnosticDescriptor MissMatchTypes = RuleHelpers.CreateRule(code: Rules.GenericTypeMissMatch,
-                                                                                         category: Categories.Naming,
-                                                                                         title: "Should be using '{0}' rather than '{1}' with {2}",
-                                                                                         message: "Should be using '{0}' rather than '{1}' with {2}");
+    private static readonly DiagnosticDescriptor MissMatchTypes = RuleHelpers.CreateRule(
+        code: Rules.GenericTypeMissMatch,
+        category: Categories.Naming,
+        title: "Should be using '{0}' rather than '{1}' with {2}",
+        message: "Should be using '{0}' rather than '{1}' with {2}"
+    );
 
-    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
-        SupportedDiagnosisList.Build(Specifications.Select(s => s.Rule))
-                              .Add(MissMatchTypes);
+    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => SupportedDiagnosisList.Build(Specifications.Select(s => s.Rule)).Add(MissMatchTypes);
 
     public override void Initialize(AnalysisContext context)
     {
@@ -73,22 +77,27 @@ public sealed class ConstructorGenericParameterTypeDiagnosticsAnalyser : Diagnos
             return;
         }
 
-        MustHaveSaneGenericUsages(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
-                                  constructorDeclarationSyntax: constructorDeclarationSyntax,
-                                  parentSymbolForClassForConstructor: parentSymbolForClassForConstructor);
+        MustHaveSaneGenericUsages(
+            syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
+            constructorDeclarationSyntax: constructorDeclarationSyntax,
+            parentSymbolForClassForConstructor: parentSymbolForClassForConstructor
+        );
     }
 
-    private static void MustHaveSaneGenericUsages(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext,
-                                                  ConstructorDeclarationSyntax constructorDeclarationSyntax,
-                                                  ClassDeclarationSyntax parentSymbolForClassForConstructor)
+    private static void MustHaveSaneGenericUsages(
+        in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext,
+        ConstructorDeclarationSyntax constructorDeclarationSyntax,
+        ClassDeclarationSyntax parentSymbolForClassForConstructor
+    )
     {
-        ISymbol classForConstructor =
-            GetDeclaredSymbol(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, parentSymbolForClassForConstructor: parentSymbolForClassForConstructor);
+        ISymbol classForConstructor = GetDeclaredSymbol(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, parentSymbolForClassForConstructor: parentSymbolForClassForConstructor);
         string className = classForConstructor.ToDisplayString();
 
-        bool needed = IsNeeded(parentSymbolForClassForConstructor: parentSymbolForClassForConstructor,
-                               classForConstructor: classForConstructor,
-                               constructorDeclarationSyntax: constructorDeclarationSyntax);
+        bool needed = IsNeeded(
+            parentSymbolForClassForConstructor: parentSymbolForClassForConstructor,
+            classForConstructor: classForConstructor,
+            constructorDeclarationSyntax: constructorDeclarationSyntax
+        );
 
         foreach (ParameterSyntax parameterSyntax in constructorDeclarationSyntax.ParameterList.Parameters)
         {
@@ -100,8 +109,7 @@ public sealed class ConstructorGenericParameterTypeDiagnosticsAnalyser : Diagnos
     private static INamedTypeSymbol GetDeclaredSymbol(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, ClassDeclarationSyntax parentSymbolForClassForConstructor)
     {
         // TODO: consider throwing
-        return syntaxNodeAnalysisContext.SemanticModel.GetDeclaredSymbol(declarationSyntax: parentSymbolForClassForConstructor,
-                                                                         cancellationToken: syntaxNodeAnalysisContext.CancellationToken)!;
+        return syntaxNodeAnalysisContext.SemanticModel.GetDeclaredSymbol(declarationSyntax: parentSymbolForClassForConstructor, cancellationToken: syntaxNodeAnalysisContext.CancellationToken)!;
     }
 
     private static bool IsNeeded(ClassDeclarationSyntax parentSymbolForClassForConstructor, ISymbol classForConstructor, ConstructorDeclarationSyntax constructorDeclarationSyntax)
@@ -127,9 +135,11 @@ public sealed class ConstructorGenericParameterTypeDiagnosticsAnalyser : Diagnos
 
     private static void CheckParameter(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, ParameterSyntax parameterSyntax, bool isProtected, string className)
     {
-        string? fullTypeName = ParameterHelpers.GetFullTypeName(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
-                                                                parameterSyntax: parameterSyntax,
-                                                                cancellationToken: syntaxNodeAnalysisContext.CancellationToken);
+        string? fullTypeName = ParameterHelpers.GetFullTypeName(
+            syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
+            parameterSyntax: parameterSyntax,
+            cancellationToken: syntaxNodeAnalysisContext.CancellationToken
+        );
 
         if (fullTypeName is null)
         {
@@ -149,10 +159,7 @@ public sealed class ConstructorGenericParameterTypeDiagnosticsAnalyser : Diagnos
         {
             if (rule.MatchTypeOnGenericParameters)
             {
-                CheckGenericParameterTypeMatch(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
-                                               parameterSyntax: parameterSyntax,
-                                               className: className,
-                                               fullTypeName: fullTypeName);
+                CheckGenericParameterTypeMatch(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, parameterSyntax: parameterSyntax, className: className, fullTypeName: fullTypeName);
             }
 
             return;
@@ -169,13 +176,9 @@ public sealed class ConstructorGenericParameterTypeDiagnosticsAnalyser : Diagnos
         return Specifications.FirstOrDefault(ns => ns.IsProtected == isProtected && (ns.IsAllowedSourceClass(fullTypeName) || ns.IsProhibitedClass(fullTypeName)));
     }
 
-    private static void CheckGenericParameterTypeMatch(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext,
-                                                       ParameterSyntax parameterSyntax,
-                                                       string className,
-                                                       string fullTypeName)
+    private static void CheckGenericParameterTypeMatch(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, ParameterSyntax parameterSyntax, string className, string fullTypeName)
     {
-        IParameterSymbol? ds =
-            syntaxNodeAnalysisContext.SemanticModel.GetDeclaredSymbol(declarationSyntax: parameterSyntax, cancellationToken: syntaxNodeAnalysisContext.CancellationToken);
+        IParameterSymbol? ds = syntaxNodeAnalysisContext.SemanticModel.GetDeclaredSymbol(declarationSyntax: parameterSyntax, cancellationToken: syntaxNodeAnalysisContext.CancellationToken);
 
         ITypeSymbol? dsType = ds?.Type;
 
@@ -191,8 +194,7 @@ public sealed class ConstructorGenericParameterTypeDiagnosticsAnalyser : Diagnos
             return;
         }
 
-        string displayName = tm[0]
-            .ToDisplayString();
+        string displayName = tm[0].ToDisplayString();
 
         if (!StringComparer.Ordinal.Equals(x: displayName, y: className))
         {
@@ -200,21 +202,17 @@ public sealed class ConstructorGenericParameterTypeDiagnosticsAnalyser : Diagnos
         }
     }
 
-    private static TypeCheckSpec Build(string ruleId,
-                                       string title,
-                                       string message,
-                                       string allowedSourceClass,
-                                       string prohibitedClass,
-                                       bool isProtected,
-                                       bool matchTypeOnGenericParameters)
+    private static TypeCheckSpec Build(string ruleId, string title, string message, string allowedSourceClass, string prohibitedClass, bool isProtected, bool matchTypeOnGenericParameters)
     {
-        return new(ruleId: ruleId,
-                   title: title,
-                   message: message,
-                   allowedSourceClass: allowedSourceClass,
-                   prohibitedClass: prohibitedClass,
-                   isProtected: isProtected,
-                   matchTypeOnGenericParameters: matchTypeOnGenericParameters);
+        return new(
+            ruleId: ruleId,
+            title: title,
+            message: message,
+            allowedSourceClass: allowedSourceClass,
+            prohibitedClass: prohibitedClass,
+            isProtected: isProtected,
+            matchTypeOnGenericParameters: matchTypeOnGenericParameters
+        );
     }
 
     [DebuggerDisplay("{Rule.Id} {Rule.Title} Allowed {AllowedSourceClass} Prohibited {ProhibitedClass} Match on generics {MatchTypeOnGenericParameters}")]

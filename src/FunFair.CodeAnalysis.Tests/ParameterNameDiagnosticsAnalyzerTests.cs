@@ -11,7 +11,8 @@ public sealed class ParameterNameDiagnosticsAnalyzerTests : DiagnosticAnalyzerVe
     [Fact]
     public Task GenericLoggerParameterNameInvalidAsync()
     {
-        const string test = @"
+        const string test =
+            @"
             using Microsoft.Extensions.Logging;
 
             public sealed class Test {
@@ -29,7 +30,8 @@ public sealed class ParameterNameDiagnosticsAnalyzerTests : DiagnosticAnalyzerVe
     [Fact]
     public Task GenericLoggerParameterNameIsValidAsync()
     {
-        const string test = @"
+        const string test =
+            @"
             using Microsoft.Extensions.Logging;
 
             public sealed class Test {
@@ -45,7 +47,8 @@ public sealed class ParameterNameDiagnosticsAnalyzerTests : DiagnosticAnalyzerVe
     [Fact]
     public Task LoggerParameterNameInvalidAsync()
     {
-        const string test = @"
+        const string test =
+            @"
             using Microsoft.Extensions.Logging;
 
             public sealed class Test {
@@ -63,7 +66,8 @@ public sealed class ParameterNameDiagnosticsAnalyzerTests : DiagnosticAnalyzerVe
     [Fact]
     public Task LoggerParameterNameIsValidAsync()
     {
-        const string test = @"
+        const string test =
+            @"
             using Microsoft.Extensions.Logging;
 
             public sealed class Test {

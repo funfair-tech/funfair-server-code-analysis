@@ -11,7 +11,8 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzerTests : Diagno
     [Fact]
     public Task AssertFalseWithMessageIsAllowedAsync()
     {
-        const string test = @"
+        const string test =
+            @"
      using Xunit;
      namespace ConsoleApplication1
      {
@@ -30,7 +31,8 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzerTests : Diagno
     [Fact]
     public Task AssertFalseWithoutMessageIsBannedAsync()
     {
-        const string test = @"
+        const string test =
+            @"
     using Xunit;
     namespace ConsoleApplication1
     {
@@ -50,7 +52,8 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzerTests : Diagno
     [Fact]
     public Task AssertTrueWithMessageIsAllowedAsync()
     {
-        const string test = @"
+        const string test =
+            @"
     using Xunit;
     namespace ConsoleApplication1
     {
@@ -69,7 +72,8 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzerTests : Diagno
     [Fact]
     public Task AssertTrueWithoutMessageIsBannedAsync()
     {
-        const string test = @"
+        const string test =
+            @"
      using Xunit;
      namespace ConsoleApplication1
      {
@@ -83,17 +87,14 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzerTests : Diagno
      }";
         DiagnosticResult expected = Result(id: "FFS0009", message: "Only use Assert.True with message parameter", severity: DiagnosticSeverity.Error, line: 9, column: 18);
 
-        return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                [
-                                                    WellKnownMetadataReferences.Assert
-                                                ],
-                                                expected: expected);
+        return this.VerifyCSharpDiagnosticAsync(source: test, [WellKnownMetadataReferences.Assert], expected: expected);
     }
 
     [Fact]
     public Task ShouldRaiseErrorForAddOrUpdateAsync()
     {
-        const string test = @"
+        const string test =
+            @"
      using NonBlocking;
      namespace ConsoleApplication1
      {
@@ -106,12 +107,13 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzerTests : Diagno
              }
          }
      }";
-        DiagnosticResult expected = Result(id: "FFS0032",
-                                           message:
-                                           "Don't use any of the built in AddOrUpdate methods, instead FunFair.Common.Extensions.ConcurrentDictionaryExtensions.AddOrUpdate can be used",
-                                           severity: DiagnosticSeverity.Error,
-                                           line: 10,
-                                           column: 18);
+        DiagnosticResult expected = Result(
+            id: "FFS0032",
+            message: "Don't use any of the built in AddOrUpdate methods, instead FunFair.Common.Extensions.ConcurrentDictionaryExtensions.AddOrUpdate can be used",
+            severity: DiagnosticSeverity.Error,
+            line: 10,
+            column: 18
+        );
 
         return this.VerifyCSharpDiagnosticAsync(source: test, reference: WellKnownMetadataReferences.NonBlockingConcurrentDictionary, expected: expected);
     }
@@ -119,7 +121,8 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzerTests : Diagno
     [Fact]
     public Task ShouldRaiseErrorForAddOrUpdateWithOutAddValueFactoryAsync()
     {
-        const string test = @"
+        const string test =
+            @"
      using NonBlocking;
      namespace ConsoleApplication1
      {
@@ -132,24 +135,22 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzerTests : Diagno
              }
          }
      }";
-        DiagnosticResult expected = Result(id: "FFS0032",
-                                           message:
-                                           "Don't use any of the built in AddOrUpdate methods, instead FunFair.Common.Extensions.ConcurrentDictionaryExtensions.AddOrUpdate can be used",
-                                           severity: DiagnosticSeverity.Error,
-                                           line: 10,
-                                           column: 18);
+        DiagnosticResult expected = Result(
+            id: "FFS0032",
+            message: "Don't use any of the built in AddOrUpdate methods, instead FunFair.Common.Extensions.ConcurrentDictionaryExtensions.AddOrUpdate can be used",
+            severity: DiagnosticSeverity.Error,
+            line: 10,
+            column: 18
+        );
 
-        return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                [
-                                                    WellKnownMetadataReferences.NonBlockingConcurrentDictionary
-                                                ],
-                                                expected: expected);
+        return this.VerifyCSharpDiagnosticAsync(source: test, [WellKnownMetadataReferences.NonBlockingConcurrentDictionary], expected: expected);
     }
 
     [Fact]
     public Task ShouldRaiseForAddOrUpdateAsync()
     {
-        const string test = @"
+        const string test =
+            @"
      using NonBlocking;
      namespace ConsoleApplication1
      {
@@ -169,24 +170,22 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzerTests : Diagno
          }
      }";
 
-        DiagnosticResult expected = Result(id: "FFS0032",
-                                           message:
-                                           "Don't use any of the built in AddOrUpdate methods, instead FunFair.Common.Extensions.ConcurrentDictionaryExtensions.AddOrUpdate can be used",
-                                           severity: DiagnosticSeverity.Error,
-                                           line: 16,
-                                           column: 18);
+        DiagnosticResult expected = Result(
+            id: "FFS0032",
+            message: "Don't use any of the built in AddOrUpdate methods, instead FunFair.Common.Extensions.ConcurrentDictionaryExtensions.AddOrUpdate can be used",
+            severity: DiagnosticSeverity.Error,
+            line: 16,
+            column: 18
+        );
 
-        return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                [
-                                                    WellKnownMetadataReferences.NonBlockingConcurrentDictionary
-                                                ],
-                                                expected: expected);
+        return this.VerifyCSharpDiagnosticAsync(source: test, [WellKnownMetadataReferences.NonBlockingConcurrentDictionary], expected: expected);
     }
 
     [Fact]
     public Task ShouldRaiseForAddOrUpdateWithAddValueFactoryAsync()
     {
-        const string test = @"
+        const string test =
+            @"
      using NonBlocking;
      namespace ConsoleApplication1
      {
@@ -203,12 +202,13 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzerTests : Diagno
          }
      }";
 
-        DiagnosticResult expected = Result(id: "FFS0032",
-                                           message:
-                                           "Don't use any of the built in AddOrUpdate methods, instead FunFair.Common.Extensions.ConcurrentDictionaryExtensions.AddOrUpdate can be used",
-                                           severity: DiagnosticSeverity.Error,
-                                           line: 13,
-                                           column: 18);
+        DiagnosticResult expected = Result(
+            id: "FFS0032",
+            message: "Don't use any of the built in AddOrUpdate methods, instead FunFair.Common.Extensions.ConcurrentDictionaryExtensions.AddOrUpdate can be used",
+            severity: DiagnosticSeverity.Error,
+            line: 13,
+            column: 18
+        );
 
         return this.VerifyCSharpDiagnosticAsync(source: test, reference: WellKnownMetadataReferences.NonBlockingConcurrentDictionary, expected: expected);
     }
@@ -216,7 +216,8 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzerTests : Diagno
     [Fact]
     public Task ShouldRaiseErrorForGetOrAddAsync()
     {
-        const string test = @"
+        const string test =
+            @"
      using NonBlocking;
      namespace ConsoleApplication1
      {
@@ -229,12 +230,13 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzerTests : Diagno
              }
          }
      }";
-        DiagnosticResult expected = Result(id: "FFS0033",
-                                           message:
-                                           "Don't use any of the built in GetOrAdd methods, instead FunFair.Common.Extensions.ConcurrentDictionaryExtensions.GetOrAdd can be used",
-                                           severity: DiagnosticSeverity.Error,
-                                           line: 10,
-                                           column: 18);
+        DiagnosticResult expected = Result(
+            id: "FFS0033",
+            message: "Don't use any of the built in GetOrAdd methods, instead FunFair.Common.Extensions.ConcurrentDictionaryExtensions.GetOrAdd can be used",
+            severity: DiagnosticSeverity.Error,
+            line: 10,
+            column: 18
+        );
 
         return this.VerifyCSharpDiagnosticAsync(source: test, reference: WellKnownMetadataReferences.NonBlockingConcurrentDictionary, expected: expected);
     }
@@ -242,7 +244,8 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzerTests : Diagno
     [Fact]
     public Task ShouldRaiseForGetOrAddWithValueFactoryAsync()
     {
-        const string test = @"
+        const string test =
+            @"
      using NonBlocking;
      namespace ConsoleApplication1
      {
@@ -258,12 +261,13 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzerTests : Diagno
              }
          }
      }";
-        DiagnosticResult expected = Result(id: "FFS0033",
-                                           message:
-                                           "Don't use any of the built in GetOrAdd methods, instead FunFair.Common.Extensions.ConcurrentDictionaryExtensions.GetOrAdd can be used",
-                                           severity: DiagnosticSeverity.Error,
-                                           line: 13,
-                                           column: 18);
+        DiagnosticResult expected = Result(
+            id: "FFS0033",
+            message: "Don't use any of the built in GetOrAdd methods, instead FunFair.Common.Extensions.ConcurrentDictionaryExtensions.GetOrAdd can be used",
+            severity: DiagnosticSeverity.Error,
+            line: 13,
+            column: 18
+        );
 
         return this.VerifyCSharpDiagnosticAsync(source: test, reference: WellKnownMetadataReferences.NonBlockingConcurrentDictionary, expected: expected);
     }
@@ -271,7 +275,8 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzerTests : Diagno
     [Fact]
     public Task ShouldAllowGetOrAddAsync()
     {
-        const string test = @"
+        const string test =
+            @"
      using NonBlocking;
      namespace ConsoleApplication1
      {

@@ -11,10 +11,12 @@ namespace FunFair.CodeAnalysis;
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public sealed class StructAnalysisDiagnosticsAnalyzer : DiagnosticAnalyzer
 {
-    private static readonly DiagnosticDescriptor Rule = RuleHelpers.CreateRule(code: Rules.RuleStructsShouldBeReadOnly,
-                                                                               category: Categories.Structs,
-                                                                               title: "Structs should be read-only",
-                                                                               message: "Structs should be read-only");
+    private static readonly DiagnosticDescriptor Rule = RuleHelpers.CreateRule(
+        code: Rules.RuleStructsShouldBeReadOnly,
+        category: Categories.Structs,
+        title: "Structs should be read-only",
+        message: "Structs should be read-only"
+    );
 
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => SupportedDiagnosisList.Build(Rule);
 

@@ -21,10 +21,12 @@ public sealed class OneTypePerDocumentAnalysisDiagnosticsAnalyzer : DiagnosticAn
     private const string STATIC_TYPE_PREFIX = "static:";
     private const string CLASS_TYPE_PREFIX = "class:";
 
-    private static readonly DiagnosticDescriptor Rule = RuleHelpers.CreateRule(code: Rules.RuleOnlyOneTypeDefinedPerFile,
-                                                                               category: Categories.Files,
-                                                                               title: "Should be only one type per file",
-                                                                               message: "Should be only one type per file");
+    private static readonly DiagnosticDescriptor Rule = RuleHelpers.CreateRule(
+        code: Rules.RuleOnlyOneTypeDefinedPerFile,
+        category: Categories.Files,
+        title: "Should be only one type per file",
+        message: "Should be only one type per file"
+    );
 
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => SupportedDiagnosisList.Build(Rule);
 
@@ -55,18 +57,17 @@ public sealed class OneTypePerDocumentAnalysisDiagnosticsAnalyzer : DiagnosticAn
         switch (grouped.Count)
         {
             case <= 1:
-            case 2 when IsSpecialCaseWhereNonGenericHelperClassExists(grouped): return;
-            default: ReportAllMembersAsErrors(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, members: members); break;
+            case 2 when IsSpecialCaseWhereNonGenericHelperClassExists(grouped):
+                return;
+            default:
+                ReportAllMembersAsErrors(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, members: members);
+                break;
         }
     }
 
     private static IReadOnlyList<IGrouping<string, MemberDeclarationSyntax>> GroupedMembers(IReadOnlyList<MemberDeclarationSyntax> members)
     {
-        return
-        [
-            ..members.GroupBy(keySelector: GetTypeName, comparer: StringComparer.Ordinal)
-                     .Where(x => !string.IsNullOrWhiteSpace(x.Key))
-        ];
+        return [.. members.GroupBy(keySelector: GetTypeName, comparer: StringComparer.Ordinal).Where(x => !string.IsNullOrWhiteSpace(x.Key))];
     }
 
     private static bool IsSpecialCaseWhereNonGenericHelperClassExists(IReadOnlyList<IGrouping<string, MemberDeclarationSyntax>> grouped)
@@ -115,7 +116,7 @@ public sealed class OneTypePerDocumentAnalysisDiagnosticsAnalyzer : DiagnosticAn
             StructDeclarationSyntax structDeclarationSyntax => NormaliseRecord(structDeclarationSyntax),
             InterfaceDeclarationSyntax interfaceDeclarationSyntax => NormaliseInterface(interfaceDeclarationSyntax),
             EnumDeclarationSyntax enumDeclarationSyntax => NormaliseEnum(enumDeclarationSyntax),
-            _ => string.Empty
+            _ => string.Empty,
         };
     }
 
@@ -151,7 +152,7 @@ public sealed class OneTypePerDocumentAnalysisDiagnosticsAnalyzer : DiagnosticAn
 
     private static IReadOnlyList<MemberDeclarationSyntax> GetNonNestedTypeDeclarations(CompilationUnitSyntax compilationUnit)
     {
-        return [..GetNonNestedTypeDeclarations(compilationUnit.Members)];
+        return [.. GetNonNestedTypeDeclarations(compilationUnit.Members)];
     }
 
     private static IEnumerable<MemberDeclarationSyntax> GetNonNestedTypeDeclarations(SyntaxList<MemberDeclarationSyntax> members)

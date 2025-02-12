@@ -13,11 +13,11 @@ internal static class SupportedDiagnosisList
 
     public static ImmutableArray<DiagnosticDescriptor> Build(params DiagnosticDescriptor[] rules)
     {
-        return [..rules];
+        return [.. rules];
     }
 
     public static ImmutableArray<DiagnosticDescriptor> Build(IEnumerable<DiagnosticDescriptor> rules)
     {
-        return [..rules];
+        return [.. rules];
     }
 }

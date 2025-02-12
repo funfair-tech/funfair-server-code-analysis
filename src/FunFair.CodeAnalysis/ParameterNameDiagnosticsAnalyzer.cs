@@ -19,19 +19,23 @@ public sealed class ParameterNameDiagnosticsAnalyzer : DiagnosticAnalyzer
 {
     private static readonly IReadOnlyList<NameSanitationSpec> NameSpecifications =
     [
-        Build(ruleId: Rules.RuleLoggerParametersShouldBeCalledLogger,
-              title: "ILogger parameters should be called 'logger'",
-              message: "ILogger parameters should be called 'logger'",
-              sourceClass: "Microsoft.Extensions.Logging.ILogger",
-              whitelistedParameterName: "logger"),
-        Build(ruleId: Rules.RuleLoggerParametersShouldBeCalledLogger,
-              title: "ILogger parameters should be called 'logger'",
-              message: "ILogger parameters should be called 'logger'",
-              sourceClass: "Microsoft.Extensions.Logging.ILogger<TCategoryName>",
-              whitelistedParameterName: "logger")
+        Build(
+            ruleId: Rules.RuleLoggerParametersShouldBeCalledLogger,
+            title: "ILogger parameters should be called 'logger'",
+            message: "ILogger parameters should be called 'logger'",
+            sourceClass: "Microsoft.Extensions.Logging.ILogger",
+            whitelistedParameterName: "logger"
+        ),
+        Build(
+            ruleId: Rules.RuleLoggerParametersShouldBeCalledLogger,
+            title: "ILogger parameters should be called 'logger'",
+            message: "ILogger parameters should be called 'logger'",
+            sourceClass: "Microsoft.Extensions.Logging.ILogger<TCategoryName>",
+            whitelistedParameterName: "logger"
+        ),
     ];
 
-    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => [..NameSpecifications.Select(selector: r => r.Rule)];
+    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => [.. NameSpecifications.Select(selector: r => r.Rule)];
 
     public override void Initialize(AnalysisContext context)
     {
@@ -58,9 +62,7 @@ public sealed class ParameterNameDiagnosticsAnalyzer : DiagnosticAnalyzer
 
     private static void MustHaveASaneName(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, ParameterSyntax parameterSyntax, CancellationToken cancellationToken)
     {
-        string? fullTypeName = ParameterHelpers.GetFullTypeName(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
-                                                                parameterSyntax: parameterSyntax,
-                                                                cancellationToken: cancellationToken);
+        string? fullTypeName = ParameterHelpers.GetFullTypeName(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, parameterSyntax: parameterSyntax, cancellationToken: cancellationToken);
 
         if (fullTypeName is null)
         {
@@ -108,15 +110,7 @@ public sealed class ParameterNameDiagnosticsAnalyzer : DiagnosticAnalyzer
     private readonly record struct NameSanitationSpec
     {
         public NameSanitationSpec(string ruleId, string title, string message, string sourceClass, string whitelistedParameterName)
-            : this(ruleId: ruleId,
-                   title: title,
-                   message: message,
-                   sourceClass: sourceClass,
-                   [
-                       whitelistedParameterName
-                   ])
-        {
-        }
+            : this(ruleId: ruleId, title: title, message: message, sourceClass: sourceClass, [whitelistedParameterName]) { }
 
         public NameSanitationSpec(string ruleId, string title, string message, string sourceClass, IReadOnlyList<string> whitelistedParameterNames)
         {

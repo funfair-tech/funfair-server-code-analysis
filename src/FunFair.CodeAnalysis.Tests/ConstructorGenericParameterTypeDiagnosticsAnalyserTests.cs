@@ -11,7 +11,8 @@ public sealed class ConstructorGenericParameterTypeDiagnosticsAnalyserTests : Di
     [Fact]
     public Task SealedClassUsesOwnClassNameInConstructorParameterIsNotAnErrorAsync()
     {
-        const string test = @"
+        const string test =
+            @"
 using Microsoft.Extensions.Logging;
 
 public sealed class Test {
@@ -27,7 +28,8 @@ public sealed class Test {
     [Fact]
     public Task SealedClassUsesUnnamedNameInConstructorParameterIsAnErrorAsync()
     {
-        const string test = @"
+        const string test =
+            @"
 using Microsoft.Extensions.Logging;
 
 public sealed class Test {
@@ -37,11 +39,13 @@ public sealed class Test {
     }
 }";
 
-        DiagnosticResult expected = Result(id: "FFS0024",
-                                           message: "ILogger parameters on leaf classes should not be ILogger but ILogger<Test>",
-                                           severity: DiagnosticSeverity.Error,
-                                           line: 6,
-                                           column: 17);
+        DiagnosticResult expected = Result(
+            id: "FFS0024",
+            message: "ILogger parameters on leaf classes should not be ILogger but ILogger<Test>",
+            severity: DiagnosticSeverity.Error,
+            line: 6,
+            column: 17
+        );
 
         return this.VerifyCSharpDiagnosticAsync(source: test, reference: WellKnownMetadataReferences.Logger, expected: expected);
     }
@@ -49,7 +53,8 @@ public sealed class Test {
     [Fact]
     public Task BaseClassUsesOwnClassNameInConstructorParameterIsAnErrorAsync()
     {
-        const string test = @"
+        const string test =
+            @"
 using Microsoft.Extensions.Logging;
 
 public abstract class Test {
@@ -59,11 +64,13 @@ public abstract class Test {
     }
 }";
 
-        DiagnosticResult expected = Result(id: "FFS0023",
-                                           message: "ILogger parameters on base classes should not be ILogger<Test> but ILogger",
-                                           severity: DiagnosticSeverity.Error,
-                                           line: 6,
-                                           column: 20);
+        DiagnosticResult expected = Result(
+            id: "FFS0023",
+            message: "ILogger parameters on base classes should not be ILogger<Test> but ILogger",
+            severity: DiagnosticSeverity.Error,
+            line: 6,
+            column: 20
+        );
 
         return this.VerifyCSharpDiagnosticAsync(source: test, reference: WellKnownMetadataReferences.Logger, expected: expected);
     }
@@ -71,7 +78,8 @@ public abstract class Test {
     [Fact]
     public Task BaseClassUsesUnnamedNameInConstructorParameterIsNotAnErrorAsync()
     {
-        const string test = @"
+        const string test =
+            @"
 using Microsoft.Extensions.Logging;
 
 public abstract class Test {
@@ -87,7 +95,8 @@ public abstract class Test {
     [Fact]
     public Task SealedClassNotUsingItsOwnNameIsAnErrorAsync()
     {
-        const string test = @"
+        const string test =
+            @"
 using Microsoft.Extensions.Logging;
 
 public sealed class Banana
@@ -101,11 +110,13 @@ public sealed class Test {
     }
 }";
 
-        DiagnosticResult expected = Result(id: "FFS0025",
-                                           message: "Should be using 'Test' rather than 'Banana' with Microsoft.Extensions.Logging.ILogger<TCategoryName>",
-                                           severity: DiagnosticSeverity.Error,
-                                           line: 10,
-                                           column: 17);
+        DiagnosticResult expected = Result(
+            id: "FFS0025",
+            message: "Should be using 'Test' rather than 'Banana' with Microsoft.Extensions.Logging.ILogger<TCategoryName>",
+            severity: DiagnosticSeverity.Error,
+            line: 10,
+            column: 17
+        );
 
         return this.VerifyCSharpDiagnosticAsync(source: test, reference: WellKnownMetadataReferences.Logger, expected: expected);
     }
@@ -113,7 +124,8 @@ public sealed class Test {
     [Fact]
     public Task SealedInternalClassNotUsingItsOwnNameIsAnNotErrorAsync()
     {
-        const string test = @"
+        const string test =
+            @"
 using Microsoft.Extensions.Logging;
 
 internal sealed class Test {
@@ -129,7 +141,8 @@ internal sealed class Test {
     [Fact]
     public Task NestedSealedInternalClassNotUsingItsOwnNameIsAnNotErrorAsync()
     {
-        const string test = @"
+        const string test =
+            @"
 using Microsoft.Extensions.Logging;
 
 public sealed class Onion {
@@ -148,7 +161,8 @@ public sealed class Onion {
     [Fact]
     public Task NestedSealedPrivateClassNotUsingItsOwnNameIsAnNotErrorAsync()
     {
-        const string test = @"
+        const string test =
+            @"
 using Microsoft.Extensions.Logging;
 
 public sealed class Onion {
@@ -167,7 +181,8 @@ public sealed class Onion {
     [Fact]
     public Task NestedSealedProtectedClassNotUsingItsOwnNameIsAnNotErrorAsync()
     {
-        const string test = @"
+        const string test =
+            @"
 using Microsoft.Extensions.Logging;
 
 public class Onion {

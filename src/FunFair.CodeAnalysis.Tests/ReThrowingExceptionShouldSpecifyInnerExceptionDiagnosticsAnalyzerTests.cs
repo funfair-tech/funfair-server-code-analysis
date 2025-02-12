@@ -6,13 +6,13 @@ using Xunit;
 
 namespace FunFair.CodeAnalysis.Tests;
 
-public sealed class
-    ReThrowingExceptionShouldSpecifyInnerExceptionDiagnosticsAnalyzerTests : DiagnosticAnalyzerVerifier<ReThrowingExceptionShouldSpecifyInnerExceptionDiagnosticsAnalyzer>
+public sealed class ReThrowingExceptionShouldSpecifyInnerExceptionDiagnosticsAnalyzerTests : DiagnosticAnalyzerVerifier<ReThrowingExceptionShouldSpecifyInnerExceptionDiagnosticsAnalyzer>
 {
     [Fact]
     public Task ReThrowingExceptionShouldNotTriggerErrorAsync()
     {
-        const string test = @"
+        const string test =
+            @"
     using System;
 
     namespace ConsoleApplication1
@@ -39,7 +39,8 @@ public sealed class
     [Fact]
     public Task ThrowingNewExceptionPassingInnerExceptionShouldNotBeAnErrorAsync()
     {
-        const string test = @"
+        const string test =
+            @"
 using System;
 
 public sealed class Test {
@@ -63,7 +64,8 @@ public sealed class Test {
     [Fact]
     public Task ThrowingNewExceptionWithoutPassingInnerExceptionShouldBeAnErrorAsync()
     {
-        const string test = @"
+        const string test =
+            @"
 using System;
 
 public sealed class Test {
@@ -81,11 +83,13 @@ public sealed class Test {
     }
 }";
 
-        DiagnosticResult expected = Result(id: "FFS0017",
-                                           message: "Provide 'failingException' as a inner exception when throw from the catch clauses",
-                                           severity: DiagnosticSeverity.Error,
-                                           line: 14,
-                                           column: 19);
+        DiagnosticResult expected = Result(
+            id: "FFS0017",
+            message: "Provide 'failingException' as a inner exception when throw from the catch clauses",
+            severity: DiagnosticSeverity.Error,
+            line: 14,
+            column: 19
+        );
 
         return this.VerifyCSharpDiagnosticAsync(source: test, expected: expected);
     }
@@ -93,7 +97,8 @@ public sealed class Test {
     [Fact]
     public Task ThrowingNewExceptionWithoutPassingRandomExceptionShouldBeAnErrorAsync()
     {
-        const string test = @"
+        const string test =
+            @"
 using System;
 
 public sealed class Test {
@@ -111,11 +116,13 @@ public sealed class Test {
     }
 }";
 
-        DiagnosticResult expected = Result(id: "FFS0017",
-                                           message: "Provide 'failingException' as a inner exception when throw from the catch clauses",
-                                           severity: DiagnosticSeverity.Error,
-                                           line: 14,
-                                           column: 19);
+        DiagnosticResult expected = Result(
+            id: "FFS0017",
+            message: "Provide 'failingException' as a inner exception when throw from the catch clauses",
+            severity: DiagnosticSeverity.Error,
+            line: 14,
+            column: 19
+        );
 
         return this.VerifyCSharpDiagnosticAsync(source: test, expected: expected);
     }

@@ -11,7 +11,8 @@ public sealed class ArgumentExceptionAnalysisDiagnosticsAnalyzerTest : Diagnosti
     [Fact]
     public Task ArgumentExceptionWhenParameterLessConstructorUsedCausesErrorAsync()
     {
-        const string test = @"
+        const string test =
+            @"
 using System;
 
 public sealed class Test {
@@ -30,7 +31,8 @@ public sealed class Test {
     [Fact]
     public Task ArgumentExceptionWhenParameterNameNotPassedCausesErrorAsync()
     {
-        const string test = @"
+        const string test =
+            @"
 using System;
 
 public sealed class Test {
@@ -49,7 +51,8 @@ public sealed class Test {
     [Fact]
     public Task ArgumentExceptionWhenParameterNamePassedByNameOfIsValidAsync()
     {
-        const string test = @"
+        const string test =
+            @"
 using System;
 
 public sealed class Test {
@@ -67,7 +70,8 @@ public sealed class Test {
     [Fact]
     public Task ArgumentExceptionWhenParameterNamePassedByStringIsValidAsync()
     {
-        const string test = @"
+        const string test =
+            @"
 using System;
 
 public sealed class Test {
@@ -85,7 +89,8 @@ public sealed class Test {
     [Fact]
     public Task ArgumentNullExceptionWhenParameterLessConstructorUsedCausesErrorAsync()
     {
-        const string test = @"
+        const string test =
+            @"
 using System;
 
 public sealed class Test {
@@ -104,7 +109,8 @@ public sealed class Test {
     [Fact]
     public Task ArgumentNullExceptionWhenParameterNameNotPassedCausesErrorAsync()
     {
-        const string test = @"
+        const string test =
+            @"
 using System;
 
 public sealed class Test {
@@ -123,7 +129,8 @@ public sealed class Test {
     [Fact]
     public Task ArgumentNullExceptionWhenParameterNamePassedByNameOfIsValidAsync()
     {
-        const string test = @"
+        const string test =
+            @"
 using System;
 
 public sealed class Test {
@@ -141,7 +148,8 @@ public sealed class Test {
     [Fact]
     public Task ArgumentNullExceptionWhenParameterNamePassedByStringIsValidAsync()
     {
-        const string test = @"
+        const string test =
+            @"
 using System;
 
 public sealed class Test {
@@ -159,7 +167,8 @@ public sealed class Test {
     [Fact]
     public Task ArgumentOutOfRangeExceptionWhenParameterLessConstructorUsedCausesErrorAsync()
     {
-        const string test = @"
+        const string test =
+            @"
 using System;
 
 public sealed class Test {
@@ -178,7 +187,8 @@ public sealed class Test {
     [Fact]
     public Task ArgumentOutOfRangeExceptionWhenParameterNameNotPassedCausesErrorAsync()
     {
-        const string test = @"
+        const string test =
+            @"
 using System;
 
 public sealed class Test {
@@ -197,7 +207,8 @@ public sealed class Test {
     [Fact]
     public Task ArgumentOutOfRangeExceptionWhenParameterNamePassedByNameOfIsValidAsync()
     {
-        const string test = @"
+        const string test =
+            @"
 using System;
 
 public sealed class Test {
@@ -215,7 +226,8 @@ public sealed class Test {
     [Fact]
     public Task ArgumentOutOfRangeExceptionWhenParameterNamePassedByStringIsValidAsync()
     {
-        const string test = @"
+        const string test =
+            @"
 using System;
 
 public sealed class Test {
@@ -233,7 +245,8 @@ public sealed class Test {
     [Fact]
     public Task DoesNotTriggerOnNonExceptionsAsync()
     {
-        const string test = @"
+        const string test =
+            @"
 public sealed class Test {
 
     public void DoIt(string value)

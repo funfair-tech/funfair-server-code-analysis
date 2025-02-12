@@ -11,12 +11,12 @@ internal static class TestDetection
 {
     public static bool IsTestMethod(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, MethodDeclarationSyntax methodDeclarationSyntax)
     {
-        return methodDeclarationSyntax.AttributeLists.SelectMany(selector: al => al.Attributes)
-                                      .Select(attribute => syntaxNodeAnalysisContext.SemanticModel.GetTypeInfo(attributeSyntax: attribute,
-                                                                                                               cancellationToken: syntaxNodeAnalysisContext.CancellationToken))
-                                      .Select(ti => ti.Type)
-                                      .RemoveNulls()
-                                      .Any(ti => IsTestMethodAttribute(ti.ToDisplayString()));
+        return methodDeclarationSyntax
+            .AttributeLists.SelectMany(selector: al => al.Attributes)
+            .Select(attribute => syntaxNodeAnalysisContext.SemanticModel.GetTypeInfo(attributeSyntax: attribute, cancellationToken: syntaxNodeAnalysisContext.CancellationToken))
+            .Select(ti => ti.Type)
+            .RemoveNulls()
+            .Any(ti => IsTestMethodAttribute(ti.ToDisplayString()));
     }
 
     public static bool IsDerivedFromTestBase(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
@@ -28,8 +28,7 @@ internal static class TestDetection
             return false;
         }
 
-        return containingType.ContainingType.BaseClasses()
-                             .Any(IsTestBase);
+        return containingType.ContainingType.BaseClasses().Any(IsTestBase);
     }
 
     private static bool IsTestBase(INamedTypeSymbol symbol)
@@ -39,7 +38,7 @@ internal static class TestDetection
 
     private static bool IsTestMethodAttribute(string attributeType)
     {
-        return StringComparer.InvariantCultureIgnoreCase.Equals(x: attributeType, y: "Xunit.FactAttribute") ||
-               StringComparer.InvariantCultureIgnoreCase.Equals(x: attributeType, y: "Xunit.TheoryAttribute");
+        return StringComparer.InvariantCultureIgnoreCase.Equals(x: attributeType, y: "Xunit.FactAttribute")
+            || StringComparer.InvariantCultureIgnoreCase.Equals(x: attributeType, y: "Xunit.TheoryAttribute");
     }
 }

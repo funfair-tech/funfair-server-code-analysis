@@ -15,10 +15,8 @@ internal static class MethodSymbolHelper
     {
         if (invocation.Expression is MemberAccessExpressionSyntax memberAccessExpressionSyntax)
         {
-            return GetSimpleMemberSymbol(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, memberAccessExpressionSyntax: memberAccessExpressionSyntax) ??
-                   ResolveExtensionMethodUsedByConstructor(invocation: invocation,
-                                                           syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
-                                                           memberAccessExpressionSyntax: memberAccessExpressionSyntax);
+            return GetSimpleMemberSymbol(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, memberAccessExpressionSyntax: memberAccessExpressionSyntax)
+                ?? ResolveExtensionMethodUsedByConstructor(invocation: invocation, syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, memberAccessExpressionSyntax: memberAccessExpressionSyntax);
         }
 
         return null;
@@ -29,13 +27,17 @@ internal static class MethodSymbolHelper
         return GetSymbol(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, expression: memberAccessExpressionSyntax) as IMethodSymbol;
     }
 
-    private static IMethodSymbol? ResolveExtensionMethodUsedByConstructor(InvocationExpressionSyntax invocation,
-                                                                          in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext,
-                                                                          MemberAccessExpressionSyntax memberAccessExpressionSyntax)
+    private static IMethodSymbol? ResolveExtensionMethodUsedByConstructor(
+        InvocationExpressionSyntax invocation,
+        in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext,
+        MemberAccessExpressionSyntax memberAccessExpressionSyntax
+    )
     {
-        INamedTypeSymbol? sourceType = GetSourceType(memberAccessExpressionSyntax: memberAccessExpressionSyntax,
-                                                     semanticModel: syntaxNodeAnalysisContext.SemanticModel,
-                                                     cancellationToken: syntaxNodeAnalysisContext.CancellationToken);
+        INamedTypeSymbol? sourceType = GetSourceType(
+            memberAccessExpressionSyntax: memberAccessExpressionSyntax,
+            semanticModel: syntaxNodeAnalysisContext.SemanticModel,
+            cancellationToken: syntaxNodeAnalysisContext.CancellationToken
+        );
 
         if (sourceType is null)
         {
@@ -45,8 +47,7 @@ internal static class MethodSymbolHelper
         string fullName = memberAccessExpressionSyntax.Name.ToFullString();
         ImmutableArray<ISymbol> symbols = BuildSymbols(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, sourceType: sourceType, fullName: fullName);
 
-        return symbols.OfType<IMethodSymbol>()
-                      .FirstOrDefault(sym => HasMatchingArguments(invocation: invocation, arguments: sym));
+        return symbols.OfType<IMethodSymbol>().FirstOrDefault(sym => HasMatchingArguments(invocation: invocation, arguments: sym));
     }
 
     private static ImmutableArray<ISymbol> BuildSymbols(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, INamedTypeSymbol sourceType, string fullName)
@@ -62,11 +63,9 @@ internal static class MethodSymbolHelper
     {
         return
         [
-            ..LookupSymbols(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, sourceType: sourceType, fullName: fullName)
-              .Concat(sourceType.BaseClasses()
-                                .SelectMany(baseType => LookupSymbols(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, sourceType: baseType, fullName: fullName)))
-              .Concat(sourceType.AllInterfaces.SelectMany(
-                          interfaceType => LookupSymbols(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, sourceType: interfaceType, fullName: fullName)))
+            .. LookupSymbols(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, sourceType: sourceType, fullName: fullName)
+                .Concat(sourceType.BaseClasses().SelectMany(baseType => LookupSymbols(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, sourceType: baseType, fullName: fullName)))
+                .Concat(sourceType.AllInterfaces.SelectMany(interfaceType => LookupSymbols(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, sourceType: interfaceType, fullName: fullName))),
         ];
     }
 
@@ -96,25 +95,21 @@ internal static class MethodSymbolHelper
 
     private static ISymbol? GetSymbol(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, SyntaxNode expression)
     {
-        return syntaxNodeAnalysisContext.SemanticModel.GetSymbolInfo(node: expression, cancellationToken: syntaxNodeAnalysisContext.CancellationToken)
-                                        .Symbol;
+        return syntaxNodeAnalysisContext.SemanticModel.GetSymbolInfo(node: expression, cancellationToken: syntaxNodeAnalysisContext.CancellationToken).Symbol;
     }
 
     private static INamedTypeSymbol? GetSourceType(MemberAccessExpressionSyntax memberAccessExpressionSyntax, SemanticModel semanticModel, CancellationToken cancellationToken)
     {
-        ISymbol? symbol = semanticModel.GetSymbolInfo(expression: memberAccessExpressionSyntax.Expression, cancellationToken: cancellationToken)
-                                       .Symbol;
+        ISymbol? symbol = semanticModel.GetSymbolInfo(expression: memberAccessExpressionSyntax.Expression, cancellationToken: cancellationToken).Symbol;
 
         return symbol switch
-        {
-            ILocalSymbol local => local.Type,
-            IParameterSymbol param => param.Type,
-            IFieldSymbol field => field.Type,
-            IPropertySymbol prop => prop.Type,
-            IMethodSymbol method => method.MethodKind == MethodKind.Constructor
-                ? method.ReceiverType
-                : method.ReturnType,
-            _ => null
-        } as INamedTypeSymbol;
+            {
+                ILocalSymbol local => local.Type,
+                IParameterSymbol param => param.Type,
+                IFieldSymbol field => field.Type,
+                IPropertySymbol prop => prop.Type,
+                IMethodSymbol method => method.MethodKind == MethodKind.Constructor ? method.ReceiverType : method.ReturnType,
+                _ => null,
+            } as INamedTypeSymbol;
     }
 }

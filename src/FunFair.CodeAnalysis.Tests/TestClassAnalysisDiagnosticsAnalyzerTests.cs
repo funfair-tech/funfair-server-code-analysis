@@ -11,7 +11,8 @@ public sealed class TestClassAnalysisDiagnosticsAnalyzerTests : DiagnosticAnalyz
     [Fact]
     public Task ClassThatHasNothingToDoWithTestsIsNotAnErrorAsync()
     {
-        const string test = @"
+        const string test =
+            @"
             public sealed class Test {
 
             public void DoIt()
@@ -19,17 +20,14 @@ public sealed class TestClassAnalysisDiagnosticsAnalyzerTests : DiagnosticAnalyz
             }
 }";
 
-        return this.VerifyCSharpDiagnosticAsync(source: test,
-        [
-            WellKnownMetadataReferences.Xunit,
-            WellKnownMetadataReferences.FunFairTestCommon
-        ]);
+        return this.VerifyCSharpDiagnosticAsync(source: test, [WellKnownMetadataReferences.Xunit, WellKnownMetadataReferences.FunFairTestCommon]);
     }
 
     [Fact]
     public Task FactClassThatDoesNotDeriveFromTestBaseIsAnErrorAsync()
     {
-        const string test = @"
+        const string test =
+            @"
 using Xunit;
 
             public sealed class Test {
@@ -47,7 +45,8 @@ using Xunit;
     [Fact]
     public Task FactClassThatInheritsFromLoggingTestBaseIsNotAnErrorAsync()
     {
-        const string test = @"
+        const string test =
+            @"
 using FunFair.Test.Common;
 using Xunit;
 using Xunit.Abstractions;
@@ -65,18 +64,14 @@ using Xunit.Abstractions;
             }
 }";
 
-        return this.VerifyCSharpDiagnosticAsync(source: test,
-        [
-            WellKnownMetadataReferences.Xunit,
-            WellKnownMetadataReferences.FunFairTestCommon,
-            WellKnownMetadataReferences.XunitAbstractions
-        ]);
+        return this.VerifyCSharpDiagnosticAsync(source: test, [WellKnownMetadataReferences.Xunit, WellKnownMetadataReferences.FunFairTestCommon, WellKnownMetadataReferences.XunitAbstractions]);
     }
 
     [Fact]
     public Task FactClassThatInheritsFromTestBaseIsNotAnErrorAsync()
     {
-        const string test = @"
+        const string test =
+            @"
 using FunFair.Test.Common;
 using Xunit;
 
@@ -88,17 +83,14 @@ using Xunit;
             }
 }";
 
-        return this.VerifyCSharpDiagnosticAsync(source: test,
-        [
-            WellKnownMetadataReferences.Xunit,
-            WellKnownMetadataReferences.FunFairTestCommon
-        ]);
+        return this.VerifyCSharpDiagnosticAsync(source: test, [WellKnownMetadataReferences.Xunit, WellKnownMetadataReferences.FunFairTestCommon]);
     }
 
     [Fact]
     public Task TheoryClassThatDoesNotDeriveFromTestBaseIsAnErrorAsync()
     {
-        const string test = @"
+        const string test =
+            @"
 using Xunit;
 
             public sealed class Test {
@@ -111,17 +103,14 @@ using Xunit;
 }";
         DiagnosticResult expected = Result(id: "FFS0013", message: "Test classes should be derived from TestBase", severity: DiagnosticSeverity.Error, line: 6, column: 13);
 
-        return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                [
-                                                    WellKnownMetadataReferences.Xunit
-                                                ],
-                                                expected: expected);
+        return this.VerifyCSharpDiagnosticAsync(source: test, [WellKnownMetadataReferences.Xunit], expected: expected);
     }
 
     [Fact]
     public Task TheoryClassThatInheritsFromLoggingTestBaseIsNotAnErrorAsync()
     {
-        const string test = @"
+        const string test =
+            @"
 using FunFair.Test.Common;
 using Xunit;
 using Xunit.Abstractions;
@@ -140,18 +129,14 @@ using Xunit.Abstractions;
             }
 }";
 
-        return this.VerifyCSharpDiagnosticAsync(source: test,
-        [
-            WellKnownMetadataReferences.Xunit,
-            WellKnownMetadataReferences.FunFairTestCommon,
-            WellKnownMetadataReferences.XunitAbstractions
-        ]);
+        return this.VerifyCSharpDiagnosticAsync(source: test, [WellKnownMetadataReferences.Xunit, WellKnownMetadataReferences.FunFairTestCommon, WellKnownMetadataReferences.XunitAbstractions]);
     }
 
     [Fact]
     public Task TheoryClassThatInheritsFromTestBaseIsNotAnErrorAsync()
     {
-        const string test = @"
+        const string test =
+            @"
 using FunFair.Test.Common;
 using Xunit;
 
@@ -164,10 +149,6 @@ using Xunit;
             }
 }";
 
-        return this.VerifyCSharpDiagnosticAsync(source: test,
-        [
-            WellKnownMetadataReferences.Xunit,
-            WellKnownMetadataReferences.FunFairTestCommon
-        ]);
+        return this.VerifyCSharpDiagnosticAsync(source: test, [WellKnownMetadataReferences.Xunit, WellKnownMetadataReferences.FunFairTestCommon]);
     }
 }

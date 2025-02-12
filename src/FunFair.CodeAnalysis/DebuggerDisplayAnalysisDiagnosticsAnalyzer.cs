@@ -13,10 +13,12 @@ namespace FunFair.CodeAnalysis;
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public sealed class DebuggerDisplayAnalysisDiagnosticsAnalyzer : DiagnosticAnalyzer
 {
-    private static readonly DiagnosticDescriptor Rule = RuleHelpers.CreateRule(code: Rules.RuleRecordsShouldSpecifyDebuggerDisplay,
-                                                                               category: Categories.Debugging,
-                                                                               title: "Should have DebuggerDisplay attribute",
-                                                                               message: "Should have DebuggerDisplay attribute");
+    private static readonly DiagnosticDescriptor Rule = RuleHelpers.CreateRule(
+        code: Rules.RuleRecordsShouldSpecifyDebuggerDisplay,
+        category: Categories.Debugging,
+        title: "Should have DebuggerDisplay attribute",
+        message: "Should have DebuggerDisplay attribute"
+    );
 
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => SupportedDiagnosisList.Build(Rule);
 
@@ -84,12 +86,12 @@ public sealed class DebuggerDisplayAnalysisDiagnosticsAnalyzer : DiagnosticAnaly
 
     private static bool HasDebuggerDisplayAttribute(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, in SyntaxList<AttributeListSyntax> attributeLists)
     {
-        return attributeLists.SelectMany(selector: al => al.Attributes)
-                             .Select(attribute => syntaxNodeAnalysisContext.SemanticModel.GetTypeInfo(attributeSyntax: attribute,
-                                                                                                      cancellationToken: syntaxNodeAnalysisContext.CancellationToken))
-                             .Select(ti => ti.Type)
-                             .RemoveNulls()
-                             .Any(ti => IsDebuggerDisplayAttribute(ti.ToDisplayString()));
+        return attributeLists
+            .SelectMany(selector: al => al.Attributes)
+            .Select(attribute => syntaxNodeAnalysisContext.SemanticModel.GetTypeInfo(attributeSyntax: attribute, cancellationToken: syntaxNodeAnalysisContext.CancellationToken))
+            .Select(ti => ti.Type)
+            .RemoveNulls()
+            .Any(ti => IsDebuggerDisplayAttribute(ti.ToDisplayString()));
     }
 
     private static bool IsDebuggerDisplayAttribute(string fullName)

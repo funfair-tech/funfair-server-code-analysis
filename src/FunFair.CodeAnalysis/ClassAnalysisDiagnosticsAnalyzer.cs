@@ -11,10 +11,12 @@ namespace FunFair.CodeAnalysis;
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public sealed class ClassAnalysisDiagnosticsAnalyzer : DiagnosticAnalyzer
 {
-    private static readonly DiagnosticDescriptor Rule = RuleHelpers.CreateRule(code: Rules.RuleClassesShouldBeStaticSealedOrAbstract,
-                                                                               category: Categories.Classes,
-                                                                               title: "Classes should be static, sealed or abstract",
-                                                                               message: "Classes should be static, sealed or abstract");
+    private static readonly DiagnosticDescriptor Rule = RuleHelpers.CreateRule(
+        code: Rules.RuleClassesShouldBeStaticSealedOrAbstract,
+        category: Categories.Classes,
+        title: "Classes should be static, sealed or abstract",
+        message: "Classes should be static, sealed or abstract"
+    );
 
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => SupportedDiagnosisList.Build(Rule);
 

@@ -29,7 +29,8 @@ public sealed class DebuggerDisplayAnalysisDiagnosticsAnalyzerTest : DiagnosticA
     [Fact]
     public Task RecordWithDebuggerDisplayNotAnErrorAsync()
     {
-        const string test = @"using System.Diagnostics;
+        const string test =
+            @"using System.Diagnostics;
 
 [DebuggerDisplay(""Value : {Value}"")]
 public sealed record Test {
@@ -42,7 +43,8 @@ public sealed record Test {
     [Fact]
     public Task RecordStructWithDebuggerDisplayNotAnErrorAsync()
     {
-        const string test = @"using System.Diagnostics;
+        const string test =
+            @"using System.Diagnostics;
 
 [DebuggerDisplay(""Value : {Value}"")]
 public readonly record struct Test {
@@ -55,7 +57,8 @@ public readonly record struct Test {
     [Fact]
     public Task RecordWithFullyQualifiedDebuggerDisplayNotAnErrorAsync()
     {
-        const string test = @"[System.Diagnostics.DebuggerDisplay(""Value : {Value}"")]
+        const string test =
+            @"[System.Diagnostics.DebuggerDisplay(""Value : {Value}"")]
 public sealed record Test {
     public int Value { get; init; }
 }";
@@ -66,7 +69,8 @@ public sealed record Test {
     [Fact]
     public Task RecordStructWithFullyQualifiedDebuggerDisplayNotAnErrorAsync()
     {
-        const string test = @"[System.Diagnostics.DebuggerDisplay(""Value : {Value}"")]
+        const string test =
+            @"[System.Diagnostics.DebuggerDisplay(""Value : {Value}"")]
 public readonly record struct Test {
     public int Value { get; init; }
 }";

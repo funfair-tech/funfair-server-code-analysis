@@ -14,15 +14,19 @@ namespace FunFair.CodeAnalysis;
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public sealed class SuppressMessageDiagnosticsAnalyzer : DiagnosticAnalyzer
 {
-    private static readonly DiagnosticDescriptor RuleMustHaveJustification = RuleHelpers.CreateRule(code: Rules.RuleSuppressMessageMustHaveJustification,
-                                                                                                    category: Categories.SuppressedErrors,
-                                                                                                    title: "SuppressMessage must specify a Justification",
-                                                                                                    message: "SuppressMessage must specify a Justification");
+    private static readonly DiagnosticDescriptor RuleMustHaveJustification = RuleHelpers.CreateRule(
+        code: Rules.RuleSuppressMessageMustHaveJustification,
+        category: Categories.SuppressedErrors,
+        title: "SuppressMessage must specify a Justification",
+        message: "SuppressMessage must specify a Justification"
+    );
 
-    private static readonly DiagnosticDescriptor RuleMustNotHaveTodoJustification = RuleHelpers.CreateRule(code: Rules.RuleSuppressMessageMustNotHaveTodoJustification,
-                                                                                                           category: Categories.SuppressedErrors,
-                                                                                                           title: "SuppressMessage must not have a TODO Justification",
-                                                                                                           message: "SuppressMessage must not have a TODO Justification");
+    private static readonly DiagnosticDescriptor RuleMustNotHaveTodoJustification = RuleHelpers.CreateRule(
+        code: Rules.RuleSuppressMessageMustNotHaveTodoJustification,
+        category: Categories.SuppressedErrors,
+        title: "SuppressMessage must not have a TODO Justification",
+        message: "SuppressMessage must not have a TODO Justification"
+    );
 
     [SuppressMessage(category: "Nullable.Extended.Analyzer", checkId: "NX0001: Suppression of NullForgiving operator is not required", Justification = "Required here")]
     private static readonly string SuppressMessageFullName = typeof(SuppressMessageAttribute).FullName!;
@@ -52,10 +56,10 @@ public sealed class SuppressMessageDiagnosticsAnalyzer : DiagnosticAnalyzer
                 return;
             }
 
-            compilationStartContext.RegisterSyntaxNodeAction(action: syntaxNodeAnalysisContext =>
-                                                                         MustDeriveFromTestBase(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
-                                                                                                sourceClassType: sourceClassType),
-                                                             SyntaxKind.Attribute);
+            compilationStartContext.RegisterSyntaxNodeAction(
+                action: syntaxNodeAnalysisContext => MustDeriveFromTestBase(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, sourceClassType: sourceClassType),
+                SyntaxKind.Attribute
+            );
         }
 
         private INamedTypeSymbol? GetSuppressMessageAttributeType(Compilation compilation)
@@ -70,8 +74,7 @@ public sealed class SuppressMessageDiagnosticsAnalyzer : DiagnosticAnalyzer
                 return;
             }
 
-            TypeInfo ti = syntaxNodeAnalysisContext.SemanticModel.GetTypeInfo(expression: methodDeclarationSyntax.Name,
-                                                                              cancellationToken: syntaxNodeAnalysisContext.CancellationToken);
+            TypeInfo ti = syntaxNodeAnalysisContext.SemanticModel.GetTypeInfo(expression: methodDeclarationSyntax.Name, cancellationToken: syntaxNodeAnalysisContext.CancellationToken);
 
             if (!StringComparer.Ordinal.Equals(x: ti.Type?.MetadataName, y: sourceClassType.MetadataName))
             {

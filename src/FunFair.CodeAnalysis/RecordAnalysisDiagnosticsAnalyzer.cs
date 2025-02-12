@@ -11,10 +11,12 @@ namespace FunFair.CodeAnalysis;
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public sealed class RecordAnalysisDiagnosticsAnalyzer : DiagnosticAnalyzer
 {
-    private static readonly DiagnosticDescriptor Rule = RuleHelpers.CreateRule(code: Rules.RuleRecordsShouldBeSealed,
-                                                                               category: Categories.Records,
-                                                                               title: "Records should be sealed",
-                                                                               message: "Records should be sealed");
+    private static readonly DiagnosticDescriptor Rule = RuleHelpers.CreateRule(
+        code: Rules.RuleRecordsShouldBeSealed,
+        category: Categories.Records,
+        title: "Records should be sealed",
+        message: "Records should be sealed"
+    );
 
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => SupportedDiagnosisList.Build(Rule);
 

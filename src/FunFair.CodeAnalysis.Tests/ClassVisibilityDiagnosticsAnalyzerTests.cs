@@ -11,7 +11,8 @@ public sealed class ClassVisibilityDiagnosticsAnalyzerTests : DiagnosticAnalyzer
     [Fact]
     public Task ClassThatHasNothingToDoWithTestsIsNotAnErrorAsync()
     {
-        const string test = @"
+        const string test =
+            @"
 public sealed class Test
 {
 
@@ -26,7 +27,8 @@ public sealed class Test
     [Fact]
     public Task PublicMockBaseIsAnErrorAsync()
     {
-        const string test = @"
+        const string test =
+            @"
 using FunFair.Test.Common.Mocks;
 
 public sealed class Test : MockBase<string>
@@ -50,7 +52,8 @@ public sealed class Test : MockBase<string>
     [Fact]
     public Task InternalMockBaseNotAnErrorAsync()
     {
-        const string test = @"
+        const string test =
+            @"
 using FunFair.Test.Common.Mocks;
 
 internal sealed class Test : MockBase<string>
@@ -73,7 +76,8 @@ internal sealed class Test : MockBase<string>
     [Fact]
     public Task AbstractMockBaseIsAnErrorAsync()
     {
-        const string test = @"
+        const string test =
+            @"
 using FunFair.Test.Common.Mocks;
 
 internal abstract class Test : MockBase<string>

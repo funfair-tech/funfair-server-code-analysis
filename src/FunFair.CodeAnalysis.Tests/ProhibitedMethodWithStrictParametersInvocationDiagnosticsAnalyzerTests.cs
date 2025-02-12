@@ -6,13 +6,13 @@ using Xunit;
 
 namespace FunFair.CodeAnalysis.Tests;
 
-public sealed class
-    ProhibitedMethodWithStrictParametersInvocationDiagnosticsAnalyzerTests : DiagnosticAnalyzerVerifier<ProhibitedMethodWithStrictParametersInvocationDiagnosticsAnalyzer>
+public sealed class ProhibitedMethodWithStrictParametersInvocationDiagnosticsAnalyzerTests : DiagnosticAnalyzerVerifier<ProhibitedMethodWithStrictParametersInvocationDiagnosticsAnalyzer>
 {
     [Fact]
     public Task NSubstituteExtensionsReceivedWithExpectedCallCountIsPassingAsync()
     {
-        const string test = @"
+        const string test =
+            @"
      using NSubstitute;
 
      namespace ConsoleApplication1
@@ -37,7 +37,8 @@ public sealed class
     [Fact]
     public Task NSubstituteExtensionsReceivedWithZeroExpectedCallCountIsFailingAsync()
     {
-        const string test = @"
+        const string test =
+            @"
      using NSubstitute;
 
      namespace ConsoleApplication1
@@ -55,11 +56,13 @@ public sealed class
              }
          }
      }";
-        DiagnosticResult expected = Result(id: "FFS0021",
-                                           message: "Only use Received with expected call count greater than 0, use DidNotReceived instead if 0 call received expected",
-                                           severity: DiagnosticSeverity.Error,
-                                           line: 15,
-                                           column: 18);
+        DiagnosticResult expected = Result(
+            id: "FFS0021",
+            message: "Only use Received with expected call count greater than 0, use DidNotReceived instead if 0 call received expected",
+            severity: DiagnosticSeverity.Error,
+            line: 15,
+            column: 18
+        );
 
         return this.VerifyCSharpDiagnosticAsync(source: test, reference: WellKnownMetadataReferences.Substitute, expected: expected);
     }
@@ -67,7 +70,8 @@ public sealed class
     [Fact]
     public Task NSubstituteExtensionsReceivedWithoutExpectedCallCountIsBannedAsync()
     {
-        const string test = @"
+        const string test =
+            @"
      using NSubstitute;
 
      namespace ConsoleApplication1
@@ -92,7 +96,8 @@ public sealed class
     [Fact]
     public Task AddJsonFileWithReloadOnChangeSetToFalseIsPassingAsync()
     {
-        const string test = @"
+        const string test =
+            @"
      using Microsoft.Extensions.Configuration;
 
      namespace ConsoleApplication1
@@ -106,18 +111,17 @@ public sealed class
          }
      }";
 
-        return this.VerifyCSharpDiagnosticAsync(source: test,
-        [
-            WellKnownMetadataReferences.MicrosoftExtensionsIConfigurationBuilder,
-            WellKnownMetadataReferences.ConfigurationBuilder,
-            WellKnownMetadataReferences.JsonConfigurationExtensions
-        ]);
+        return this.VerifyCSharpDiagnosticAsync(
+            source: test,
+            [WellKnownMetadataReferences.MicrosoftExtensionsIConfigurationBuilder, WellKnownMetadataReferences.ConfigurationBuilder, WellKnownMetadataReferences.JsonConfigurationExtensions]
+        );
     }
 
     [Fact]
     public Task AddJsonFileWithReloadOnChangeSetToTrueIsBannedConstructorAsync()
     {
-        const string test = @"
+        const string test =
+            @"
      using Microsoft.Extensions.Configuration;
 
      namespace ConsoleApplication1
@@ -133,25 +137,20 @@ public sealed class
          }
      }";
 
-        DiagnosticResult expected = Result(id: "FFS0034",
-                                           message: "Only use AddJsonFile with reloadOnChange set to false",
-                                           severity: DiagnosticSeverity.Error,
-                                           line: 10,
-                                           column: 47);
+        DiagnosticResult expected = Result(id: "FFS0034", message: "Only use AddJsonFile with reloadOnChange set to false", severity: DiagnosticSeverity.Error, line: 10, column: 47);
 
-        return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                [
-                                                    WellKnownMetadataReferences.MicrosoftExtensionsIConfigurationBuilder,
-                                                    WellKnownMetadataReferences.ConfigurationBuilder,
-                                                    WellKnownMetadataReferences.JsonConfigurationExtensions
-                                                ],
-                                                expected: expected);
+        return this.VerifyCSharpDiagnosticAsync(
+            source: test,
+            [WellKnownMetadataReferences.MicrosoftExtensionsIConfigurationBuilder, WellKnownMetadataReferences.ConfigurationBuilder, WellKnownMetadataReferences.JsonConfigurationExtensions],
+            expected: expected
+        );
     }
 
     [Fact]
     public Task AddJsonFileWithReloadOnChangeSetToTrueIsBannedNonConstructorAsync()
     {
-        const string test = @"
+        const string test =
+            @"
      using Microsoft.Extensions.Configuration;
 
      namespace ConsoleApplication1
@@ -168,18 +167,12 @@ public sealed class
          }
      }";
 
-        DiagnosticResult expected = Result(id: "FFS0034",
-                                           message: "Only use AddJsonFile with reloadOnChange set to false",
-                                           severity: DiagnosticSeverity.Error,
-                                           line: 10,
-                                           column: 47);
+        DiagnosticResult expected = Result(id: "FFS0034", message: "Only use AddJsonFile with reloadOnChange set to false", severity: DiagnosticSeverity.Error, line: 10, column: 47);
 
-        return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                [
-                                                    WellKnownMetadataReferences.MicrosoftExtensionsIConfigurationBuilder,
-                                                    WellKnownMetadataReferences.ConfigurationBuilder,
-                                                    WellKnownMetadataReferences.JsonConfigurationExtensions
-                                                ],
-                                                expected: expected);
+        return this.VerifyCSharpDiagnosticAsync(
+            source: test,
+            [WellKnownMetadataReferences.MicrosoftExtensionsIConfigurationBuilder, WellKnownMetadataReferences.ConfigurationBuilder, WellKnownMetadataReferences.JsonConfigurationExtensions],
+            expected: expected
+        );
     }
 }

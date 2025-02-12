@@ -17,39 +17,49 @@ public sealed class ForceMethodParametersInvocationsDiagnosticsAnalyzer : Diagno
 {
     private static readonly ForcedMethodsSpec[] ForcedMethods =
     [
-        Build(ruleId: Rules.RuleDontUseJsonSerializerWithoutJsonOptions,
-              title: "Avoid use of serializer without own JsonSerializerOptions parameter",
-              message: "Only use JsonSerializer.Serialize with own JsonSerializerOptions",
-              sourceClass: "System.Text.Json.JsonSerializer",
-              forcedMethod: "Serialize",
-              requiredArgumentCount: 2),
-        Build(ruleId: Rules.RuleDontUseJsonSerializerWithoutJsonOptions,
-              title: "Avoid use of serializer without own JsonSerializerOptions parameter",
-              message: "Only use JsonSerializer.Serialize with own JsonSerializerOptions",
-              sourceClass: "System.Text.Json.JsonSerializer",
-              forcedMethod: "SerializeAsync",
-              requiredArgumentCount: 2),
-        Build(ruleId: Rules.RuleDontUseJsonDeserializerWithoutJsonOptions,
-              title: "Avoid use of deserializer without own JsonSerializerOptions parameter",
-              message: "Only use JsonSerializer.Deserialize with own JsonSerializerOptions",
-              sourceClass: "System.Text.Json.JsonSerializer",
-              forcedMethod: "Deserialize",
-              requiredArgumentCount: 2),
-        Build(ruleId: Rules.RuleDontUseJsonDeserializerWithoutJsonOptions,
-              title: "Avoid use of deserializer without own JsonSerializerOptions parameter",
-              message: "Only use JsonSerializer.Deserialize with own JsonSerializerOptions",
-              sourceClass: "System.Text.Json.JsonSerializer",
-              forcedMethod: "DeserializeAsync",
-              requiredArgumentCount: 2),
-        Build(ruleId: Rules.RuleDontUseSubstituteReceivedWithoutAmountOfCalls,
-              title: "Avoid use of received without call count",
-              message: "Only use Received with expected call count",
-              sourceClass: "NSubstitute.SubstituteExtensions",
-              forcedMethod: "Received",
-              requiredArgumentCount: 1)
+        Build(
+            ruleId: Rules.RuleDontUseJsonSerializerWithoutJsonOptions,
+            title: "Avoid use of serializer without own JsonSerializerOptions parameter",
+            message: "Only use JsonSerializer.Serialize with own JsonSerializerOptions",
+            sourceClass: "System.Text.Json.JsonSerializer",
+            forcedMethod: "Serialize",
+            requiredArgumentCount: 2
+        ),
+        Build(
+            ruleId: Rules.RuleDontUseJsonSerializerWithoutJsonOptions,
+            title: "Avoid use of serializer without own JsonSerializerOptions parameter",
+            message: "Only use JsonSerializer.Serialize with own JsonSerializerOptions",
+            sourceClass: "System.Text.Json.JsonSerializer",
+            forcedMethod: "SerializeAsync",
+            requiredArgumentCount: 2
+        ),
+        Build(
+            ruleId: Rules.RuleDontUseJsonDeserializerWithoutJsonOptions,
+            title: "Avoid use of deserializer without own JsonSerializerOptions parameter",
+            message: "Only use JsonSerializer.Deserialize with own JsonSerializerOptions",
+            sourceClass: "System.Text.Json.JsonSerializer",
+            forcedMethod: "Deserialize",
+            requiredArgumentCount: 2
+        ),
+        Build(
+            ruleId: Rules.RuleDontUseJsonDeserializerWithoutJsonOptions,
+            title: "Avoid use of deserializer without own JsonSerializerOptions parameter",
+            message: "Only use JsonSerializer.Deserialize with own JsonSerializerOptions",
+            sourceClass: "System.Text.Json.JsonSerializer",
+            forcedMethod: "DeserializeAsync",
+            requiredArgumentCount: 2
+        ),
+        Build(
+            ruleId: Rules.RuleDontUseSubstituteReceivedWithoutAmountOfCalls,
+            title: "Avoid use of received without call count",
+            message: "Only use Received with expected call count",
+            sourceClass: "NSubstitute.SubstituteExtensions",
+            forcedMethod: "Received",
+            requiredArgumentCount: 1
+        ),
     ];
 
-    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => [..ForcedMethods.Select(selector: r => r.Rule)];
+    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => [.. ForcedMethods.Select(selector: r => r.Rule)];
 
     public override void Initialize(AnalysisContext context)
     {
@@ -85,9 +95,7 @@ public sealed class ForceMethodParametersInvocationsDiagnosticsAnalyzer : Diagno
 
         foreach (ForcedMethodsSpec prohibitedMethod in forcedMethods)
         {
-            if (!IsInvocationAllowed(invocationArguments: memberSymbol,
-                                     argumentsInvokedCount: invocation.ArgumentList.Arguments.Count,
-                                     requiredArgumentsCount: prohibitedMethod.RequiredArgumentCount))
+            if (!IsInvocationAllowed(invocationArguments: memberSymbol, argumentsInvokedCount: invocation.ArgumentList.Arguments.Count, requiredArgumentsCount: prohibitedMethod.RequiredArgumentCount))
             {
                 invocation.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: prohibitedMethod.Rule);
             }

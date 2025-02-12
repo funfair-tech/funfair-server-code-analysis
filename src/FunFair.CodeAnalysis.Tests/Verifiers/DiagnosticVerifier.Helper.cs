@@ -35,10 +35,12 @@ public abstract partial class DiagnosticVerifier
 
     #region Get Diagnostics
 
-    private static ValueTask<IReadOnlyList<Diagnostic>> GetSortedDiagnosticsAsync(IReadOnlyList<string> sources,
-                                                                                  IReadOnlyList<MetadataReference> references,
-                                                                                  string language,
-                                                                                  DiagnosticAnalyzer analyzer)
+    private static ValueTask<IReadOnlyList<Diagnostic>> GetSortedDiagnosticsAsync(
+        IReadOnlyList<string> sources,
+        IReadOnlyList<MetadataReference> references,
+        string language,
+        DiagnosticAnalyzer analyzer
+    )
     {
         return GetSortedDiagnosticsFromDocumentsAsync(analyzer: analyzer, GetDocuments(sources: sources, references: references, language: language));
     }
@@ -97,8 +99,7 @@ public abstract partial class DiagnosticVerifier
 
         foreach (Diagnostic diagnostic in diagnostics)
         {
-            bool add = diagnostic.Location == Location.None || diagnostic.Location.IsInMetadata ||
-                       await ShouldAddDocumentDiagnosticAsync(documents: documents, diagnostic: diagnostic);
+            bool add = diagnostic.Location == Location.None || diagnostic.Location.IsInMetadata || await ShouldAddDocumentDiagnosticAsync(documents: documents, diagnostic: diagnostic);
 
             if (add)
             {
@@ -140,8 +141,7 @@ public abstract partial class DiagnosticVerifier
             return;
         }
 
-        StringBuilder errors = compilerErrors.Where(IsReportableCSharpError)
-                                             .Aggregate(new StringBuilder(), func: (current, compilerError) => current.Append(compilerError));
+        StringBuilder errors = compilerErrors.Where(IsReportableCSharpError).Aggregate(new StringBuilder(), func: (current, compilerError) => current.Append(compilerError));
 
         if (errors.Length != 0)
         {
@@ -151,21 +151,15 @@ public abstract partial class DiagnosticVerifier
 
     private static bool IsReportableCSharpError(Diagnostic compilerError)
     {
-        return !compilerError.ToString()
-                             .Contains(value: "netstandard", comparisonType: StringComparison.Ordinal) && !compilerError.ToString()
-            .Contains(value: "static 'Main' method", comparisonType: StringComparison.Ordinal) && !compilerError.ToString()
-                                                                                                                .Contains(value: "CS1002",
-                                                                                                                    comparisonType: StringComparison.Ordinal) && !compilerError
-            .ToString()
-            .Contains(value: "CS1702", comparisonType: StringComparison.Ordinal);
+        return !compilerError.ToString().Contains(value: "netstandard", comparisonType: StringComparison.Ordinal)
+            && !compilerError.ToString().Contains(value: "static 'Main' method", comparisonType: StringComparison.Ordinal)
+            && !compilerError.ToString().Contains(value: "CS1002", comparisonType: StringComparison.Ordinal)
+            && !compilerError.ToString().Contains(value: "CS1702", comparisonType: StringComparison.Ordinal);
     }
 
     private static IReadOnlyList<Diagnostic> SortDiagnostics(IEnumerable<Diagnostic> diagnostics)
     {
-        return
-        [
-            ..diagnostics.OrderBy(keySelector: d => d.Location.SourceSpan.Start)
-        ];
+        return [.. diagnostics.OrderBy(keySelector: d => d.Location.SourceSpan.Start)];
     }
 
     #endregion
@@ -180,7 +174,7 @@ public abstract partial class DiagnosticVerifier
         }
 
         Project project = CreateProject(sources: sources, references: references, language: language);
-        IReadOnlyList<Document> documents = [..project.Documents];
+        IReadOnlyList<Document> documents = [.. project.Documents];
 
         if (sources.Count != documents.Count)
         {
@@ -208,14 +202,14 @@ public abstract partial class DiagnosticVerifier
     private static Project CreateProject(IReadOnlyList<string> sources, IReadOnlyList<MetadataReference> references, string language = LanguageNames.CSharp)
     {
         const string fileNamePrefix = DEFAULT_FILE_PATH_PREFIX;
-        string fileExt = IsCSharp(language)
-            ? C_SHARP_DEFAULT_FILE_EXT
-            : VISUAL_BASIC_DEFAULT_EXT;
+        string fileExt = IsCSharp(language) ? C_SHARP_DEFAULT_FILE_EXT : VISUAL_BASIC_DEFAULT_EXT;
 
         ProjectId projectId = ProjectId.CreateNewId(TEST_PROJECT_NAME);
 
-        Solution solution = references.Aggregate(BuildSolutionWithStandardReferences(language: language, projectId: projectId),
-                                                 func: (current, reference) => current.AddMetadataReference(projectId: projectId, metadataReference: reference));
+        Solution solution = references.Aggregate(
+            BuildSolutionWithStandardReferences(language: language, projectId: projectId),
+            func: (current, reference) => current.AddMetadataReference(projectId: projectId, metadataReference: reference)
+        );
 
         int count = 0;
 
@@ -234,14 +228,15 @@ public abstract partial class DiagnosticVerifier
     [SuppressMessage(category: "Microsoft.Reliability", checkId: "CA2000:DisposeObjectsBeforeLosingScope", Justification = "Test code")]
     private static Solution BuildSolutionWithStandardReferences(string language, ProjectId projectId)
     {
-        return new AdhocWorkspace().CurrentSolution.AddProject(projectId: projectId, name: TEST_PROJECT_NAME, assemblyName: TEST_PROJECT_NAME, language: language)
-                                   .AddMetadataReference(projectId: projectId, metadataReference: CorlibReference)
-                                   .AddMetadataReference(projectId: projectId, metadataReference: SystemCoreReference)
-                                   .AddMetadataReference(projectId: projectId, metadataReference: CSharpSymbolsReference)
-                                   .AddMetadataReference(projectId: projectId, metadataReference: CodeAnalysisReference)
-                                   .AddMetadataReference(projectId: projectId, metadataReference: SystemRuntimeReference)
-                                   .AddMetadataReference(projectId: projectId, metadataReference: SystemReference)
-                                   .AddMetadataReference(projectId: projectId, metadataReference: SystemConsoleReference);
+        return new AdhocWorkspace()
+            .CurrentSolution.AddProject(projectId: projectId, name: TEST_PROJECT_NAME, assemblyName: TEST_PROJECT_NAME, language: language)
+            .AddMetadataReference(projectId: projectId, metadataReference: CorlibReference)
+            .AddMetadataReference(projectId: projectId, metadataReference: SystemCoreReference)
+            .AddMetadataReference(projectId: projectId, metadataReference: CSharpSymbolsReference)
+            .AddMetadataReference(projectId: projectId, metadataReference: CodeAnalysisReference)
+            .AddMetadataReference(projectId: projectId, metadataReference: SystemRuntimeReference)
+            .AddMetadataReference(projectId: projectId, metadataReference: SystemReference)
+            .AddMetadataReference(projectId: projectId, metadataReference: SystemConsoleReference);
     }
 
     #endregion

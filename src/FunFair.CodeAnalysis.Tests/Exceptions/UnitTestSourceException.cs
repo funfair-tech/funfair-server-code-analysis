@@ -7,18 +7,12 @@ public sealed class UnitTestSourceException : Exception
 {
     [SuppressMessage(category: "ReSharper", checkId: "UnusedMember.Global", Justification = "Standard exception constructor")]
     public UnitTestSourceException()
-        : this(message: "House not ready")
-    {
-    }
+        : this(message: "House not ready") { }
 
     public UnitTestSourceException(string message)
-        : base(message)
-    {
-    }
+        : base(message) { }
 
     [SuppressMessage(category: "ReSharper", checkId: "UnusedMember.Global", Justification = "Standard exception constructor")]
     public UnitTestSourceException(string message, Exception innerException)
-        : base(message: message, innerException: innerException)
-    {
-    }
+        : base(message: message, innerException: innerException) { }
 }

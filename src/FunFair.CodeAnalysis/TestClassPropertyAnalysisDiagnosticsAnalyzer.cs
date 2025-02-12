@@ -12,10 +12,12 @@ namespace FunFair.CodeAnalysis;
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public sealed class TestClassPropertyAnalysisDiagnosticsAnalyzer : DiagnosticAnalyzer
 {
-    private static readonly DiagnosticDescriptor Rule = RuleHelpers.CreateRule(code: Rules.RuleTestClassesShouldNotDefineMutableProperties,
-                                                                               category: Categories.Classes,
-                                                                               title: "Properties in test classes should be read-only or const",
-                                                                               message: "Properties in test classes should be read-only or const");
+    private static readonly DiagnosticDescriptor Rule = RuleHelpers.CreateRule(
+        code: Rules.RuleTestClassesShouldNotDefineMutableProperties,
+        category: Categories.Classes,
+        title: "Properties in test classes should be read-only or const",
+        message: "Properties in test classes should be read-only or const"
+    );
 
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => SupportedDiagnosisList.Build(Rule);
 

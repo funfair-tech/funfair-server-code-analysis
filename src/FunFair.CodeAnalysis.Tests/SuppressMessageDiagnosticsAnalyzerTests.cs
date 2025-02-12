@@ -11,7 +11,8 @@ public sealed class SuppressMessageDiagnosticsAnalyzerTests : DiagnosticAnalyzer
     [Fact]
     public Task SuppressMessageWithJustificationIsOkAsync()
     {
-        const string test = @"
+        const string test =
+            @"
             using System.Diagnostics.CodeAnalysis;
 
             public sealed class Test {
@@ -28,7 +29,8 @@ public sealed class SuppressMessageDiagnosticsAnalyzerTests : DiagnosticAnalyzer
     [Fact]
     public Task SuppressMessageWithoutJustificationIsErrorAsync()
     {
-        const string test = @"
+        const string test =
+            @"
             using System.Diagnostics.CodeAnalysis;
 
             public sealed class Test {
@@ -40,17 +42,14 @@ public sealed class SuppressMessageDiagnosticsAnalyzerTests : DiagnosticAnalyzer
 }";
         DiagnosticResult expected = Result(id: "FFS0027", message: "SuppressMessage must specify a Justification", severity: DiagnosticSeverity.Error, line: 6, column: 14);
 
-        return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                [
-                                                    WellKnownMetadataReferences.SuppressMessage
-                                                ],
-                                                expected: expected);
+        return this.VerifyCSharpDiagnosticAsync(source: test, [WellKnownMetadataReferences.SuppressMessage], expected: expected);
     }
 
     [Fact]
     public Task SuppressMessageWithBlankJustificationIsErrorAsync()
     {
-        const string test = @"
+        const string test =
+            @"
             using System.Diagnostics.CodeAnalysis;
 
             public sealed class Test {
@@ -69,7 +68,8 @@ public sealed class SuppressMessageDiagnosticsAnalyzerTests : DiagnosticAnalyzer
     [Fact]
     public Task SuppressMessageWithTodoJustificationIsErrorAsync()
     {
-        const string test = @"
+        const string test =
+            @"
             using System.Diagnostics.CodeAnalysis;
 
             public sealed class Test {
@@ -82,10 +82,6 @@ public sealed class SuppressMessageDiagnosticsAnalyzerTests : DiagnosticAnalyzer
 
         DiagnosticResult expected = Result(id: "FFS0042", message: "SuppressMessage must not have a TODO Justification", severity: DiagnosticSeverity.Error, line: 6, column: 75);
 
-        return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                [
-                                                    WellKnownMetadataReferences.SuppressMessage
-                                                ],
-                                                expected: expected);
+        return this.VerifyCSharpDiagnosticAsync(source: test, [WellKnownMetadataReferences.SuppressMessage], expected: expected);
     }
 }

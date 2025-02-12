@@ -14,17 +14,14 @@ public sealed class ArgumentExceptionAnalysisDiagnosticsAnalyzer : DiagnosticAna
 {
     private const string CATEGORY = Categories.Exceptions;
 
-    private static readonly DiagnosticDescriptor Rule = RuleHelpers.CreateRule(code: Rules.RuleMustPassParameterNameToArgumentExceptions,
-                                                                               category: CATEGORY,
-                                                                               title: "Argument Exceptions should pass parameter name",
-                                                                               message: "Argument Exceptions should pass parameter name");
+    private static readonly DiagnosticDescriptor Rule = RuleHelpers.CreateRule(
+        code: Rules.RuleMustPassParameterNameToArgumentExceptions,
+        category: CATEGORY,
+        title: "Argument Exceptions should pass parameter name",
+        message: "Argument Exceptions should pass parameter name"
+    );
 
-    private static readonly string[] ArgumentExceptions =
-    [
-        "System.ArgumentException",
-        "System.ArgumentNullException",
-        "System.ArgumentOutOfRangeException"
-    ];
+    private static readonly string[] ArgumentExceptions = ["System.ArgumentException", "System.ArgumentNullException", "System.ArgumentOutOfRangeException"];
 
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => SupportedDiagnosisList.Build(Rule);
 

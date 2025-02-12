@@ -18,64 +18,59 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzer : DiagnosticA
 {
     private static readonly ProhibitedMethodsSpec[] BannedMethods =
     [
-        Build(ruleId: Rules.RuleDontUseAssertTrueWithoutMessage,
-              title: "Avoid use of assert method without message",
-              message: "Only use Assert.True with message parameter",
-              sourceClass: "Xunit.Assert",
-              bannedMethod: "True",
-              [
-                  [
-                      "bool"
-                  ]
-              ]),
-        Build(ruleId: Rules.RuleDontUseAssertFalseWithoutMessage,
-              title: "Avoid use of assert method without message",
-              message: "Only use Assert.False with message parameter",
-              sourceClass: "Xunit.Assert",
-              bannedMethod: "False",
-              [
-                  [
-                      "bool"
-                  ]
-              ]),
-        Build(ruleId: Rules.RuleDontUseBuildInAddOrUpdateConcurrentDictionary,
-              title: "Avoid use of the built in AddOrUpdate methods",
-              message: "Don't use any of the built in AddOrUpdate methods, instead FunFair.Common.Extensions.ConcurrentDictionaryExtensions.AddOrUpdate can be used",
-              sourceClass: "NonBlocking.ConcurrentDictionary`2",
-              bannedMethod: "AddOrUpdate",
-              [
-                  [
-                      "TKey",
-                      "System.Func<TKey, TValue>",
-                      "System.Func<TKey, TValue, TValue>"
-                  ]
-              ]),
-        Build(ruleId: Rules.RuleDontUseBuildInAddOrUpdateConcurrentDictionary,
-              title: "Avoid use of the built in AddOrUpdate methods",
-              message: "Don't use any of the built in AddOrUpdate methods, instead FunFair.Common.Extensions.ConcurrentDictionaryExtensions.AddOrUpdate can be used",
-              sourceClass: "NonBlocking.ConcurrentDictionary`2",
-              bannedMethod: "AddOrUpdate",
-              [
-                  [
-                      "TKey",
-                      "TValue",
-                      "System.Func<TKey, TValue, TValue>"
-                  ]
-              ]),
-        Build(ruleId: Rules.RuleDontUseBuildInGetOrAddConcurrentDictionary,
-              title: "Avoid use of the built in GetOrAdd methods",
-              message: "Don't use any of the built in GetOrAdd methods, instead FunFair.Common.Extensions.ConcurrentDictionaryExtensions.GetOrAdd can be used",
-              sourceClass: "NonBlocking.ConcurrentDictionary`2",
-              bannedMethod: "GetOrAdd",
-              [
-                  [
-                      "TKey",
-                      "System.Func<TKey, TValue>"
-                  ]
-              ])
+        Build(
+            ruleId: Rules.RuleDontUseAssertTrueWithoutMessage,
+            title: "Avoid use of assert method without message",
+            message: "Only use Assert.True with message parameter",
+            sourceClass: "Xunit.Assert",
+            bannedMethod: "True",
+            [
+                ["bool"],
+            ]
+        ),
+        Build(
+            ruleId: Rules.RuleDontUseAssertFalseWithoutMessage,
+            title: "Avoid use of assert method without message",
+            message: "Only use Assert.False with message parameter",
+            sourceClass: "Xunit.Assert",
+            bannedMethod: "False",
+            [
+                ["bool"],
+            ]
+        ),
+        Build(
+            ruleId: Rules.RuleDontUseBuildInAddOrUpdateConcurrentDictionary,
+            title: "Avoid use of the built in AddOrUpdate methods",
+            message: "Don't use any of the built in AddOrUpdate methods, instead FunFair.Common.Extensions.ConcurrentDictionaryExtensions.AddOrUpdate can be used",
+            sourceClass: "NonBlocking.ConcurrentDictionary`2",
+            bannedMethod: "AddOrUpdate",
+            [
+                ["TKey", "System.Func<TKey, TValue>", "System.Func<TKey, TValue, TValue>"],
+            ]
+        ),
+        Build(
+            ruleId: Rules.RuleDontUseBuildInAddOrUpdateConcurrentDictionary,
+            title: "Avoid use of the built in AddOrUpdate methods",
+            message: "Don't use any of the built in AddOrUpdate methods, instead FunFair.Common.Extensions.ConcurrentDictionaryExtensions.AddOrUpdate can be used",
+            sourceClass: "NonBlocking.ConcurrentDictionary`2",
+            bannedMethod: "AddOrUpdate",
+            [
+                ["TKey", "TValue", "System.Func<TKey, TValue, TValue>"],
+            ]
+        ),
+        Build(
+            ruleId: Rules.RuleDontUseBuildInGetOrAddConcurrentDictionary,
+            title: "Avoid use of the built in GetOrAdd methods",
+            message: "Don't use any of the built in GetOrAdd methods, instead FunFair.Common.Extensions.ConcurrentDictionaryExtensions.GetOrAdd can be used",
+            sourceClass: "NonBlocking.ConcurrentDictionary`2",
+            bannedMethod: "GetOrAdd",
+            [
+                ["TKey", "System.Func<TKey, TValue>"],
+            ]
+        ),
     ];
 
-    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => [..BannedMethods.Select(selector: r => r.Rule)];
+    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => [.. BannedMethods.Select(selector: r => r.Rule)];
 
     public override void Initialize(AnalysisContext context)
     {
@@ -98,10 +93,10 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzer : DiagnosticA
 
         public void PerformCheck(CompilationStartAnalysisContext compilationStartContext)
         {
-            compilationStartContext.RegisterSyntaxNodeAction(action: syntaxNodeAnalysisContext =>
-                                                                         this.LookForBannedMethods(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
-                                                                                                   compilation: compilationStartContext.Compilation),
-                                                             SyntaxKind.InvocationExpression);
+            compilationStartContext.RegisterSyntaxNodeAction(
+                action: syntaxNodeAnalysisContext => this.LookForBannedMethods(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, compilation: compilationStartContext.Compilation),
+                SyntaxKind.InvocationExpression
+            );
         }
 
         private IReadOnlyDictionary<ProhibitedMethodsSpec, IReadOnlyList<IMethodSymbol>> LoadCachedSymbols(Compilation compilation)
@@ -165,8 +160,7 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzer : DiagnosticA
 
                 INamedTypeSymbol? sourceClassType = compilation.GetTypeByMetadataName(rule.SourceClass);
 
-                if (sourceClassType?.GetMembers()
-                                   .IsEmpty != false)
+                if (sourceClassType?.GetMembers().IsEmpty != false)
                 {
                     continue;
                 }
@@ -185,12 +179,7 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzer : DiagnosticA
 
         private static IReadOnlyList<IMethodSymbol> GetOverloads(INamedTypeSymbol sourceClassType, ProhibitedMethodsSpec rule)
         {
-            return
-            [
-                ..sourceClassType.GetMembers()
-                                 .Where(predicate: x => StringComparer.Ordinal.Equals(x: x.Name, y: rule.BannedMethod))
-                                 .OfType<IMethodSymbol>()
-            ];
+            return [.. sourceClassType.GetMembers().Where(predicate: x => StringComparer.Ordinal.Equals(x: x.Name, y: rule.BannedMethod)).OfType<IMethodSymbol>()];
         }
 
         private static IReadOnlyList<IMethodSymbol> RemoveAllowedSignaturesForMethod(IReadOnlyList<IMethodSymbol>? methodSignatures, IEnumerable<IEnumerable<string>>? ruleSignatures)
@@ -212,9 +201,13 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzer : DiagnosticA
         {
             return
             [
-                ..ruleSignatures.SelectMany(ruleSignature => methodSymbols.Where(methodSymbol => methodSymbol
-                                                                                                 .Parameters.Select(selector: parameterSymbol => SymbolDisplay.ToDisplayString(parameterSymbol.Type))
-                                                                                                 .SequenceEqual(second: ruleSignature, comparer: StringComparer.Ordinal)))
+                .. ruleSignatures.SelectMany(ruleSignature =>
+                    methodSymbols.Where(methodSymbol =>
+                        methodSymbol
+                            .Parameters.Select(selector: parameterSymbol => SymbolDisplay.ToDisplayString(parameterSymbol.Type))
+                            .SequenceEqual(second: ruleSignature, comparer: StringComparer.Ordinal)
+                    )
+                ),
             ];
         }
 
@@ -236,16 +229,14 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzer : DiagnosticA
         {
             IReadOnlyList<string> invocationParameters = GetInvocationParameters(invocationArguments);
 
-            return methodSignatures.Any(predicate: methodSignature => methodSignature.Parameters.Select(x => SymbolDisplay.ToDisplayString(x.OriginalDefinition))
-                                                                                     .SequenceEqual(second: invocationParameters, comparer: StringComparer.Ordinal));
+            return methodSignatures.Any(predicate: methodSignature =>
+                methodSignature.Parameters.Select(x => SymbolDisplay.ToDisplayString(x.OriginalDefinition)).SequenceEqual(second: invocationParameters, comparer: StringComparer.Ordinal)
+            );
         }
 
         private static IReadOnlyList<string> GetInvocationParameters(IMethodSymbol invocationArguments)
         {
-            return
-            [
-                ..invocationArguments.Parameters.Select(parameter => SymbolDisplay.ToDisplayString(parameter.OriginalDefinition))
-            ];
+            return [.. invocationArguments.Parameters.Select(parameter => SymbolDisplay.ToDisplayString(parameter.OriginalDefinition))];
         }
     }
 

@@ -11,7 +11,8 @@ public sealed class TestClassFieldsAnalysisDiagnosticsAnalyzerTests : Diagnostic
     [Fact]
     public Task NonTestClassAllowedMutableFieldsAsync()
     {
-        const string test = @"
+        const string test =
+            @"
 public sealed class NormalClass {
     private int _test;
 
@@ -27,7 +28,8 @@ public sealed class NormalClass {
     [Fact]
     public Task TestClassProhibitedMutableFieldsAsync()
     {
-        const string test = @"
+        const string test =
+            @"
 using FunFair.Test.Common;
 
 public sealed class Test : TestBase{
@@ -41,18 +43,14 @@ public sealed class Test : TestBase{
 
         DiagnosticResult expected = Result(id: "FFS0035", message: "Fields in test classes should be read-only or const", severity: DiagnosticSeverity.Error, line: 5, column: 5);
 
-        return this.VerifyCSharpDiagnosticAsync(source: test,
-                                                [
-                                                    WellKnownMetadataReferences.Xunit,
-                                                    WellKnownMetadataReferences.FunFairTestCommon
-                                                ],
-                                                expected: expected);
+        return this.VerifyCSharpDiagnosticAsync(source: test, [WellKnownMetadataReferences.Xunit, WellKnownMetadataReferences.FunFairTestCommon], expected: expected);
     }
 
     [Fact]
     public Task TestClassAllowedReadOnlyFieldAsync()
     {
-        const string test = @"
+        const string test =
+            @"
 using FunFair.Test.Common;
 
 public sealed class Test : TestBase{
@@ -64,17 +62,14 @@ public sealed class Test : TestBase{
     }
 }";
 
-        return this.VerifyCSharpDiagnosticAsync(source: test,
-        [
-            WellKnownMetadataReferences.Xunit,
-            WellKnownMetadataReferences.FunFairTestCommon
-        ]);
+        return this.VerifyCSharpDiagnosticAsync(source: test, [WellKnownMetadataReferences.Xunit, WellKnownMetadataReferences.FunFairTestCommon]);
     }
 
     [Fact]
     public Task TestClassAllowedConstFieldAsync()
     {
-        const string test = @"
+        const string test =
+            @"
 using FunFair.Test.Common;
 
 public sealed class Test : TestBase{
@@ -86,10 +81,6 @@ public sealed class Test : TestBase{
     }
 }";
 
-        return this.VerifyCSharpDiagnosticAsync(source: test,
-        [
-            WellKnownMetadataReferences.Xunit,
-            WellKnownMetadataReferences.FunFairTestCommon
-        ]);
+        return this.VerifyCSharpDiagnosticAsync(source: test, [WellKnownMetadataReferences.Xunit, WellKnownMetadataReferences.FunFairTestCommon]);
     }
 }
