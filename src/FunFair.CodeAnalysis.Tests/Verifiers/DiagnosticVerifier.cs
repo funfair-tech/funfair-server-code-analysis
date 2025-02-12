@@ -72,8 +72,7 @@ public abstract partial class DiagnosticVerifier : TestBase
                 string resultMethodName = GetResultMethodName(diagnostic);
                 LinePosition linePosition = GetStartLinePosition(diagnostic);
 
-                builder = builder.Append(provider: CultureInfo.InvariantCulture,
-                                         $"{resultMethodName}({linePosition.Line + 1}, {linePosition.Character + 1}, {analyzerType.Name}.{rule.Id})");
+                builder = builder.Append(provider: CultureInfo.InvariantCulture, $"{resultMethodName}({linePosition.Line + 1}, {linePosition.Character + 1}, {analyzerType.Name}.{rule.Id})");
             }
 
             builder = builder.Append(value: ',')
@@ -176,16 +175,15 @@ public abstract partial class DiagnosticVerifier : TestBase
 
     #region Actual comparisons and verifications
 
-    private static void VerifyDiagnosticResults(IEnumerable<Diagnostic> actualResults, DiagnosticAnalyzer analyzer, IReadOnlyList<DiagnosticResult> expectedResults)
+    private static void VerifyDiagnosticResults(IReadOnlyList<Diagnostic> actualResults, DiagnosticAnalyzer analyzer, IReadOnlyList<DiagnosticResult> expectedResults)
     {
-        Diagnostic[] results = actualResults.ToArray();
         int expectedCount = expectedResults.Count;
-        int actualCount = results.Length;
+        int actualCount = actualResults.Count;
 
         if (expectedCount != actualCount)
         {
-            string diagnosticsOutput = results.Length != 0
-                ? FormatDiagnostics(analyzer: analyzer, [.. results])
+            string diagnosticsOutput = actualResults.Count != 0
+                ? FormatDiagnostics(analyzer: analyzer, [.. actualResults])
                 : "    NONE.";
 
             Assert.Fail($"Mismatch between number of diagnostics returned, expected \"{expectedCount}\" actual \"{actualCount}\"\r\n\r\nDiagnostics:\r\n{diagnosticsOutput}\r\n");
@@ -193,10 +191,7 @@ public abstract partial class DiagnosticVerifier : TestBase
 
         for (int i = 0; i < expectedResults.Count; i++)
         {
-            Diagnostic actual = results[i];
-            DiagnosticResult expected = expectedResults[i];
-
-            VerifyOneResult(analyzer: analyzer, expected: expected, actual: actual);
+            VerifyOneResult(analyzer: analyzer, expectedResults[i], actualResults[i]);
         }
     }
 
@@ -233,8 +228,7 @@ public abstract partial class DiagnosticVerifier : TestBase
 
         if (additionalLocations.Count != expected.Locations.Count - 1)
         {
-            Assert.Fail(
-                $"Expected {expected.Locations.Count - 1} additional locations but got {additionalLocations.Count} for Diagnostic:\r\n    {FormatDiagnostics(analyzer: analyzer, actual)}\r\n");
+            Assert.Fail($"Expected {expected.Locations.Count - 1} additional locations but got {additionalLocations.Count} for Diagnostic:\r\n    {FormatDiagnostics(analyzer: analyzer, actual)}\r\n");
         }
 
         for (int j = 0; j < additionalLocations.Count; ++j)

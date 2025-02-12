@@ -48,8 +48,7 @@ public sealed class OneTypePerDocumentAnalysisDiagnosticsAnalyzer : DiagnosticAn
             return;
         }
 
-        IReadOnlyList<MemberDeclarationSyntax> members = GetNonNestedTypeDeclarations(compilationUnitSyntax)
-            .ToArray();
+        IReadOnlyList<MemberDeclarationSyntax> members = GetNonNestedTypeDeclarations(compilationUnitSyntax);
 
         IReadOnlyList<IGrouping<string, MemberDeclarationSyntax>> grouped = GroupedMembers(members);
 
@@ -57,18 +56,17 @@ public sealed class OneTypePerDocumentAnalysisDiagnosticsAnalyzer : DiagnosticAn
         {
             case <= 1:
             case 2 when IsSpecialCaseWhereNonGenericHelperClassExists(grouped): return;
-            default:
-                ReportAllMembersAsErrors(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, members: members);
-
-                break;
+            default: ReportAllMembersAsErrors(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, members: members); break;
         }
     }
 
     private static IReadOnlyList<IGrouping<string, MemberDeclarationSyntax>> GroupedMembers(IReadOnlyList<MemberDeclarationSyntax> members)
     {
-        return members.GroupBy(keySelector: GetTypeName, comparer: StringComparer.Ordinal)
-                      .Where(x => !string.IsNullOrWhiteSpace(x.Key))
-                      .ToArray();
+        return
+        [
+            ..members.GroupBy(keySelector: GetTypeName, comparer: StringComparer.Ordinal)
+                     .Where(x => !string.IsNullOrWhiteSpace(x.Key))
+        ];
     }
 
     private static bool IsSpecialCaseWhereNonGenericHelperClassExists(IReadOnlyList<IGrouping<string, MemberDeclarationSyntax>> grouped)
@@ -151,9 +149,9 @@ public sealed class OneTypePerDocumentAnalysisDiagnosticsAnalyzer : DiagnosticAn
         return string.Concat(str0: CLASS_TYPE_PREFIX, classDeclarationSyntax.Identifier.ToString());
     }
 
-    private static IEnumerable<MemberDeclarationSyntax> GetNonNestedTypeDeclarations(CompilationUnitSyntax compilationUnit)
+    private static IReadOnlyList<MemberDeclarationSyntax> GetNonNestedTypeDeclarations(CompilationUnitSyntax compilationUnit)
     {
-        return GetNonNestedTypeDeclarations(compilationUnit.Members);
+        return [..GetNonNestedTypeDeclarations(compilationUnit.Members)];
     }
 
     private static IEnumerable<MemberDeclarationSyntax> GetNonNestedTypeDeclarations(SyntaxList<MemberDeclarationSyntax> members)
