@@ -111,8 +111,7 @@ public sealed class ReThrowingExceptionShouldSpecifyInnerExceptionDiagnosticsAna
         IEnumerable<ExpressionSyntax> expressionFromThrowStatements = ThrowStatements(codeBlock);
         IEnumerable<ExpressionSyntax> expressionFromThrowExpressions = ThrowExpressions(codeBlock);
 
-        return expressionFromThrowStatements.Concat(expressionFromThrowExpressions)
-                                            .ToArray();
+        return [..expressionFromThrowStatements.Concat(expressionFromThrowExpressions)];
     }
 
     private static IEnumerable<ExpressionSyntax> ThrowExpressions(BlockSyntax codeBlock)
