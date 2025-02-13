@@ -6,7 +6,8 @@ using Xunit;
 
 namespace FunFair.CodeAnalysis.Tests;
 
-public sealed class TestClassAnalysisDiagnosticsAnalyzerTests : DiagnosticAnalyzerVerifier<TestClassAnalysisDiagnosticsAnalyzer>
+public sealed class TestClassAnalysisDiagnosticsAnalyzerTests
+    : DiagnosticAnalyzerVerifier<TestClassAnalysisDiagnosticsAnalyzer>
 {
     [Fact]
     public Task ClassThatHasNothingToDoWithTestsIsNotAnErrorAsync()
@@ -20,7 +21,10 @@ public sealed class TestClassAnalysisDiagnosticsAnalyzerTests : DiagnosticAnalyz
             }
 }";
 
-        return this.VerifyCSharpDiagnosticAsync(source: test, [WellKnownMetadataReferences.Xunit, WellKnownMetadataReferences.FunFairTestCommon]);
+        return this.VerifyCSharpDiagnosticAsync(
+            source: test,
+            [WellKnownMetadataReferences.Xunit, WellKnownMetadataReferences.FunFairTestCommon]
+        );
     }
 
     [Fact]
@@ -37,9 +41,19 @@ using Xunit;
             {
             }
 }";
-        DiagnosticResult expected = Result(id: "FFS0013", message: "Test classes should be derived from TestBase", severity: DiagnosticSeverity.Error, line: 6, column: 13);
+        DiagnosticResult expected = Result(
+            id: "FFS0013",
+            message: "Test classes should be derived from TestBase",
+            severity: DiagnosticSeverity.Error,
+            line: 6,
+            column: 13
+        );
 
-        return this.VerifyCSharpDiagnosticAsync(source: test, reference: WellKnownMetadataReferences.Xunit, expected: expected);
+        return this.VerifyCSharpDiagnosticAsync(
+            source: test,
+            reference: WellKnownMetadataReferences.Xunit,
+            expected: expected
+        );
     }
 
     [Fact]
@@ -64,7 +78,14 @@ using Xunit.Abstractions;
             }
 }";
 
-        return this.VerifyCSharpDiagnosticAsync(source: test, [WellKnownMetadataReferences.Xunit, WellKnownMetadataReferences.FunFairTestCommon, WellKnownMetadataReferences.XunitAbstractions]);
+        return this.VerifyCSharpDiagnosticAsync(
+            source: test,
+            [
+                WellKnownMetadataReferences.Xunit,
+                WellKnownMetadataReferences.FunFairTestCommon,
+                WellKnownMetadataReferences.XunitAbstractions,
+            ]
+        );
     }
 
     [Fact]
@@ -83,7 +104,10 @@ using Xunit;
             }
 }";
 
-        return this.VerifyCSharpDiagnosticAsync(source: test, [WellKnownMetadataReferences.Xunit, WellKnownMetadataReferences.FunFairTestCommon]);
+        return this.VerifyCSharpDiagnosticAsync(
+            source: test,
+            [WellKnownMetadataReferences.Xunit, WellKnownMetadataReferences.FunFairTestCommon]
+        );
     }
 
     [Fact]
@@ -101,9 +125,19 @@ using Xunit;
             {
             }
 }";
-        DiagnosticResult expected = Result(id: "FFS0013", message: "Test classes should be derived from TestBase", severity: DiagnosticSeverity.Error, line: 6, column: 13);
+        DiagnosticResult expected = Result(
+            id: "FFS0013",
+            message: "Test classes should be derived from TestBase",
+            severity: DiagnosticSeverity.Error,
+            line: 6,
+            column: 13
+        );
 
-        return this.VerifyCSharpDiagnosticAsync(source: test, [WellKnownMetadataReferences.Xunit], expected: expected);
+        return this.VerifyCSharpDiagnosticAsync(
+            source: test,
+            [WellKnownMetadataReferences.Xunit],
+            expected: expected
+        );
     }
 
     [Fact]
@@ -129,7 +163,14 @@ using Xunit.Abstractions;
             }
 }";
 
-        return this.VerifyCSharpDiagnosticAsync(source: test, [WellKnownMetadataReferences.Xunit, WellKnownMetadataReferences.FunFairTestCommon, WellKnownMetadataReferences.XunitAbstractions]);
+        return this.VerifyCSharpDiagnosticAsync(
+            source: test,
+            [
+                WellKnownMetadataReferences.Xunit,
+                WellKnownMetadataReferences.FunFairTestCommon,
+                WellKnownMetadataReferences.XunitAbstractions,
+            ]
+        );
     }
 
     [Fact]
@@ -149,6 +190,9 @@ using Xunit;
             }
 }";
 
-        return this.VerifyCSharpDiagnosticAsync(source: test, [WellKnownMetadataReferences.Xunit, WellKnownMetadataReferences.FunFairTestCommon]);
+        return this.VerifyCSharpDiagnosticAsync(
+            source: test,
+            [WellKnownMetadataReferences.Xunit, WellKnownMetadataReferences.FunFairTestCommon]
+        );
     }
 }

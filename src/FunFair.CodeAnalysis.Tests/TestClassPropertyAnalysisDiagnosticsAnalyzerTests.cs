@@ -6,7 +6,8 @@ using Xunit;
 
 namespace FunFair.CodeAnalysis.Tests;
 
-public sealed class TestClassPropertyAnalysisDiagnosticsAnalyzerTests : DiagnosticAnalyzerVerifier<TestClassPropertyAnalysisDiagnosticsAnalyzer>
+public sealed class TestClassPropertyAnalysisDiagnosticsAnalyzerTests
+    : DiagnosticAnalyzerVerifier<TestClassPropertyAnalysisDiagnosticsAnalyzer>
 {
     [Fact]
     public Task NonTestClassAllowedMutablePropertiesAsync()
@@ -34,9 +35,19 @@ public sealed class Test : TestBase {
 
 }";
 
-        DiagnosticResult expected = Result(id: "FFS0036", message: "Properties in test classes should be read-only or const", severity: DiagnosticSeverity.Error, line: 6, column: 5);
+        DiagnosticResult expected = Result(
+            id: "FFS0036",
+            message: "Properties in test classes should be read-only or const",
+            severity: DiagnosticSeverity.Error,
+            line: 6,
+            column: 5
+        );
 
-        return this.VerifyCSharpDiagnosticAsync(source: test, [WellKnownMetadataReferences.Xunit, WellKnownMetadataReferences.FunFairTestCommon], expected: expected);
+        return this.VerifyCSharpDiagnosticAsync(
+            source: test,
+            [WellKnownMetadataReferences.Xunit, WellKnownMetadataReferences.FunFairTestCommon],
+            expected: expected
+        );
     }
 
     [Fact]
@@ -56,7 +67,10 @@ public sealed class Test : TestBase {
 
 }";
 
-        return this.VerifyCSharpDiagnosticAsync(source: test, [WellKnownMetadataReferences.Xunit, WellKnownMetadataReferences.FunFairTestCommon]);
+        return this.VerifyCSharpDiagnosticAsync(
+            source: test,
+            [WellKnownMetadataReferences.Xunit, WellKnownMetadataReferences.FunFairTestCommon]
+        );
     }
 
     [Fact]
@@ -72,7 +86,10 @@ public sealed class Test : TestBase {
 
 }";
 
-        return this.VerifyCSharpDiagnosticAsync(source: test, [WellKnownMetadataReferences.Xunit, WellKnownMetadataReferences.FunFairTestCommon]);
+        return this.VerifyCSharpDiagnosticAsync(
+            source: test,
+            [WellKnownMetadataReferences.Xunit, WellKnownMetadataReferences.FunFairTestCommon]
+        );
     }
 
     [Fact]
@@ -88,7 +105,10 @@ public sealed class Test : TestBase {
 
 }";
 
-        return this.VerifyCSharpDiagnosticAsync(source: test, [WellKnownMetadataReferences.Xunit, WellKnownMetadataReferences.FunFairTestCommon]);
+        return this.VerifyCSharpDiagnosticAsync(
+            source: test,
+            [WellKnownMetadataReferences.Xunit, WellKnownMetadataReferences.FunFairTestCommon]
+        );
     }
 
     [Fact]
@@ -108,7 +128,10 @@ public sealed class Test : TestBase {
         }
 }";
 
-        return this.VerifyCSharpDiagnosticAsync(source: test, [WellKnownMetadataReferences.Xunit, WellKnownMetadataReferences.FunFairTestCommon]);
+        return this.VerifyCSharpDiagnosticAsync(
+            source: test,
+            [WellKnownMetadataReferences.Xunit, WellKnownMetadataReferences.FunFairTestCommon]
+        );
     }
 
     [Fact]
@@ -128,9 +151,19 @@ public sealed class Test : TestBase {
 
 }";
 
-        DiagnosticResult expected = Result(id: "FFS0036", message: "Properties in test classes should be read-only or const", severity: DiagnosticSeverity.Error, line: 10, column: 5);
+        DiagnosticResult expected = Result(
+            id: "FFS0036",
+            message: "Properties in test classes should be read-only or const",
+            severity: DiagnosticSeverity.Error,
+            line: 10,
+            column: 5
+        );
 
-        return this.VerifyCSharpDiagnosticAsync(source: test, [WellKnownMetadataReferences.Xunit, WellKnownMetadataReferences.FunFairTestCommon], expected: expected);
+        return this.VerifyCSharpDiagnosticAsync(
+            source: test,
+            [WellKnownMetadataReferences.Xunit, WellKnownMetadataReferences.FunFairTestCommon],
+            expected: expected
+        );
     }
 
     [Fact]
@@ -158,8 +191,18 @@ public sealed class Test : TestBase {
     }
 }";
 
-        DiagnosticResult expected = Result(id: "FFS0036", message: "Properties in test classes should be read-only or const", severity: DiagnosticSeverity.Error, line: 10, column: 5);
+        DiagnosticResult expected = Result(
+            id: "FFS0036",
+            message: "Properties in test classes should be read-only or const",
+            severity: DiagnosticSeverity.Error,
+            line: 10,
+            column: 5
+        );
 
-        return this.VerifyCSharpDiagnosticAsync(source: test, [WellKnownMetadataReferences.Xunit, WellKnownMetadataReferences.FunFairTestCommon], expected: expected);
+        return this.VerifyCSharpDiagnosticAsync(
+            source: test,
+            [WellKnownMetadataReferences.Xunit, WellKnownMetadataReferences.FunFairTestCommon],
+            expected: expected
+        );
     }
 }

@@ -6,7 +6,8 @@ using Xunit;
 
 namespace FunFair.CodeAnalysis.Tests;
 
-public sealed class ConstructorGenericParameterTypeDiagnosticsAnalyserTests : DiagnosticAnalyzerVerifier<ConstructorGenericParameterTypeDiagnosticsAnalyser>
+public sealed class ConstructorGenericParameterTypeDiagnosticsAnalyserTests
+    : DiagnosticAnalyzerVerifier<ConstructorGenericParameterTypeDiagnosticsAnalyser>
 {
     [Fact]
     public Task SealedClassUsesOwnClassNameInConstructorParameterIsNotAnErrorAsync()
@@ -22,7 +23,10 @@ public sealed class Test {
     }
 }";
 
-        return this.VerifyCSharpDiagnosticAsync(source: test, reference: WellKnownMetadataReferences.Logger);
+        return this.VerifyCSharpDiagnosticAsync(
+            source: test,
+            reference: WellKnownMetadataReferences.Logger
+        );
     }
 
     [Fact]
@@ -47,7 +51,11 @@ public sealed class Test {
             column: 17
         );
 
-        return this.VerifyCSharpDiagnosticAsync(source: test, reference: WellKnownMetadataReferences.Logger, expected: expected);
+        return this.VerifyCSharpDiagnosticAsync(
+            source: test,
+            reference: WellKnownMetadataReferences.Logger,
+            expected: expected
+        );
     }
 
     [Fact]
@@ -72,7 +80,11 @@ public abstract class Test {
             column: 20
         );
 
-        return this.VerifyCSharpDiagnosticAsync(source: test, reference: WellKnownMetadataReferences.Logger, expected: expected);
+        return this.VerifyCSharpDiagnosticAsync(
+            source: test,
+            reference: WellKnownMetadataReferences.Logger,
+            expected: expected
+        );
     }
 
     [Fact]
@@ -89,7 +101,10 @@ public abstract class Test {
     }
 }";
 
-        return this.VerifyCSharpDiagnosticAsync(source: test, reference: WellKnownMetadataReferences.Logger);
+        return this.VerifyCSharpDiagnosticAsync(
+            source: test,
+            reference: WellKnownMetadataReferences.Logger
+        );
     }
 
     [Fact]
@@ -118,7 +133,11 @@ public sealed class Test {
             column: 17
         );
 
-        return this.VerifyCSharpDiagnosticAsync(source: test, reference: WellKnownMetadataReferences.Logger, expected: expected);
+        return this.VerifyCSharpDiagnosticAsync(
+            source: test,
+            reference: WellKnownMetadataReferences.Logger,
+            expected: expected
+        );
     }
 
     [Fact]
@@ -135,7 +154,10 @@ internal sealed class Test {
     }
 }";
 
-        return this.VerifyCSharpDiagnosticAsync(source: test, reference: WellKnownMetadataReferences.Logger);
+        return this.VerifyCSharpDiagnosticAsync(
+            source: test,
+            reference: WellKnownMetadataReferences.Logger
+        );
     }
 
     [Fact]
@@ -155,7 +177,10 @@ public sealed class Onion {
     }
 }";
 
-        return this.VerifyCSharpDiagnosticAsync(source: test, reference: WellKnownMetadataReferences.Logger);
+        return this.VerifyCSharpDiagnosticAsync(
+            source: test,
+            reference: WellKnownMetadataReferences.Logger
+        );
     }
 
     [Fact]
@@ -175,7 +200,10 @@ public sealed class Onion {
     }
 }";
 
-        return this.VerifyCSharpDiagnosticAsync(source: test, reference: WellKnownMetadataReferences.Logger);
+        return this.VerifyCSharpDiagnosticAsync(
+            source: test,
+            reference: WellKnownMetadataReferences.Logger
+        );
     }
 
     [Fact]
@@ -195,6 +223,9 @@ public class Onion {
     }
 }";
 
-        return this.VerifyCSharpDiagnosticAsync(source: test, reference: WellKnownMetadataReferences.Logger);
+        return this.VerifyCSharpDiagnosticAsync(
+            source: test,
+            reference: WellKnownMetadataReferences.Logger
+        );
     }
 }

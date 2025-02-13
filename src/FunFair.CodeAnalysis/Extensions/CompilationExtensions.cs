@@ -10,18 +10,28 @@ internal static class CompilationExtensions
 {
     private static readonly IReadOnlyList<string> TestAssemblies = ["Microsoft.NET.Test.Sdk"];
 
-    private static readonly IReadOnlyList<string> UnitTestAssemblies = ["Microsoft.NET.Test.Sdk", "xunit", "xunit.core"];
+    private static readonly IReadOnlyList<string> UnitTestAssemblies =
+    [
+        "Microsoft.NET.Test.Sdk",
+        "xunit",
+        "xunit.core",
+    ];
 
     private static bool Matches(IReadOnlyList<string> assemblyNames, AssemblyIdentity assembly)
     {
-        return assemblyNames.Contains(value: assembly.Name, comparer: StringComparer.OrdinalIgnoreCase);
+        return assemblyNames.Contains(
+            value: assembly.Name,
+            comparer: StringComparer.OrdinalIgnoreCase
+        );
     }
 
     public static bool IsTestAssembly(this Compilation compilation)
     {
         try
         {
-            return compilation.ReferencedAssemblyNames.Any(assemblyName => Matches(assemblyNames: TestAssemblies, assembly: assemblyName));
+            return compilation.ReferencedAssemblyNames.Any(assemblyName =>
+                Matches(assemblyNames: TestAssemblies, assembly: assemblyName)
+            );
         }
         catch (Exception exception)
         {
@@ -36,7 +46,9 @@ internal static class CompilationExtensions
     {
         try
         {
-            return compilation.ReferencedAssemblyNames.Any(assemblyName => Matches(assemblyNames: UnitTestAssemblies, assembly: assemblyName));
+            return compilation.ReferencedAssemblyNames.Any(assemblyName =>
+                Matches(assemblyNames: UnitTestAssemblies, assembly: assemblyName)
+            );
         }
         catch (Exception exception)
         {

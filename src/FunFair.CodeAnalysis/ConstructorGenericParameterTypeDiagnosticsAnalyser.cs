@@ -45,11 +45,14 @@ public sealed class ConstructorGenericParameterTypeDiagnosticsAnalyser : Diagnos
         message: "Should be using '{0}' rather than '{1}' with {2}"
     );
 
-    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => SupportedDiagnosisList.Build(Specifications.Select(s => s.Rule)).Add(MissMatchTypes);
+    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
+        SupportedDiagnosisList.Build(Specifications.Select(s => s.Rule)).Add(MissMatchTypes);
 
     public override void Initialize(AnalysisContext context)
     {
-        context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.None);
+        context.ConfigureGeneratedCodeAnalysis(
+            GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.None
+        );
         context.EnableConcurrentExecution();
 
         context.RegisterCompilationStartAction(PerformCheck);
@@ -57,22 +60,39 @@ public sealed class ConstructorGenericParameterTypeDiagnosticsAnalyser : Diagnos
 
     private static void PerformCheck(CompilationStartAnalysisContext compilationStartContext)
     {
-        compilationStartContext.RegisterSyntaxNodeAction(action: MustHaveSaneGenericUsages, SyntaxKind.ConstructorDeclaration);
+        compilationStartContext.RegisterSyntaxNodeAction(
+            action: MustHaveSaneGenericUsages,
+            SyntaxKind.ConstructorDeclaration
+        );
     }
 
-    private static void MustHaveSaneGenericUsages(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
+    private static void MustHaveSaneGenericUsages(
+        SyntaxNodeAnalysisContext syntaxNodeAnalysisContext
+    )
     {
-        if (syntaxNodeAnalysisContext.Node is not ConstructorDeclarationSyntax constructorDeclarationSyntax)
+        if (
+            syntaxNodeAnalysisContext.Node
+            is not ConstructorDeclarationSyntax constructorDeclarationSyntax
+        )
         {
             return;
         }
 
-        MustHaveSaneGenericUsages(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, constructorDeclarationSyntax: constructorDeclarationSyntax);
+        MustHaveSaneGenericUsages(
+            syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
+            constructorDeclarationSyntax: constructorDeclarationSyntax
+        );
     }
 
-    private static void MustHaveSaneGenericUsages(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, ConstructorDeclarationSyntax constructorDeclarationSyntax)
+    private static void MustHaveSaneGenericUsages(
+        in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext,
+        ConstructorDeclarationSyntax constructorDeclarationSyntax
+    )
     {
-        if (constructorDeclarationSyntax.Parent is not ClassDeclarationSyntax parentSymbolForClassForConstructor)
+        if (
+            constructorDeclarationSyntax.Parent
+            is not ClassDeclarationSyntax parentSymbolForClassForConstructor
+        )
         {
             return;
         }
@@ -90,7 +110,10 @@ public sealed class ConstructorGenericParameterTypeDiagnosticsAnalyser : Diagnos
         ClassDeclarationSyntax parentSymbolForClassForConstructor
     )
     {
-        ISymbol classForConstructor = GetDeclaredSymbol(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, parentSymbolForClassForConstructor: parentSymbolForClassForConstructor);
+        ISymbol classForConstructor = GetDeclaredSymbol(
+            syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
+            parentSymbolForClassForConstructor: parentSymbolForClassForConstructor
+        );
         string className = classForConstructor.ToDisplayString();
 
         bool needed = IsNeeded(
@@ -99,22 +122,45 @@ public sealed class ConstructorGenericParameterTypeDiagnosticsAnalyser : Diagnos
             constructorDeclarationSyntax: constructorDeclarationSyntax
         );
 
-        foreach (ParameterSyntax parameterSyntax in constructorDeclarationSyntax.ParameterList.Parameters)
+        foreach (
+            ParameterSyntax parameterSyntax in constructorDeclarationSyntax.ParameterList.Parameters
+        )
         {
-            CheckParameter(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, parameterSyntax: parameterSyntax, isProtected: needed, className: className);
+            CheckParameter(
+                syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
+                parameterSyntax: parameterSyntax,
+                isProtected: needed,
+                className: className
+            );
         }
     }
 
-    [SuppressMessage(category: "Nullable.Extended.Analyzer", checkId: "NX0001: Suppression of NullForgiving operator is not required", Justification = "Required here")]
-    private static INamedTypeSymbol GetDeclaredSymbol(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, ClassDeclarationSyntax parentSymbolForClassForConstructor)
+    [SuppressMessage(
+        category: "Nullable.Extended.Analyzer",
+        checkId: "NX0001: Suppression of NullForgiving operator is not required",
+        Justification = "Required here"
+    )]
+    private static INamedTypeSymbol GetDeclaredSymbol(
+        in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext,
+        ClassDeclarationSyntax parentSymbolForClassForConstructor
+    )
     {
         // TODO: consider throwing
-        return syntaxNodeAnalysisContext.SemanticModel.GetDeclaredSymbol(declarationSyntax: parentSymbolForClassForConstructor, cancellationToken: syntaxNodeAnalysisContext.CancellationToken)!;
+        return syntaxNodeAnalysisContext.SemanticModel.GetDeclaredSymbol(
+            declarationSyntax: parentSymbolForClassForConstructor,
+            cancellationToken: syntaxNodeAnalysisContext.CancellationToken
+        )!;
     }
 
-    private static bool IsNeeded(ClassDeclarationSyntax parentSymbolForClassForConstructor, ISymbol classForConstructor, ConstructorDeclarationSyntax constructorDeclarationSyntax)
+    private static bool IsNeeded(
+        ClassDeclarationSyntax parentSymbolForClassForConstructor,
+        ISymbol classForConstructor,
+        ConstructorDeclarationSyntax constructorDeclarationSyntax
+    )
     {
-        bool isProtected = constructorDeclarationSyntax.Modifiers.Any(x => x.IsKind(SyntaxKind.ProtectedKeyword));
+        bool isProtected = constructorDeclarationSyntax.Modifiers.Any(x =>
+            x.IsKind(SyntaxKind.ProtectedKeyword)
+        );
 
         if (isProtected)
         {
@@ -128,12 +174,19 @@ public sealed class ConstructorGenericParameterTypeDiagnosticsAnalyser : Diagnos
             return true;
         }
 
-        bool classIsPublic = parentSymbolForClassForConstructor.Modifiers.Any(x => x.IsKind(SyntaxKind.PublicKeyword));
+        bool classIsPublic = parentSymbolForClassForConstructor.Modifiers.Any(x =>
+            x.IsKind(SyntaxKind.PublicKeyword)
+        );
 
         return !classIsPublic;
     }
 
-    private static void CheckParameter(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, ParameterSyntax parameterSyntax, bool isProtected, string className)
+    private static void CheckParameter(
+        in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext,
+        ParameterSyntax parameterSyntax,
+        bool isProtected,
+        string className
+    )
     {
         string? fullTypeName = ParameterHelpers.GetFullTypeName(
             syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
@@ -146,7 +199,10 @@ public sealed class ConstructorGenericParameterTypeDiagnosticsAnalyser : Diagnos
             return;
         }
 
-        TypeCheckSpec? checkRule = GetTypeSpec(isProtected: isProtected, fullTypeName: fullTypeName);
+        TypeCheckSpec? checkRule = GetTypeSpec(
+            isProtected: isProtected,
+            fullTypeName: fullTypeName
+        );
 
         if (checkRule is null)
         {
@@ -159,7 +215,12 @@ public sealed class ConstructorGenericParameterTypeDiagnosticsAnalyser : Diagnos
         {
             if (rule.MatchTypeOnGenericParameters)
             {
-                CheckGenericParameterTypeMatch(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, parameterSyntax: parameterSyntax, className: className, fullTypeName: fullTypeName);
+                CheckGenericParameterTypeMatch(
+                    syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
+                    parameterSyntax: parameterSyntax,
+                    className: className,
+                    fullTypeName: fullTypeName
+                );
             }
 
             return;
@@ -167,18 +228,33 @@ public sealed class ConstructorGenericParameterTypeDiagnosticsAnalyser : Diagnos
 
         if (rule.IsProhibitedClass(fullTypeName))
         {
-            parameterSyntax.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: rule.Rule, className);
+            parameterSyntax.ReportDiagnostics(
+                syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
+                rule: rule.Rule,
+                className
+            );
         }
     }
 
     private static TypeCheckSpec? GetTypeSpec(bool isProtected, string fullTypeName)
     {
-        return Specifications.FirstOrDefault(ns => ns.IsProtected == isProtected && (ns.IsAllowedSourceClass(fullTypeName) || ns.IsProhibitedClass(fullTypeName)));
+        return Specifications.FirstOrDefault(ns =>
+            ns.IsProtected == isProtected
+            && (ns.IsAllowedSourceClass(fullTypeName) || ns.IsProhibitedClass(fullTypeName))
+        );
     }
 
-    private static void CheckGenericParameterTypeMatch(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, ParameterSyntax parameterSyntax, string className, string fullTypeName)
+    private static void CheckGenericParameterTypeMatch(
+        in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext,
+        ParameterSyntax parameterSyntax,
+        string className,
+        string fullTypeName
+    )
     {
-        IParameterSymbol? ds = syntaxNodeAnalysisContext.SemanticModel.GetDeclaredSymbol(declarationSyntax: parameterSyntax, cancellationToken: syntaxNodeAnalysisContext.CancellationToken);
+        IParameterSymbol? ds = syntaxNodeAnalysisContext.SemanticModel.GetDeclaredSymbol(
+            declarationSyntax: parameterSyntax,
+            cancellationToken: syntaxNodeAnalysisContext.CancellationToken
+        );
 
         ITypeSymbol? dsType = ds?.Type;
 
@@ -198,11 +274,25 @@ public sealed class ConstructorGenericParameterTypeDiagnosticsAnalyser : Diagnos
 
         if (!StringComparer.Ordinal.Equals(x: displayName, y: className))
         {
-            parameterSyntax.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: MissMatchTypes, className, displayName, fullTypeName);
+            parameterSyntax.ReportDiagnostics(
+                syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
+                rule: MissMatchTypes,
+                className,
+                displayName,
+                fullTypeName
+            );
         }
     }
 
-    private static TypeCheckSpec Build(string ruleId, string title, string message, string allowedSourceClass, string prohibitedClass, bool isProtected, bool matchTypeOnGenericParameters)
+    private static TypeCheckSpec Build(
+        string ruleId,
+        string title,
+        string message,
+        string allowedSourceClass,
+        string prohibitedClass,
+        bool isProtected,
+        bool matchTypeOnGenericParameters
+    )
     {
         return new(
             ruleId: ruleId,
@@ -215,17 +305,32 @@ public sealed class ConstructorGenericParameterTypeDiagnosticsAnalyser : Diagnos
         );
     }
 
-    [DebuggerDisplay("{Rule.Id} {Rule.Title} Allowed {AllowedSourceClass} Prohibited {ProhibitedClass} Match on generics {MatchTypeOnGenericParameters}")]
+    [DebuggerDisplay(
+        "{Rule.Id} {Rule.Title} Allowed {AllowedSourceClass} Prohibited {ProhibitedClass} Match on generics {MatchTypeOnGenericParameters}"
+    )]
     private readonly record struct TypeCheckSpec
     {
-        public TypeCheckSpec(string ruleId, string title, string message, string allowedSourceClass, string prohibitedClass, bool isProtected, bool matchTypeOnGenericParameters)
+        public TypeCheckSpec(
+            string ruleId,
+            string title,
+            string message,
+            string allowedSourceClass,
+            string prohibitedClass,
+            bool isProtected,
+            bool matchTypeOnGenericParameters
+        )
         {
             this.AllowedSourceClass = allowedSourceClass;
             this.ProhibitedClass = prohibitedClass;
             this.IsProtected = isProtected;
             this.MatchTypeOnGenericParameters = matchTypeOnGenericParameters;
 
-            this.Rule = RuleHelpers.CreateRule(code: ruleId, category: Categories.Naming, title: title, message: message);
+            this.Rule = RuleHelpers.CreateRule(
+                code: ruleId,
+                category: Categories.Naming,
+                title: title,
+                message: message
+            );
         }
 
         public string AllowedSourceClass { get; }

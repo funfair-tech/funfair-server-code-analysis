@@ -82,11 +82,14 @@ public sealed class ProhibitedMethodsDiagnosticsAnalyzer : DiagnosticAnalyzer
         ),
     ];
 
-    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => [.. BannedMethods.Select(selector: r => r.Rule)];
+    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
+        [.. BannedMethods.Select(selector: r => r.Rule)];
 
     public override void Initialize(AnalysisContext context)
     {
-        context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.None);
+        context.ConfigureGeneratedCodeAnalysis(
+            GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.None
+        );
         context.EnableConcurrentExecution();
 
         Checker checker = new();
@@ -94,9 +97,21 @@ public sealed class ProhibitedMethodsDiagnosticsAnalyzer : DiagnosticAnalyzer
         context.RegisterCompilationStartAction(checker.PerformCheck);
     }
 
-    private static ProhibitedMethodsSpec Build(string ruleId, string title, string message, string sourceClass, string bannedMethod)
+    private static ProhibitedMethodsSpec Build(
+        string ruleId,
+        string title,
+        string message,
+        string sourceClass,
+        string bannedMethod
+    )
     {
-        return new(ruleId: ruleId, title: title, message: message, sourceClass: sourceClass, bannedMethod: bannedMethod);
+        return new(
+            ruleId: ruleId,
+            title: title,
+            message: message,
+            sourceClass: sourceClass,
+            bannedMethod: bannedMethod
+        );
     }
 
     private sealed class Checker
@@ -106,45 +121,96 @@ public sealed class ProhibitedMethodsDiagnosticsAnalyzer : DiagnosticAnalyzer
         public void PerformCheck(CompilationStartAnalysisContext compilationStartContext)
         {
             compilationStartContext.RegisterSyntaxNodeAction(
-                action: syntaxNodeAnalysisContext => this.LookForBannedMethods(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, compilation: compilationStartContext.Compilation),
+                action: syntaxNodeAnalysisContext =>
+                    this.LookForBannedMethods(
+                        syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
+                        compilation: compilationStartContext.Compilation
+                    ),
                 SyntaxKind.PointerMemberAccessExpression,
                 SyntaxKind.SimpleMemberAccessExpression
             );
         }
 
-        private void LookForBannedMethod(MemberAccessExpressionSyntax memberAccessExpressionSyntax, in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, Compilation compilation)
+        private void LookForBannedMethod(
+            MemberAccessExpressionSyntax memberAccessExpressionSyntax,
+            in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext,
+            Compilation compilation
+        )
         {
-            INamedTypeSymbol? typeInfo = ExtractExpressionSyntax(invocation: memberAccessExpressionSyntax, syntaxNodeAnalysisContext: syntaxNodeAnalysisContext);
+            INamedTypeSymbol? typeInfo = ExtractExpressionSyntax(
+                invocation: memberAccessExpressionSyntax,
+                syntaxNodeAnalysisContext: syntaxNodeAnalysisContext
+            );
 
             if (typeInfo is null)
             {
                 return;
             }
 
-            this.ReportAnyBannedSymbols(typeInfo: typeInfo, invocation: memberAccessExpressionSyntax, syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, compilation: compilation);
+            this.ReportAnyBannedSymbols(
+                typeInfo: typeInfo,
+                invocation: memberAccessExpressionSyntax,
+                syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
+                compilation: compilation
+            );
         }
 
-        private void LookForBannedMethods(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, Compilation compilation)
+        private void LookForBannedMethods(
+            in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext,
+            Compilation compilation
+        )
         {
-            if (syntaxNodeAnalysisContext.Node is MemberAccessExpressionSyntax memberAccessExpressionSyntax)
+            if (
+                syntaxNodeAnalysisContext.Node
+                is MemberAccessExpressionSyntax memberAccessExpressionSyntax
+            )
             {
-                this.LookForBannedMethod(memberAccessExpressionSyntax: memberAccessExpressionSyntax, syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, compilation: compilation);
+                this.LookForBannedMethod(
+                    memberAccessExpressionSyntax: memberAccessExpressionSyntax,
+                    syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
+                    compilation: compilation
+                );
             }
         }
 
-        private void ReportAnyBannedSymbols(INamedTypeSymbol typeInfo, MemberAccessExpressionSyntax invocation, in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, Compilation compilation)
+        private void ReportAnyBannedSymbols(
+            INamedTypeSymbol typeInfo,
+            MemberAccessExpressionSyntax invocation,
+            in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext,
+            Compilation compilation
+        )
         {
-            Dictionary<string, INamedTypeSymbol> cachedSymbols = this.LoadCachedSymbols(compilation);
+            Dictionary<string, INamedTypeSymbol> cachedSymbols = this.LoadCachedSymbols(
+                compilation
+            );
 
             foreach (ProhibitedMethodsSpec item in BannedMethods)
             {
-                if (cachedSymbols.TryGetValue(key: item.SourceClass, out INamedTypeSymbol metadataType))
+                if (
+                    cachedSymbols.TryGetValue(
+                        key: item.SourceClass,
+                        out INamedTypeSymbol metadataType
+                    )
+                )
                 {
-                    if (StringComparer.OrdinalIgnoreCase.Equals(x: typeInfo.ConstructedFrom.MetadataName, y: metadataType.MetadataName))
+                    if (
+                        StringComparer.OrdinalIgnoreCase.Equals(
+                            x: typeInfo.ConstructedFrom.MetadataName,
+                            y: metadataType.MetadataName
+                        )
+                    )
                     {
-                        if (StringComparer.Ordinal.Equals(invocation.Name.Identifier.ToString(), y: item.BannedMethod))
+                        if (
+                            StringComparer.Ordinal.Equals(
+                                invocation.Name.Identifier.ToString(),
+                                y: item.BannedMethod
+                            )
+                        )
                         {
-                            invocation.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: item.Rule);
+                            invocation.ReportDiagnostics(
+                                syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
+                                rule: item.Rule
+                            );
                         }
                     }
                 }
@@ -156,7 +222,9 @@ public sealed class ProhibitedMethodsDiagnosticsAnalyzer : DiagnosticAnalyzer
             return this._cachedSymbols ??= BuildCachedSymbols(compilation);
         }
 
-        private static Dictionary<string, INamedTypeSymbol> BuildCachedSymbols(Compilation compilation)
+        private static Dictionary<string, INamedTypeSymbol> BuildCachedSymbols(
+            Compilation compilation
+        )
         {
             Dictionary<string, INamedTypeSymbol> cachedSymbols = new(StringComparer.Ordinal);
 
@@ -176,7 +244,10 @@ public sealed class ProhibitedMethodsDiagnosticsAnalyzer : DiagnosticAnalyzer
             return cachedSymbols;
         }
 
-        private static INamedTypeSymbol? ExtractExpressionSyntax(MemberAccessExpressionSyntax invocation, in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
+        private static INamedTypeSymbol? ExtractExpressionSyntax(
+            MemberAccessExpressionSyntax invocation,
+            in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext
+        )
         {
             ExpressionSyntax e;
 
@@ -193,7 +264,10 @@ public sealed class ProhibitedMethodsDiagnosticsAnalyzer : DiagnosticAnalyzer
                 return null;
             }
 
-            INamedTypeSymbol? typeInfo = GetExpressionNamedTypeSymbol(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, e: e);
+            INamedTypeSymbol? typeInfo = GetExpressionNamedTypeSymbol(
+                syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
+                e: e
+            );
 
             if (typeInfo?.ConstructedFrom is null)
             {
@@ -203,20 +277,39 @@ public sealed class ProhibitedMethodsDiagnosticsAnalyzer : DiagnosticAnalyzer
             return typeInfo;
         }
 
-        private static INamedTypeSymbol? GetExpressionNamedTypeSymbol(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, ExpressionSyntax e)
+        private static INamedTypeSymbol? GetExpressionNamedTypeSymbol(
+            in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext,
+            ExpressionSyntax e
+        )
         {
-            return syntaxNodeAnalysisContext.SemanticModel.GetTypeInfo(expression: e, cancellationToken: syntaxNodeAnalysisContext.CancellationToken).Type as INamedTypeSymbol;
+            return syntaxNodeAnalysisContext
+                    .SemanticModel.GetTypeInfo(
+                        expression: e,
+                        cancellationToken: syntaxNodeAnalysisContext.CancellationToken
+                    )
+                    .Type as INamedTypeSymbol;
         }
     }
 
     [DebuggerDisplay("{Rule.Id} {Rule.Title} Class {SourceClass} Banned Method: {BannedMethod}")]
     private readonly record struct ProhibitedMethodsSpec
     {
-        public ProhibitedMethodsSpec(string ruleId, string title, string message, string sourceClass, string bannedMethod)
+        public ProhibitedMethodsSpec(
+            string ruleId,
+            string title,
+            string message,
+            string sourceClass,
+            string bannedMethod
+        )
         {
             this.SourceClass = sourceClass;
             this.BannedMethod = bannedMethod;
-            this.Rule = RuleHelpers.CreateRule(code: ruleId, category: Categories.IllegalMethodCalls, title: title, message: message);
+            this.Rule = RuleHelpers.CreateRule(
+                code: ruleId,
+                category: Categories.IllegalMethodCalls,
+                title: title,
+                message: message
+            );
         }
 
         public string SourceClass { get; }

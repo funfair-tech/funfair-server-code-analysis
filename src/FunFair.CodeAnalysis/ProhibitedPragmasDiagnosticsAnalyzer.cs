@@ -35,11 +35,14 @@ public sealed class ProhibitedPragmasDiagnosticsAnalyzer : DiagnosticAnalyzer
         message: "Don't disable warnings using #pragma warning disable"
     );
 
-    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => SupportedDiagnosisList.Build(Rule);
+    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
+        SupportedDiagnosisList.Build(Rule);
 
     public override void Initialize(AnalysisContext context)
     {
-        context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.None);
+        context.ConfigureGeneratedCodeAnalysis(
+            GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.None
+        );
         context.EnableConcurrentExecution();
 
         context.RegisterCompilationStartAction(PerformCheck);
@@ -52,7 +55,8 @@ public sealed class ProhibitedPragmasDiagnosticsAnalyzer : DiagnosticAnalyzer
 
     private static bool IsBannedForTestAssemblies(string code)
     {
-        return AllowedInTestWarnings.Contains(value: code, comparer: StringComparer.Ordinal) || IsBanned(code);
+        return AllowedInTestWarnings.Contains(value: code, comparer: StringComparer.Ordinal)
+            || IsBanned(code);
     }
 
     private static Func<string, bool> DetermineWarningList(Compilation compilation)
@@ -64,7 +68,10 @@ public sealed class ProhibitedPragmasDiagnosticsAnalyzer : DiagnosticAnalyzer
     {
         Banned banned = new(DetermineWarningList(compilationStartContext.Compilation));
 
-        compilationStartContext.RegisterSyntaxNodeAction(action: banned.LookForBannedMethods, SyntaxKind.PragmaWarningDirectiveTrivia);
+        compilationStartContext.RegisterSyntaxNodeAction(
+            action: banned.LookForBannedMethods,
+            SyntaxKind.PragmaWarningDirectiveTrivia
+        );
     }
 
     [DebuggerDisplay("IsBaned = {_isBanned}")]
@@ -77,25 +84,43 @@ public sealed class ProhibitedPragmasDiagnosticsAnalyzer : DiagnosticAnalyzer
             this._isBanned = isBanned;
         }
 
-        [SuppressMessage(category: "Roslynator.Analyzers", checkId: "RCS1231:Make parameter ref read only", Justification = "Needed here")]
+        [SuppressMessage(
+            category: "Roslynator.Analyzers",
+            checkId: "RCS1231:Make parameter ref read only",
+            Justification = "Needed here"
+        )]
         public void LookForBannedMethods(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
         {
-            if (syntaxNodeAnalysisContext.Node is not PragmaWarningDirectiveTriviaSyntax pragmaWarningDirective)
+            if (
+                syntaxNodeAnalysisContext.Node
+                is not PragmaWarningDirectiveTriviaSyntax pragmaWarningDirective
+            )
             {
                 return;
             }
 
-            foreach (ExpressionSyntax invocation in this.BannedInvocations(pragmaWarningDirective: pragmaWarningDirective))
+            foreach (
+                ExpressionSyntax invocation in this.BannedInvocations(
+                    pragmaWarningDirective: pragmaWarningDirective
+                )
+            )
             {
-                invocation.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: Rule);
+                invocation.ReportDiagnostics(
+                    syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
+                    rule: Rule
+                );
             }
         }
 
-        private IEnumerable<ExpressionSyntax> BannedInvocations(PragmaWarningDirectiveTriviaSyntax pragmaWarningDirective)
+        private IEnumerable<ExpressionSyntax> BannedInvocations(
+            PragmaWarningDirectiveTriviaSyntax pragmaWarningDirective
+        )
         {
             Func<string, bool>? isBanned = this._isBanned;
 
-            return pragmaWarningDirective.ErrorCodes.Where(invocation => isBanned(invocation.ToString()));
+            return pragmaWarningDirective.ErrorCodes.Where(invocation =>
+                isBanned(invocation.ToString())
+            );
         }
     }
 }

@@ -11,20 +11,36 @@ namespace FunFair.CodeAnalysis.Helpers;
 
 internal static class MethodSymbolHelper
 {
-    public static IMethodSymbol? FindInvokedMemberSymbol(InvocationExpressionSyntax invocation, in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
+    public static IMethodSymbol? FindInvokedMemberSymbol(
+        InvocationExpressionSyntax invocation,
+        in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext
+    )
     {
         if (invocation.Expression is MemberAccessExpressionSyntax memberAccessExpressionSyntax)
         {
-            return GetSimpleMemberSymbol(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, memberAccessExpressionSyntax: memberAccessExpressionSyntax)
-                ?? ResolveExtensionMethodUsedByConstructor(invocation: invocation, syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, memberAccessExpressionSyntax: memberAccessExpressionSyntax);
+            return GetSimpleMemberSymbol(
+                    syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
+                    memberAccessExpressionSyntax: memberAccessExpressionSyntax
+                )
+                ?? ResolveExtensionMethodUsedByConstructor(
+                    invocation: invocation,
+                    syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
+                    memberAccessExpressionSyntax: memberAccessExpressionSyntax
+                );
         }
 
         return null;
     }
 
-    private static IMethodSymbol? GetSimpleMemberSymbol(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, MemberAccessExpressionSyntax memberAccessExpressionSyntax)
+    private static IMethodSymbol? GetSimpleMemberSymbol(
+        in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext,
+        MemberAccessExpressionSyntax memberAccessExpressionSyntax
+    )
     {
-        return GetSymbol(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, expression: memberAccessExpressionSyntax) as IMethodSymbol;
+        return GetSymbol(
+                syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
+                expression: memberAccessExpressionSyntax
+            ) as IMethodSymbol;
     }
 
     private static IMethodSymbol? ResolveExtensionMethodUsedByConstructor(
@@ -45,36 +61,88 @@ internal static class MethodSymbolHelper
         }
 
         string fullName = memberAccessExpressionSyntax.Name.ToFullString();
-        ImmutableArray<ISymbol> symbols = BuildSymbols(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, sourceType: sourceType, fullName: fullName);
+        ImmutableArray<ISymbol> symbols = BuildSymbols(
+            syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
+            sourceType: sourceType,
+            fullName: fullName
+        );
 
-        return symbols.OfType<IMethodSymbol>().FirstOrDefault(sym => HasMatchingArguments(invocation: invocation, arguments: sym));
+        return symbols
+            .OfType<IMethodSymbol>()
+            .FirstOrDefault(sym => HasMatchingArguments(invocation: invocation, arguments: sym));
     }
 
-    private static ImmutableArray<ISymbol> BuildSymbols(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, INamedTypeSymbol sourceType, string fullName)
+    private static ImmutableArray<ISymbol> BuildSymbols(
+        in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext,
+        INamedTypeSymbol sourceType,
+        string fullName
+    )
     {
-        ImmutableArray<ISymbol> symbols = BuildSymbolsWithBaseTypes(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, sourceType: sourceType, fullName: fullName);
+        ImmutableArray<ISymbol> symbols = BuildSymbolsWithBaseTypes(
+            syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
+            sourceType: sourceType,
+            fullName: fullName
+        );
 
         Dump(symbols);
 
         return symbols;
     }
 
-    private static ImmutableArray<ISymbol> BuildSymbolsWithBaseTypes(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, INamedTypeSymbol sourceType, string fullName)
+    private static ImmutableArray<ISymbol> BuildSymbolsWithBaseTypes(
+        SyntaxNodeAnalysisContext syntaxNodeAnalysisContext,
+        INamedTypeSymbol sourceType,
+        string fullName
+    )
     {
         return
         [
-            .. LookupSymbols(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, sourceType: sourceType, fullName: fullName)
-                .Concat(sourceType.BaseClasses().SelectMany(baseType => LookupSymbols(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, sourceType: baseType, fullName: fullName)))
-                .Concat(sourceType.AllInterfaces.SelectMany(interfaceType => LookupSymbols(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, sourceType: interfaceType, fullName: fullName))),
+            .. LookupSymbols(
+                    syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
+                    sourceType: sourceType,
+                    fullName: fullName
+                )
+                .Concat(
+                    sourceType
+                        .BaseClasses()
+                        .SelectMany(baseType =>
+                            LookupSymbols(
+                                syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
+                                sourceType: baseType,
+                                fullName: fullName
+                            )
+                        )
+                )
+                .Concat(
+                    sourceType.AllInterfaces.SelectMany(interfaceType =>
+                        LookupSymbols(
+                            syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
+                            sourceType: interfaceType,
+                            fullName: fullName
+                        )
+                    )
+                ),
         ];
     }
 
-    private static ImmutableArray<ISymbol> LookupSymbols(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, INamedTypeSymbol sourceType, string fullName)
+    private static ImmutableArray<ISymbol> LookupSymbols(
+        in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext,
+        INamedTypeSymbol sourceType,
+        string fullName
+    )
     {
-        return syntaxNodeAnalysisContext.SemanticModel.LookupSymbols(position: 0, container: sourceType, name: fullName, includeReducedExtensionMethods: true);
+        return syntaxNodeAnalysisContext.SemanticModel.LookupSymbols(
+            position: 0,
+            container: sourceType,
+            name: fullName,
+            includeReducedExtensionMethods: true
+        );
     }
 
-    private static bool HasMatchingArguments(InvocationExpressionSyntax invocation, IMethodSymbol arguments)
+    private static bool HasMatchingArguments(
+        InvocationExpressionSyntax invocation,
+        IMethodSymbol arguments
+    )
     {
         // Ideally: Match on something more than just the count of methods - i.e. match on types and argument names?
         // It is hard to make any match because we don't know for sure to which parameter argument is related.
@@ -93,14 +161,31 @@ internal static class MethodSymbolHelper
         }
     }
 
-    private static ISymbol? GetSymbol(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, SyntaxNode expression)
+    private static ISymbol? GetSymbol(
+        in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext,
+        SyntaxNode expression
+    )
     {
-        return syntaxNodeAnalysisContext.SemanticModel.GetSymbolInfo(node: expression, cancellationToken: syntaxNodeAnalysisContext.CancellationToken).Symbol;
+        return syntaxNodeAnalysisContext
+            .SemanticModel.GetSymbolInfo(
+                node: expression,
+                cancellationToken: syntaxNodeAnalysisContext.CancellationToken
+            )
+            .Symbol;
     }
 
-    private static INamedTypeSymbol? GetSourceType(MemberAccessExpressionSyntax memberAccessExpressionSyntax, SemanticModel semanticModel, CancellationToken cancellationToken)
+    private static INamedTypeSymbol? GetSourceType(
+        MemberAccessExpressionSyntax memberAccessExpressionSyntax,
+        SemanticModel semanticModel,
+        CancellationToken cancellationToken
+    )
     {
-        ISymbol? symbol = semanticModel.GetSymbolInfo(expression: memberAccessExpressionSyntax.Expression, cancellationToken: cancellationToken).Symbol;
+        ISymbol? symbol = semanticModel
+            .GetSymbolInfo(
+                expression: memberAccessExpressionSyntax.Expression,
+                cancellationToken: cancellationToken
+            )
+            .Symbol;
 
         return symbol switch
             {
@@ -108,7 +193,9 @@ internal static class MethodSymbolHelper
                 IParameterSymbol param => param.Type,
                 IFieldSymbol field => field.Type,
                 IPropertySymbol prop => prop.Type,
-                IMethodSymbol method => method.MethodKind == MethodKind.Constructor ? method.ReceiverType : method.ReturnType,
+                IMethodSymbol method => method.MethodKind == MethodKind.Constructor
+                    ? method.ReceiverType
+                    : method.ReturnType,
                 _ => null,
             } as INamedTypeSymbol;
     }

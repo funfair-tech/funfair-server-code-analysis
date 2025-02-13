@@ -19,11 +19,14 @@ public sealed class TestClassPropertyAnalysisDiagnosticsAnalyzer : DiagnosticAna
         message: "Properties in test classes should be read-only or const"
     );
 
-    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => SupportedDiagnosisList.Build(Rule);
+    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
+        SupportedDiagnosisList.Build(Rule);
 
     public override void Initialize(AnalysisContext context)
     {
-        context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.None);
+        context.ConfigureGeneratedCodeAnalysis(
+            GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.None
+        );
         context.EnableConcurrentExecution();
 
         context.RegisterCompilationStartAction(PerformCheck);
@@ -31,7 +34,10 @@ public sealed class TestClassPropertyAnalysisDiagnosticsAnalyzer : DiagnosticAna
 
     private static void PerformCheck(CompilationStartAnalysisContext compilationStartContext)
     {
-        compilationStartContext.RegisterSyntaxNodeAction(action: PropertyMustBeReadOnly, SyntaxKind.PropertyDeclaration);
+        compilationStartContext.RegisterSyntaxNodeAction(
+            action: PropertyMustBeReadOnly,
+            SyntaxKind.PropertyDeclaration
+        );
     }
 
     private static void PropertyMustBeReadOnly(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
@@ -41,7 +47,10 @@ public sealed class TestClassPropertyAnalysisDiagnosticsAnalyzer : DiagnosticAna
             return;
         }
 
-        if (syntaxNodeAnalysisContext.Node is not PropertyDeclarationSyntax propertyDeclarationSyntax)
+        if (
+            syntaxNodeAnalysisContext.Node
+            is not PropertyDeclarationSyntax propertyDeclarationSyntax
+        )
         {
             return;
         }
@@ -49,7 +58,10 @@ public sealed class TestClassPropertyAnalysisDiagnosticsAnalyzer : DiagnosticAna
         if (propertyDeclarationSyntax.AccessorList?.Accessors.Any(IsMutable) == true)
         {
             // its read-only or const.
-            propertyDeclarationSyntax.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: Rule);
+            propertyDeclarationSyntax.ReportDiagnostics(
+                syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
+                rule: Rule
+            );
         }
     }
 

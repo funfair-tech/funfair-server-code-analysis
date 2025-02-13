@@ -7,7 +7,8 @@ using Xunit;
 
 namespace FunFair.CodeAnalysis.Tests;
 
-public sealed class OneTypePerDocumentAnalysisDiagnosticsAnalyzerTests : DiagnosticAnalyzerVerifier<OneTypePerDocumentAnalysisDiagnosticsAnalyzer>
+public sealed class OneTypePerDocumentAnalysisDiagnosticsAnalyzerTests
+    : DiagnosticAnalyzerVerifier<OneTypePerDocumentAnalysisDiagnosticsAnalyzer>
 {
     [Fact]
     public Task OneClassDefinedInFileOkAsync()
@@ -109,10 +110,34 @@ public interface Test<T1, T2, T3> {}
 ";
         IReadOnlyList<DiagnosticResult> expected =
         [
-            Result(id: "FFS0039", message: "Should be only one type per file", severity: DiagnosticSeverity.Error, line: 1, column: 1),
-            Result(id: "FFS0039", message: "Should be only one type per file", severity: DiagnosticSeverity.Error, line: 3, column: 1),
-            Result(id: "FFS0039", message: "Should be only one type per file", severity: DiagnosticSeverity.Error, line: 5, column: 1),
-            Result(id: "FFS0039", message: "Should be only one type per file", severity: DiagnosticSeverity.Error, line: 7, column: 1),
+            Result(
+                id: "FFS0039",
+                message: "Should be only one type per file",
+                severity: DiagnosticSeverity.Error,
+                line: 1,
+                column: 1
+            ),
+            Result(
+                id: "FFS0039",
+                message: "Should be only one type per file",
+                severity: DiagnosticSeverity.Error,
+                line: 3,
+                column: 1
+            ),
+            Result(
+                id: "FFS0039",
+                message: "Should be only one type per file",
+                severity: DiagnosticSeverity.Error,
+                line: 5,
+                column: 1
+            ),
+            Result(
+                id: "FFS0039",
+                message: "Should be only one type per file",
+                severity: DiagnosticSeverity.Error,
+                line: 7,
+                column: 1
+            ),
         ];
 
         return this.VerifyCSharpDiagnosticAsync(source: test, expected: expected);
@@ -128,8 +153,20 @@ public sealed class Test1 {}
 ";
         IReadOnlyList<DiagnosticResult> expected =
         [
-            Result(id: "FFS0039", message: "Should be only one type per file", severity: DiagnosticSeverity.Error, line: 1, column: 1),
-            Result(id: "FFS0039", message: "Should be only one type per file", severity: DiagnosticSeverity.Error, line: 3, column: 1),
+            Result(
+                id: "FFS0039",
+                message: "Should be only one type per file",
+                severity: DiagnosticSeverity.Error,
+                line: 1,
+                column: 1
+            ),
+            Result(
+                id: "FFS0039",
+                message: "Should be only one type per file",
+                severity: DiagnosticSeverity.Error,
+                line: 3,
+                column: 1
+            ),
         ];
 
         return this.VerifyCSharpDiagnosticAsync(source: test, expected: expected);
@@ -146,8 +183,20 @@ public readonly struct Test1 {}
 
         IReadOnlyList<DiagnosticResult> expected =
         [
-            Result(id: "FFS0039", message: "Should be only one type per file", severity: DiagnosticSeverity.Error, line: 1, column: 1),
-            Result(id: "FFS0039", message: "Should be only one type per file", severity: DiagnosticSeverity.Error, line: 3, column: 1),
+            Result(
+                id: "FFS0039",
+                message: "Should be only one type per file",
+                severity: DiagnosticSeverity.Error,
+                line: 1,
+                column: 1
+            ),
+            Result(
+                id: "FFS0039",
+                message: "Should be only one type per file",
+                severity: DiagnosticSeverity.Error,
+                line: 3,
+                column: 1
+            ),
         ];
 
         return this.VerifyCSharpDiagnosticAsync(source: test, expected: expected);
@@ -164,8 +213,20 @@ public sealed record Test1 {}
 
         IReadOnlyList<DiagnosticResult> expected =
         [
-            Result(id: "FFS0039", message: "Should be only one type per file", severity: DiagnosticSeverity.Error, line: 1, column: 1),
-            Result(id: "FFS0039", message: "Should be only one type per file", severity: DiagnosticSeverity.Error, line: 3, column: 1),
+            Result(
+                id: "FFS0039",
+                message: "Should be only one type per file",
+                severity: DiagnosticSeverity.Error,
+                line: 1,
+                column: 1
+            ),
+            Result(
+                id: "FFS0039",
+                message: "Should be only one type per file",
+                severity: DiagnosticSeverity.Error,
+                line: 3,
+                column: 1
+            ),
         ];
 
         return this.VerifyCSharpDiagnosticAsync(source: test, expected: expected);
@@ -182,8 +243,20 @@ public interface Test1 {}
 
         IReadOnlyList<DiagnosticResult> expected =
         [
-            Result(id: "FFS0039", message: "Should be only one type per file", severity: DiagnosticSeverity.Error, line: 1, column: 1),
-            Result(id: "FFS0039", message: "Should be only one type per file", severity: DiagnosticSeverity.Error, line: 3, column: 1),
+            Result(
+                id: "FFS0039",
+                message: "Should be only one type per file",
+                severity: DiagnosticSeverity.Error,
+                line: 1,
+                column: 1
+            ),
+            Result(
+                id: "FFS0039",
+                message: "Should be only one type per file",
+                severity: DiagnosticSeverity.Error,
+                line: 3,
+                column: 1
+            ),
         ];
 
         return this.VerifyCSharpDiagnosticAsync(source: test, expected: expected);

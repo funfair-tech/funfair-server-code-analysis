@@ -6,7 +6,8 @@ using Xunit;
 
 namespace FunFair.CodeAnalysis.Tests;
 
-public sealed class ProhibitedClassesInTestAssembliesDiagnosticsAnalyzerTests : DiagnosticAnalyzerVerifier<ProhibitedClassesInTestAssembliesDiagnosticsAnalyzer>
+public sealed class ProhibitedClassesInTestAssembliesDiagnosticsAnalyzerTests
+    : DiagnosticAnalyzerVerifier<ProhibitedClassesInTestAssembliesDiagnosticsAnalyzer>
 {
     [Fact]
     public Task AssertTrueForConsoleUsageInTestAsync()
@@ -27,9 +28,19 @@ public sealed class ProhibitedClassesInTestAssembliesDiagnosticsAnalyzerTests : 
              }
          }
      }";
-        DiagnosticResult expected = Result(id: "FFS0041", message: "Use ITestOutputHelper rather than System.Console in test projects", severity: DiagnosticSeverity.Error, line: 12, column: 18);
+        DiagnosticResult expected = Result(
+            id: "FFS0041",
+            message: "Use ITestOutputHelper rather than System.Console in test projects",
+            severity: DiagnosticSeverity.Error,
+            line: 12,
+            column: 18
+        );
 
-        return this.VerifyCSharpDiagnosticAsync(source: test, [WellKnownMetadataReferences.Xunit], expected: expected);
+        return this.VerifyCSharpDiagnosticAsync(
+            source: test,
+            [WellKnownMetadataReferences.Xunit],
+            expected: expected
+        );
     }
 
     [Fact]

@@ -5,13 +5,30 @@ namespace FunFair.CodeAnalysis.Extensions;
 
 internal static class SyntaxNodeExtensions
 {
-    public static void ReportDiagnostics(this SyntaxNode expressionSyntax, in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, DiagnosticDescriptor rule)
+    public static void ReportDiagnostics(
+        this SyntaxNode expressionSyntax,
+        in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext,
+        DiagnosticDescriptor rule
+    )
     {
-        syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(descriptor: rule, expressionSyntax.GetLocation()));
+        syntaxNodeAnalysisContext.ReportDiagnostic(
+            Diagnostic.Create(descriptor: rule, expressionSyntax.GetLocation())
+        );
     }
 
-    public static void ReportDiagnostics(this SyntaxNode expressionSyntax, in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, DiagnosticDescriptor rule, params object?[]? messageArgs)
+    public static void ReportDiagnostics(
+        this SyntaxNode expressionSyntax,
+        in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext,
+        DiagnosticDescriptor rule,
+        params object?[]? messageArgs
+    )
     {
-        syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(descriptor: rule, expressionSyntax.GetLocation(), messageArgs: messageArgs));
+        syntaxNodeAnalysisContext.ReportDiagnostic(
+            Diagnostic.Create(
+                descriptor: rule,
+                expressionSyntax.GetLocation(),
+                messageArgs: messageArgs
+            )
+        );
     }
 }

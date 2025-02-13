@@ -6,7 +6,8 @@ using Xunit;
 
 namespace FunFair.CodeAnalysis.Tests;
 
-public sealed class ProhibitedMethodsDiagnosticsAnalyzerTests : DiagnosticAnalyzerVerifier<ProhibitedMethodsDiagnosticsAnalyzer>
+public sealed class ProhibitedMethodsDiagnosticsAnalyzerTests
+    : DiagnosticAnalyzerVerifier<ProhibitedMethodsDiagnosticsAnalyzer>
 {
     [Fact]
     public Task DateTimeNowIsBannedInConstructorsAsync()
@@ -27,7 +28,13 @@ public sealed class ProhibitedMethodsDiagnosticsAnalyzerTests : DiagnosticAnalyz
             }
         }
     }";
-        DiagnosticResult expected = Result(id: "FFS0001", message: "Call IDateTimeSource.UtcNow() rather than DateTime.Now", severity: DiagnosticSeverity.Error, line: 12, column: 25);
+        DiagnosticResult expected = Result(
+            id: "FFS0001",
+            message: "Call IDateTimeSource.UtcNow() rather than DateTime.Now",
+            severity: DiagnosticSeverity.Error,
+            line: 12,
+            column: 25
+        );
 
         return this.VerifyCSharpDiagnosticAsync(source: test, expected: expected);
     }
@@ -51,7 +58,13 @@ public sealed class ProhibitedMethodsDiagnosticsAnalyzerTests : DiagnosticAnalyz
              }
         }
     }";
-        DiagnosticResult expected = Result(id: "FFS0001", message: "Call IDateTimeSource.UtcNow() rather than DateTime.Now", severity: DiagnosticSeverity.Error, line: 12, column: 25);
+        DiagnosticResult expected = Result(
+            id: "FFS0001",
+            message: "Call IDateTimeSource.UtcNow() rather than DateTime.Now",
+            severity: DiagnosticSeverity.Error,
+            line: 12,
+            column: 25
+        );
 
         return this.VerifyCSharpDiagnosticAsync(source: test, expected: expected);
     }
@@ -73,7 +86,13 @@ public sealed class ProhibitedMethodsDiagnosticsAnalyzerTests : DiagnosticAnalyz
             }
         }
     }";
-        DiagnosticResult expected = Result(id: "FFS0001", message: "Call IDateTimeSource.UtcNow() rather than DateTime.Now", severity: DiagnosticSeverity.Error, line: 10, column: 28);
+        DiagnosticResult expected = Result(
+            id: "FFS0001",
+            message: "Call IDateTimeSource.UtcNow() rather than DateTime.Now",
+            severity: DiagnosticSeverity.Error,
+            line: 10,
+            column: 28
+        );
 
         return this.VerifyCSharpDiagnosticAsync(source: test, expected: expected);
     }
@@ -114,7 +133,13 @@ public sealed class ProhibitedMethodsDiagnosticsAnalyzerTests : DiagnosticAnalyz
             }
         }
     }";
-        DiagnosticResult expected = Result(id: "FFS0001", message: "Call IDateTimeSource.UtcNow() rather than DateTime.Now", severity: DiagnosticSeverity.Error, line: 13, column: 29);
+        DiagnosticResult expected = Result(
+            id: "FFS0001",
+            message: "Call IDateTimeSource.UtcNow() rather than DateTime.Now",
+            severity: DiagnosticSeverity.Error,
+            line: 13,
+            column: 29
+        );
 
         return this.VerifyCSharpDiagnosticAsync(source: test, expected: expected);
     }
@@ -139,7 +164,13 @@ public sealed class ProhibitedMethodsDiagnosticsAnalyzerTests : DiagnosticAnalyz
             }
         }
     }";
-        DiagnosticResult expected = Result(id: "FFS0001", message: "Call IDateTimeSource.UtcNow() rather than DateTime.Now", severity: DiagnosticSeverity.Error, line: 12, column: 28);
+        DiagnosticResult expected = Result(
+            id: "FFS0001",
+            message: "Call IDateTimeSource.UtcNow() rather than DateTime.Now",
+            severity: DiagnosticSeverity.Error,
+            line: 12,
+            column: 28
+        );
 
         return this.VerifyCSharpDiagnosticAsync(source: test, expected: expected);
     }
@@ -161,7 +192,13 @@ public sealed class ProhibitedMethodsDiagnosticsAnalyzerTests : DiagnosticAnalyz
             }
         }
     }";
-        DiagnosticResult expected = Result(id: "FFS0004", message: "Call IDateTimeSource.UtcNow() rather than DateTimeOffset.Now", severity: DiagnosticSeverity.Error, line: 10, column: 28);
+        DiagnosticResult expected = Result(
+            id: "FFS0004",
+            message: "Call IDateTimeSource.UtcNow() rather than DateTimeOffset.Now",
+            severity: DiagnosticSeverity.Error,
+            line: 10,
+            column: 28
+        );
 
         return this.VerifyCSharpDiagnosticAsync(source: test, expected: expected);
     }
@@ -183,7 +220,13 @@ public sealed class ProhibitedMethodsDiagnosticsAnalyzerTests : DiagnosticAnalyz
             }
         }
     }";
-        DiagnosticResult expected = Result(id: "FFS0005", message: "Call IDateTimeSource.UtcNow() rather than DateTimeOffset.UtcNow", severity: DiagnosticSeverity.Error, line: 10, column: 28);
+        DiagnosticResult expected = Result(
+            id: "FFS0005",
+            message: "Call IDateTimeSource.UtcNow() rather than DateTimeOffset.UtcNow",
+            severity: DiagnosticSeverity.Error,
+            line: 10,
+            column: 28
+        );
 
         return this.VerifyCSharpDiagnosticAsync(source: test, expected: expected);
     }
@@ -205,7 +248,13 @@ public sealed class ProhibitedMethodsDiagnosticsAnalyzerTests : DiagnosticAnalyz
             }
         }
     }";
-        DiagnosticResult expected = Result(id: "FFS0003", message: "Call IDateTimeSource.UtcNow().Date rather than DateTime.Today", severity: DiagnosticSeverity.Error, line: 10, column: 28);
+        DiagnosticResult expected = Result(
+            id: "FFS0003",
+            message: "Call IDateTimeSource.UtcNow().Date rather than DateTime.Today",
+            severity: DiagnosticSeverity.Error,
+            line: 10,
+            column: 28
+        );
 
         return this.VerifyCSharpDiagnosticAsync(source: test, expected: expected);
     }
@@ -227,7 +276,13 @@ public sealed class ProhibitedMethodsDiagnosticsAnalyzerTests : DiagnosticAnalyz
             }
         }
     }";
-        DiagnosticResult expected = Result(id: "FFS0002", message: "Call IDateTimeSource.UtcNow() rather than DateTime.UtcNow", severity: DiagnosticSeverity.Error, line: 10, column: 28);
+        DiagnosticResult expected = Result(
+            id: "FFS0002",
+            message: "Call IDateTimeSource.UtcNow() rather than DateTime.UtcNow",
+            severity: DiagnosticSeverity.Error,
+            line: 10,
+            column: 28
+        );
 
         return this.VerifyCSharpDiagnosticAsync(source: test, expected: expected);
     }
@@ -307,7 +362,13 @@ public sealed class ProhibitedMethodsDiagnosticsAnalyzerTests : DiagnosticAnalyz
             }
         }
     }";
-        DiagnosticResult expected = Result(id: "FFS0007", message: "Only use ISqlServerDatabase.QueryArbitrarySqlAsync in integration tests", severity: DiagnosticSeverity.Error, line: 24, column: 17);
+        DiagnosticResult expected = Result(
+            id: "FFS0007",
+            message: "Only use ISqlServerDatabase.QueryArbitrarySqlAsync in integration tests",
+            severity: DiagnosticSeverity.Error,
+            line: 24,
+            column: 17
+        );
 
         return this.VerifyCSharpDiagnosticAsync(source: test, expected: expected);
     }
@@ -337,7 +398,13 @@ public sealed class ProhibitedMethodsDiagnosticsAnalyzerTests : DiagnosticAnalyz
             }
         }
     }";
-        DiagnosticResult expected = Result(id: "FFS0007", message: "Only use ISqlServerDatabase.QueryArbitrarySqlAsync in integration tests", severity: DiagnosticSeverity.Error, line: 18, column: 17);
+        DiagnosticResult expected = Result(
+            id: "FFS0007",
+            message: "Only use ISqlServerDatabase.QueryArbitrarySqlAsync in integration tests",
+            severity: DiagnosticSeverity.Error,
+            line: 18,
+            column: 17
+        );
 
         return this.VerifyCSharpDiagnosticAsync(source: test, expected: expected);
     }
@@ -358,11 +425,21 @@ public sealed class ProhibitedMethodsDiagnosticsAnalyzerTests : DiagnosticAnalyz
         }
     }";
 
-        DiagnosticResult expected = Result(id: "FFS0026", message: "Use RemoteIpAddressRetriever", severity: DiagnosticSeverity.Error, line: 8, column: 66);
+        DiagnosticResult expected = Result(
+            id: "FFS0026",
+            message: "Use RemoteIpAddressRetriever",
+            severity: DiagnosticSeverity.Error,
+            line: 8,
+            column: 66
+        );
 
         return this.VerifyCSharpDiagnosticAsync(
             source: test,
-            [WellKnownMetadataReferences.IpAddress, WellKnownMetadataReferences.ConnectionInfo, WellKnownMetadataReferences.HttpContext],
+            [
+                WellKnownMetadataReferences.IpAddress,
+                WellKnownMetadataReferences.ConnectionInfo,
+                WellKnownMetadataReferences.HttpContext,
+            ],
             expected: expected
         );
     }
@@ -386,11 +463,21 @@ public sealed class ProhibitedMethodsDiagnosticsAnalyzerTests : DiagnosticAnalyz
         }
     }";
 
-        DiagnosticResult expected = Result(id: "FFS0026", message: "Use RemoteIpAddressRetriever", severity: DiagnosticSeverity.Error, line: 11, column: 55);
+        DiagnosticResult expected = Result(
+            id: "FFS0026",
+            message: "Use RemoteIpAddressRetriever",
+            severity: DiagnosticSeverity.Error,
+            line: 11,
+            column: 55
+        );
 
         return this.VerifyCSharpDiagnosticAsync(
             source: test,
-            [WellKnownMetadataReferences.IpAddress, WellKnownMetadataReferences.ConnectionInfo, WellKnownMetadataReferences.HttpContext],
+            [
+                WellKnownMetadataReferences.IpAddress,
+                WellKnownMetadataReferences.ConnectionInfo,
+                WellKnownMetadataReferences.HttpContext,
+            ],
             expected: expected
         );
     }
@@ -412,7 +499,13 @@ public sealed class ProhibitedMethodsDiagnosticsAnalyzerTests : DiagnosticAnalyz
             }
         }
     }";
-        DiagnosticResult expected = Result(id: "FFS0037", message: "Use new Guid() with constant guids or Guid.TryParse everywhere else", severity: DiagnosticSeverity.Error, line: 10, column: 28);
+        DiagnosticResult expected = Result(
+            id: "FFS0037",
+            message: "Use new Guid() with constant guids or Guid.TryParse everywhere else",
+            severity: DiagnosticSeverity.Error,
+            line: 10,
+            column: 28
+        );
 
         return this.VerifyCSharpDiagnosticAsync(source: test, expected: expected);
     }

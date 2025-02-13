@@ -26,11 +26,14 @@ public sealed class ProhibitedClassesInTestAssembliesDiagnosticsAnalyzer : Diagn
         ),
     ];
 
-    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => [.. BannedClasses.Select(selector: r => r.Rule)];
+    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
+        [.. BannedClasses.Select(selector: r => r.Rule)];
 
     public override void Initialize(AnalysisContext context)
     {
-        context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.None);
+        context.ConfigureGeneratedCodeAnalysis(
+            GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.None
+        );
         context.EnableConcurrentExecution();
 
         Checker checker = new();
@@ -38,7 +41,12 @@ public sealed class ProhibitedClassesInTestAssembliesDiagnosticsAnalyzer : Diagn
         context.RegisterCompilationStartAction(checker.PerformCheck);
     }
 
-    private static ProhibitedClassSpec Build(string ruleId, string title, string message, string sourceClass)
+    private static ProhibitedClassSpec Build(
+        string ruleId,
+        string title,
+        string message,
+        string sourceClass
+    )
     {
         return new(ruleId: ruleId, title: title, message: message, sourceClass: sourceClass);
     }
@@ -52,16 +60,28 @@ public sealed class ProhibitedClassesInTestAssembliesDiagnosticsAnalyzer : Diagn
             if (compilationStartContext.Compilation.IsUnitTestAssembly())
             {
                 compilationStartContext.RegisterSyntaxNodeAction(
-                    action: syntaxNodeAnalysisContext => this.LookForBannedClasses(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, compilation: compilationStartContext.Compilation),
+                    action: syntaxNodeAnalysisContext =>
+                        this.LookForBannedClasses(
+                            syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
+                            compilation: compilationStartContext.Compilation
+                        ),
                     SyntaxKind.InvocationExpression
                 );
             }
         }
 
-        private void LookForBannedClasses(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, Compilation compilation)
+        private void LookForBannedClasses(
+            in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext,
+            Compilation compilation
+        )
         {
-            Dictionary<string, INamedTypeSymbol> cachedSymbols = this.LookupCachedSymbols(compilation);
-            string? typeSymbol = GetNameIfBanned(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, cachedSymbols: cachedSymbols);
+            Dictionary<string, INamedTypeSymbol> cachedSymbols = this.LookupCachedSymbols(
+                compilation
+            );
+            string? typeSymbol = GetNameIfBanned(
+                syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
+                cachedSymbols: cachedSymbols
+            );
 
             if (typeSymbol is null)
             {
@@ -72,11 +92,18 @@ public sealed class ProhibitedClassesInTestAssembliesDiagnosticsAnalyzer : Diagn
 
             if (bannedClass is not null)
             {
-                syntaxNodeAnalysisContext.Node.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: bannedClass.Value.Rule);
+                syntaxNodeAnalysisContext.Node.ReportDiagnostics(
+                    syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
+                    rule: bannedClass.Value.Rule
+                );
             }
         }
 
-        [SuppressMessage(category: "SonarAnalyzer.CSharp", checkId: "S3267: Use Linq", Justification = "Not here")]
+        [SuppressMessage(
+            category: "SonarAnalyzer.CSharp",
+            checkId: "S3267: Use Linq",
+            Justification = "Not here"
+        )]
         private static ProhibitedClassSpec? GetBannedClass(string typeSymbol)
         {
             foreach (ProhibitedClassSpec rule in BannedClasses)
@@ -95,7 +122,9 @@ public sealed class ProhibitedClassesInTestAssembliesDiagnosticsAnalyzer : Diagn
             return this._cachedSymbols ??= BuildCachedSymbols(compilation);
         }
 
-        private static Dictionary<string, INamedTypeSymbol> BuildCachedSymbols(Compilation compilation)
+        private static Dictionary<string, INamedTypeSymbol> BuildCachedSymbols(
+            Compilation compilation
+        )
         {
             Dictionary<string, INamedTypeSymbol> cachedSymbols = new(StringComparer.Ordinal);
 
@@ -115,14 +144,20 @@ public sealed class ProhibitedClassesInTestAssembliesDiagnosticsAnalyzer : Diagn
             return cachedSymbols;
         }
 
-        private static string? GetNameIfBanned(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, Dictionary<string, INamedTypeSymbol> cachedSymbols)
+        private static string? GetNameIfBanned(
+            in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext,
+            Dictionary<string, INamedTypeSymbol> cachedSymbols
+        )
         {
             if (syntaxNodeAnalysisContext.Node is not InvocationExpressionSyntax invocation)
             {
                 return null;
             }
 
-            IMethodSymbol? memberSymbol = MethodSymbolHelper.FindInvokedMemberSymbol(invocation: invocation, syntaxNodeAnalysisContext: syntaxNodeAnalysisContext);
+            IMethodSymbol? memberSymbol = MethodSymbolHelper.FindInvokedMemberSymbol(
+                invocation: invocation,
+                syntaxNodeAnalysisContext: syntaxNodeAnalysisContext
+            );
 
             if (memberSymbol is null)
             {
@@ -137,7 +172,9 @@ public sealed class ProhibitedClassesInTestAssembliesDiagnosticsAnalyzer : Diagn
                 return null;
             }
 
-            return cachedSymbols.TryGetValue(key: fullName, out INamedTypeSymbol? _) ? fullName : null;
+            return cachedSymbols.TryGetValue(key: fullName, out INamedTypeSymbol? _)
+                ? fullName
+                : null;
         }
     }
 
@@ -147,7 +184,12 @@ public sealed class ProhibitedClassesInTestAssembliesDiagnosticsAnalyzer : Diagn
         public ProhibitedClassSpec(string ruleId, string title, string message, string sourceClass)
         {
             this.SourceClass = sourceClass;
-            this.Rule = RuleHelpers.CreateRule(code: ruleId, category: Categories.IllegalClassUsage, title: title, message: message);
+            this.Rule = RuleHelpers.CreateRule(
+                code: ruleId,
+                category: Categories.IllegalClassUsage,
+                title: title,
+                message: message
+            );
         }
 
         public string SourceClass { get; }

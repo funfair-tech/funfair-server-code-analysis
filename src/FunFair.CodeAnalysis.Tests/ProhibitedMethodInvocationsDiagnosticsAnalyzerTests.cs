@@ -6,7 +6,8 @@ using Xunit;
 
 namespace FunFair.CodeAnalysis.Tests;
 
-public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzerTests : DiagnosticAnalyzerVerifier<ProhibitedMethodInvocationsDiagnosticsAnalyzer>
+public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzerTests
+    : DiagnosticAnalyzerVerifier<ProhibitedMethodInvocationsDiagnosticsAnalyzer>
 {
     [Fact]
     public Task AssertFalseWithMessageIsAllowedAsync()
@@ -25,7 +26,10 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzerTests : Diagno
          }
      }";
 
-        return this.VerifyCSharpDiagnosticAsync(source: test, reference: WellKnownMetadataReferences.Assert);
+        return this.VerifyCSharpDiagnosticAsync(
+            source: test,
+            reference: WellKnownMetadataReferences.Assert
+        );
     }
 
     [Fact]
@@ -44,9 +48,19 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzerTests : Diagno
             }
         }
     }";
-        DiagnosticResult expected = Result(id: "FFS0010", message: "Only use Assert.False with message parameter", severity: DiagnosticSeverity.Error, line: 9, column: 17);
+        DiagnosticResult expected = Result(
+            id: "FFS0010",
+            message: "Only use Assert.False with message parameter",
+            severity: DiagnosticSeverity.Error,
+            line: 9,
+            column: 17
+        );
 
-        return this.VerifyCSharpDiagnosticAsync(source: test, reference: WellKnownMetadataReferences.Assert, expected: expected);
+        return this.VerifyCSharpDiagnosticAsync(
+            source: test,
+            reference: WellKnownMetadataReferences.Assert,
+            expected: expected
+        );
     }
 
     [Fact]
@@ -66,7 +80,10 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzerTests : Diagno
         }
     }";
 
-        return this.VerifyCSharpDiagnosticAsync(source: test, reference: WellKnownMetadataReferences.Assert);
+        return this.VerifyCSharpDiagnosticAsync(
+            source: test,
+            reference: WellKnownMetadataReferences.Assert
+        );
     }
 
     [Fact]
@@ -85,9 +102,19 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzerTests : Diagno
              }
          }
      }";
-        DiagnosticResult expected = Result(id: "FFS0009", message: "Only use Assert.True with message parameter", severity: DiagnosticSeverity.Error, line: 9, column: 18);
+        DiagnosticResult expected = Result(
+            id: "FFS0009",
+            message: "Only use Assert.True with message parameter",
+            severity: DiagnosticSeverity.Error,
+            line: 9,
+            column: 18
+        );
 
-        return this.VerifyCSharpDiagnosticAsync(source: test, [WellKnownMetadataReferences.Assert], expected: expected);
+        return this.VerifyCSharpDiagnosticAsync(
+            source: test,
+            [WellKnownMetadataReferences.Assert],
+            expected: expected
+        );
     }
 
     [Fact]
@@ -115,7 +142,11 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzerTests : Diagno
             column: 18
         );
 
-        return this.VerifyCSharpDiagnosticAsync(source: test, reference: WellKnownMetadataReferences.NonBlockingConcurrentDictionary, expected: expected);
+        return this.VerifyCSharpDiagnosticAsync(
+            source: test,
+            reference: WellKnownMetadataReferences.NonBlockingConcurrentDictionary,
+            expected: expected
+        );
     }
 
     [Fact]
@@ -143,7 +174,11 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzerTests : Diagno
             column: 18
         );
 
-        return this.VerifyCSharpDiagnosticAsync(source: test, [WellKnownMetadataReferences.NonBlockingConcurrentDictionary], expected: expected);
+        return this.VerifyCSharpDiagnosticAsync(
+            source: test,
+            [WellKnownMetadataReferences.NonBlockingConcurrentDictionary],
+            expected: expected
+        );
     }
 
     [Fact]
@@ -178,7 +213,11 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzerTests : Diagno
             column: 18
         );
 
-        return this.VerifyCSharpDiagnosticAsync(source: test, [WellKnownMetadataReferences.NonBlockingConcurrentDictionary], expected: expected);
+        return this.VerifyCSharpDiagnosticAsync(
+            source: test,
+            [WellKnownMetadataReferences.NonBlockingConcurrentDictionary],
+            expected: expected
+        );
     }
 
     [Fact]
@@ -210,7 +249,11 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzerTests : Diagno
             column: 18
         );
 
-        return this.VerifyCSharpDiagnosticAsync(source: test, reference: WellKnownMetadataReferences.NonBlockingConcurrentDictionary, expected: expected);
+        return this.VerifyCSharpDiagnosticAsync(
+            source: test,
+            reference: WellKnownMetadataReferences.NonBlockingConcurrentDictionary,
+            expected: expected
+        );
     }
 
     [Fact]
@@ -238,7 +281,11 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzerTests : Diagno
             column: 18
         );
 
-        return this.VerifyCSharpDiagnosticAsync(source: test, reference: WellKnownMetadataReferences.NonBlockingConcurrentDictionary, expected: expected);
+        return this.VerifyCSharpDiagnosticAsync(
+            source: test,
+            reference: WellKnownMetadataReferences.NonBlockingConcurrentDictionary,
+            expected: expected
+        );
     }
 
     [Fact]
@@ -269,7 +316,11 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzerTests : Diagno
             column: 18
         );
 
-        return this.VerifyCSharpDiagnosticAsync(source: test, reference: WellKnownMetadataReferences.NonBlockingConcurrentDictionary, expected: expected);
+        return this.VerifyCSharpDiagnosticAsync(
+            source: test,
+            reference: WellKnownMetadataReferences.NonBlockingConcurrentDictionary,
+            expected: expected
+        );
     }
 
     [Fact]
@@ -290,6 +341,9 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzerTests : Diagno
          }
      }";
 
-        return this.VerifyCSharpDiagnosticAsync(source: test, reference: WellKnownMetadataReferences.NonBlockingConcurrentDictionary);
+        return this.VerifyCSharpDiagnosticAsync(
+            source: test,
+            reference: WellKnownMetadataReferences.NonBlockingConcurrentDictionary
+        );
     }
 }

@@ -5,7 +5,11 @@ namespace FunFair.CodeAnalysis.Helpers;
 
 internal static class ItemHelpers
 {
-    [SuppressMessage(category: "SonarAnalyzer.CSharp", checkId: "S3267: Use Linq", Justification = "Not here")]
+    [SuppressMessage(
+        category: "SonarAnalyzer.CSharp",
+        checkId: "S3267: Use Linq",
+        Justification = "Not here"
+    )]
     public static IEnumerable<TItemType> RemoveNulls<TItemType>(this IEnumerable<TItemType?> source)
         where TItemType : class
     {

@@ -6,13 +6,20 @@ using Xunit;
 
 namespace FunFair.CodeAnalysis.Tests;
 
-public sealed class RecordAnalysisDiagnosticsAnalyzerTests : DiagnosticAnalyzerVerifier<RecordAnalysisDiagnosticsAnalyzer>
+public sealed class RecordAnalysisDiagnosticsAnalyzerTests
+    : DiagnosticAnalyzerVerifier<RecordAnalysisDiagnosticsAnalyzer>
 {
     [Fact]
     public Task RecordWithNoModifiersIsAnErrorAsync()
     {
         const string test = "public record Test {}";
-        DiagnosticResult expected = Result(id: "FFS0028", message: "Records should be sealed", severity: DiagnosticSeverity.Error, line: 12, column: 25);
+        DiagnosticResult expected = Result(
+            id: "FFS0028",
+            message: "Records should be sealed",
+            severity: DiagnosticSeverity.Error,
+            line: 12,
+            column: 25
+        );
 
         return this.VerifyCSharpDiagnosticAsync(source: test, expected: expected);
     }

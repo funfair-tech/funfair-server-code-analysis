@@ -20,11 +20,14 @@ public sealed class DebuggerDisplayAnalysisDiagnosticsAnalyzer : DiagnosticAnaly
         message: "Should have DebuggerDisplay attribute"
     );
 
-    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => SupportedDiagnosisList.Build(Rule);
+    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
+        SupportedDiagnosisList.Build(Rule);
 
     public override void Initialize(AnalysisContext context)
     {
-        context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.None);
+        context.ConfigureGeneratedCodeAnalysis(
+            GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.None
+        );
         context.EnableConcurrentExecution();
 
         context.RegisterCompilationStartAction(PerformCheck);
@@ -32,19 +35,31 @@ public sealed class DebuggerDisplayAnalysisDiagnosticsAnalyzer : DiagnosticAnaly
 
     private static void PerformCheck(CompilationStartAnalysisContext compilationStartContext)
     {
-        compilationStartContext.RegisterSyntaxNodeAction(action: RecordMustHaveDebuggerDisplayAttribute, SyntaxKind.RecordDeclaration, SyntaxKind.RecordStructDeclaration);
+        compilationStartContext.RegisterSyntaxNodeAction(
+            action: RecordMustHaveDebuggerDisplayAttribute,
+            SyntaxKind.RecordDeclaration,
+            SyntaxKind.RecordStructDeclaration
+        );
     }
 
-    private static void RecordMustHaveDebuggerDisplayAttribute(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
+    private static void RecordMustHaveDebuggerDisplayAttribute(
+        SyntaxNodeAnalysisContext syntaxNodeAnalysisContext
+    )
     {
         switch (syntaxNodeAnalysisContext.Node)
         {
             case RecordDeclarationSyntax recordDeclarationSyntax:
-                RecordMustHaveDebuggerDisplayAttribute(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, recordDeclarationSyntax: recordDeclarationSyntax);
+                RecordMustHaveDebuggerDisplayAttribute(
+                    syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
+                    recordDeclarationSyntax: recordDeclarationSyntax
+                );
 
                 return;
             case StructDeclarationSyntax structDeclarationSyntax:
-                RecordMustHaveDebuggerDisplayAttribute(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, structDeclarationSyntax: structDeclarationSyntax);
+                RecordMustHaveDebuggerDisplayAttribute(
+                    syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
+                    structDeclarationSyntax: structDeclarationSyntax
+                );
 
                 return;
             default:
@@ -53,42 +68,84 @@ public sealed class DebuggerDisplayAnalysisDiagnosticsAnalyzer : DiagnosticAnaly
         }
     }
 
-    private static void RecordMustHaveDebuggerDisplayAttribute(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, StructDeclarationSyntax structDeclarationSyntax)
+    private static void RecordMustHaveDebuggerDisplayAttribute(
+        in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext,
+        StructDeclarationSyntax structDeclarationSyntax
+    )
     {
         if (!structDeclarationSyntax.Modifiers.Any(SyntaxKind.RecordKeyword))
         {
             return;
         }
 
-        if (!HasDebuggerDisplayAttribute(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, structDeclarationSyntax: structDeclarationSyntax))
+        if (
+            !HasDebuggerDisplayAttribute(
+                syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
+                structDeclarationSyntax: structDeclarationSyntax
+            )
+        )
         {
-            structDeclarationSyntax.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: Rule);
+            structDeclarationSyntax.ReportDiagnostics(
+                syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
+                rule: Rule
+            );
         }
     }
 
-    private static void RecordMustHaveDebuggerDisplayAttribute(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, RecordDeclarationSyntax recordDeclarationSyntax)
+    private static void RecordMustHaveDebuggerDisplayAttribute(
+        in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext,
+        RecordDeclarationSyntax recordDeclarationSyntax
+    )
     {
-        if (!HasDebuggerDisplayAttribute(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, recordDeclarationSyntax: recordDeclarationSyntax))
+        if (
+            !HasDebuggerDisplayAttribute(
+                syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
+                recordDeclarationSyntax: recordDeclarationSyntax
+            )
+        )
         {
-            recordDeclarationSyntax.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: Rule);
+            recordDeclarationSyntax.ReportDiagnostics(
+                syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
+                rule: Rule
+            );
         }
     }
 
-    private static bool HasDebuggerDisplayAttribute(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, RecordDeclarationSyntax recordDeclarationSyntax)
+    private static bool HasDebuggerDisplayAttribute(
+        in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext,
+        RecordDeclarationSyntax recordDeclarationSyntax
+    )
     {
-        return HasDebuggerDisplayAttribute(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, attributeLists: recordDeclarationSyntax.AttributeLists);
+        return HasDebuggerDisplayAttribute(
+            syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
+            attributeLists: recordDeclarationSyntax.AttributeLists
+        );
     }
 
-    private static bool HasDebuggerDisplayAttribute(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, StructDeclarationSyntax structDeclarationSyntax)
+    private static bool HasDebuggerDisplayAttribute(
+        in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext,
+        StructDeclarationSyntax structDeclarationSyntax
+    )
     {
-        return HasDebuggerDisplayAttribute(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, attributeLists: structDeclarationSyntax.AttributeLists);
+        return HasDebuggerDisplayAttribute(
+            syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
+            attributeLists: structDeclarationSyntax.AttributeLists
+        );
     }
 
-    private static bool HasDebuggerDisplayAttribute(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, in SyntaxList<AttributeListSyntax> attributeLists)
+    private static bool HasDebuggerDisplayAttribute(
+        SyntaxNodeAnalysisContext syntaxNodeAnalysisContext,
+        in SyntaxList<AttributeListSyntax> attributeLists
+    )
     {
         return attributeLists
             .SelectMany(selector: al => al.Attributes)
-            .Select(attribute => syntaxNodeAnalysisContext.SemanticModel.GetTypeInfo(attributeSyntax: attribute, cancellationToken: syntaxNodeAnalysisContext.CancellationToken))
+            .Select(attribute =>
+                syntaxNodeAnalysisContext.SemanticModel.GetTypeInfo(
+                    attributeSyntax: attribute,
+                    cancellationToken: syntaxNodeAnalysisContext.CancellationToken
+                )
+            )
             .Select(ti => ti.Type)
             .RemoveNulls()
             .Any(ti => IsDebuggerDisplayAttribute(ti.ToDisplayString()));
@@ -96,6 +153,9 @@ public sealed class DebuggerDisplayAnalysisDiagnosticsAnalyzer : DiagnosticAnaly
 
     private static bool IsDebuggerDisplayAttribute(string fullName)
     {
-        return StringComparer.Ordinal.Equals(x: fullName, y: "System.Diagnostics.DebuggerDisplayAttribute");
+        return StringComparer.Ordinal.Equals(
+            x: fullName,
+            y: "System.Diagnostics.DebuggerDisplayAttribute"
+        );
     }
 }

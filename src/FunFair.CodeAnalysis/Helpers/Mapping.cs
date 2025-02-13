@@ -15,5 +15,6 @@ internal readonly record struct Mapping
 
     private string ClassName { get; }
 
-    public string QualifiedName => string.Concat(str0: this.ClassName, str1: ".", str2: this.MethodName);
+    public string QualifiedName =>
+        string.Concat(str0: this.ClassName, str1: ".", str2: this.MethodName);
 }

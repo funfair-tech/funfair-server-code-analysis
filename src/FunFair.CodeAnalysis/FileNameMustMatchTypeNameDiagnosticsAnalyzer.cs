@@ -21,11 +21,14 @@ public sealed class FileNameMustMatchTypeNameDiagnosticsAnalyzer : DiagnosticAna
         message: "Should be in a file of the same name as the type"
     );
 
-    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => SupportedDiagnosisList.Build(Rule);
+    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
+        SupportedDiagnosisList.Build(Rule);
 
     public override void Initialize(AnalysisContext context)
     {
-        context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.None);
+        context.ConfigureGeneratedCodeAnalysis(
+            GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.None
+        );
         context.EnableConcurrentExecution();
 
         context.RegisterCompilationStartAction(PerformCheck);
@@ -33,7 +36,10 @@ public sealed class FileNameMustMatchTypeNameDiagnosticsAnalyzer : DiagnosticAna
 
     private static void PerformCheck(CompilationStartAnalysisContext compilationStartContext)
     {
-        compilationStartContext.RegisterSyntaxNodeAction(action: CheckTypeNames, SyntaxKind.CompilationUnit);
+        compilationStartContext.RegisterSyntaxNodeAction(
+            action: CheckTypeNames,
+            SyntaxKind.CompilationUnit
+        );
     }
 
     private static void CheckTypeNames(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
@@ -45,7 +51,9 @@ public sealed class FileNameMustMatchTypeNameDiagnosticsAnalyzer : DiagnosticAna
 
         string fileName = GetDocumentFileName(compilationUnitSyntax);
 
-        IReadOnlyList<MemberDeclarationSyntax> members = GetNonNestedTypeDeclarations(compilationUnitSyntax);
+        IReadOnlyList<MemberDeclarationSyntax> members = GetNonNestedTypeDeclarations(
+            compilationUnitSyntax
+        );
 
         foreach (MemberDeclarationSyntax member in members)
         {
@@ -58,14 +66,19 @@ public sealed class FileNameMustMatchTypeNameDiagnosticsAnalyzer : DiagnosticAna
 
             if (!StringComparer.InvariantCultureIgnoreCase.Equals(x: fileName, y: name))
             {
-                member.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: Rule);
+                member.ReportDiagnostics(
+                    syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
+                    rule: Rule
+                );
             }
         }
     }
 
     private static string GetDocumentFileName(CompilationUnitSyntax compilationUnitSyntax)
     {
-        string fileName = Path.GetFileNameWithoutExtension(compilationUnitSyntax.SyntaxTree.FilePath);
+        string fileName = Path.GetFileNameWithoutExtension(
+            compilationUnitSyntax.SyntaxTree.FilePath
+        );
         int split = fileName.IndexOf('.');
 
         if (split != -1)
@@ -81,9 +94,15 @@ public sealed class FileNameMustMatchTypeNameDiagnosticsAnalyzer : DiagnosticAna
         return memberDeclarationSyntax switch
         {
             ClassDeclarationSyntax classDeclarationSyntax => NormaliseClass(classDeclarationSyntax),
-            RecordDeclarationSyntax recordDeclarationSyntax => NormaliseStruct(recordDeclarationSyntax),
-            StructDeclarationSyntax structDeclarationSyntax => NormaliseRecord(structDeclarationSyntax),
-            InterfaceDeclarationSyntax interfaceDeclarationSyntax => NormaliseInterface(interfaceDeclarationSyntax),
+            RecordDeclarationSyntax recordDeclarationSyntax => NormaliseStruct(
+                recordDeclarationSyntax
+            ),
+            StructDeclarationSyntax structDeclarationSyntax => NormaliseRecord(
+                structDeclarationSyntax
+            ),
+            InterfaceDeclarationSyntax interfaceDeclarationSyntax => NormaliseInterface(
+                interfaceDeclarationSyntax
+            ),
             EnumDeclarationSyntax enumDeclarationSyntax => NormaliseEnum(enumDeclarationSyntax),
             _ => string.Empty,
         };
@@ -114,12 +133,16 @@ public sealed class FileNameMustMatchTypeNameDiagnosticsAnalyzer : DiagnosticAna
         return classDeclarationSyntax.Identifier.ToString();
     }
 
-    private static IReadOnlyList<MemberDeclarationSyntax> GetNonNestedTypeDeclarations(CompilationUnitSyntax compilationUnit)
+    private static IReadOnlyList<MemberDeclarationSyntax> GetNonNestedTypeDeclarations(
+        CompilationUnitSyntax compilationUnit
+    )
     {
         return [.. GetNonNestedTypeDeclarations(compilationUnit.Members)];
     }
 
-    private static IEnumerable<MemberDeclarationSyntax> GetNonNestedTypeDeclarations(SyntaxList<MemberDeclarationSyntax> members)
+    private static IEnumerable<MemberDeclarationSyntax> GetNonNestedTypeDeclarations(
+        SyntaxList<MemberDeclarationSyntax> members
+    )
     {
         foreach (MemberDeclarationSyntax member in members)
         {
@@ -127,9 +150,14 @@ public sealed class FileNameMustMatchTypeNameDiagnosticsAnalyzer : DiagnosticAna
 
             if (kind == SyntaxKind.NamespaceDeclaration)
             {
-                NamespaceDeclarationSyntax namespaceDeclaration = (NamespaceDeclarationSyntax)member;
+                NamespaceDeclarationSyntax namespaceDeclaration =
+                    (NamespaceDeclarationSyntax)member;
 
-                foreach (MemberDeclarationSyntax member2 in GetNonNestedTypeDeclarations(namespaceDeclaration.Members))
+                foreach (
+                    MemberDeclarationSyntax member2 in GetNonNestedTypeDeclarations(
+                        namespaceDeclaration.Members
+                    )
+                )
                 {
                     yield return member2;
                 }

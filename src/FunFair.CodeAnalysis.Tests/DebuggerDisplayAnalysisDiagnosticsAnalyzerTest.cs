@@ -6,13 +6,20 @@ using Xunit;
 
 namespace FunFair.CodeAnalysis.Tests;
 
-public sealed class DebuggerDisplayAnalysisDiagnosticsAnalyzerTest : DiagnosticAnalyzerVerifier<DebuggerDisplayAnalysisDiagnosticsAnalyzer>
+public sealed class DebuggerDisplayAnalysisDiagnosticsAnalyzerTest
+    : DiagnosticAnalyzerVerifier<DebuggerDisplayAnalysisDiagnosticsAnalyzer>
 {
     [Fact]
     public Task RecordWithDebuggerDisplayIsAnErrorAsync()
     {
         const string test = "public sealed record Test {}";
-        DiagnosticResult expected = Result(id: "FFS0038", message: "Should have DebuggerDisplay attribute", severity: DiagnosticSeverity.Error, line: 12, column: 25);
+        DiagnosticResult expected = Result(
+            id: "FFS0038",
+            message: "Should have DebuggerDisplay attribute",
+            severity: DiagnosticSeverity.Error,
+            line: 12,
+            column: 25
+        );
 
         return this.VerifyCSharpDiagnosticAsync(source: test, expected: expected);
     }
@@ -21,7 +28,13 @@ public sealed class DebuggerDisplayAnalysisDiagnosticsAnalyzerTest : DiagnosticA
     public Task RecordStructWithNoDebuggerDisplayIsAnErrorAsync()
     {
         const string test = "public readonly record struct Test {  }";
-        DiagnosticResult expected = Result(id: "FFS0038", message: "Should have DebuggerDisplay attribute", severity: DiagnosticSeverity.Error, line: 12, column: 25);
+        DiagnosticResult expected = Result(
+            id: "FFS0038",
+            message: "Should have DebuggerDisplay attribute",
+            severity: DiagnosticSeverity.Error,
+            line: 12,
+            column: 25
+        );
 
         return this.VerifyCSharpDiagnosticAsync(source: test, expected: expected);
     }

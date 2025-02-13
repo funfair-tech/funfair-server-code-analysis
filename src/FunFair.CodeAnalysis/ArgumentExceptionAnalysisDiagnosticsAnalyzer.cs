@@ -21,13 +21,21 @@ public sealed class ArgumentExceptionAnalysisDiagnosticsAnalyzer : DiagnosticAna
         message: "Argument Exceptions should pass parameter name"
     );
 
-    private static readonly string[] ArgumentExceptions = ["System.ArgumentException", "System.ArgumentNullException", "System.ArgumentOutOfRangeException"];
+    private static readonly string[] ArgumentExceptions =
+    [
+        "System.ArgumentException",
+        "System.ArgumentNullException",
+        "System.ArgumentOutOfRangeException",
+    ];
 
-    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => SupportedDiagnosisList.Build(Rule);
+    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
+        SupportedDiagnosisList.Build(Rule);
 
     public override void Initialize(AnalysisContext context)
     {
-        context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.None);
+        context.ConfigureGeneratedCodeAnalysis(
+            GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.None
+        );
         context.EnableConcurrentExecution();
 
         context.RegisterCompilationStartAction(PerformCheck);
@@ -35,17 +43,25 @@ public sealed class ArgumentExceptionAnalysisDiagnosticsAnalyzer : DiagnosticAna
 
     private static void PerformCheck(CompilationStartAnalysisContext compilationStartContext)
     {
-        compilationStartContext.RegisterSyntaxNodeAction(action: ArgumentExceptionsMustPassParameterName, SyntaxKind.ObjectCreationExpression);
+        compilationStartContext.RegisterSyntaxNodeAction(
+            action: ArgumentExceptionsMustPassParameterName,
+            SyntaxKind.ObjectCreationExpression
+        );
     }
 
-    private static void ArgumentExceptionsMustPassParameterName(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
+    private static void ArgumentExceptionsMustPassParameterName(
+        SyntaxNodeAnalysisContext syntaxNodeAnalysisContext
+    )
     {
         if (syntaxNodeAnalysisContext.Node is not ObjectCreationExpressionSyntax objectCreation)
         {
             return;
         }
 
-        SymbolInfo symbolInfo = syntaxNodeAnalysisContext.SemanticModel.GetSymbolInfo(expression: objectCreation, cancellationToken: syntaxNodeAnalysisContext.CancellationToken);
+        SymbolInfo symbolInfo = syntaxNodeAnalysisContext.SemanticModel.GetSymbolInfo(
+            expression: objectCreation,
+            cancellationToken: syntaxNodeAnalysisContext.CancellationToken
+        );
 
         if (symbolInfo.Symbol is not IMethodSymbol methodSymbol)
         {
@@ -62,12 +78,16 @@ public sealed class ArgumentExceptionAnalysisDiagnosticsAnalyzer : DiagnosticAna
             return;
         }
 
-        syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(descriptor: Rule, objectCreation.GetLocation()));
+        syntaxNodeAnalysisContext.ReportDiagnostic(
+            Diagnostic.Create(descriptor: Rule, objectCreation.GetLocation())
+        );
     }
 
     private static bool HasParamNameParameter(IMethodSymbol methodSymbol)
     {
-        return methodSymbol.Parameters.Any(parameter => StringComparer.Ordinal.Equals(x: parameter.Name, y: "paramName"));
+        return methodSymbol.Parameters.Any(parameter =>
+            StringComparer.Ordinal.Equals(x: parameter.Name, y: "paramName")
+        );
     }
 
     private static bool IsArgumentException(ITypeSymbol? methodSymbolReceiverType)

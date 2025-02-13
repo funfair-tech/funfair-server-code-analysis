@@ -6,7 +6,8 @@ using Xunit;
 
 namespace FunFair.CodeAnalysis.Tests;
 
-public sealed class SuppressMessageDiagnosticsAnalyzerTests : DiagnosticAnalyzerVerifier<SuppressMessageDiagnosticsAnalyzer>
+public sealed class SuppressMessageDiagnosticsAnalyzerTests
+    : DiagnosticAnalyzerVerifier<SuppressMessageDiagnosticsAnalyzer>
 {
     [Fact]
     public Task SuppressMessageWithJustificationIsOkAsync()
@@ -23,7 +24,10 @@ public sealed class SuppressMessageDiagnosticsAnalyzerTests : DiagnosticAnalyzer
             }
 }";
 
-        return this.VerifyCSharpDiagnosticAsync(source: test, reference: WellKnownMetadataReferences.SuppressMessage);
+        return this.VerifyCSharpDiagnosticAsync(
+            source: test,
+            reference: WellKnownMetadataReferences.SuppressMessage
+        );
     }
 
     [Fact]
@@ -40,9 +44,19 @@ public sealed class SuppressMessageDiagnosticsAnalyzerTests : DiagnosticAnalyzer
             {
             }
 }";
-        DiagnosticResult expected = Result(id: "FFS0027", message: "SuppressMessage must specify a Justification", severity: DiagnosticSeverity.Error, line: 6, column: 14);
+        DiagnosticResult expected = Result(
+            id: "FFS0027",
+            message: "SuppressMessage must specify a Justification",
+            severity: DiagnosticSeverity.Error,
+            line: 6,
+            column: 14
+        );
 
-        return this.VerifyCSharpDiagnosticAsync(source: test, [WellKnownMetadataReferences.SuppressMessage], expected: expected);
+        return this.VerifyCSharpDiagnosticAsync(
+            source: test,
+            [WellKnownMetadataReferences.SuppressMessage],
+            expected: expected
+        );
     }
 
     [Fact]
@@ -60,9 +74,19 @@ public sealed class SuppressMessageDiagnosticsAnalyzerTests : DiagnosticAnalyzer
             }
 }";
 
-        DiagnosticResult expected = Result(id: "FFS0027", message: "SuppressMessage must specify a Justification", severity: DiagnosticSeverity.Error, line: 6, column: 75);
+        DiagnosticResult expected = Result(
+            id: "FFS0027",
+            message: "SuppressMessage must specify a Justification",
+            severity: DiagnosticSeverity.Error,
+            line: 6,
+            column: 75
+        );
 
-        return this.VerifyCSharpDiagnosticAsync(source: test, reference: WellKnownMetadataReferences.SuppressMessage, expected: expected);
+        return this.VerifyCSharpDiagnosticAsync(
+            source: test,
+            reference: WellKnownMetadataReferences.SuppressMessage,
+            expected: expected
+        );
     }
 
     [Fact]
@@ -80,8 +104,18 @@ public sealed class SuppressMessageDiagnosticsAnalyzerTests : DiagnosticAnalyzer
             }
 }";
 
-        DiagnosticResult expected = Result(id: "FFS0042", message: "SuppressMessage must not have a TODO Justification", severity: DiagnosticSeverity.Error, line: 6, column: 75);
+        DiagnosticResult expected = Result(
+            id: "FFS0042",
+            message: "SuppressMessage must not have a TODO Justification",
+            severity: DiagnosticSeverity.Error,
+            line: 6,
+            column: 75
+        );
 
-        return this.VerifyCSharpDiagnosticAsync(source: test, [WellKnownMetadataReferences.SuppressMessage], expected: expected);
+        return this.VerifyCSharpDiagnosticAsync(
+            source: test,
+            [WellKnownMetadataReferences.SuppressMessage],
+            expected: expected
+        );
     }
 }

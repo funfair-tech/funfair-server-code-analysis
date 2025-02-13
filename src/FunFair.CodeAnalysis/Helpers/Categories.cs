@@ -17,6 +17,8 @@ internal static class Categories
     public const string IllegalClassUsage = nameof(IllegalClassUsage);
     public const string IllegalMethodInvocations = nameof(IllegalMethodInvocations);
     public const string Structs = nameof(Structs);
-    public const string ProhibitedMethodWithStrictInvocations = nameof(ProhibitedMethodWithStrictInvocations);
+    public const string ProhibitedMethodWithStrictInvocations = nameof(
+        ProhibitedMethodWithStrictInvocations
+    );
     public const string SuppressedErrors = nameof(SuppressedErrors);
 }

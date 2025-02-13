@@ -9,11 +9,19 @@ namespace FunFair.CodeAnalysis.Helpers;
 
 internal static class TestDetection
 {
-    public static bool IsTestMethod(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, MethodDeclarationSyntax methodDeclarationSyntax)
+    public static bool IsTestMethod(
+        SyntaxNodeAnalysisContext syntaxNodeAnalysisContext,
+        MethodDeclarationSyntax methodDeclarationSyntax
+    )
     {
         return methodDeclarationSyntax
             .AttributeLists.SelectMany(selector: al => al.Attributes)
-            .Select(attribute => syntaxNodeAnalysisContext.SemanticModel.GetTypeInfo(attributeSyntax: attribute, cancellationToken: syntaxNodeAnalysisContext.CancellationToken))
+            .Select(attribute =>
+                syntaxNodeAnalysisContext.SemanticModel.GetTypeInfo(
+                    attributeSyntax: attribute,
+                    cancellationToken: syntaxNodeAnalysisContext.CancellationToken
+                )
+            )
             .Select(ti => ti.Type)
             .RemoveNulls()
             .Any(ti => IsTestMethodAttribute(ti.ToDisplayString()));
@@ -33,12 +41,21 @@ internal static class TestDetection
 
     private static bool IsTestBase(INamedTypeSymbol symbol)
     {
-        return StringComparer.Ordinal.Equals(symbol.ToFullyQualifiedName(), y: "FunFair.Test.Common.TestBase");
+        return StringComparer.Ordinal.Equals(
+            symbol.ToFullyQualifiedName(),
+            y: "FunFair.Test.Common.TestBase"
+        );
     }
 
     private static bool IsTestMethodAttribute(string attributeType)
     {
-        return StringComparer.InvariantCultureIgnoreCase.Equals(x: attributeType, y: "Xunit.FactAttribute")
-            || StringComparer.InvariantCultureIgnoreCase.Equals(x: attributeType, y: "Xunit.TheoryAttribute");
+        return StringComparer.InvariantCultureIgnoreCase.Equals(
+                x: attributeType,
+                y: "Xunit.FactAttribute"
+            )
+            || StringComparer.InvariantCultureIgnoreCase.Equals(
+                x: attributeType,
+                y: "Xunit.TheoryAttribute"
+            );
     }
 }

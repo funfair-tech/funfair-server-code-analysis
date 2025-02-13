@@ -6,7 +6,8 @@ using Xunit;
 
 namespace FunFair.CodeAnalysis.Tests;
 
-public sealed class ParameterOrderingDiagnosticsAnalyzerTests : DiagnosticAnalyzerVerifier<ParameterOrderingDiagnosticsAnalyzer>
+public sealed class ParameterOrderingDiagnosticsAnalyzerTests
+    : DiagnosticAnalyzerVerifier<ParameterOrderingDiagnosticsAnalyzer>
 {
     [Fact]
     public Task GenericLoggerAsLastParameterIsNotAnErrorAsync()
@@ -22,7 +23,10 @@ public sealed class ParameterOrderingDiagnosticsAnalyzerTests : DiagnosticAnalyz
             }
 }";
 
-        return this.VerifyCSharpDiagnosticAsync(source: test, reference: WellKnownMetadataReferences.GenericLogger);
+        return this.VerifyCSharpDiagnosticAsync(
+            source: test,
+            reference: WellKnownMetadataReferences.GenericLogger
+        );
     }
 
     [Fact]
@@ -39,7 +43,10 @@ public sealed class ParameterOrderingDiagnosticsAnalyzerTests : DiagnosticAnalyz
             }
 }";
 
-        return this.VerifyCSharpDiagnosticAsync(source: test, reference: WellKnownMetadataReferences.GenericLogger);
+        return this.VerifyCSharpDiagnosticAsync(
+            source: test,
+            reference: WellKnownMetadataReferences.GenericLogger
+        );
     }
 
     [Fact]
@@ -56,9 +63,19 @@ public sealed class ParameterOrderingDiagnosticsAnalyzerTests : DiagnosticAnalyz
             }
 }";
 
-        DiagnosticResult expected = Result(id: "FFS0020", message: "Parameter 'logger' must be parameter 2", severity: DiagnosticSeverity.Error, line: 6, column: 30);
+        DiagnosticResult expected = Result(
+            id: "FFS0020",
+            message: "Parameter 'logger' must be parameter 2",
+            severity: DiagnosticSeverity.Error,
+            line: 6,
+            column: 30
+        );
 
-        return this.VerifyCSharpDiagnosticAsync(source: test, reference: WellKnownMetadataReferences.GenericLogger, expected: expected);
+        return this.VerifyCSharpDiagnosticAsync(
+            source: test,
+            reference: WellKnownMetadataReferences.GenericLogger,
+            expected: expected
+        );
     }
 
     [Fact]
@@ -76,9 +93,22 @@ public sealed class ParameterOrderingDiagnosticsAnalyzerTests : DiagnosticAnalyz
             }
 }";
 
-        DiagnosticResult expected = Result(id: "FFS0020", message: "Parameter 'logger' must be parameter 2", severity: DiagnosticSeverity.Error, line: 7, column: 30);
+        DiagnosticResult expected = Result(
+            id: "FFS0020",
+            message: "Parameter 'logger' must be parameter 2",
+            severity: DiagnosticSeverity.Error,
+            line: 7,
+            column: 30
+        );
 
-        return this.VerifyCSharpDiagnosticAsync(source: test, [WellKnownMetadataReferences.GenericLogger, WellKnownMetadataReferences.CancellationToken], expected: expected);
+        return this.VerifyCSharpDiagnosticAsync(
+            source: test,
+            [
+                WellKnownMetadataReferences.GenericLogger,
+                WellKnownMetadataReferences.CancellationToken,
+            ],
+            expected: expected
+        );
     }
 
     [Fact]
@@ -95,7 +125,10 @@ public sealed class ParameterOrderingDiagnosticsAnalyzerTests : DiagnosticAnalyz
             }
 }";
 
-        return this.VerifyCSharpDiagnosticAsync(source: test, reference: WellKnownMetadataReferences.GenericLogger);
+        return this.VerifyCSharpDiagnosticAsync(
+            source: test,
+            reference: WellKnownMetadataReferences.GenericLogger
+        );
     }
 
     [Fact]
@@ -112,7 +145,10 @@ public sealed class ParameterOrderingDiagnosticsAnalyzerTests : DiagnosticAnalyz
             }
 }";
 
-        return this.VerifyCSharpDiagnosticAsync(source: test, reference: WellKnownMetadataReferences.GenericLogger);
+        return this.VerifyCSharpDiagnosticAsync(
+            source: test,
+            reference: WellKnownMetadataReferences.GenericLogger
+        );
     }
 
     [Fact]
@@ -129,7 +165,10 @@ public sealed class ParameterOrderingDiagnosticsAnalyzerTests : DiagnosticAnalyz
             }
 }";
 
-        return this.VerifyCSharpDiagnosticAsync(source: test, reference: WellKnownMetadataReferences.GenericLogger);
+        return this.VerifyCSharpDiagnosticAsync(
+            source: test,
+            reference: WellKnownMetadataReferences.GenericLogger
+        );
     }
 
     [Fact]
@@ -146,9 +185,19 @@ public sealed class ParameterOrderingDiagnosticsAnalyzerTests : DiagnosticAnalyz
             }
 }";
 
-        DiagnosticResult expected = Result(id: "FFS0020", message: "Parameter 'logger' must be parameter 2", severity: DiagnosticSeverity.Error, line: 6, column: 30);
+        DiagnosticResult expected = Result(
+            id: "FFS0020",
+            message: "Parameter 'logger' must be parameter 2",
+            severity: DiagnosticSeverity.Error,
+            line: 6,
+            column: 30
+        );
 
-        return this.VerifyCSharpDiagnosticAsync(source: test, reference: WellKnownMetadataReferences.GenericLogger, expected: expected);
+        return this.VerifyCSharpDiagnosticAsync(
+            source: test,
+            reference: WellKnownMetadataReferences.GenericLogger,
+            expected: expected
+        );
     }
 
     [Fact]
@@ -166,8 +215,21 @@ public sealed class ParameterOrderingDiagnosticsAnalyzerTests : DiagnosticAnalyz
             }
 }";
 
-        DiagnosticResult expected = Result(id: "FFS0020", message: "Parameter 'logger' must be parameter 2", severity: DiagnosticSeverity.Error, line: 7, column: 30);
+        DiagnosticResult expected = Result(
+            id: "FFS0020",
+            message: "Parameter 'logger' must be parameter 2",
+            severity: DiagnosticSeverity.Error,
+            line: 7,
+            column: 30
+        );
 
-        return this.VerifyCSharpDiagnosticAsync(source: test, [WellKnownMetadataReferences.GenericLogger, WellKnownMetadataReferences.CancellationToken], expected: expected);
+        return this.VerifyCSharpDiagnosticAsync(
+            source: test,
+            [
+                WellKnownMetadataReferences.GenericLogger,
+                WellKnownMetadataReferences.CancellationToken,
+            ],
+            expected: expected
+        );
     }
 }

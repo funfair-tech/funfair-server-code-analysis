@@ -8,9 +8,16 @@ namespace FunFair.CodeAnalysis.Helpers;
 
 internal static class ParameterHelpers
 {
-    public static string? GetFullTypeName(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, ParameterSyntax parameterSyntax, CancellationToken cancellationToken)
+    public static string? GetFullTypeName(
+        in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext,
+        ParameterSyntax parameterSyntax,
+        CancellationToken cancellationToken
+    )
     {
-        IParameterSymbol? ds = syntaxNodeAnalysisContext.SemanticModel.GetDeclaredSymbol(declarationSyntax: parameterSyntax, cancellationToken: cancellationToken);
+        IParameterSymbol? ds = syntaxNodeAnalysisContext.SemanticModel.GetDeclaredSymbol(
+            declarationSyntax: parameterSyntax,
+            cancellationToken: cancellationToken
+        );
 
         if (ds is not null)
         {

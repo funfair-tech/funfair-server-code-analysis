@@ -6,7 +6,8 @@ using Xunit;
 
 namespace FunFair.CodeAnalysis.Tests;
 
-public sealed class ClassAnalysisDiagnosticsAnalyzerTests : DiagnosticAnalyzerVerifier<ClassAnalysisDiagnosticsAnalyzer>
+public sealed class ClassAnalysisDiagnosticsAnalyzerTests
+    : DiagnosticAnalyzerVerifier<ClassAnalysisDiagnosticsAnalyzer>
 {
     [Fact]
     public Task AbstractClassNotAnErrorAsync()
@@ -20,7 +21,13 @@ public sealed class ClassAnalysisDiagnosticsAnalyzerTests : DiagnosticAnalyzerVe
     public Task ClassWithNoModifiersIsAnErrorAsync()
     {
         const string test = "public class Test {}";
-        DiagnosticResult expected = Result(id: "FFS0012", message: "Classes should be static, sealed or abstract", severity: DiagnosticSeverity.Error, line: 12, column: 25);
+        DiagnosticResult expected = Result(
+            id: "FFS0012",
+            message: "Classes should be static, sealed or abstract",
+            severity: DiagnosticSeverity.Error,
+            line: 12,
+            column: 25
+        );
 
         return this.VerifyCSharpDiagnosticAsync(source: test, expected: expected);
     }

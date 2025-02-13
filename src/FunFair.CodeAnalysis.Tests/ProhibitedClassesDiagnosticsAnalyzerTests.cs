@@ -7,7 +7,8 @@ using Xunit;
 
 namespace FunFair.CodeAnalysis.Tests;
 
-public sealed class ProhibitedClassesDiagnosticsAnalyzerTests : DiagnosticAnalyzerVerifier<ProhibitedClassesDiagnosticsAnalyzer>
+public sealed class ProhibitedClassesDiagnosticsAnalyzerTests
+    : DiagnosticAnalyzerVerifier<ProhibitedClassesDiagnosticsAnalyzer>
 {
     [Fact]
     public Task AssertFalseForNonBlockingConcurrentDictionaryAsync()
@@ -27,7 +28,10 @@ public sealed class ProhibitedClassesDiagnosticsAnalyzerTests : DiagnosticAnalyz
          }
      }";
 
-        return this.VerifyCSharpDiagnosticAsync(source: test, reference: WellKnownMetadataReferences.NonBlockingConcurrentDictionary);
+        return this.VerifyCSharpDiagnosticAsync(
+            source: test,
+            reference: WellKnownMetadataReferences.NonBlockingConcurrentDictionary
+        );
     }
 
     [Fact]
@@ -55,7 +59,11 @@ public sealed class ProhibitedClassesDiagnosticsAnalyzerTests : DiagnosticAnalyz
             column: 61
         );
 
-        return this.VerifyCSharpDiagnosticAsync(source: test, reference: WellKnownMetadataReferences.ConcurrentDictionary, expected: expected);
+        return this.VerifyCSharpDiagnosticAsync(
+            source: test,
+            reference: WellKnownMetadataReferences.ConcurrentDictionary,
+            expected: expected
+        );
     }
 
     [Fact]
@@ -84,7 +92,11 @@ public sealed class ProhibitedClassesDiagnosticsAnalyzerTests : DiagnosticAnalyz
             column: 14
         );
 
-        return this.VerifyCSharpDiagnosticAsync(source: test, reference: WellKnownMetadataReferences.ConcurrentDictionary, expected: expected);
+        return this.VerifyCSharpDiagnosticAsync(
+            source: test,
+            reference: WellKnownMetadataReferences.ConcurrentDictionary,
+            expected: expected
+        );
     }
 
     [Fact]
@@ -125,7 +137,11 @@ public sealed class ProhibitedClassesDiagnosticsAnalyzerTests : DiagnosticAnalyz
             ),
         ];
 
-        return this.VerifyCSharpDiagnosticAsync(source: test, references: WellKnownMetadataReferences.ConcurrentDictionary, expected: expected);
+        return this.VerifyCSharpDiagnosticAsync(
+            source: test,
+            references: WellKnownMetadataReferences.ConcurrentDictionary,
+            expected: expected
+        );
     }
 
     [Fact]
@@ -155,7 +171,11 @@ public sealed class ProhibitedClassesDiagnosticsAnalyzerTests : DiagnosticAnalyz
             column: 13
         );
 
-        return this.VerifyCSharpDiagnosticAsync(source: test, [WellKnownMetadataReferences.ConcurrentDictionary], expected: expected);
+        return this.VerifyCSharpDiagnosticAsync(
+            source: test,
+            [WellKnownMetadataReferences.ConcurrentDictionary],
+            expected: expected
+        );
     }
 
     [Fact]
@@ -184,6 +204,10 @@ public sealed class ProhibitedClassesDiagnosticsAnalyzerTests : DiagnosticAnalyz
             column: 14
         );
 
-        return this.VerifyCSharpDiagnosticAsync(source: test, reference: WellKnownMetadataReferences.ConcurrentDictionary, expected: expected);
+        return this.VerifyCSharpDiagnosticAsync(
+            source: test,
+            reference: WellKnownMetadataReferences.ConcurrentDictionary,
+            expected: expected
+        );
     }
 }

@@ -11,7 +11,8 @@ using Microsoft.CodeAnalysis.Diagnostics;
 namespace FunFair.CodeAnalysis;
 
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
-public sealed class ReThrowingExceptionShouldSpecifyInnerExceptionDiagnosticsAnalyzer : DiagnosticAnalyzer
+public sealed class ReThrowingExceptionShouldSpecifyInnerExceptionDiagnosticsAnalyzer
+    : DiagnosticAnalyzer
 {
     private static readonly DiagnosticDescriptor Rule = RuleHelpers.CreateRule(
         code: Rules.RuleMustPassInterExceptionToExceptionsThrownInCatchBlock,
@@ -20,11 +21,14 @@ public sealed class ReThrowingExceptionShouldSpecifyInnerExceptionDiagnosticsAna
         message: "Provide '{0}' as a inner exception when throw from the catch clauses"
     );
 
-    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => SupportedDiagnosisList.Build(Rule);
+    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
+        SupportedDiagnosisList.Build(Rule);
 
     public override void Initialize(AnalysisContext context)
     {
-        context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.None);
+        context.ConfigureGeneratedCodeAnalysis(
+            GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.None
+        );
         context.EnableConcurrentExecution();
 
         context.RegisterCompilationStartAction(PerformCheck);
@@ -32,7 +36,10 @@ public sealed class ReThrowingExceptionShouldSpecifyInnerExceptionDiagnosticsAna
 
     private static void PerformCheck(CompilationStartAnalysisContext compilationStartContext)
     {
-        compilationStartContext.RegisterSyntaxNodeAction(action: MustBeReadOnly, SyntaxKind.CatchClause);
+        compilationStartContext.RegisterSyntaxNodeAction(
+            action: MustBeReadOnly,
+            SyntaxKind.CatchClause
+        );
     }
 
     private static void MustBeReadOnly(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
@@ -93,25 +100,44 @@ public sealed class ReThrowingExceptionShouldSpecifyInnerExceptionDiagnosticsAna
     {
         if (argumentListSyntax is null || argumentListSyntax.Arguments.Count == 0)
         {
-            ReportDiagnostic(exceptionVariable: exceptionVariable, syntaxNodeContext: syntaxNodeContext, objectCreationExpression.GetLocation());
+            ReportDiagnostic(
+                exceptionVariable: exceptionVariable,
+                syntaxNodeContext: syntaxNodeContext,
+                objectCreationExpression.GetLocation()
+            );
 
             return;
         }
 
-        if (!argumentListSyntax.Arguments.Any(x => IsNamedIdentifier(exceptionVariable: exceptionVariable, x: x)))
+        if (
+            !argumentListSyntax.Arguments.Any(x =>
+                IsNamedIdentifier(exceptionVariable: exceptionVariable, x: x)
+            )
+        )
         {
-            ReportDiagnostic(exceptionVariable: exceptionVariable, syntaxNodeContext: syntaxNodeContext, objectCreationExpression.GetLocation());
+            ReportDiagnostic(
+                exceptionVariable: exceptionVariable,
+                syntaxNodeContext: syntaxNodeContext,
+                objectCreationExpression.GetLocation()
+            );
         }
     }
 
     private static bool IsNamedIdentifier(string exceptionVariable, ArgumentSyntax x)
     {
-        return x.Expression is IdentifierNameSyntax identifier && StringComparer.Ordinal.Equals(x: identifier.Identifier.Text, y: exceptionVariable);
+        return x.Expression is IdentifierNameSyntax identifier
+            && StringComparer.Ordinal.Equals(x: identifier.Identifier.Text, y: exceptionVariable);
     }
 
-    private static void ReportDiagnostic(string exceptionVariable, in SyntaxNodeAnalysisContext syntaxNodeContext, Location location)
+    private static void ReportDiagnostic(
+        string exceptionVariable,
+        in SyntaxNodeAnalysisContext syntaxNodeContext,
+        Location location
+    )
     {
-        syntaxNodeContext.ReportDiagnostic(Diagnostic.Create(descriptor: Rule, location: location, exceptionVariable));
+        syntaxNodeContext.ReportDiagnostic(
+            Diagnostic.Create(descriptor: Rule, location: location, exceptionVariable)
+        );
     }
 
     private static IReadOnlyList<ExpressionSyntax> GetAllThrowExpressions(BlockSyntax codeBlock)
@@ -124,11 +150,18 @@ public sealed class ReThrowingExceptionShouldSpecifyInnerExceptionDiagnosticsAna
 
     private static IEnumerable<ExpressionSyntax> ThrowExpressions(BlockSyntax codeBlock)
     {
-        return codeBlock.DescendantNodes().OfType<ThrowExpressionSyntax>().Select(x => x.Expression);
+        return codeBlock
+            .DescendantNodes()
+            .OfType<ThrowExpressionSyntax>()
+            .Select(x => x.Expression);
     }
 
     private static IEnumerable<ExpressionSyntax> ThrowStatements(BlockSyntax codeBlock)
     {
-        return codeBlock.DescendantNodes().OfType<ThrowStatementSyntax>().Select(x => x.Expression).RemoveNulls();
+        return codeBlock
+            .DescendantNodes()
+            .OfType<ThrowStatementSyntax>()
+            .Select(x => x.Expression)
+            .RemoveNulls();
     }
 }

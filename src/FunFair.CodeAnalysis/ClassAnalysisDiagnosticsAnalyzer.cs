@@ -18,11 +18,14 @@ public sealed class ClassAnalysisDiagnosticsAnalyzer : DiagnosticAnalyzer
         message: "Classes should be static, sealed or abstract"
     );
 
-    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => SupportedDiagnosisList.Build(Rule);
+    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
+        SupportedDiagnosisList.Build(Rule);
 
     public override void Initialize(AnalysisContext context)
     {
-        context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.None);
+        context.ConfigureGeneratedCodeAnalysis(
+            GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.None
+        );
         context.EnableConcurrentExecution();
 
         context.RegisterCompilationStartAction(PerformCheck);
@@ -30,7 +33,10 @@ public sealed class ClassAnalysisDiagnosticsAnalyzer : DiagnosticAnalyzer
 
     private static void PerformCheck(CompilationStartAnalysisContext compilationStartContext)
     {
-        compilationStartContext.RegisterSyntaxNodeAction(action: MustBeReadOnly, SyntaxKind.ClassDeclaration);
+        compilationStartContext.RegisterSyntaxNodeAction(
+            action: MustBeReadOnly,
+            SyntaxKind.ClassDeclaration
+        );
     }
 
     private static void MustBeReadOnly(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
@@ -42,7 +48,10 @@ public sealed class ClassAnalysisDiagnosticsAnalyzer : DiagnosticAnalyzer
 
         if (!classDeclarationSyntax.Modifiers.Any(IsWhiteListedClassModifier))
         {
-            classDeclarationSyntax.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: Rule);
+            classDeclarationSyntax.ReportDiagnostics(
+                syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
+                rule: Rule
+            );
         }
     }
 
@@ -50,6 +59,9 @@ public sealed class ClassAnalysisDiagnosticsAnalyzer : DiagnosticAnalyzer
     {
         SyntaxKind kind = syntaxToken.Kind();
 
-        return kind is SyntaxKind.StaticKeyword or SyntaxKind.AbstractKeyword or SyntaxKind.SealedKeyword;
+        return kind
+            is SyntaxKind.StaticKeyword
+                or SyntaxKind.AbstractKeyword
+                or SyntaxKind.SealedKeyword;
     }
 }

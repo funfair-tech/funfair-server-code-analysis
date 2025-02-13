@@ -33,11 +33,14 @@ public sealed class ClassVisibilityDiagnosticsAnalyzer : DiagnosticAnalyzer
         ),
     ];
 
-    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => [.. Classes.Select(c => c.Rule)];
+    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
+        [.. Classes.Select(c => c.Rule)];
 
     public override void Initialize(AnalysisContext context)
     {
-        context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.None);
+        context.ConfigureGeneratedCodeAnalysis(
+            GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.None
+        );
         context.EnableConcurrentExecution();
 
         context.RegisterCompilationStartAction(PerformCheck);
@@ -45,7 +48,10 @@ public sealed class ClassVisibilityDiagnosticsAnalyzer : DiagnosticAnalyzer
 
     private static void PerformCheck(CompilationStartAnalysisContext compilationStartContext)
     {
-        compilationStartContext.RegisterSyntaxNodeAction(action: CheckClassVisibility, SyntaxKind.ClassDeclaration);
+        compilationStartContext.RegisterSyntaxNodeAction(
+            action: CheckClassVisibility,
+            SyntaxKind.ClassDeclaration
+        );
     }
 
     private static void CheckClassVisibility(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
@@ -57,26 +63,59 @@ public sealed class ClassVisibilityDiagnosticsAnalyzer : DiagnosticAnalyzer
 
         foreach (ConfiguredClass classDefinition in Classes)
         {
-            if (classDefinition.TypeMatchesClass(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext) && !classDefinition.HasCorrectClassModifier(classDeclarationSyntax: classDeclarationSyntax))
+            if (
+                classDefinition.TypeMatchesClass(
+                    syntaxNodeAnalysisContext: syntaxNodeAnalysisContext
+                )
+                && !classDefinition.HasCorrectClassModifier(
+                    classDeclarationSyntax: classDeclarationSyntax
+                )
+            )
             {
-                classDeclarationSyntax.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: classDefinition.Rule);
+                classDeclarationSyntax.ReportDiagnostics(
+                    syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
+                    rule: classDefinition.Rule
+                );
             }
         }
     }
 
-    private static ConfiguredClass Build(string ruleId, string title, string message, string className, SyntaxKind visibility)
+    private static ConfiguredClass Build(
+        string ruleId,
+        string title,
+        string message,
+        string className,
+        SyntaxKind visibility
+    )
     {
-        return new(ruleId: ruleId, title: title, message: message, className: className, visibility: visibility);
+        return new(
+            ruleId: ruleId,
+            title: title,
+            message: message,
+            className: className,
+            visibility: visibility
+        );
     }
 
     [DebuggerDisplay("{Rule.Id} {Rule.Title} Class {ClassName} Visibility {Visibility}")]
     private readonly record struct ConfiguredClass
     {
-        public ConfiguredClass(string ruleId, string title, string message, string className, SyntaxKind visibility)
+        public ConfiguredClass(
+            string ruleId,
+            string title,
+            string message,
+            string className,
+            SyntaxKind visibility
+        )
         {
             this.ClassName = className;
             this.Visibility = visibility;
-            this.Rule = RuleHelpers.CreateRule(code: ruleId, category: Categories.Classes, title: title, message: message);
+            this.Rule = RuleHelpers.CreateRule(
+                code: ruleId,
+                category: Categories.Classes,
+                title: title,
+                message: message
+            );
         }
 
         public DiagnosticDescriptor Rule { get; }
@@ -94,14 +133,19 @@ public sealed class ClassVisibilityDiagnosticsAnalyzer : DiagnosticAnalyzer
 
             string className = this.ClassName;
 
-            return containingType.BaseClasses().Any(s => IsMatchingClass(typeSymbol: s, className: className));
+            return containingType
+                .BaseClasses()
+                .Any(s => IsMatchingClass(typeSymbol: s, className: className));
         }
 
         private static bool IsMatchingClass(INamedTypeSymbol typeSymbol, string className)
         {
             INamedTypeSymbol originalDefinition = typeSymbol.OriginalDefinition;
 
-            return StringComparer.Ordinal.Equals(SymbolDisplay.ToDisplayString(originalDefinition), y: className);
+            return StringComparer.Ordinal.Equals(
+                SymbolDisplay.ToDisplayString(originalDefinition),
+                y: className
+            );
         }
 
         public bool HasCorrectClassModifier(ClassDeclarationSyntax classDeclarationSyntax)

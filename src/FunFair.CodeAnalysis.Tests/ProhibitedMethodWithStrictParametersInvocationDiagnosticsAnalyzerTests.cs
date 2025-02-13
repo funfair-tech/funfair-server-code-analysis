@@ -6,7 +6,8 @@ using Xunit;
 
 namespace FunFair.CodeAnalysis.Tests;
 
-public sealed class ProhibitedMethodWithStrictParametersInvocationDiagnosticsAnalyzerTests : DiagnosticAnalyzerVerifier<ProhibitedMethodWithStrictParametersInvocationDiagnosticsAnalyzer>
+public sealed class ProhibitedMethodWithStrictParametersInvocationDiagnosticsAnalyzerTests
+    : DiagnosticAnalyzerVerifier<ProhibitedMethodWithStrictParametersInvocationDiagnosticsAnalyzer>
 {
     [Fact]
     public Task NSubstituteExtensionsReceivedWithExpectedCallCountIsPassingAsync()
@@ -31,7 +32,10 @@ public sealed class ProhibitedMethodWithStrictParametersInvocationDiagnosticsAna
          }
      }";
 
-        return this.VerifyCSharpDiagnosticAsync(source: test, reference: WellKnownMetadataReferences.Substitute);
+        return this.VerifyCSharpDiagnosticAsync(
+            source: test,
+            reference: WellKnownMetadataReferences.Substitute
+        );
     }
 
     [Fact]
@@ -64,7 +68,11 @@ public sealed class ProhibitedMethodWithStrictParametersInvocationDiagnosticsAna
             column: 18
         );
 
-        return this.VerifyCSharpDiagnosticAsync(source: test, reference: WellKnownMetadataReferences.Substitute, expected: expected);
+        return this.VerifyCSharpDiagnosticAsync(
+            source: test,
+            reference: WellKnownMetadataReferences.Substitute,
+            expected: expected
+        );
     }
 
     [Fact]
@@ -90,7 +98,10 @@ public sealed class ProhibitedMethodWithStrictParametersInvocationDiagnosticsAna
          }
      }";
 
-        return this.VerifyCSharpDiagnosticAsync(source: test, reference: WellKnownMetadataReferences.Substitute);
+        return this.VerifyCSharpDiagnosticAsync(
+            source: test,
+            reference: WellKnownMetadataReferences.Substitute
+        );
     }
 
     [Fact]
@@ -113,7 +124,11 @@ public sealed class ProhibitedMethodWithStrictParametersInvocationDiagnosticsAna
 
         return this.VerifyCSharpDiagnosticAsync(
             source: test,
-            [WellKnownMetadataReferences.MicrosoftExtensionsIConfigurationBuilder, WellKnownMetadataReferences.ConfigurationBuilder, WellKnownMetadataReferences.JsonConfigurationExtensions]
+            [
+                WellKnownMetadataReferences.MicrosoftExtensionsIConfigurationBuilder,
+                WellKnownMetadataReferences.ConfigurationBuilder,
+                WellKnownMetadataReferences.JsonConfigurationExtensions,
+            ]
         );
     }
 
@@ -137,11 +152,21 @@ public sealed class ProhibitedMethodWithStrictParametersInvocationDiagnosticsAna
          }
      }";
 
-        DiagnosticResult expected = Result(id: "FFS0034", message: "Only use AddJsonFile with reloadOnChange set to false", severity: DiagnosticSeverity.Error, line: 10, column: 47);
+        DiagnosticResult expected = Result(
+            id: "FFS0034",
+            message: "Only use AddJsonFile with reloadOnChange set to false",
+            severity: DiagnosticSeverity.Error,
+            line: 10,
+            column: 47
+        );
 
         return this.VerifyCSharpDiagnosticAsync(
             source: test,
-            [WellKnownMetadataReferences.MicrosoftExtensionsIConfigurationBuilder, WellKnownMetadataReferences.ConfigurationBuilder, WellKnownMetadataReferences.JsonConfigurationExtensions],
+            [
+                WellKnownMetadataReferences.MicrosoftExtensionsIConfigurationBuilder,
+                WellKnownMetadataReferences.ConfigurationBuilder,
+                WellKnownMetadataReferences.JsonConfigurationExtensions,
+            ],
             expected: expected
         );
     }
@@ -167,11 +192,21 @@ public sealed class ProhibitedMethodWithStrictParametersInvocationDiagnosticsAna
          }
      }";
 
-        DiagnosticResult expected = Result(id: "FFS0034", message: "Only use AddJsonFile with reloadOnChange set to false", severity: DiagnosticSeverity.Error, line: 10, column: 47);
+        DiagnosticResult expected = Result(
+            id: "FFS0034",
+            message: "Only use AddJsonFile with reloadOnChange set to false",
+            severity: DiagnosticSeverity.Error,
+            line: 10,
+            column: 47
+        );
 
         return this.VerifyCSharpDiagnosticAsync(
             source: test,
-            [WellKnownMetadataReferences.MicrosoftExtensionsIConfigurationBuilder, WellKnownMetadataReferences.ConfigurationBuilder, WellKnownMetadataReferences.JsonConfigurationExtensions],
+            [
+                WellKnownMetadataReferences.MicrosoftExtensionsIConfigurationBuilder,
+                WellKnownMetadataReferences.ConfigurationBuilder,
+                WellKnownMetadataReferences.JsonConfigurationExtensions,
+            ],
             expected: expected
         );
     }
