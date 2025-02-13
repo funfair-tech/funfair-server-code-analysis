@@ -16,6 +16,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 - SDK - Updated DotNet SDK to 9.0.200
 - Dependencies - Updated Meziantou.Analyzer to 2.0.187
 - Dependencies - Updated Roslynator.Analyzers to 4.13.0
+- Dependencies - Updated Microsoft.Extensions to 9.0.2
 ### Removed
 ### Deployment Changes
 
