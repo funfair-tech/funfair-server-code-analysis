@@ -9,18 +9,21 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 ### Added
 ### Fixed
 ### Changed
-- Dependencies - Updated Meziantou.Analyzer to 2.0.188
-- Dependencies - Updated Roslynator.Analyzers to 4.13.1
-- Dependencies - Updated Microsoft.CodeAnalysis.CSharp to 4.13.0
-- Dependencies - Updated SonarAnalyzer.CSharp to 10.7.0.110445
-- Dependencies - Updated FunFair.Test.Common to 6.1.261.1171
-- Dependencies - Updated Credfeto.Enumeration to 1.2.67.955
 ### Removed
 ### Deployment Changes
 
 <!--
 Releases that have at least been deployed to staging, BUT NOT necessarily released to live.  Changes should be moved from [Unreleased] into here as they are merged into the appropriate release branch
 -->
+## [7.0.69] - 2025-03-04
+### Changed
+- Dependencies - Updated Meziantou.Analyzer to 2.0.188
+- Dependencies - Updated Roslynator.Analyzers to 4.13.1
+- Dependencies - Updated Microsoft.CodeAnalysis.CSharp to 4.13.0
+- Dependencies - Updated SonarAnalyzer.CSharp to 10.7.0.110445
+- Dependencies - Updated FunFair.Test.Common to 6.1.261.1171
+- Dependencies - Updated Credfeto.Enumeration to 1.2.67.955
+
 ## [7.0.68] - 2025-02-14
 ### Changed
 - Dependencies - Updated Microsoft.Sbom.Targets to 3.1.0
