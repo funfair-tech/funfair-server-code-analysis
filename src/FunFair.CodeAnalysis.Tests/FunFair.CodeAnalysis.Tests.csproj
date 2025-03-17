@@ -54,7 +54,7 @@
     <PackageReference Include="Credfeto.Enumeration.Source.Generation.Attributes" Version="1.2.67.955" />
     <PackageReference Include="FunFair.Test.Common" Version="6.1.262.1177" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.13.0" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="9.0.2" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="9.0.3" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.13.0" />
     <PackageReference Include="xunit" Version="2.9.3" />
     <PackageReference Include="xunit.runner.visualstudio" Version="3.0.2" />
