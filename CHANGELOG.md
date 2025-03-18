@@ -9,17 +9,20 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 ### Added
 ### Fixed
 ### Changed
-- Dependencies - Updated FunFair.Test.Common to 6.1.262.1177
-- Dependencies - Updated Microsoft.VisualStudio.Threading.Analyzers to 17.13.61
-- Dependencies - Updated Microsoft.Extensions to 9.0.3
-- SDK - Updated DotNet SDK to 9.0.201
-- Dependencies - Updated Credfeto.Enumeration to 1.2.68.969
 ### Removed
 ### Deployment Changes
 
 <!--
 Releases that have at least been deployed to staging, BUT NOT necessarily released to live.  Changes should be moved from [Unreleased] into here as they are merged into the appropriate release branch
 -->
+## [7.0.70] - 2025-03-18
+### Changed
+- Dependencies - Updated FunFair.Test.Common to 6.1.262.1177
+- Dependencies - Updated Microsoft.VisualStudio.Threading.Analyzers to 17.13.61
+- Dependencies - Updated Microsoft.Extensions to 9.0.3
+- SDK - Updated DotNet SDK to 9.0.201
+- Dependencies - Updated Credfeto.Enumeration to 1.2.68.969
+
 ## [7.0.69] - 2025-03-04
 ### Changed
 - Dependencies - Updated Meziantou.Analyzer to 2.0.188
