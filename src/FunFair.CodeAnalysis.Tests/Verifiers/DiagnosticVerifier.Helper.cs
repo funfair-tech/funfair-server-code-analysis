@@ -52,12 +52,14 @@ public abstract partial class DiagnosticVerifier
         IReadOnlyList<string> sources,
         IReadOnlyList<MetadataReference> references,
         string language,
-        DiagnosticAnalyzer analyzer
+        DiagnosticAnalyzer analyzer,
+        in CancellationToken cancellationToken
     )
     {
         return GetSortedDiagnosticsFromDocumentsAsync(
             analyzer: analyzer,
-            GetDocuments(sources: sources, references: references, language: language)
+            GetDocuments(sources: sources, references: references, language: language),
+            cancellationToken: cancellationToken
         );
     }
 
@@ -65,7 +67,8 @@ public abstract partial class DiagnosticVerifier
         IReadOnlyList<Diagnostic>
     > GetSortedDiagnosticsFromDocumentsAsync(
         DiagnosticAnalyzer analyzer,
-        IReadOnlyList<Document> documents
+        IReadOnlyList<Document> documents,
+        CancellationToken cancellationToken
     )
     {
         HashSet<Project> projects = BuildProjects(documents);
@@ -74,14 +77,14 @@ public abstract partial class DiagnosticVerifier
 
         foreach (Project project in projects)
         {
-            Compilation? compilation = await project.GetCompilationAsync(CancellationToken.None);
+            Compilation? compilation = await project.GetCompilationAsync(cancellationToken);
 
             if (compilation is null)
             {
                 continue;
             }
 
-            EnsureNoCompilationErrors(compilation);
+            EnsureNoCompilationErrors(compilation, cancellationToken);
 
             CompilationWithAnalyzers compilationWithAnalyzers = CreateCompilationWithAnalyzers(
                 analyzer: analyzer,
@@ -89,7 +92,8 @@ public abstract partial class DiagnosticVerifier
             );
             diagnostics = await CollectDiagnosticsAsync(
                 documents: documents,
-                compilationWithAnalyzers: compilationWithAnalyzers
+                compilationWithAnalyzers: compilationWithAnalyzers,
+                cancellationToken: cancellationToken
             );
         }
 
@@ -118,18 +122,24 @@ public abstract partial class DiagnosticVerifier
 
     private static async ValueTask<IReadOnlyList<Diagnostic>> CollectDiagnosticsAsync(
         IReadOnlyList<Document> documents,
-        CompilationWithAnalyzers compilationWithAnalyzers
+        CompilationWithAnalyzers compilationWithAnalyzers,
+        CancellationToken cancellationToken
     )
     {
         ImmutableArray<Diagnostic> diagnostics =
-            await compilationWithAnalyzers.GetAnalyzerDiagnosticsAsync(CancellationToken.None);
+            await compilationWithAnalyzers.GetAnalyzerDiagnosticsAsync(cancellationToken);
 
-        return await ExtractDiagnosticsAsync(documents: documents, diagnostics: diagnostics);
+        return await ExtractDiagnosticsAsync(
+            documents: documents,
+            diagnostics: diagnostics,
+            cancellationToken: cancellationToken
+        );
     }
 
     private static async ValueTask<IReadOnlyList<Diagnostic>> ExtractDiagnosticsAsync(
         IReadOnlyList<Document> documents,
-        IReadOnlyList<Diagnostic> diagnostics
+        IReadOnlyList<Diagnostic> diagnostics,
+        CancellationToken cancellationToken
     )
     {
         List<Diagnostic> results = [];
@@ -141,7 +151,8 @@ public abstract partial class DiagnosticVerifier
                 || diagnostic.Location.IsInMetadata
                 || await ShouldAddDocumentDiagnosticAsync(
                     documents: documents,
-                    diagnostic: diagnostic
+                    diagnostic: diagnostic,
+                    cancellationToken: cancellationToken
                 );
 
             if (add)
@@ -155,12 +166,17 @@ public abstract partial class DiagnosticVerifier
 
     private static async ValueTask<bool> ShouldAddDocumentDiagnosticAsync(
         IReadOnlyList<Document> documents,
-        Diagnostic diagnostic
+        Diagnostic diagnostic,
+        CancellationToken cancellationToken
     )
     {
         foreach (Document document in documents)
         {
-            bool add = await ShouldAddDiagnosticAsync(document: document, diagnostic: diagnostic);
+            bool add = await ShouldAddDiagnosticAsync(
+                document: document,
+                diagnostic: diagnostic,
+                cancellationToken: cancellationToken
+            );
 
             if (add)
             {
@@ -173,19 +189,21 @@ public abstract partial class DiagnosticVerifier
 
     private static async ValueTask<bool> ShouldAddDiagnosticAsync(
         Document document,
-        Diagnostic diagnostic
+        Diagnostic diagnostic,
+        CancellationToken cancellationToken
     )
     {
-        SyntaxTree? tree = await document.GetSyntaxTreeAsync(CancellationToken.None);
+        SyntaxTree? tree = await document.GetSyntaxTreeAsync(cancellationToken);
 
         return tree is not null && tree == diagnostic.Location.SourceTree;
     }
 
-    private static void EnsureNoCompilationErrors(Compilation compilation)
+    private static void EnsureNoCompilationErrors(
+        Compilation compilation,
+        in CancellationToken cancellationToken
+    )
     {
-        ImmutableArray<Diagnostic> compilerErrors = compilation.GetDiagnostics(
-            CancellationToken.None
-        );
+        ImmutableArray<Diagnostic> compilerErrors = compilation.GetDiagnostics(cancellationToken);
 
         if (compilerErrors.IsEmpty)
         {
