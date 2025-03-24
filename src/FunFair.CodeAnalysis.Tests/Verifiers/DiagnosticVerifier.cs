@@ -4,6 +4,7 @@ using System.Collections.Immutable;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using FunFair.CodeAnalysis.Tests.Helpers;
 using FunFair.Test.Common;
@@ -193,6 +194,7 @@ public abstract partial class DiagnosticVerifier : TestBase
         IReadOnlyList<DiagnosticResult> expected
     )
     {
+        CancellationToken cancellationToken = this.CancellationToken();
         DiagnosticAnalyzer diagnostic = AssertReallyNotNull(this.GetCSharpDiagnosticAnalyzer());
 
         return VerifyDiagnosticsAsync(
@@ -200,7 +202,8 @@ public abstract partial class DiagnosticVerifier : TestBase
             references: references,
             language: LanguageNames.CSharp,
             analyzer: diagnostic,
-            expected: expected
+            expected: expected,
+            cancellationToken: cancellationToken
         );
     }
 
@@ -209,14 +212,16 @@ public abstract partial class DiagnosticVerifier : TestBase
         IReadOnlyList<MetadataReference> references,
         string language,
         DiagnosticAnalyzer analyzer,
-        IReadOnlyList<DiagnosticResult> expected
+        IReadOnlyList<DiagnosticResult> expected,
+        CancellationToken cancellationToken
     )
     {
         IReadOnlyList<Diagnostic> diagnostics = await GetSortedDiagnosticsAsync(
             sources: sources,
             references: references,
             language: language,
-            analyzer: analyzer
+            analyzer: analyzer,
+            cancellationToken: cancellationToken
         );
 
         VerifyDiagnosticResults(

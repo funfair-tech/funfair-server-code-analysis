@@ -29,7 +29,7 @@
     <NuGetAuditMode>all</NuGetAuditMode>
     <Nullable>enable</Nullable>
     <OptimizationPreference>speed</OptimizationPreference>
-    <OutputType>Library</OutputType>
+    <OutputType>Exe</OutputType>
     <RunAOTCompilation>false</RunAOTCompilation>
     <TargetFramework>net9.0</TargetFramework>
     <TieredCompilation>true</TieredCompilation>
@@ -55,9 +55,7 @@
     <PackageReference Include="FunFair.Test.Common" Version="6.1.265.1215" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.13.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="9.0.3" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.13.0" />
-    <PackageReference Include="xunit" Version="2.9.3" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="3.0.2" />
+    <PackageReference Include="xunit.v3" Version="2.0.0" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="AsyncFixer" Version="1.6.0" PrivateAssets="All" ExcludeAssets="runtime" />
