@@ -10,9 +10,9 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 ### Fixed
 ### Changed
 - Dependencies - Updated FunFair.Test.Common to 6.1.268.1269
-- Dependencies - Updated CSharpier.MSBuild to 1.0.0
 - Dependencies - Updated Credfeto.Enumeration to 1.2.79.1071
 - Dependencies - Updated Meziantou.Analyzer to 2.0.199
+- Dependencies - Updated CSharpier.MSBuild to 1.0.1
 ### Removed
 ### Deployment Changes
 
