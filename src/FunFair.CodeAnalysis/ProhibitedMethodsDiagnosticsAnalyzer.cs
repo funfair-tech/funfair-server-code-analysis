@@ -87,9 +87,7 @@ public sealed class ProhibitedMethodsDiagnosticsAnalyzer : DiagnosticAnalyzer
 
     public override void Initialize(AnalysisContext context)
     {
-        context.ConfigureGeneratedCodeAnalysis(
-            GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.None
-        );
+        context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.None);
         context.EnableConcurrentExecution();
 
         Checker checker = new();
@@ -160,10 +158,7 @@ public sealed class ProhibitedMethodsDiagnosticsAnalyzer : DiagnosticAnalyzer
             Compilation compilation
         )
         {
-            if (
-                syntaxNodeAnalysisContext.Node
-                is MemberAccessExpressionSyntax memberAccessExpressionSyntax
-            )
+            if (syntaxNodeAnalysisContext.Node is MemberAccessExpressionSyntax memberAccessExpressionSyntax)
             {
                 this.LookForBannedMethod(
                     memberAccessExpressionSyntax: memberAccessExpressionSyntax,
@@ -180,18 +175,11 @@ public sealed class ProhibitedMethodsDiagnosticsAnalyzer : DiagnosticAnalyzer
             Compilation compilation
         )
         {
-            Dictionary<string, INamedTypeSymbol> cachedSymbols = this.LoadCachedSymbols(
-                compilation
-            );
+            Dictionary<string, INamedTypeSymbol> cachedSymbols = this.LoadCachedSymbols(compilation);
 
             foreach (ProhibitedMethodsSpec item in BannedMethods)
             {
-                if (
-                    cachedSymbols.TryGetValue(
-                        key: item.SourceClass,
-                        out INamedTypeSymbol metadataType
-                    )
-                )
+                if (cachedSymbols.TryGetValue(key: item.SourceClass, out INamedTypeSymbol metadataType))
                 {
                     if (
                         StringComparer.OrdinalIgnoreCase.Equals(
@@ -200,12 +188,7 @@ public sealed class ProhibitedMethodsDiagnosticsAnalyzer : DiagnosticAnalyzer
                         )
                     )
                     {
-                        if (
-                            StringComparer.Ordinal.Equals(
-                                invocation.Name.Identifier.ToString(),
-                                y: item.BannedMethod
-                            )
-                        )
+                        if (StringComparer.Ordinal.Equals(invocation.Name.Identifier.ToString(), y: item.BannedMethod))
                         {
                             invocation.ReportDiagnostics(
                                 syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
@@ -222,9 +205,7 @@ public sealed class ProhibitedMethodsDiagnosticsAnalyzer : DiagnosticAnalyzer
             return this._cachedSymbols ??= BuildCachedSymbols(compilation);
         }
 
-        private static Dictionary<string, INamedTypeSymbol> BuildCachedSymbols(
-            Compilation compilation
-        )
+        private static Dictionary<string, INamedTypeSymbol> BuildCachedSymbols(Compilation compilation)
         {
             Dictionary<string, INamedTypeSymbol> cachedSymbols = new(StringComparer.Ordinal);
 
