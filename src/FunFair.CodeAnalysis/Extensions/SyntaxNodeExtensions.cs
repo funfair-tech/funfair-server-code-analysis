@@ -11,9 +11,7 @@ internal static class SyntaxNodeExtensions
         DiagnosticDescriptor rule
     )
     {
-        syntaxNodeAnalysisContext.ReportDiagnostic(
-            Diagnostic.Create(descriptor: rule, expressionSyntax.GetLocation())
-        );
+        syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(descriptor: rule, expressionSyntax.GetLocation()));
     }
 
     public static void ReportDiagnostics(
@@ -24,11 +22,7 @@ internal static class SyntaxNodeExtensions
     )
     {
         syntaxNodeAnalysisContext.ReportDiagnostic(
-            Diagnostic.Create(
-                descriptor: rule,
-                expressionSyntax.GetLocation(),
-                messageArgs: messageArgs
-            )
+            Diagnostic.Create(descriptor: rule, expressionSyntax.GetLocation(), messageArgs: messageArgs)
         );
     }
 }
