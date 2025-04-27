@@ -28,14 +28,11 @@ public sealed class ArgumentExceptionAnalysisDiagnosticsAnalyzer : DiagnosticAna
         "System.ArgumentOutOfRangeException",
     ];
 
-    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
-        SupportedDiagnosisList.Build(Rule);
+    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => SupportedDiagnosisList.Build(Rule);
 
     public override void Initialize(AnalysisContext context)
     {
-        context.ConfigureGeneratedCodeAnalysis(
-            GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.None
-        );
+        context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.None);
         context.EnableConcurrentExecution();
 
         context.RegisterCompilationStartAction(PerformCheck);
@@ -49,9 +46,7 @@ public sealed class ArgumentExceptionAnalysisDiagnosticsAnalyzer : DiagnosticAna
         );
     }
 
-    private static void ArgumentExceptionsMustPassParameterName(
-        SyntaxNodeAnalysisContext syntaxNodeAnalysisContext
-    )
+    private static void ArgumentExceptionsMustPassParameterName(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
     {
         if (syntaxNodeAnalysisContext.Node is not ObjectCreationExpressionSyntax objectCreation)
         {
@@ -78,9 +73,7 @@ public sealed class ArgumentExceptionAnalysisDiagnosticsAnalyzer : DiagnosticAna
             return;
         }
 
-        syntaxNodeAnalysisContext.ReportDiagnostic(
-            Diagnostic.Create(descriptor: Rule, objectCreation.GetLocation())
-        );
+        syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(descriptor: Rule, objectCreation.GetLocation()));
     }
 
     private static bool HasParamNameParameter(IMethodSymbol methodSymbol)
