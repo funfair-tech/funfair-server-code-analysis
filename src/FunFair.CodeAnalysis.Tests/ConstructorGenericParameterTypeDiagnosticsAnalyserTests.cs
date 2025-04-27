@@ -1,4 +1,4 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using FunFair.CodeAnalysis.Tests.Helpers;
 using FunFair.CodeAnalysis.Tests.Verifiers;
 using Microsoft.CodeAnalysis;
@@ -23,10 +23,7 @@ public sealed class Test {
     }
 }";
 
-        return this.VerifyCSharpDiagnosticAsync(
-            source: test,
-            reference: WellKnownMetadataReferences.Logger
-        );
+        return this.VerifyCSharpDiagnosticAsync(source: test, reference: WellKnownMetadataReferences.Logger);
     }
 
     [Fact]
@@ -101,10 +98,7 @@ public abstract class Test {
     }
 }";
 
-        return this.VerifyCSharpDiagnosticAsync(
-            source: test,
-            reference: WellKnownMetadataReferences.Logger
-        );
+        return this.VerifyCSharpDiagnosticAsync(source: test, reference: WellKnownMetadataReferences.Logger);
     }
 
     [Fact]
@@ -154,10 +148,7 @@ internal sealed class Test {
     }
 }";
 
-        return this.VerifyCSharpDiagnosticAsync(
-            source: test,
-            reference: WellKnownMetadataReferences.Logger
-        );
+        return this.VerifyCSharpDiagnosticAsync(source: test, reference: WellKnownMetadataReferences.Logger);
     }
 
     [Fact]
@@ -177,10 +168,7 @@ public sealed class Onion {
     }
 }";
 
-        return this.VerifyCSharpDiagnosticAsync(
-            source: test,
-            reference: WellKnownMetadataReferences.Logger
-        );
+        return this.VerifyCSharpDiagnosticAsync(source: test, reference: WellKnownMetadataReferences.Logger);
     }
 
     [Fact]
@@ -200,10 +188,7 @@ public sealed class Onion {
     }
 }";
 
-        return this.VerifyCSharpDiagnosticAsync(
-            source: test,
-            reference: WellKnownMetadataReferences.Logger
-        );
+        return this.VerifyCSharpDiagnosticAsync(source: test, reference: WellKnownMetadataReferences.Logger);
     }
 
     [Fact]
@@ -223,9 +208,6 @@ public class Onion {
     }
 }";
 
-        return this.VerifyCSharpDiagnosticAsync(
-            source: test,
-            reference: WellKnownMetadataReferences.Logger
-        );
+        return this.VerifyCSharpDiagnosticAsync(source: test, reference: WellKnownMetadataReferences.Logger);
     }
 }
