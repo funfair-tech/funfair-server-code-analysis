@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -41,21 +41,12 @@ internal static class TestDetection
 
     private static bool IsTestBase(INamedTypeSymbol symbol)
     {
-        return StringComparer.Ordinal.Equals(
-            symbol.ToFullyQualifiedName(),
-            y: "FunFair.Test.Common.TestBase"
-        );
+        return StringComparer.Ordinal.Equals(symbol.ToFullyQualifiedName(), y: "FunFair.Test.Common.TestBase");
     }
 
     private static bool IsTestMethodAttribute(string attributeType)
     {
-        return StringComparer.InvariantCultureIgnoreCase.Equals(
-                x: attributeType,
-                y: "Xunit.FactAttribute"
-            )
-            || StringComparer.InvariantCultureIgnoreCase.Equals(
-                x: attributeType,
-                y: "Xunit.TheoryAttribute"
-            );
+        return StringComparer.InvariantCultureIgnoreCase.Equals(x: attributeType, y: "Xunit.FactAttribute")
+            || StringComparer.InvariantCultureIgnoreCase.Equals(x: attributeType, y: "Xunit.TheoryAttribute");
     }
 }
