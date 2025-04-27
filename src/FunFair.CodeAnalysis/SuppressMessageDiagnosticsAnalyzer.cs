@@ -21,30 +21,26 @@ public sealed class SuppressMessageDiagnosticsAnalyzer : DiagnosticAnalyzer
         message: "SuppressMessage must specify a Justification"
     );
 
-    private static readonly DiagnosticDescriptor RuleMustNotHaveTodoJustification =
-        RuleHelpers.CreateRule(
-            code: Rules.RuleSuppressMessageMustNotHaveTodoJustification,
-            category: Categories.SuppressedErrors,
-            title: "SuppressMessage must not have a TODO Justification",
-            message: "SuppressMessage must not have a TODO Justification"
-        );
+    private static readonly DiagnosticDescriptor RuleMustNotHaveTodoJustification = RuleHelpers.CreateRule(
+        code: Rules.RuleSuppressMessageMustNotHaveTodoJustification,
+        category: Categories.SuppressedErrors,
+        title: "SuppressMessage must not have a TODO Justification",
+        message: "SuppressMessage must not have a TODO Justification"
+    );
 
     [SuppressMessage(
         category: "Nullable.Extended.Analyzer",
         checkId: "NX0001: Suppression of NullForgiving operator is not required",
         Justification = "Required here"
     )]
-    private static readonly string SuppressMessageFullName =
-        typeof(SuppressMessageAttribute).FullName!;
+    private static readonly string SuppressMessageFullName = typeof(SuppressMessageAttribute).FullName!;
 
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
         SupportedDiagnosisList.Build(RuleMustHaveJustification, RuleMustNotHaveTodoJustification);
 
     public override void Initialize(AnalysisContext context)
     {
-        context.ConfigureGeneratedCodeAnalysis(
-            GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.None
-        );
+        context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.None);
         context.EnableConcurrentExecution();
 
         Checker checker = new();
@@ -79,9 +75,7 @@ public sealed class SuppressMessageDiagnosticsAnalyzer : DiagnosticAnalyzer
 
         private INamedTypeSymbol? GetSuppressMessageAttributeType(Compilation compilation)
         {
-            return this._suppressMessage ??= compilation.GetTypeByMetadataName(
-                SuppressMessageFullName
-            );
+            return this._suppressMessage ??= compilation.GetTypeByMetadataName(SuppressMessageFullName);
         }
 
         private static void MustDeriveFromTestBase(
@@ -99,19 +93,12 @@ public sealed class SuppressMessageDiagnosticsAnalyzer : DiagnosticAnalyzer
                 cancellationToken: syntaxNodeAnalysisContext.CancellationToken
             );
 
-            if (
-                !StringComparer.Ordinal.Equals(
-                    x: ti.Type?.MetadataName,
-                    y: sourceClassType.MetadataName
-                )
-            )
+            if (!StringComparer.Ordinal.Equals(x: ti.Type?.MetadataName, y: sourceClassType.MetadataName))
             {
                 return;
             }
 
-            SeparatedSyntaxList<AttributeArgumentSyntax>? args = methodDeclarationSyntax
-                .ArgumentList
-                ?.Arguments;
+            SeparatedSyntaxList<AttributeArgumentSyntax>? args = methodDeclarationSyntax.ArgumentList?.Arguments;
 
             AttributeArgumentSyntax? justification = args?.FirstOrDefault(IsJustificationAttribute);
 
@@ -132,19 +119,12 @@ public sealed class SuppressMessageDiagnosticsAnalyzer : DiagnosticAnalyzer
 
             string text = l.Token.ValueText;
 
-            CheckJustification(
-                syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
-                text: text,
-                l: l
-            );
+            CheckJustification(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, text: text, l: l);
         }
 
         private static bool IsJustificationAttribute(AttributeArgumentSyntax k)
         {
-            return StringComparer.Ordinal.Equals(
-                x: k.NameEquals?.Name.Identifier.Text,
-                y: "Justification"
-            );
+            return StringComparer.Ordinal.Equals(x: k.NameEquals?.Name.Identifier.Text, y: "Justification");
         }
 
         private static void CheckJustification(
