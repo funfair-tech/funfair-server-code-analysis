@@ -37,10 +37,8 @@ internal static class MethodSymbolHelper
         MemberAccessExpressionSyntax memberAccessExpressionSyntax
     )
     {
-        return GetSymbol(
-                syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
-                expression: memberAccessExpressionSyntax
-            ) as IMethodSymbol;
+        return GetSymbol(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, expression: memberAccessExpressionSyntax)
+            as IMethodSymbol;
     }
 
     private static IMethodSymbol? ResolveExtensionMethodUsedByConstructor(
@@ -139,10 +137,7 @@ internal static class MethodSymbolHelper
         );
     }
 
-    private static bool HasMatchingArguments(
-        InvocationExpressionSyntax invocation,
-        IMethodSymbol arguments
-    )
+    private static bool HasMatchingArguments(InvocationExpressionSyntax invocation, IMethodSymbol arguments)
     {
         // Ideally: Match on something more than just the count of methods - i.e. match on types and argument names?
         // It is hard to make any match because we don't know for sure to which parameter argument is related.
@@ -161,10 +156,7 @@ internal static class MethodSymbolHelper
         }
     }
 
-    private static ISymbol? GetSymbol(
-        in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext,
-        SyntaxNode expression
-    )
+    private static ISymbol? GetSymbol(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, SyntaxNode expression)
     {
         return syntaxNodeAnalysisContext
             .SemanticModel.GetSymbolInfo(
@@ -181,10 +173,7 @@ internal static class MethodSymbolHelper
     )
     {
         ISymbol? symbol = semanticModel
-            .GetSymbolInfo(
-                expression: memberAccessExpressionSyntax.Expression,
-                cancellationToken: cancellationToken
-            )
+            .GetSymbolInfo(expression: memberAccessExpressionSyntax.Expression, cancellationToken: cancellationToken)
             .Symbol;
 
         return symbol switch
