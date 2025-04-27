@@ -5,12 +5,7 @@ namespace FunFair.CodeAnalysis.Helpers;
 
 internal static class RuleHelpers
 {
-    public static DiagnosticDescriptor CreateRule(
-        string code,
-        string category,
-        string title,
-        string message
-    )
+    public static DiagnosticDescriptor CreateRule(string code, string category, string title, string message)
     {
         LiteralString translatableTitle = new(title);
         LiteralString translatableMessage = UseTitleForMessage(
@@ -30,14 +25,8 @@ internal static class RuleHelpers
         );
     }
 
-    private static LiteralString UseTitleForMessage(
-        string title,
-        string message,
-        LiteralString translatableTitle
-    )
+    private static LiteralString UseTitleForMessage(string title, string message, LiteralString translatableTitle)
     {
-        return StringComparer.Ordinal.Equals(x: message, y: title)
-            ? translatableTitle
-            : new(message);
+        return StringComparer.Ordinal.Equals(x: message, y: title) ? translatableTitle : new(message);
     }
 }
