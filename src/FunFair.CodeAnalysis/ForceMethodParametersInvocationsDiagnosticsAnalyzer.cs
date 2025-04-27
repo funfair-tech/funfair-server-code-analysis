@@ -64,9 +64,7 @@ public sealed class ForceMethodParametersInvocationsDiagnosticsAnalyzer : Diagno
 
     public override void Initialize(AnalysisContext context)
     {
-        context.ConfigureGeneratedCodeAnalysis(
-            GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.None
-        );
+        context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.None);
         context.EnableConcurrentExecution();
 
         context.RegisterCompilationStartAction(PerformCheck);
@@ -74,10 +72,7 @@ public sealed class ForceMethodParametersInvocationsDiagnosticsAnalyzer : Diagno
 
     private static void PerformCheck(CompilationStartAnalysisContext compilationStartContext)
     {
-        compilationStartContext.RegisterSyntaxNodeAction(
-            action: LookForForcedMethods,
-            SyntaxKind.InvocationExpression
-        );
+        compilationStartContext.RegisterSyntaxNodeAction(action: LookForForcedMethods, SyntaxKind.InvocationExpression);
     }
 
     private static void LookForForcedMethods(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
@@ -189,7 +184,6 @@ public sealed class ForceMethodParametersInvocationsDiagnosticsAnalyzer : Diagno
 
         public DiagnosticDescriptor Rule { get; }
 
-        public string QualifiedName =>
-            string.Concat(str0: this.SourceClass, str1: ".", str2: this.ForcedMethod);
+        public string QualifiedName => string.Concat(str0: this.SourceClass, str1: ".", str2: this.ForcedMethod);
     }
 }
