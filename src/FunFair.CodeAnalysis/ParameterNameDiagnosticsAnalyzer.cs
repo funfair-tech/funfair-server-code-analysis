@@ -40,9 +40,7 @@ public sealed class ParameterNameDiagnosticsAnalyzer : DiagnosticAnalyzer
 
     public override void Initialize(AnalysisContext context)
     {
-        context.ConfigureGeneratedCodeAnalysis(
-            GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.None
-        );
+        context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.None);
         context.EnableConcurrentExecution();
 
         context.RegisterCompilationStartAction(PerformCheck);
@@ -50,10 +48,7 @@ public sealed class ParameterNameDiagnosticsAnalyzer : DiagnosticAnalyzer
 
     private static void PerformCheck(CompilationStartAnalysisContext compilationStartContext)
     {
-        compilationStartContext.RegisterSyntaxNodeAction(
-            action: MustHaveASaneName,
-            SyntaxKind.Parameter
-        );
+        compilationStartContext.RegisterSyntaxNodeAction(action: MustHaveASaneName, SyntaxKind.Parameter);
     }
 
     private static void MustHaveASaneName(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
@@ -121,11 +116,7 @@ public sealed class ParameterNameDiagnosticsAnalyzer : DiagnosticAnalyzer
         }
     }
 
-    [SuppressMessage(
-        category: "SonarAnalyzer.CSharp",
-        checkId: "S3267: Use Linq",
-        Justification = "Not here"
-    )]
+    [SuppressMessage(category: "SonarAnalyzer.CSharp", checkId: "S3267: Use Linq", Justification = "Not here")]
     private static NameSanitationSpec? FindSpec(string fullTypeName)
     {
         foreach (NameSanitationSpec ns in NameSpecifications)
@@ -166,13 +157,8 @@ public sealed class ParameterNameDiagnosticsAnalyzer : DiagnosticAnalyzer
             string sourceClass,
             string whitelistedParameterName
         )
-            : this(
-                ruleId: ruleId,
-                title: title,
-                message: message,
-                sourceClass: sourceClass,
-                [whitelistedParameterName]
-            ) { }
+            : this(ruleId: ruleId, title: title, message: message, sourceClass: sourceClass, [whitelistedParameterName])
+        { }
 
         public NameSanitationSpec(
             string ruleId,
