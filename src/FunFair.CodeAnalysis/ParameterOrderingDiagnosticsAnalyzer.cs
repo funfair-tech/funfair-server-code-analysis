@@ -30,14 +30,11 @@ public sealed class ParameterOrderingDiagnosticsAnalyzer : DiagnosticAnalyzer
         message: "Parameter '{0}' must be parameter {1}"
     );
 
-    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
-        SupportedDiagnosisList.Build(Rule);
+    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => SupportedDiagnosisList.Build(Rule);
 
     public override void Initialize(AnalysisContext context)
     {
-        context.ConfigureGeneratedCodeAnalysis(
-            GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.None
-        );
+        context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.None);
         context.EnableConcurrentExecution();
 
         context.RegisterCompilationStartAction(PerformCheck);
@@ -45,10 +42,7 @@ public sealed class ParameterOrderingDiagnosticsAnalyzer : DiagnosticAnalyzer
 
     private static void PerformCheck(CompilationStartAnalysisContext compilationStartContext)
     {
-        compilationStartContext.RegisterSyntaxNodeAction(
-            action: MustBeInASaneOrder,
-            SyntaxKind.ParameterList
-        );
+        compilationStartContext.RegisterSyntaxNodeAction(action: MustBeInASaneOrder, SyntaxKind.ParameterList);
     }
 
     private static void MustBeInASaneOrder(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
@@ -67,10 +61,7 @@ public sealed class ParameterOrderingDiagnosticsAnalyzer : DiagnosticAnalyzer
 
         foreach (string parameterType in PreferredEndingOrdering.Reverse())
         {
-            ParameterItem? match = FindParameter(
-                parameters: parameters,
-                parameterType: parameterType
-            );
+            ParameterItem? match = FindParameter(parameters: parameters, parameterType: parameterType);
 
             if (match is null)
             {
@@ -129,15 +120,8 @@ public sealed class ParameterOrderingDiagnosticsAnalyzer : DiagnosticAnalyzer
         ];
     }
 
-    [SuppressMessage(
-        category: "SonarAnalyzer.CSharp",
-        checkId: "S3267: Use Linq",
-        Justification = "Not here"
-    )]
-    private static ParameterItem? FindParameter(
-        IReadOnlyList<ParameterItem> parameters,
-        string parameterType
-    )
+    [SuppressMessage(category: "SonarAnalyzer.CSharp", checkId: "S3267: Use Linq", Justification = "Not here")]
+    private static ParameterItem? FindParameter(IReadOnlyList<ParameterItem> parameters, string parameterType)
     {
         foreach (ParameterItem parameter in parameters)
         {
