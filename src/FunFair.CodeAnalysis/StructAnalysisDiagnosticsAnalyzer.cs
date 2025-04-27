@@ -18,14 +18,11 @@ public sealed class StructAnalysisDiagnosticsAnalyzer : DiagnosticAnalyzer
         message: "Structs should be read-only"
     );
 
-    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
-        SupportedDiagnosisList.Build(Rule);
+    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => SupportedDiagnosisList.Build(Rule);
 
     public override void Initialize(AnalysisContext context)
     {
-        context.ConfigureGeneratedCodeAnalysis(
-            GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.None
-        );
+        context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.None);
         context.EnableConcurrentExecution();
 
         context.RegisterCompilationStartAction(PerformCheck);
@@ -33,10 +30,7 @@ public sealed class StructAnalysisDiagnosticsAnalyzer : DiagnosticAnalyzer
 
     private static void PerformCheck(CompilationStartAnalysisContext compilationStartContext)
     {
-        compilationStartContext.RegisterSyntaxNodeAction(
-            action: MustBeReadOnly,
-            SyntaxKind.StructDeclaration
-        );
+        compilationStartContext.RegisterSyntaxNodeAction(action: MustBeReadOnly, SyntaxKind.StructDeclaration);
     }
 
     private static void MustBeReadOnly(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
@@ -48,10 +42,7 @@ public sealed class StructAnalysisDiagnosticsAnalyzer : DiagnosticAnalyzer
 
         if (!structDeclarationSyntax.Modifiers.Any(IsReadOnlyKeyword))
         {
-            structDeclarationSyntax.ReportDiagnostics(
-                syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
-                rule: Rule
-            );
+            structDeclarationSyntax.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: Rule);
         }
     }
 
