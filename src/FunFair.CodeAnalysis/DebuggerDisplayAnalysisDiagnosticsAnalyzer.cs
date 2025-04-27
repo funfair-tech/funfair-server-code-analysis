@@ -20,14 +20,11 @@ public sealed class DebuggerDisplayAnalysisDiagnosticsAnalyzer : DiagnosticAnaly
         message: "Should have DebuggerDisplay attribute"
     );
 
-    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
-        SupportedDiagnosisList.Build(Rule);
+    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => SupportedDiagnosisList.Build(Rule);
 
     public override void Initialize(AnalysisContext context)
     {
-        context.ConfigureGeneratedCodeAnalysis(
-            GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.None
-        );
+        context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.None);
         context.EnableConcurrentExecution();
 
         context.RegisterCompilationStartAction(PerformCheck);
@@ -42,9 +39,7 @@ public sealed class DebuggerDisplayAnalysisDiagnosticsAnalyzer : DiagnosticAnaly
         );
     }
 
-    private static void RecordMustHaveDebuggerDisplayAttribute(
-        SyntaxNodeAnalysisContext syntaxNodeAnalysisContext
-    )
+    private static void RecordMustHaveDebuggerDisplayAttribute(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
     {
         switch (syntaxNodeAnalysisContext.Node)
         {
@@ -85,10 +80,7 @@ public sealed class DebuggerDisplayAnalysisDiagnosticsAnalyzer : DiagnosticAnaly
             )
         )
         {
-            structDeclarationSyntax.ReportDiagnostics(
-                syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
-                rule: Rule
-            );
+            structDeclarationSyntax.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: Rule);
         }
     }
 
@@ -104,10 +96,7 @@ public sealed class DebuggerDisplayAnalysisDiagnosticsAnalyzer : DiagnosticAnaly
             )
         )
         {
-            recordDeclarationSyntax.ReportDiagnostics(
-                syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
-                rule: Rule
-            );
+            recordDeclarationSyntax.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: Rule);
         }
     }
 
@@ -153,9 +142,6 @@ public sealed class DebuggerDisplayAnalysisDiagnosticsAnalyzer : DiagnosticAnaly
 
     private static bool IsDebuggerDisplayAttribute(string fullName)
     {
-        return StringComparer.Ordinal.Equals(
-            x: fullName,
-            y: "System.Diagnostics.DebuggerDisplayAttribute"
-        );
+        return StringComparer.Ordinal.Equals(x: fullName, y: "System.Diagnostics.DebuggerDisplayAttribute");
     }
 }
