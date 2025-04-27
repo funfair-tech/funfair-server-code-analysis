@@ -26,10 +26,7 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzerTests
          }
      }";
 
-        return this.VerifyCSharpDiagnosticAsync(
-            source: test,
-            reference: WellKnownMetadataReferences.Assert
-        );
+        return this.VerifyCSharpDiagnosticAsync(source: test, reference: WellKnownMetadataReferences.Assert);
     }
 
     [Fact]
@@ -80,10 +77,7 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzerTests
         }
     }";
 
-        return this.VerifyCSharpDiagnosticAsync(
-            source: test,
-            reference: WellKnownMetadataReferences.Assert
-        );
+        return this.VerifyCSharpDiagnosticAsync(source: test, reference: WellKnownMetadataReferences.Assert);
     }
 
     [Fact]
@@ -110,11 +104,7 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzerTests
             column: 18
         );
 
-        return this.VerifyCSharpDiagnosticAsync(
-            source: test,
-            [WellKnownMetadataReferences.Assert],
-            expected: expected
-        );
+        return this.VerifyCSharpDiagnosticAsync(source: test, [WellKnownMetadataReferences.Assert], expected: expected);
     }
 
     [Fact]
