@@ -41,10 +41,7 @@ public abstract partial class DiagnosticVerifier : TestBase
 
     #region Formatting Diagnostics
 
-    private static string FormatDiagnostics(
-        DiagnosticAnalyzer analyzer,
-        params Diagnostic[] diagnostics
-    )
+    private static string FormatDiagnostics(DiagnosticAnalyzer analyzer, params Diagnostic[] diagnostics)
     {
         StringBuilder builder = new();
 
@@ -106,10 +103,7 @@ public abstract partial class DiagnosticVerifier : TestBase
             diagnostic.Location.SourceTree
             ?? throw new InvalidOperationException(message: "Diagnostic has no source location");
 
-        return sourceTree.FilePath.EndsWith(
-            value: ".cs",
-            comparisonType: StringComparison.OrdinalIgnoreCase
-        )
+        return sourceTree.FilePath.EndsWith(value: ".cs", comparisonType: StringComparison.OrdinalIgnoreCase)
             ? "GetCSharpResultAt"
             : "GetBasicResultAt";
     }
@@ -118,11 +112,7 @@ public abstract partial class DiagnosticVerifier : TestBase
 
     #region Verifier wrappers
 
-    protected Task VerifyCSharpDiagnosticAsync(
-        string source,
-        MetadataReference reference,
-        in DiagnosticResult expected
-    )
+    protected Task VerifyCSharpDiagnosticAsync(string source, MetadataReference reference, in DiagnosticResult expected)
     {
         return this.VerifyCSharpDiagnosticAsync(source: source, [reference], [expected]);
     }
@@ -142,18 +132,12 @@ public abstract partial class DiagnosticVerifier : TestBase
         return this.VerifyCSharpDiagnosticAsync(source: source, [], [expected]);
     }
 
-    protected Task VerifyCSharpDiagnosticAsync(
-        string source,
-        IReadOnlyList<DiagnosticResult> expected
-    )
+    protected Task VerifyCSharpDiagnosticAsync(string source, IReadOnlyList<DiagnosticResult> expected)
     {
         return this.VerifyCSharpDiagnosticAsync(source: source, [], expected: expected);
     }
 
-    protected Task VerifyCSharpDiagnosticAsync(
-        string source,
-        IReadOnlyList<MetadataReference> references
-    )
+    protected Task VerifyCSharpDiagnosticAsync(string source, IReadOnlyList<MetadataReference> references)
     {
         return this.VerifyCSharpDiagnosticAsync(source: source, references: references, []);
     }
@@ -166,11 +150,7 @@ public abstract partial class DiagnosticVerifier : TestBase
     {
         IReadOnlyList<MetadataReference> refs = [references];
 
-        return this.VerifyCSharpDiagnosticAsync(
-            source: source,
-            references: refs,
-            expected: expected
-        );
+        return this.VerifyCSharpDiagnosticAsync(source: source, references: refs, expected: expected);
     }
 
     protected Task VerifyCSharpDiagnosticAsync(
@@ -181,11 +161,7 @@ public abstract partial class DiagnosticVerifier : TestBase
     {
         IReadOnlyList<DiagnosticResult> exp = [expected];
 
-        return this.VerifyCSharpDiagnosticAsync(
-            source: source,
-            references: references,
-            expected: exp
-        );
+        return this.VerifyCSharpDiagnosticAsync(source: source, references: references, expected: exp);
     }
 
     protected Task VerifyCSharpDiagnosticAsync(
@@ -224,11 +200,7 @@ public abstract partial class DiagnosticVerifier : TestBase
             cancellationToken: cancellationToken
         );
 
-        VerifyDiagnosticResults(
-            actualResults: diagnostics,
-            analyzer: analyzer,
-            expectedResults: expected
-        );
+        VerifyDiagnosticResults(actualResults: diagnostics, analyzer: analyzer, expectedResults: expected);
     }
 
     #endregion
@@ -247,9 +219,7 @@ public abstract partial class DiagnosticVerifier : TestBase
         if (expectedCount != actualCount)
         {
             string diagnosticsOutput =
-                actualResults.Count != 0
-                    ? FormatDiagnostics(analyzer: analyzer, [.. actualResults])
-                    : "    NONE.";
+                actualResults.Count != 0 ? FormatDiagnostics(analyzer: analyzer, [.. actualResults]) : "    NONE.";
 
             Assert.Fail(
                 $"Mismatch between number of diagnostics returned, expected \"{expectedCount}\" actual \"{actualCount}\"\r\n\r\nDiagnostics:\r\n{diagnosticsOutput}\r\n"
@@ -262,11 +232,7 @@ public abstract partial class DiagnosticVerifier : TestBase
         }
     }
 
-    private static void VerifyOneResult(
-        DiagnosticAnalyzer analyzer,
-        in DiagnosticResult expected,
-        Diagnostic actual
-    )
+    private static void VerifyOneResult(DiagnosticAnalyzer analyzer, in DiagnosticResult expected, Diagnostic actual)
     {
         if (IsInvalidLocation(expected))
         {
@@ -283,11 +249,7 @@ public abstract partial class DiagnosticVerifier : TestBase
                 actual: actual.Location,
                 expected.Locations[0]
             );
-            VerifyAdditionalDiagnosticLocations(
-                analyzer: analyzer,
-                actual: actual,
-                expected: expected
-            );
+            VerifyAdditionalDiagnosticLocations(analyzer: analyzer, actual: actual, expected: expected);
         }
 
         Assert.True(
@@ -348,14 +310,8 @@ public abstract partial class DiagnosticVerifier : TestBase
 
         Assert.True(
             StringComparer.Ordinal.Equals(x: actualSpan.Path, y: expected.Path)
-                || actualSpan.Path.Contains(
-                    value: "Test0.",
-                    comparisonType: StringComparison.Ordinal
-                )
-                    && expected.Path.Contains(
-                        value: "Test.",
-                        comparisonType: StringComparison.Ordinal
-                    ),
+                || actualSpan.Path.Contains(value: "Test0.", comparisonType: StringComparison.Ordinal)
+                    && expected.Path.Contains(value: "Test.", comparisonType: StringComparison.Ordinal),
             $"Expected diagnostic to be in file \"{expected.Path}\" was actually in file \"{actualSpan.Path}\"\r\n\r\nDiagnostic:\r\n    {FormatDiagnostics(analyzer: analyzer, diagnostic)}\r\n"
         );
 
