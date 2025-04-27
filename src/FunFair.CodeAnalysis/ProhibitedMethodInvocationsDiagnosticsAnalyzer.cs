@@ -75,9 +75,7 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzer : DiagnosticA
 
     public override void Initialize(AnalysisContext context)
     {
-        context.ConfigureGeneratedCodeAnalysis(
-            GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.None
-        );
+        context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.None);
         context.EnableConcurrentExecution();
 
         Checker checker = new();
@@ -106,10 +104,7 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzer : DiagnosticA
 
     private sealed class Checker
     {
-        private IReadOnlyDictionary<
-            ProhibitedMethodsSpec,
-            IReadOnlyList<IMethodSymbol>
-        >? _cachedSymbols;
+        private IReadOnlyDictionary<ProhibitedMethodsSpec, IReadOnlyList<IMethodSymbol>>? _cachedSymbols;
 
         public void PerformCheck(CompilationStartAnalysisContext compilationStartContext)
         {
@@ -123,10 +118,9 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzer : DiagnosticA
             );
         }
 
-        private IReadOnlyDictionary<
-            ProhibitedMethodsSpec,
-            IReadOnlyList<IMethodSymbol>
-        > LoadCachedSymbols(Compilation compilation)
+        private IReadOnlyDictionary<ProhibitedMethodsSpec, IReadOnlyList<IMethodSymbol>> LoadCachedSymbols(
+            Compilation compilation
+        )
         {
             return this._cachedSymbols ??= BuildCachedSymbols(compilation);
         }
@@ -206,10 +200,9 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzer : DiagnosticA
             }
         }
 
-        private static IReadOnlyDictionary<
-            ProhibitedMethodsSpec,
-            IReadOnlyList<IMethodSymbol>
-        > BuildCachedSymbols(Compilation compilation)
+        private static IReadOnlyDictionary<ProhibitedMethodsSpec, IReadOnlyList<IMethodSymbol>> BuildCachedSymbols(
+            Compilation compilation
+        )
         {
             Dictionary<ProhibitedMethodsSpec, IReadOnlyList<IMethodSymbol>> cachedSymbols = [];
 
@@ -220,9 +213,7 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzer : DiagnosticA
                     continue;
                 }
 
-                INamedTypeSymbol? sourceClassType = compilation.GetTypeByMetadataName(
-                    rule.SourceClass
-                );
+                INamedTypeSymbol? sourceClassType = compilation.GetTypeByMetadataName(rule.SourceClass);
 
                 if (sourceClassType?.GetMembers().IsEmpty != false)
                 {
@@ -259,9 +250,7 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzer : DiagnosticA
             [
                 .. sourceClassType
                     .GetMembers()
-                    .Where(predicate: x =>
-                        StringComparer.Ordinal.Equals(x: x.Name, y: rule.BannedMethod)
-                    )
+                    .Where(predicate: x => StringComparer.Ordinal.Equals(x: x.Name, y: rule.BannedMethod))
                     .OfType<IMethodSymbol>(),
             ];
         }
@@ -281,10 +270,7 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzer : DiagnosticA
                 return ThrowUnknownRuleSignature(ruleSignatures);
             }
 
-            return BuildMethodSignatureList(
-                ruleSignatures: ruleSignatures,
-                methodSymbols: methodSignatures
-            );
+            return BuildMethodSignatureList(ruleSignatures: ruleSignatures, methodSymbols: methodSignatures);
         }
 
         private static IReadOnlyList<IMethodSymbol> BuildMethodSignatureList(
@@ -311,11 +297,7 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzer : DiagnosticA
             checkId: "S1172: Parameter only used for name",
             Justification = "By Design"
         )]
-        [SuppressMessage(
-            category: "ReSharper",
-            checkId: "EntityNameCapturedOnly.Local",
-            Justification = "By Design"
-        )]
+        [SuppressMessage(category: "ReSharper", checkId: "EntityNameCapturedOnly.Local", Justification = "By Design")]
         private static IReadOnlyList<IMethodSymbol> ThrowUnknownRuleSignature(
             IEnumerable<IEnumerable<string>>? ruleSignatures
         )
@@ -328,19 +310,12 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzer : DiagnosticA
             checkId: "S1172: Parameter only used for name",
             Justification = "By Design"
         )]
-        [SuppressMessage(
-            category: "ReSharper",
-            checkId: "EntityNameCapturedOnly.Local",
-            Justification = "By Design"
-        )]
+        [SuppressMessage(category: "ReSharper", checkId: "EntityNameCapturedOnly.Local", Justification = "By Design")]
         private static IReadOnlyList<IMethodSymbol> ThrowUnknownMethodSignatureException(
             IEnumerable<IMethodSymbol>? methodSignatures
         )
         {
-            throw new ArgumentException(
-                message: "Unknown method signature",
-                nameof(methodSignatures)
-            );
+            throw new ArgumentException(message: "Unknown method signature", nameof(methodSignatures));
         }
 
         private static bool IsBannedMethodSignature(
@@ -348,9 +323,7 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzer : DiagnosticA
             IEnumerable<IMethodSymbol> methodSignatures
         )
         {
-            IReadOnlyList<string> invocationParameters = GetInvocationParameters(
-                invocationArguments
-            );
+            IReadOnlyList<string> invocationParameters = GetInvocationParameters(invocationArguments);
 
             return methodSignatures.Any(predicate: methodSignature =>
                 methodSignature
@@ -359,9 +332,7 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzer : DiagnosticA
             );
         }
 
-        private static IReadOnlyList<string> GetInvocationParameters(
-            IMethodSymbol invocationArguments
-        )
+        private static IReadOnlyList<string> GetInvocationParameters(IMethodSymbol invocationArguments)
         {
             return
             [
@@ -403,7 +374,6 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzer : DiagnosticA
 
         public DiagnosticDescriptor Rule { get; }
 
-        public string QualifiedName =>
-            string.Concat(str0: this.SourceClass, str1: ".", str2: this.BannedMethod);
+        public string QualifiedName => string.Concat(str0: this.SourceClass, str1: ".", str2: this.BannedMethod);
     }
 }
