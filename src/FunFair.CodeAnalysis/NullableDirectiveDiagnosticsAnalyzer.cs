@@ -18,14 +18,11 @@ public sealed class NullableDirectiveDiagnosticsAnalyzer : DiagnosticAnalyzer
         message: "Don't use #nulllable directive, make the change globally for the project"
     );
 
-    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
-        SupportedDiagnosisList.Build(Rule);
+    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => SupportedDiagnosisList.Build(Rule);
 
     public override void Initialize(AnalysisContext context)
     {
-        context.ConfigureGeneratedCodeAnalysis(
-            GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.None
-        );
+        context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.None);
         context.EnableConcurrentExecution();
 
         context.RegisterCompilationStartAction(PerformCheck);
@@ -41,17 +38,11 @@ public sealed class NullableDirectiveDiagnosticsAnalyzer : DiagnosticAnalyzer
 
     private static void LookForProhibition(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
     {
-        if (
-            syntaxNodeAnalysisContext.Node
-            is not NullableDirectiveTriviaSyntax pragmaWarningDirective
-        )
+        if (syntaxNodeAnalysisContext.Node is not NullableDirectiveTriviaSyntax pragmaWarningDirective)
         {
             return;
         }
 
-        pragmaWarningDirective.ReportDiagnostics(
-            syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
-            rule: Rule
-        );
+        pragmaWarningDirective.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: Rule);
     }
 }
