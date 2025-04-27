@@ -1,4 +1,4 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using FunFair.CodeAnalysis.Tests.Helpers;
 using FunFair.CodeAnalysis.Tests.Verifiers;
 using Microsoft.CodeAnalysis;
@@ -36,11 +36,7 @@ public sealed class ProhibitedClassesInTestAssembliesDiagnosticsAnalyzerTests
             column: 18
         );
 
-        return this.VerifyCSharpDiagnosticAsync(
-            source: test,
-            [WellKnownMetadataReferences.Xunit],
-            expected: expected
-        );
+        return this.VerifyCSharpDiagnosticAsync(source: test, [WellKnownMetadataReferences.Xunit], expected: expected);
     }
 
     [Fact]
