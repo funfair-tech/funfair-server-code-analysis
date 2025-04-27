@@ -8,11 +8,7 @@ namespace FunFair.CodeAnalysis.Extensions;
 
 internal static class CompilationExtensions
 {
-    private static readonly IReadOnlyList<string> TestAssemblies =
-    [
-        "Microsoft.NET.Test.Sdk",
-        "xunit.v3",
-    ];
+    private static readonly IReadOnlyList<string> TestAssemblies = ["Microsoft.NET.Test.Sdk", "xunit.v3"];
 
     private static readonly IReadOnlyList<string> UnitTestAssemblies =
     [
@@ -25,10 +21,7 @@ internal static class CompilationExtensions
 
     private static bool Matches(IReadOnlyList<string> assemblyNames, AssemblyIdentity assembly)
     {
-        return assemblyNames.Contains(
-            value: assembly.Name,
-            comparer: StringComparer.OrdinalIgnoreCase
-        );
+        return assemblyNames.Contains(value: assembly.Name, comparer: StringComparer.OrdinalIgnoreCase);
     }
 
     public static bool IsTestAssembly(this Compilation compilation)
