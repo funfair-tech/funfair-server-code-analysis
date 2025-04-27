@@ -19,14 +19,11 @@ public sealed class TestClassPropertyAnalysisDiagnosticsAnalyzer : DiagnosticAna
         message: "Properties in test classes should be read-only or const"
     );
 
-    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
-        SupportedDiagnosisList.Build(Rule);
+    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => SupportedDiagnosisList.Build(Rule);
 
     public override void Initialize(AnalysisContext context)
     {
-        context.ConfigureGeneratedCodeAnalysis(
-            GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.None
-        );
+        context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.None);
         context.EnableConcurrentExecution();
 
         context.RegisterCompilationStartAction(PerformCheck);
@@ -47,10 +44,7 @@ public sealed class TestClassPropertyAnalysisDiagnosticsAnalyzer : DiagnosticAna
             return;
         }
 
-        if (
-            syntaxNodeAnalysisContext.Node
-            is not PropertyDeclarationSyntax propertyDeclarationSyntax
-        )
+        if (syntaxNodeAnalysisContext.Node is not PropertyDeclarationSyntax propertyDeclarationSyntax)
         {
             return;
         }
