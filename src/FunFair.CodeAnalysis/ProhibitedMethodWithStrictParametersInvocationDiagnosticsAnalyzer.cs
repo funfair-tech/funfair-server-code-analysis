@@ -13,8 +13,7 @@ using Microsoft.CodeAnalysis.Diagnostics;
 namespace FunFair.CodeAnalysis;
 
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
-public sealed class ProhibitedMethodWithStrictParametersInvocationDiagnosticsAnalyzer
-    : DiagnosticAnalyzer
+public sealed class ProhibitedMethodWithStrictParametersInvocationDiagnosticsAnalyzer : DiagnosticAnalyzer
 {
     private static readonly IReadOnlyList<ProhibitedMethodsSpec> ForcedMethods =
     [
@@ -25,13 +24,7 @@ public sealed class ProhibitedMethodWithStrictParametersInvocationDiagnosticsAna
             sourceClass: "NSubstitute.SubstituteExtensions",
             forcedMethod: "Received",
             [
-                [
-                    Build(
-                        name: "requiredNumberOfCalls",
-                        type: "NumericLiteralExpression",
-                        value: "0"
-                    ),
-                ],
+                [Build(name: "requiredNumberOfCalls", type: "NumericLiteralExpression", value: "0")],
             ]
         ),
         Build(
@@ -51,9 +44,7 @@ public sealed class ProhibitedMethodWithStrictParametersInvocationDiagnosticsAna
 
     public override void Initialize(AnalysisContext context)
     {
-        context.ConfigureGeneratedCodeAnalysis(
-            GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.None
-        );
+        context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.None);
         context.EnableConcurrentExecution();
 
         context.RegisterCompilationStartAction(PerformCheck);
@@ -61,10 +52,7 @@ public sealed class ProhibitedMethodWithStrictParametersInvocationDiagnosticsAna
 
     private static void PerformCheck(CompilationStartAnalysisContext compilationStartContext)
     {
-        compilationStartContext.RegisterSyntaxNodeAction(
-            action: LookForForcedMethods,
-            SyntaxKind.InvocationExpression
-        );
+        compilationStartContext.RegisterSyntaxNodeAction(action: LookForForcedMethods, SyntaxKind.InvocationExpression);
     }
 
     private static bool Wtf(
@@ -163,24 +151,15 @@ public sealed class ProhibitedMethodWithStrictParametersInvocationDiagnosticsAna
                 (
                     t,
                     parameter: parameters.FirstOrDefault(predicate: param =>
-                        StringComparer.Ordinal.Equals(
-                            x: param.MetadataName,
-                            y: t.parameterSpec.Name
-                        )
+                        StringComparer.Ordinal.Equals(x: param.MetadataName, y: t.parameterSpec.Name)
                     )
                 )
             )
             .Where(t => t.parameter is not null)
             .Select(t => (t, argument: arguments.Arguments[t.parameter!.Ordinal]))
             .Where(t =>
-                StringComparer.Ordinal.Equals(
-                    t.argument.Expression.ToFullString(),
-                    y: t.t.t.parameterSpec.Value
-                )
-                && StringComparer.Ordinal.Equals(
-                    t.argument.Expression.Kind().ToString(),
-                    y: t.t.t.parameterSpec.Type
-                )
+                StringComparer.Ordinal.Equals(t.argument.Expression.ToFullString(), y: t.t.t.parameterSpec.Value)
+                && StringComparer.Ordinal.Equals(t.argument.Expression.Kind().ToString(), y: t.t.t.parameterSpec.Type)
             )
             .Select(t => t.t.t.parameterSpec)
             .Any();
@@ -258,7 +237,6 @@ public sealed class ProhibitedMethodWithStrictParametersInvocationDiagnosticsAna
 
         public DiagnosticDescriptor Rule { get; }
 
-        public string QualifiedName =>
-            string.Concat(str0: this.SourceClass, str1: ".", str2: this.ForcedMethod);
+        public string QualifiedName => string.Concat(str0: this.SourceClass, str1: ".", str2: this.ForcedMethod);
     }
 }
