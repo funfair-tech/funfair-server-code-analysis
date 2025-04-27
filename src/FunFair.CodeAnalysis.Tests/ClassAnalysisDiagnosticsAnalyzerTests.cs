@@ -1,4 +1,4 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using FunFair.CodeAnalysis.Tests.Helpers;
 using FunFair.CodeAnalysis.Tests.Verifiers;
 using Microsoft.CodeAnalysis;
@@ -6,8 +6,7 @@ using Xunit;
 
 namespace FunFair.CodeAnalysis.Tests;
 
-public sealed class ClassAnalysisDiagnosticsAnalyzerTests
-    : DiagnosticAnalyzerVerifier<ClassAnalysisDiagnosticsAnalyzer>
+public sealed class ClassAnalysisDiagnosticsAnalyzerTests : DiagnosticAnalyzerVerifier<ClassAnalysisDiagnosticsAnalyzer>
 {
     [Fact]
     public Task AbstractClassNotAnErrorAsync()
