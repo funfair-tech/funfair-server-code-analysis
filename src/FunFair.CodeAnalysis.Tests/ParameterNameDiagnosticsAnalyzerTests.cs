@@ -1,4 +1,4 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using FunFair.CodeAnalysis.Tests.Helpers;
 using FunFair.CodeAnalysis.Tests.Verifiers;
 using Microsoft.CodeAnalysis;
@@ -6,8 +6,7 @@ using Xunit;
 
 namespace FunFair.CodeAnalysis.Tests;
 
-public sealed class ParameterNameDiagnosticsAnalyzerTests
-    : DiagnosticAnalyzerVerifier<ParameterNameDiagnosticsAnalyzer>
+public sealed class ParameterNameDiagnosticsAnalyzerTests : DiagnosticAnalyzerVerifier<ParameterNameDiagnosticsAnalyzer>
 {
     [Fact]
     public Task GenericLoggerParameterNameInvalidAsync()
@@ -52,10 +51,7 @@ public sealed class ParameterNameDiagnosticsAnalyzerTests
             }
 }";
 
-        return this.VerifyCSharpDiagnosticAsync(
-            source: test,
-            reference: WellKnownMetadataReferences.GenericLogger
-        );
+        return this.VerifyCSharpDiagnosticAsync(source: test, reference: WellKnownMetadataReferences.GenericLogger);
     }
 
     [Fact]
@@ -101,9 +97,6 @@ public sealed class ParameterNameDiagnosticsAnalyzerTests
             }
 }";
 
-        return this.VerifyCSharpDiagnosticAsync(
-            source: test,
-            reference: WellKnownMetadataReferences.Logger
-        );
+        return this.VerifyCSharpDiagnosticAsync(source: test, reference: WellKnownMetadataReferences.Logger);
     }
 }
