@@ -1,4 +1,4 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using FunFair.CodeAnalysis.Tests.Helpers;
 using FunFair.CodeAnalysis.Tests.Verifiers;
 using Microsoft.CodeAnalysis;
@@ -34,10 +34,7 @@ public sealed class ForcedMethodParametersInvocationsDiagnosticsAnalyzerTests
         }
     }";
 
-        return this.VerifyCSharpDiagnosticAsync(
-            source: test,
-            reference: WellKnownMetadataReferences.JsonSerializer
-        );
+        return this.VerifyCSharpDiagnosticAsync(source: test, reference: WellKnownMetadataReferences.JsonSerializer);
     }
 
     [Fact]
@@ -101,10 +98,7 @@ public sealed class ForcedMethodParametersInvocationsDiagnosticsAnalyzerTests
          }
      }";
 
-        return this.VerifyCSharpDiagnosticAsync(
-            source: test,
-            reference: WellKnownMetadataReferences.Substitute
-        );
+        return this.VerifyCSharpDiagnosticAsync(source: test, reference: WellKnownMetadataReferences.Substitute);
     }
 
     [Fact]
@@ -170,10 +164,7 @@ public sealed class ForcedMethodParametersInvocationsDiagnosticsAnalyzerTests
         }
     }";
 
-        return this.VerifyCSharpDiagnosticAsync(
-            source: test,
-            reference: WellKnownMetadataReferences.JsonSerializer
-        );
+        return this.VerifyCSharpDiagnosticAsync(source: test, reference: WellKnownMetadataReferences.JsonSerializer);
     }
 
     [Fact]
