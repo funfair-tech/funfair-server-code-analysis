@@ -50,9 +50,7 @@ public sealed class ConstructorGenericParameterTypeDiagnosticsAnalyser : Diagnos
 
     public override void Initialize(AnalysisContext context)
     {
-        context.ConfigureGeneratedCodeAnalysis(
-            GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.None
-        );
+        context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.None);
         context.EnableConcurrentExecution();
 
         context.RegisterCompilationStartAction(PerformCheck);
@@ -66,14 +64,9 @@ public sealed class ConstructorGenericParameterTypeDiagnosticsAnalyser : Diagnos
         );
     }
 
-    private static void MustHaveSaneGenericUsages(
-        SyntaxNodeAnalysisContext syntaxNodeAnalysisContext
-    )
+    private static void MustHaveSaneGenericUsages(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
     {
-        if (
-            syntaxNodeAnalysisContext.Node
-            is not ConstructorDeclarationSyntax constructorDeclarationSyntax
-        )
+        if (syntaxNodeAnalysisContext.Node is not ConstructorDeclarationSyntax constructorDeclarationSyntax)
         {
             return;
         }
@@ -89,10 +82,7 @@ public sealed class ConstructorGenericParameterTypeDiagnosticsAnalyser : Diagnos
         ConstructorDeclarationSyntax constructorDeclarationSyntax
     )
     {
-        if (
-            constructorDeclarationSyntax.Parent
-            is not ClassDeclarationSyntax parentSymbolForClassForConstructor
-        )
+        if (constructorDeclarationSyntax.Parent is not ClassDeclarationSyntax parentSymbolForClassForConstructor)
         {
             return;
         }
@@ -122,9 +112,7 @@ public sealed class ConstructorGenericParameterTypeDiagnosticsAnalyser : Diagnos
             constructorDeclarationSyntax: constructorDeclarationSyntax
         );
 
-        foreach (
-            ParameterSyntax parameterSyntax in constructorDeclarationSyntax.ParameterList.Parameters
-        )
+        foreach (ParameterSyntax parameterSyntax in constructorDeclarationSyntax.ParameterList.Parameters)
         {
             CheckParameter(
                 syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
@@ -158,9 +146,7 @@ public sealed class ConstructorGenericParameterTypeDiagnosticsAnalyser : Diagnos
         ConstructorDeclarationSyntax constructorDeclarationSyntax
     )
     {
-        bool isProtected = constructorDeclarationSyntax.Modifiers.Any(x =>
-            x.IsKind(SyntaxKind.ProtectedKeyword)
-        );
+        bool isProtected = constructorDeclarationSyntax.Modifiers.Any(x => x.IsKind(SyntaxKind.ProtectedKeyword));
 
         if (isProtected)
         {
@@ -174,9 +160,7 @@ public sealed class ConstructorGenericParameterTypeDiagnosticsAnalyser : Diagnos
             return true;
         }
 
-        bool classIsPublic = parentSymbolForClassForConstructor.Modifiers.Any(x =>
-            x.IsKind(SyntaxKind.PublicKeyword)
-        );
+        bool classIsPublic = parentSymbolForClassForConstructor.Modifiers.Any(x => x.IsKind(SyntaxKind.PublicKeyword));
 
         return !classIsPublic;
     }
@@ -199,10 +183,7 @@ public sealed class ConstructorGenericParameterTypeDiagnosticsAnalyser : Diagnos
             return;
         }
 
-        TypeCheckSpec? checkRule = GetTypeSpec(
-            isProtected: isProtected,
-            fullTypeName: fullTypeName
-        );
+        TypeCheckSpec? checkRule = GetTypeSpec(isProtected: isProtected, fullTypeName: fullTypeName);
 
         if (checkRule is null)
         {
