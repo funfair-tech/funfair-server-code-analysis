@@ -18,14 +18,11 @@ public sealed class TestClassFieldsAnalysisDiagnosticsAnalyzer : DiagnosticAnaly
         message: "Fields in test classes should be read-only or const"
     );
 
-    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
-        SupportedDiagnosisList.Build(Rule);
+    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => SupportedDiagnosisList.Build(Rule);
 
     public override void Initialize(AnalysisContext context)
     {
-        context.ConfigureGeneratedCodeAnalysis(
-            GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.None
-        );
+        context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.None);
         context.EnableConcurrentExecution();
 
         context.RegisterCompilationStartAction(PerformCheck);
@@ -33,10 +30,7 @@ public sealed class TestClassFieldsAnalysisDiagnosticsAnalyzer : DiagnosticAnaly
 
     private static void PerformCheck(CompilationStartAnalysisContext compilationStartContext)
     {
-        compilationStartContext.RegisterSyntaxNodeAction(
-            action: FieldMustBeReadOnly,
-            SyntaxKind.FieldDeclaration
-        );
+        compilationStartContext.RegisterSyntaxNodeAction(action: FieldMustBeReadOnly, SyntaxKind.FieldDeclaration);
     }
 
     private static void FieldMustBeReadOnly(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
@@ -60,9 +54,6 @@ public sealed class TestClassFieldsAnalysisDiagnosticsAnalyzer : DiagnosticAnaly
             return;
         }
 
-        fieldDeclarationSyntax.ReportDiagnostics(
-            syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
-            rule: Rule
-        );
+        fieldDeclarationSyntax.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: Rule);
     }
 }
