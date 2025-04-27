@@ -18,14 +18,11 @@ public sealed class RecordAnalysisDiagnosticsAnalyzer : DiagnosticAnalyzer
         message: "Records should be sealed"
     );
 
-    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
-        SupportedDiagnosisList.Build(Rule);
+    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => SupportedDiagnosisList.Build(Rule);
 
     public override void Initialize(AnalysisContext context)
     {
-        context.ConfigureGeneratedCodeAnalysis(
-            GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.None
-        );
+        context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.None);
         context.EnableConcurrentExecution();
 
         context.RegisterCompilationStartAction(PerformCheck);
@@ -33,10 +30,7 @@ public sealed class RecordAnalysisDiagnosticsAnalyzer : DiagnosticAnalyzer
 
     private static void PerformCheck(CompilationStartAnalysisContext compilationStartContext)
     {
-        compilationStartContext.RegisterSyntaxNodeAction(
-            action: MustBeReadOnly,
-            SyntaxKind.RecordDeclaration
-        );
+        compilationStartContext.RegisterSyntaxNodeAction(action: MustBeReadOnly, SyntaxKind.RecordDeclaration);
     }
 
     private static void MustBeReadOnly(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
@@ -48,10 +42,7 @@ public sealed class RecordAnalysisDiagnosticsAnalyzer : DiagnosticAnalyzer
 
         if (!recordDeclarationSyntax.Modifiers.Any(IsWhiteListedRecordModifier))
         {
-            recordDeclarationSyntax.ReportDiagnostics(
-                syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
-                rule: Rule
-            );
+            recordDeclarationSyntax.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: Rule);
         }
     }
 
