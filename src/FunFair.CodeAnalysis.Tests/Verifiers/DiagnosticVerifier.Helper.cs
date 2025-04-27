@@ -22,29 +22,30 @@ public abstract partial class DiagnosticVerifier
     private const string C_SHARP_DEFAULT_FILE_EXT = "cs";
     private const string VISUAL_BASIC_DEFAULT_EXT = "vb";
     private const string TEST_PROJECT_NAME = "TestProject";
-    private static readonly string? AssemblyPath = Path.GetDirectoryName(
-        typeof(object).Assembly.Location
-    );
+    private static readonly string? AssemblyPath = Path.GetDirectoryName(typeof(object).Assembly.Location);
     private static readonly MetadataReference CorlibReference = MetadataReference.CreateFromFile(
         typeof(object).Assembly.Location
     );
-    private static readonly MetadataReference SystemCoreReference =
-        MetadataReference.CreateFromFile(typeof(Enumerable).Assembly.Location);
-    private static readonly MetadataReference CSharpSymbolsReference =
-        MetadataReference.CreateFromFile(typeof(CSharpCompilation).Assembly.Location);
-    private static readonly MetadataReference CodeAnalysisReference =
-        MetadataReference.CreateFromFile(typeof(Compilation).Assembly.Location);
+    private static readonly MetadataReference SystemCoreReference = MetadataReference.CreateFromFile(
+        typeof(Enumerable).Assembly.Location
+    );
+    private static readonly MetadataReference CSharpSymbolsReference = MetadataReference.CreateFromFile(
+        typeof(CSharpCompilation).Assembly.Location
+    );
+    private static readonly MetadataReference CodeAnalysisReference = MetadataReference.CreateFromFile(
+        typeof(Compilation).Assembly.Location
+    );
 
-    private static readonly MetadataReference SystemRuntimeReference =
-        MetadataReference.CreateFromFile(
-            Path.Combine(AssemblyPath ?? string.Empty, path2: "System.Runtime.dll")
-        );
+    private static readonly MetadataReference SystemRuntimeReference = MetadataReference.CreateFromFile(
+        Path.Combine(AssemblyPath ?? string.Empty, path2: "System.Runtime.dll")
+    );
 
     private static readonly MetadataReference SystemReference = MetadataReference.CreateFromFile(
         Path.Combine(AssemblyPath ?? string.Empty, path2: "System.dll")
     );
-    private static readonly MetadataReference SystemConsoleReference =
-        MetadataReference.CreateFromFile(typeof(Console).Assembly.Location);
+    private static readonly MetadataReference SystemConsoleReference = MetadataReference.CreateFromFile(
+        typeof(Console).Assembly.Location
+    );
 
     #region Get Diagnostics
 
@@ -63,9 +64,7 @@ public abstract partial class DiagnosticVerifier
         );
     }
 
-    protected static async ValueTask<
-        IReadOnlyList<Diagnostic>
-    > GetSortedDiagnosticsFromDocumentsAsync(
+    protected static async ValueTask<IReadOnlyList<Diagnostic>> GetSortedDiagnosticsFromDocumentsAsync(
         DiagnosticAnalyzer analyzer,
         IReadOnlyList<Document> documents,
         CancellationToken cancellationToken
@@ -126,8 +125,9 @@ public abstract partial class DiagnosticVerifier
         CancellationToken cancellationToken
     )
     {
-        ImmutableArray<Diagnostic> diagnostics =
-            await compilationWithAnalyzers.GetAnalyzerDiagnosticsAsync(cancellationToken);
+        ImmutableArray<Diagnostic> diagnostics = await compilationWithAnalyzers.GetAnalyzerDiagnosticsAsync(
+            cancellationToken
+        );
 
         return await ExtractDiagnosticsAsync(
             documents: documents,
@@ -198,10 +198,7 @@ public abstract partial class DiagnosticVerifier
         return tree is not null && tree == diagnostic.Location.SourceTree;
     }
 
-    private static void EnsureNoCompilationErrors(
-        Compilation compilation,
-        in CancellationToken cancellationToken
-    )
+    private static void EnsureNoCompilationErrors(Compilation compilation, in CancellationToken cancellationToken)
     {
         ImmutableArray<Diagnostic> compilerErrors = compilation.GetDiagnostics(cancellationToken);
 
@@ -212,10 +209,7 @@ public abstract partial class DiagnosticVerifier
 
         StringBuilder errors = compilerErrors
             .Where(IsReportableCSharpError)
-            .Aggregate(
-                new StringBuilder(),
-                func: (current, compilerError) => current.Append(compilerError)
-            );
+            .Aggregate(new StringBuilder(), func: (current, compilerError) => current.Append(compilerError));
 
         if (errors.Length != 0)
         {
@@ -227,18 +221,12 @@ public abstract partial class DiagnosticVerifier
 
     private static bool IsReportableCSharpError(Diagnostic compilerError)
     {
-        return !compilerError
-                .ToString()
-                .Contains(value: "netstandard", comparisonType: StringComparison.Ordinal)
+        return !compilerError.ToString().Contains(value: "netstandard", comparisonType: StringComparison.Ordinal)
             && !compilerError
                 .ToString()
                 .Contains(value: "static 'Main' method", comparisonType: StringComparison.Ordinal)
-            && !compilerError
-                .ToString()
-                .Contains(value: "CS1002", comparisonType: StringComparison.Ordinal)
-            && !compilerError
-                .ToString()
-                .Contains(value: "CS1702", comparisonType: StringComparison.Ordinal);
+            && !compilerError.ToString().Contains(value: "CS1002", comparisonType: StringComparison.Ordinal)
+            && !compilerError.ToString().Contains(value: "CS1702", comparisonType: StringComparison.Ordinal);
     }
 
     private static IReadOnlyList<Diagnostic> SortDiagnostics(IEnumerable<Diagnostic> diagnostics)
@@ -261,18 +249,12 @@ public abstract partial class DiagnosticVerifier
             throw new ArgumentException(message: "Unsupported Language", nameof(language));
         }
 
-        Project project = CreateProject(
-            sources: sources,
-            references: references,
-            language: language
-        );
+        Project project = CreateProject(sources: sources, references: references, language: language);
         IReadOnlyList<Document> documents = [.. project.Documents];
 
         if (sources.Count != documents.Count)
         {
-            throw new InvalidOperationException(
-                message: "Amount of sources did not match amount of Documents created"
-            );
+            throw new InvalidOperationException(message: "Amount of sources did not match amount of Documents created");
         }
 
         return documents;
@@ -314,17 +296,9 @@ public abstract partial class DiagnosticVerifier
 
         foreach (string source in sources)
         {
-            string newFileName =
-                fileNamePrefix + count.ToString(CultureInfo.InvariantCulture) + "." + fileExt;
-            DocumentId documentId = DocumentId.CreateNewId(
-                projectId: projectId,
-                debugName: newFileName
-            );
-            solution = solution.AddDocument(
-                documentId: documentId,
-                name: newFileName,
-                SourceText.From(source)
-            );
+            string newFileName = fileNamePrefix + count.ToString(CultureInfo.InvariantCulture) + "." + fileExt;
+            DocumentId documentId = DocumentId.CreateNewId(projectId: projectId, debugName: newFileName);
+            solution = solution.AddDocument(documentId: documentId, name: newFileName, SourceText.From(source));
             count++;
         }
 
@@ -341,10 +315,7 @@ public abstract partial class DiagnosticVerifier
         checkId: "CA2000:DisposeObjectsBeforeLosingScope",
         Justification = "Test code"
     )]
-    private static Solution BuildSolutionWithStandardReferences(
-        string language,
-        ProjectId projectId
-    )
+    private static Solution BuildSolutionWithStandardReferences(string language, ProjectId projectId)
     {
         return new AdhocWorkspace()
             .CurrentSolution.AddProject(
