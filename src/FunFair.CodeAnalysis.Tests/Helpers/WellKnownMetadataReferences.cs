@@ -67,19 +67,21 @@ internal static class WellKnownMetadataReferences
         typeof(SuppressMessageAttribute).Assembly.Location
     );
 
-    public static readonly MetadataReference ConcurrentDictionary =
-        MetadataReference.CreateFromFile(typeof(ConcurrentDictionary<,>).Assembly.Location);
+    public static readonly MetadataReference ConcurrentDictionary = MetadataReference.CreateFromFile(
+        typeof(ConcurrentDictionary<,>).Assembly.Location
+    );
 
-    public static readonly MetadataReference NonBlockingConcurrentDictionary =
-        MetadataReference.CreateFromFile(
-            typeof(NonBlocking.ConcurrentDictionary<,>).Assembly.Location
-        );
+    public static readonly MetadataReference NonBlockingConcurrentDictionary = MetadataReference.CreateFromFile(
+        typeof(NonBlocking.ConcurrentDictionary<,>).Assembly.Location
+    );
 
-    public static readonly MetadataReference ConfigurationBuilder =
-        MetadataReference.CreateFromFile(typeof(ConfigurationBuilder).Assembly.Location);
+    public static readonly MetadataReference ConfigurationBuilder = MetadataReference.CreateFromFile(
+        typeof(ConfigurationBuilder).Assembly.Location
+    );
 
-    public static readonly MetadataReference JsonConfigurationExtensions =
-        MetadataReference.CreateFromFile(typeof(JsonConfigurationExtensions).Assembly.Location);
+    public static readonly MetadataReference JsonConfigurationExtensions = MetadataReference.CreateFromFile(
+        typeof(JsonConfigurationExtensions).Assembly.Location
+    );
 
     public static readonly MetadataReference MicrosoftExtensionsIConfigurationBuilder =
         MetadataReference.CreateFromFile(typeof(IConfigurationBuilder).Assembly.Location);
