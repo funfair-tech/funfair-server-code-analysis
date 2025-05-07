@@ -14,12 +14,10 @@ namespace FunFair.CodeAnalysis;
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public sealed class FileNameMustMatchTypeNameDiagnosticsAnalyzer : DiagnosticAnalyzer
 {
-    private static readonly DiagnosticDescriptor Rule = RuleHelpers.CreateRule(
-        code: Rules.RuleTypeShouldBeInAFileWithSameName,
-        category: Categories.Files,
-        title: "Should be in a file of the same name as the type",
-        message: "Should be in a file of the same name as the type"
-    );
+    private static readonly DiagnosticDescriptor Rule = RuleHelpers.CreateRule(code: Rules.RuleTypeShouldBeInAFileWithSameName,
+                                                                               category: Categories.Files,
+                                                                               title: "Should be in a file of the same name as the type",
+                                                                               message: "Should be in a file of the same name as the type");
 
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => SupportedDiagnosisList.Build(Rule);
 
@@ -56,7 +54,7 @@ public sealed class FileNameMustMatchTypeNameDiagnosticsAnalyzer : DiagnosticAna
                 continue;
             }
 
-            if (!StringComparer.InvariantCultureIgnoreCase.Equals(x: fileName, y: name))
+            if (!StringComparer.OrdinalIgnoreCase.Equals(x: fileName, y: name))
             {
                 member.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: Rule);
             }
@@ -85,7 +83,7 @@ public sealed class FileNameMustMatchTypeNameDiagnosticsAnalyzer : DiagnosticAna
             StructDeclarationSyntax structDeclarationSyntax => NormaliseRecord(structDeclarationSyntax),
             InterfaceDeclarationSyntax interfaceDeclarationSyntax => NormaliseInterface(interfaceDeclarationSyntax),
             EnumDeclarationSyntax enumDeclarationSyntax => NormaliseEnum(enumDeclarationSyntax),
-            _ => string.Empty,
+            _ => string.Empty
         };
     }
 
@@ -114,16 +112,12 @@ public sealed class FileNameMustMatchTypeNameDiagnosticsAnalyzer : DiagnosticAna
         return classDeclarationSyntax.Identifier.ToString();
     }
 
-    private static IReadOnlyList<MemberDeclarationSyntax> GetNonNestedTypeDeclarations(
-        CompilationUnitSyntax compilationUnit
-    )
+    private static IReadOnlyList<MemberDeclarationSyntax> GetNonNestedTypeDeclarations(CompilationUnitSyntax compilationUnit)
     {
         return [.. GetNonNestedTypeDeclarations(compilationUnit.Members)];
     }
 
-    private static IEnumerable<MemberDeclarationSyntax> GetNonNestedTypeDeclarations(
-        SyntaxList<MemberDeclarationSyntax> members
-    )
+    private static IEnumerable<MemberDeclarationSyntax> GetNonNestedTypeDeclarations(SyntaxList<MemberDeclarationSyntax> members)
     {
         foreach (MemberDeclarationSyntax member in members)
         {
