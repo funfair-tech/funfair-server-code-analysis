@@ -7,6 +7,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 
 ## [Unreleased]
 ### Added
+- Avoid StringComparer.InvariantCulure use the Oridinal version instead
 ### Fixed
 ### Changed
 - Dependencies - Updated FunFair.Test.Common to 6.1.268.1269

@@ -44,4 +44,6 @@ internal static class Rules
     public const string RuleTypeShouldBeInAFileWithSameName = "FFS0040";
     public const string RuleDontUseSystemConsoleInTestProjects = "FFS0041";
     public const string RuleSuppressMessageMustNotHaveTodoJustification = "FFS0042";
+    public const string RuleDontUseStringComparerInvariantCulture = "FFS0043";
+    public const string RuleDontUseStringComparerInvariantCultureIgnoreCase = "FFS0044";
 }

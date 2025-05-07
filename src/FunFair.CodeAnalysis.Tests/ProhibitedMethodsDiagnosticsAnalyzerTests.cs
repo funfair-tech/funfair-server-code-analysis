@@ -509,4 +509,60 @@ public sealed class ProhibitedMethodsDiagnosticsAnalyzerTests
 
         return this.VerifyCSharpDiagnosticAsync(source: test, expected: expected);
     }
+
+    [Fact]
+    public Task StringComparerInvariantCultureIsBannedInMethodsAsync()
+    {
+        const string test =
+            @"
+    using System;
+
+    namespace ConsoleApplication1
+    {
+        class TypeName
+        {
+            void Test()
+            {
+                var same = StringComparer.InvariantCulture.Equals(""a"", ""b"");
+            }
+        }
+    }";
+        DiagnosticResult expected = Result(
+            id: "FFS0043",
+            message: "Use System.StringComparer.Ordinal instead",
+            severity: DiagnosticSeverity.Error,
+            line: 10,
+            column: 28
+        );
+
+        return this.VerifyCSharpDiagnosticAsync(source: test, expected: expected);
+    }
+
+    [Fact]
+    public Task StringComparerInvariantCultureIgnoreCaseIsBannedInMethodsAsync()
+    {
+        const string test =
+            @"
+    using System;
+
+    namespace ConsoleApplication1
+    {
+        class TypeName
+        {
+            void Test()
+            {
+                var same = StringComparer.InvariantCultureIgnoreCase.Equals(""a"", ""b"");
+            }
+        }
+    }";
+        DiagnosticResult expected = Result(
+            id: "FFS0044",
+            message: "Use System.StringComparer.OrdinalIgnoreCase instead",
+            severity: DiagnosticSeverity.Error,
+            line: 10,
+            column: 28
+        );
+
+        return this.VerifyCSharpDiagnosticAsync(source: test, expected: expected);
+    }
 }

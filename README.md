@@ -55,6 +55,8 @@ Static Code analysis Repo for FunFair Server dotnet projects.
 | FFS0040 | Type should be in a file with the same name as the type.                                                                                       |
 | FFS0041 | Do not use System.Console in test assemblies.                                                                                                  |
 | FFS0042 | Do not have TODO's in ``SuppressMessage`` justifications.                                                                                      |
+| FFS0043 | Do not use ``StringComparer.InvariantCulture`` use ``StringComparer.Ordinal`` instead.                                                         |
+| FFS0044 | Do not have TODO's in ``StringComparer.InvariantCultureIgnoreCase`` use ``StringComparer.OrdinalIgnoreCase`` instead.                          |
 
 ## Changelog
 

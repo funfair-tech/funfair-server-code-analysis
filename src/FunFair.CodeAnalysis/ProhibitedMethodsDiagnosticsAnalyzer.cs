@@ -79,7 +79,22 @@ public sealed class ProhibitedMethodsDiagnosticsAnalyzer : DiagnosticAnalyzer
             message: "Use new Guid() with constant guids or Guid.TryParse everywhere else",
             sourceClass: "System.Guid",
             bannedMethod: "Parse"
+        )
+        ,
+        Build(
+            ruleId: Rules.RuleDontUseStringComparerInvariantCulture,
+            title: "Use System.StringComparer.Ordinal instead",
+            message: "Use System.StringComparer.Ordinal instead",
+            sourceClass: "System.StringComparer",
+            bannedMethod: "InvariantCulture"
         ),
+        Build(
+            ruleId: Rules.RuleDontUseStringComparerInvariantCultureIgnoreCase,
+            title: "Use System.StringComparer.OrdinalIgnoreCase instead",
+            message: "Use System.StringComparer.OrdinalIgnoreCase instead",
+            sourceClass: "System.StringComparer",
+            bannedMethod: "InvariantCultureIgnoreCase"
+        )
     ];
 
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
@@ -87,6 +102,7 @@ public sealed class ProhibitedMethodsDiagnosticsAnalyzer : DiagnosticAnalyzer
 
     public override void Initialize(AnalysisContext context)
     {
+
         context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.None);
         context.EnableConcurrentExecution();
 
