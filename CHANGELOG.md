@@ -11,6 +11,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 ### Changed
 - Dependencies - Updated Microsoft.Sbom.Targets to 4.0.2
 - Dependencies - Updated Microsoft.Extensions to 9.0.5
+- SDK - Updated DotNet SDK to 9.0.300
 ### Removed
 ### Deployment Changes
 
