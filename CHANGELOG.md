@@ -16,6 +16,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 - Dependencies - Updated Microsoft.Sbom.Targets to 4.0.3
 - Dependencies - Updated Credfeto.Enumeration to 1.2.87.1134
 - Dependencies - Updated SonarAnalyzer.CSharp to 10.10.0.116381
+- Dependencies - Updated Microsoft.NET.Test.Sdk to 17.14.0
 ### Removed
 ### Deployment Changes
 
