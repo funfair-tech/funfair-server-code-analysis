@@ -14,9 +14,9 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 - Dependencies - Updated Microsoft.VisualStudio.Threading.Analyzers to 17.14.15
 - Dependencies - Updated Microsoft.CodeAnalysis.CSharp to 4.14.0
 - Dependencies - Updated Microsoft.Sbom.Targets to 4.0.3
-- Dependencies - Updated Credfeto.Enumeration to 1.2.87.1134
 - Dependencies - Updated SonarAnalyzer.CSharp to 10.10.0.116381
 - Dependencies - Updated Microsoft.NET.Test.Sdk to 17.14.0
+- Dependencies - Updated Credfeto.Enumeration to 1.2.88.1149
 ### Removed
 ### Deployment Changes
 
