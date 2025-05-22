@@ -31,7 +31,7 @@
     <OptimizationPreference>speed</OptimizationPreference>
     <OutputType>Exe</OutputType>
     <RunAOTCompilation>false</RunAOTCompilation>
-    <TargetFramework>net9.0</TargetFramework>
+    <TargetFrameworks>net9.0;net10.0</TargetFrameworks>
     <TestingPlatformDotnetTestSupport>true</TestingPlatformDotnetTestSupport>
     <TieredCompilation>true</TieredCompilation>
     <TieredPGO>true</TieredPGO>
@@ -56,7 +56,6 @@
     <PackageReference Include="Credfeto.Enumeration.Source.Generation.Attributes" Version="1.2.89.1151" />
     <PackageReference Include="FunFair.Test.Common" Version="6.1.268.1269" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.14.0" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="9.0.5" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.0" />
     <PackageReference Include="xunit.v3" Version="2.0.2" />
   </ItemGroup>
