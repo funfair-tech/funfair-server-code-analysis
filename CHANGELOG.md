@@ -17,6 +17,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 - Dependencies - Updated Microsoft.NET.Test.Sdk to 17.14.1
 - Dependencies - Updated SonarAnalyzer.CSharp to 10.11.0.117924
 - Dependencies - Updated Credfeto.Enumeration to 1.2.105.1202
+- Dependencies - Updated xunit.analyzers to 1.22.0
 ### Removed
 ### Deployment Changes
 
