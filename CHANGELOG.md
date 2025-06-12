@@ -9,7 +9,6 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 ### Added
 ### Fixed
 ### Changed
-- SDK - Updated DotNet SDK to 9.0.300
 - Dependencies - Updated Microsoft.VisualStudio.Threading.Analyzers to 17.14.15
 - Dependencies - Updated Microsoft.CodeAnalysis.CSharp to 4.14.0
 - Dependencies - Updated Microsoft.Sbom.Targets to 4.0.3
@@ -19,6 +18,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 - Dependencies - Updated xunit.v3 to 2.0.3
 - Dependencies - Updated Microsoft.Extensions to 9.0.6
 - Dependencies - Updated Credfeto.Enumeration to 1.2.111.1223
+- SDK - Updated DotNet SDK to 9.0.301
 ### Removed
 ### Deployment Changes
 
