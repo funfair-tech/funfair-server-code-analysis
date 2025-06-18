@@ -228,9 +228,11 @@ public sealed class ProhibitedMethodsDiagnosticsAnalyzer : DiagnosticAnalyzer
         {
             Dictionary<string, INamedTypeSymbol> cachedSymbols = new(StringComparer.Ordinal);
 
-            foreach (string ruleSourceClass in BannedMethods.Select(rule => rule.SourceClass)
-                                                            .Where(ruleSourceClass => !cachedSymbols.ContainsKey(ruleSourceClass))
-                     )
+            foreach (
+                string ruleSourceClass in BannedMethods
+                    .Select(rule => rule.SourceClass)
+                    .Where(ruleSourceClass => !cachedSymbols.ContainsKey(ruleSourceClass))
+            )
             {
                 INamedTypeSymbol? item = compilation.GetTypeByMetadataName(ruleSourceClass);
 
