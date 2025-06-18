@@ -113,7 +113,11 @@ public sealed class ProhibitedClassesInTestAssembliesDiagnosticsAnalyzer : Diagn
         {
             Dictionary<string, INamedTypeSymbol> cachedSymbols = new(StringComparer.Ordinal);
 
-            foreach (string ruleSourceClass in BannedClasses.Select(rule => rule.SourceClass).Where(ruleSourceClass=> !cachedSymbols.ContainsKey(ruleSourceClass)))
+            foreach (
+                string ruleSourceClass in BannedClasses
+                    .Select(rule => rule.SourceClass)
+                    .Where(ruleSourceClass => !cachedSymbols.ContainsKey(ruleSourceClass))
+            )
             {
                 INamedTypeSymbol? item = compilation.GetTypeByMetadataName(ruleSourceClass);
 
