@@ -55,18 +55,13 @@ public sealed class ClassVisibilityDiagnosticsAnalyzer : DiagnosticAnalyzer
             return;
         }
 
-        foreach (ConfiguredClass classDefinition in Classes)
+        foreach (ConfiguredClass classDefinition in Classes.Where(classDefinition => classDefinition.TypeMatchesClass(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext)
+                                                                                     && !classDefinition.HasCorrectClassModifier(classDeclarationSyntax: classDeclarationSyntax)))
         {
-            if (
-                classDefinition.TypeMatchesClass(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext)
-                && !classDefinition.HasCorrectClassModifier(classDeclarationSyntax: classDeclarationSyntax)
-            )
-            {
-                classDeclarationSyntax.ReportDiagnostics(
-                    syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
-                    rule: classDefinition.Rule
-                );
-            }
+            classDeclarationSyntax.ReportDiagnostics(
+                syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
+                rule: classDefinition.Rule
+            );
         }
     }
 

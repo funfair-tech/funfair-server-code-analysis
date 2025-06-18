@@ -102,21 +102,16 @@ public sealed class ForceMethodParametersInvocationsDiagnosticsAnalyzer : Diagno
             StringComparer.Ordinal.Equals(x: rule.QualifiedName, y: mapping.QualifiedName)
         );
 
-        foreach (ForcedMethodsSpec prohibitedMethod in forcedMethods)
+        foreach (ForcedMethodsSpec prohibitedMethod in forcedMethods.Where(prohibitedMethod => !IsInvocationAllowed(
+                                                                               invocationArguments: memberSymbol,
+                                                                               argumentsInvokedCount: invocation.ArgumentList.Arguments.Count,
+                                                                               requiredArgumentsCount: prohibitedMethod.RequiredArgumentCount
+                                                                           )))
         {
-            if (
-                !IsInvocationAllowed(
-                    invocationArguments: memberSymbol,
-                    argumentsInvokedCount: invocation.ArgumentList.Arguments.Count,
-                    requiredArgumentsCount: prohibitedMethod.RequiredArgumentCount
-                )
-            )
-            {
-                invocation.ReportDiagnostics(
-                    syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
-                    rule: prohibitedMethod.Rule
-                );
-            }
+            invocation.ReportDiagnostics(
+                syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
+                rule: prohibitedMethod.Rule
+            );
         }
     }
 
