@@ -9,14 +9,17 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 ### Added
 ### Fixed
 ### Changed
-- Dependencies - Updated Credfeto.Enumeration to 1.2.116.1247
-- Dependencies - Updated FunFair.Test.Common to 6.1.270.1471
 ### Removed
 ### Deployment Changes
 
 <!--
 Releases that have at least been deployed to staging, BUT NOT necessarily released to live.  Changes should be moved from [Unreleased] into here as they are merged into the appropriate release branch
 -->
+## [7.1.3] - 2025-06-20
+### Changed
+- Dependencies - Updated Credfeto.Enumeration to 1.2.116.1247
+- Dependencies - Updated FunFair.Test.Common to 6.1.270.1471
+
 ## [7.1.2] - 2025-06-19
 ### Changed
 - Dependencies - Updated SonarAnalyzer.CSharp to 10.12.0.118525
