@@ -9,16 +9,19 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 ### Added
 ### Fixed
 ### Changed
-- Dependencies - Updated FunFair.Test.Common to 6.1.274.1486
-- Dependencies - Updated Meziantou.Analyzer to 2.0.205
-- Dependencies - Updated Philips.CodeAnalysis.MaintainabilityAnalyzers to 1.6.3
-- Dependencies - Updated Microsoft.Extensions to 9.0.7
 ### Removed
 ### Deployment Changes
 
 <!--
 Releases that have at least been deployed to staging, BUT NOT necessarily released to live.  Changes should be moved from [Unreleased] into here as they are merged into the appropriate release branch
 -->
+## [7.1.7] - 2025-07-09
+### Changed
+- Dependencies - Updated FunFair.Test.Common to 6.1.274.1486
+- Dependencies - Updated Meziantou.Analyzer to 2.0.205
+- Dependencies - Updated Philips.CodeAnalysis.MaintainabilityAnalyzers to 1.6.3
+- Dependencies - Updated Microsoft.Extensions to 9.0.7
+
 ## [7.1.6] - 2025-06-23
 ### Changed
 - Dependencies - Updated FunFair.Test.Common to 6.1.273.1481
