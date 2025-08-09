@@ -10,6 +10,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 ### Fixed
 ### Changed
 - Dependencies - Updated Credfeto.Enumeration to 1.2.124.1351
+- Dependencies - Updated FunFair.Test.Common to 6.1.282.1603
 ### Removed
 ### Deployment Changes
 
