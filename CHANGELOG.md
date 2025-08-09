@@ -10,6 +10,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 ### Fixed
 ### Changed
 - Dependencies - Updated Credfeto.Enumeration to 1.2.125.1355
+- Dependencies - Updated Philips.CodeAnalysis.MaintainabilityAnalyzers to 1.7.0
 ### Removed
 ### Deployment Changes
 
