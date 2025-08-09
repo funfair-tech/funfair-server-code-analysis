@@ -158,7 +158,7 @@ public sealed class ProhibitedClassesInTestAssembliesDiagnosticsAnalyzer : Diagn
                 return null;
             }
 
-            return cachedSymbols.TryGetValue(key: fullName, out INamedTypeSymbol? _) ? fullName : null;
+            return cachedSymbols.TryGetValue(key: fullName, out _) ? fullName : null;
         }
     }
 
