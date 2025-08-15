@@ -15,11 +15,6 @@ namespace FunFair.CodeAnalysis;
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public sealed class ProhibitedMethodsDiagnosticsAnalyzer : DiagnosticAnalyzer
 {
-    /* TODO ban these fields... probably needs a new analyzer
-      F:System.StringComparison.InvariantCulture;Do you mean Ordinal?
-       F:System.StringComparison.InvariantCultureIgnoreCase;Do you mean OrdinalIgnoreCase?
-     */
-
     private static readonly ProhibitedMethodsSpec[] BannedMethods =
     [
         Build(
