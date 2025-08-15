@@ -133,7 +133,6 @@ public sealed class ConstructorGenericParameterTypeDiagnosticsAnalyser : Diagnos
         ClassDeclarationSyntax parentSymbolForClassForConstructor
     )
     {
-        // TODO: consider throwing
         return syntaxNodeAnalysisContext.SemanticModel.GetDeclaredSymbol(
             declarationSyntax: parentSymbolForClassForConstructor,
             cancellationToken: syntaxNodeAnalysisContext.CancellationToken
