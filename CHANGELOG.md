@@ -10,6 +10,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 ### Fixed
 ### Changed
 - Dependencies - Updated Philips.CodeAnalysis.MaintainabilityAnalyzers to 1.8.0
+- Dependencies - Updated xunit.analyzers to 1.24.0
 ### Removed
 ### Deployment Changes
 
