@@ -25,11 +25,6 @@ public sealed class ProhibitedEnumMembersAnalyzer : DiagnosticAnalyzer
 
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; } = [.. BannedEnums.Select(selector: r => r.Rule)];
 
-    /* TODO ban these fields... probably needs a new analyzer
-  F:System.StringComparison.InvariantCulture;Do you mean Ordinal?
-   F:System.StringComparison.InvariantCultureIgnoreCase;Do you mean OrdinalIgnoreCase?
- */
-
     public override void Initialize(AnalysisContext context)
     {
         context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.None);
@@ -46,7 +41,6 @@ public sealed class ProhibitedEnumMembersAnalyzer : DiagnosticAnalyzer
 
     private static void ParameterCannotBeProhibitedEnum(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
     {
-        // TODO
         if (syntaxNodeAnalysisContext.Node is ParameterSyntax)
         {
             Debug.WriteLine("Parameter");
