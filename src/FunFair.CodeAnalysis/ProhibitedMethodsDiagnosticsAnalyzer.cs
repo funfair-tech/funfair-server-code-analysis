@@ -85,15 +85,37 @@ public sealed class ProhibitedMethodsDiagnosticsAnalyzer : DiagnosticAnalyzer
             title: "Use System.StringComparer.Ordinal instead",
             message: "Use System.StringComparer.Ordinal instead",
             sourceClass: "System.StringComparer",
-            bannedMethod: "InvariantCulture"
+            bannedMethod: nameof(StringComparer.InvariantCulture)
         ),
         Build(
             ruleId: Rules.RuleDontUseStringComparerInvariantCultureIgnoreCase,
             title: "Use System.StringComparer.OrdinalIgnoreCase instead",
             message: "Use System.StringComparer.OrdinalIgnoreCase instead",
             sourceClass: "System.StringComparer",
-            bannedMethod: "InvariantCultureIgnoreCase"
+            bannedMethod: nameof(StringComparer.InvariantCultureIgnoreCase)
         ),
+        Build(ruleId: Rules.RuleDontUseStringComparisonInvariantCulture,
+              title: "Use System.StringComparison.Ordinal instead",
+              message: "Use System.StringComparison.Ordinal instead",
+              sourceClass: "System.StringComparison",
+              bannedMethod:nameof(StringComparison.InvariantCulture)),
+        Build(ruleId: Rules.RuleDontUseStringComparisonInvariantCultureIgnoreCase,
+              title: "Use System.StringComparison.OrdinalIgnoreCase instead",
+              message: "Use System.StringComparison.OrdinalIgnoreCase instead",
+              sourceClass: "System.StringComparison",
+              bannedMethod:nameof(StringComparison.InvariantCultureIgnoreCase))
+        ,
+        Build(ruleId: Rules.RuleDontUseStringComparisonCurrentCulture,
+              title: "Use System.StringComparison.Ordinal instead",
+              message: "Use System.StringComparison.Ordinal instead",
+              sourceClass: "System.StringComparison",
+              bannedMethod:nameof(StringComparison.CurrentCulture)),
+        Build(ruleId: Rules.RuleDontUseStringComparisonCurrentCultureIgnoreCase,
+              title: "Use System.StringComparison.OrdinalIgnoreCase instead",
+              message: "Use System.StringComparison.OrdinalIgnoreCase instead",
+              sourceClass: "System.StringComparison",
+              bannedMethod:nameof(StringComparison.CurrentCultureIgnoreCase))
+
     ];
 
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>

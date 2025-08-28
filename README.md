@@ -56,7 +56,11 @@ Static Code analysis Repo for FunFair Server dotnet projects.
 | FFS0041 | Do not use System.Console in test assemblies.                                                                                                  |
 | FFS0042 | Do not have TODO's in ``SuppressMessage`` justifications.                                                                                      |
 | FFS0043 | Do not use ``StringComparer.InvariantCulture`` use ``StringComparer.Ordinal`` instead.                                                         |
-| FFS0044 | Do not have TODO's in ``StringComparer.InvariantCultureIgnoreCase`` use ``StringComparer.OrdinalIgnoreCase`` instead.                          |
+| FFS0044 | Do not use ``StringComparer.InvariantCultureIgnoreCase`` use ``StringComparer.OrdinalIgnoreCase`` instead.                                     |
+| FFS0045 | Do not use ``StringCompaison.InvariantCulture`` use ``StringCompaison.Ordinal`` instead.                                                       |
+| FFS0046 | Do not use ``StringCompaison.InvariantCultureIgnoreCase`` use ``StringCompaison.OrdinalIgnoreCase`` instead.                                   |
+| FFS0047 | Do not use ``StringCompaison.CurrentCulture`` use ``StringCompaison.Ordinal`` instead.                                                         |
+| FFS0048 | Do not use ``StringCompaison.CurrentCultureIgnoreCase`` use ``StringCompaison.OrdinalIgnoreCase`` instead.                                     |
 
 ## Changelog
 
