@@ -103,8 +103,7 @@ public sealed class ProhibitedMethodsDiagnosticsAnalyzer : DiagnosticAnalyzer
               title: "Use System.StringComparison.OrdinalIgnoreCase instead",
               message: "Use System.StringComparison.OrdinalIgnoreCase instead",
               sourceClass: "System.StringComparison",
-              bannedMethod:nameof(StringComparison.InvariantCultureIgnoreCase))
-        ,
+              bannedMethod:nameof(StringComparison.InvariantCultureIgnoreCase)),
         Build(ruleId: Rules.RuleDontUseStringComparisonCurrentCulture,
               title: "Use System.StringComparison.Ordinal instead",
               message: "Use System.StringComparison.Ordinal instead",
