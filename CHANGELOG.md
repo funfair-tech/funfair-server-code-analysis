@@ -14,6 +14,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 - Dependencies - Updated Credfeto.Enumeration to 1.2.129.1430
 - Dependencies - Updated Meziantou.Analyzer to 2.0.225
 - Dependencies - Updated Roslynator.Analyzers to 4.14.1
+- Dependencies - Updated xunit.v3 to 3.1.0
 ### Removed
 ### Deployment Changes
 
