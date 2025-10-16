@@ -1,3 +1,4 @@
+
 using System;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
@@ -44,7 +45,6 @@ public sealed class SuppressMessageDiagnosticsAnalyzer : DiagnosticAnalyzer
         context.EnableConcurrentExecution();
 
         Checker checker = new();
-
         context.RegisterCompilationStartAction(checker.PerformCheck);
     }
 
@@ -54,9 +54,7 @@ public sealed class SuppressMessageDiagnosticsAnalyzer : DiagnosticAnalyzer
 
         public void PerformCheck(CompilationStartAnalysisContext compilationStartContext)
         {
-            INamedTypeSymbol? sourceClassType = this.GetSuppressMessageAttributeType(
-                compilationStartContext.Compilation
-            );
+            INamedTypeSymbol? sourceClassType = this.GetSuppressMessageAttributeType(compilationStartContext.Compilation);
 
             if (sourceClassType is null)
             {
@@ -65,7 +63,7 @@ public sealed class SuppressMessageDiagnosticsAnalyzer : DiagnosticAnalyzer
 
             compilationStartContext.RegisterSyntaxNodeAction(
                 action: syntaxNodeAnalysisContext =>
-                    MustDeriveFromTestBase(
+                    CheckSuppressMessageAttribute(
                         syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
                         sourceClassType: sourceClassType
                     ),
@@ -78,78 +76,74 @@ public sealed class SuppressMessageDiagnosticsAnalyzer : DiagnosticAnalyzer
             return this._suppressMessage ??= compilation.GetTypeByMetadataName(SuppressMessageFullName);
         }
 
-        private static void MustDeriveFromTestBase(
+        private static void CheckSuppressMessageAttribute(
             in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext,
             INamedTypeSymbol sourceClassType
         )
         {
-            if (syntaxNodeAnalysisContext.Node is not AttributeSyntax methodDeclarationSyntax)
+            if (syntaxNodeAnalysisContext.Node is not AttributeSyntax attributeSyntax)
             {
                 return;
             }
 
-            TypeInfo ti = syntaxNodeAnalysisContext.SemanticModel.GetTypeInfo(
-                expression: methodDeclarationSyntax.Name,
+            TypeInfo typeInfo = syntaxNodeAnalysisContext.SemanticModel.GetTypeInfo(
+                expression: attributeSyntax.Name,
                 cancellationToken: syntaxNodeAnalysisContext.CancellationToken
             );
 
-            if (!StringComparer.Ordinal.Equals(x: ti.Type?.MetadataName, y: sourceClassType.MetadataName))
+            if (!StringComparer.Ordinal.Equals(x: typeInfo.Type?.MetadataName, y: sourceClassType.MetadataName))
             {
                 return;
             }
 
-            SeparatedSyntaxList<AttributeArgumentSyntax>? args = methodDeclarationSyntax.ArgumentList?.Arguments;
+            AttributeArgumentSyntax? justificationAttributeArguement = FindJustificationAttributeArgument(attributeSyntax);
 
-            AttributeArgumentSyntax? justification = args?.FirstOrDefault(IsJustificationAttribute);
-
-            if (justification is null)
+            if (justificationAttributeArguement is null)
             {
-                methodDeclarationSyntax.ReportDiagnostics(
+                attributeSyntax.ReportDiagnostics(
                     syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
                     rule: RuleMustHaveJustification
                 );
-
                 return;
             }
 
-            if (justification.Expression is not LiteralExpressionSyntax l)
+            if (justificationAttributeArguement.Expression is not LiteralExpressionSyntax literalExpression)
             {
                 return;
             }
 
-            string text = l.Token.ValueText;
-
-            CheckJustification(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, text: text, l: l);
-        }
-
-        private static bool IsJustificationAttribute(AttributeArgumentSyntax k)
-        {
-            return StringComparer.Ordinal.Equals(x: k.NameEquals?.Name.Identifier.Text, y: "Justification");
-        }
-
-        private static void CheckJustification(
-            in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext,
-            string text,
-            LiteralExpressionSyntax l
-        )
-        {
-            if (string.IsNullOrWhiteSpace(text))
+            DiagnosticDescriptor? rule = CheckJustificationText(literalExpression.Token.ValueText);
+            if (rule is not null)
             {
-                l.ReportDiagnostics(
+                literalExpression.ReportDiagnostics(
                     syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
-                    rule: RuleMustHaveJustification
-                );
-
-                return;
-            }
-
-            if (text.StartsWith(value: "TODO", comparisonType: StringComparison.OrdinalIgnoreCase))
-            {
-                l.ReportDiagnostics(
-                    syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
-                    rule: RuleMustNotHaveTodoJustification
+                    rule: rule
                 );
             }
+        }
+
+        private static DiagnosticDescriptor? CheckJustificationText(string justificationText)
+        {
+            if (string.IsNullOrWhiteSpace(justificationText))
+            {
+                return RuleMustHaveJustification;
+            }
+
+            if (justificationText.StartsWith(value: "TODO", comparisonType: StringComparison.OrdinalIgnoreCase))
+            {
+                return RuleMustNotHaveTodoJustification;
+            }
+
+            return null;
+        }
+
+        private static AttributeArgumentSyntax? FindJustificationAttributeArgument(AttributeSyntax attributeSyntax)
+        {
+            return attributeSyntax.ArgumentList?.Arguments
+                                  .FirstOrDefault(arg => StringComparer.Ordinal.Equals(
+                                                      x: arg.NameEquals?.Name.Identifier.Text,
+                                                      y: "Justification"
+                                                  ));
         }
     }
 }
