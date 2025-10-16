@@ -1,4 +1,3 @@
-
 using System;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
@@ -54,7 +53,9 @@ public sealed class SuppressMessageDiagnosticsAnalyzer : DiagnosticAnalyzer
 
         public void PerformCheck(CompilationStartAnalysisContext compilationStartContext)
         {
-            INamedTypeSymbol? sourceClassType = this.GetSuppressMessageAttributeType(compilationStartContext.Compilation);
+            INamedTypeSymbol? sourceClassType = this.GetSuppressMessageAttributeType(
+                compilationStartContext.Compilation
+            );
 
             if (sourceClassType is null)
             {
@@ -96,7 +97,9 @@ public sealed class SuppressMessageDiagnosticsAnalyzer : DiagnosticAnalyzer
                 return;
             }
 
-            AttributeArgumentSyntax? justificationAttributeArguement = FindJustificationAttributeArgument(attributeSyntax);
+            AttributeArgumentSyntax? justificationAttributeArguement = FindJustificationAttributeArgument(
+                attributeSyntax
+            );
 
             if (justificationAttributeArguement is null)
             {
@@ -115,10 +118,7 @@ public sealed class SuppressMessageDiagnosticsAnalyzer : DiagnosticAnalyzer
             DiagnosticDescriptor? rule = CheckJustificationText(literalExpression.Token.ValueText);
             if (rule is not null)
             {
-                literalExpression.ReportDiagnostics(
-                    syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
-                    rule: rule
-                );
+                literalExpression.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: rule);
             }
         }
 
@@ -139,11 +139,9 @@ public sealed class SuppressMessageDiagnosticsAnalyzer : DiagnosticAnalyzer
 
         private static AttributeArgumentSyntax? FindJustificationAttributeArgument(AttributeSyntax attributeSyntax)
         {
-            return attributeSyntax.ArgumentList?.Arguments
-                                  .FirstOrDefault(arg => StringComparer.Ordinal.Equals(
-                                                      x: arg.NameEquals?.Name.Identifier.Text,
-                                                      y: "Justification"
-                                                  ));
+            return attributeSyntax.ArgumentList?.Arguments.FirstOrDefault(arg =>
+                StringComparer.Ordinal.Equals(x: arg.NameEquals?.Name.Identifier.Text, y: "Justification")
+            );
         }
     }
 }
