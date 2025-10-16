@@ -16,11 +16,10 @@ namespace FunFair.CodeAnalysis;
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public sealed class ParameterOrderingDiagnosticsAnalyzer : DiagnosticAnalyzer
 {
-    private static readonly IReadOnlyList<string> PreferredEndingOrdering =
-    [
+    private static readonly ImmutableArray<string> PreferredEndingOrdering = [
         "Microsoft.Extensions.Logging.ILogger<TCategoryName>",
         "Microsoft.Extensions.Logging.ILogger",
-        "System.Threading.CancellationToken",
+        "System.Threading.CancellationToken"
     ];
 
     private static readonly DiagnosticDescriptor Rule = RuleHelpers.CreateRule(
@@ -30,7 +29,12 @@ public sealed class ParameterOrderingDiagnosticsAnalyzer : DiagnosticAnalyzer
         message: "Parameter '{0}' must be parameter {1}"
     );
 
-    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => SupportedDiagnosisList.Build(Rule);
+    private static readonly ImmutableArray<DiagnosticDescriptor> SupportedDiagnosticsCache =
+        SupportedDiagnosisList.Build(Rule);
+
+    private static readonly StringComparer TypeNameComparer = StringComparer.Ordinal;
+
+    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => SupportedDiagnosticsCache;
 
     public override void Initialize(AnalysisContext context)
     {
@@ -42,30 +46,60 @@ public sealed class ParameterOrderingDiagnosticsAnalyzer : DiagnosticAnalyzer
 
     private static void PerformCheck(CompilationStartAnalysisContext compilationStartContext)
     {
-        compilationStartContext.RegisterSyntaxNodeAction(action: MustBeInASaneOrder, SyntaxKind.ParameterList);
+        Checker checker = new();
+
+        compilationStartContext.RegisterSyntaxNodeAction(
+            action: checker.MustBeInASaneOrder,
+            SyntaxKind.ParameterList
+        );
     }
 
-    private static void MustBeInASaneOrder(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
+    private sealed class Checker
     {
-        if (syntaxNodeAnalysisContext.Node is not ParameterListSyntax parameterList)
+        private readonly Dictionary<ParameterSyntax, string?> _typeNameCache = [];
+
+        [SuppressMessage(
+            category: "Roslynator.Analyzers",
+            checkId: "RCS1231:Make parameter ref read only",
+            Justification = "Needed here"
+        )]
+        public void MustBeInASaneOrder(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
         {
-            return;
+            if (syntaxNodeAnalysisContext.Node is not ParameterListSyntax parameterList)
+            {
+                return;
+            }
+
+            IReadOnlyList<ParameterItem> parameters = this.BuildParameters(
+                syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
+                parameterList: parameterList
+            );
+
+            List<string> matchedEndings = [];
+
+            PreferredEndingOrdering
+                .Reverse()
+                .ForEach(parameterType =>
+                    ProcessParameterType(
+                        parameterType: parameterType,
+                        parameters: parameters,
+                        matchedEndings: matchedEndings,
+                        syntaxNodeAnalysisContext: syntaxNodeAnalysisContext
+                    ));
         }
 
-        ParameterItem[] parameters = BuildParameters(
-            syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
-            parameterList: parameterList
-        );
-
-        List<string> matchedEndings = [];
-
-        foreach (string parameterType in PreferredEndingOrdering.Reverse())
+        private static void ProcessParameterType(
+            string parameterType,
+            IReadOnlyList<ParameterItem> parameters,
+            List<string> matchedEndings,
+            in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext
+        )
         {
             ParameterItem? match = FindParameter(parameters: parameters, parameterType: parameterType);
 
             if (match is null)
             {
-                continue;
+                return;
             }
 
             ParameterItem matchingParameter = match.Value;
@@ -73,13 +107,13 @@ public sealed class ParameterOrderingDiagnosticsAnalyzer : DiagnosticAnalyzer
             if (matchingParameter.Parameter.Modifiers.Any(pm => pm.IsKind(SyntaxKind.ThisKeyword)))
             {
                 // Ignore parameters that are extension methods - they have to be the first parameter
-                continue;
+                return;
             }
 
             matchedEndings.Add(parameterType);
 
             int parameterIndex = matchingParameter.Index;
-            int requiredParameterIndex = parameters.Length - matchedEndings.Count;
+            int requiredParameterIndex = parameters.Count - matchedEndings.Count;
 
             if (parameterIndex != requiredParameterIndex)
             {
@@ -91,47 +125,66 @@ public sealed class ParameterOrderingDiagnosticsAnalyzer : DiagnosticAnalyzer
                 );
             }
         }
-    }
 
-    [SuppressMessage(
-        category: "Nullable.Extended.Analyzer",
-        checkId: "NX0003: Suppression of NullForgiving operator is not required",
-        Justification = "Required here"
-    )]
-    private static ParameterItem[] BuildParameters(
-        SyntaxNodeAnalysisContext syntaxNodeAnalysisContext,
-        ParameterListSyntax parameterList
-    )
-    {
-        return
-        [
-            .. parameterList.Parameters.Select(
-                (parameter, index) =>
+        [SuppressMessage(
+            category: "Nullable.Extended.Analyzer",
+            checkId: "NX0003: Suppression of NullForgiving operator is not required",
+            Justification = "Required here"
+        )]
+        private IReadOnlyList<ParameterItem> BuildParameters(
+            SyntaxNodeAnalysisContext syntaxNodeAnalysisContext,
+            ParameterListSyntax parameterList
+        )
+        {
+            return [..parameterList.Parameters
+                .Select((parameter, index) =>
                     new ParameterItem(
                         parameter: parameter,
                         index: index,
-                        ParameterHelpers.GetFullTypeName(
+                        this.GetFullTypeName(
                             syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
-                            parameterSyntax: parameter,
-                            cancellationToken: syntaxNodeAnalysisContext.CancellationToken
+                            parameterSyntax: parameter
                         )!
-                    )
-            ),
-        ];
-    }
-
-    [SuppressMessage(category: "SonarAnalyzer.CSharp", checkId: "S3267: Use Linq", Justification = "Not here")]
-    private static ParameterItem? FindParameter(IReadOnlyList<ParameterItem> parameters, string parameterType)
-    {
-        foreach (ParameterItem parameter in parameters)
-        {
-            if (StringComparer.Ordinal.Equals(x: parameter.FullTypeName, y: parameterType))
-            {
-                return parameter;
-            }
+                    ))
+                ];
         }
 
-        return null;
+        private string? GetFullTypeName(
+            in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext,
+            ParameterSyntax parameterSyntax
+        )
+        {
+            // Check cache first
+            if (this._typeNameCache.TryGetValue(key: parameterSyntax, out string? cachedTypeName))
+            {
+                return cachedTypeName;
+            }
+
+            // Compute and cache result
+            string? typeName = ParameterHelpers.GetFullTypeName(
+                syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
+                parameterSyntax: parameterSyntax,
+                cancellationToken: syntaxNodeAnalysisContext.CancellationToken
+            );
+
+            this._typeNameCache[parameterSyntax] = typeName;
+            return typeName;
+        }
+
+        private static ParameterItem? FindParameter(IReadOnlyList<ParameterItem> parameters, string parameterType)
+        {
+            // Use LINQ to find the matching parameter
+            // Note: Can't use FirstOrDefault directly on structs as it returns default(T) not null
+            foreach (ParameterItem parameter in parameters)
+            {
+                if (TypeNameComparer.Equals(x: parameter.FullTypeName, y: parameterType))
+                {
+                    return parameter;
+                }
+            }
+
+            return null;
+        }
     }
 
     [DebuggerDisplay("{Parameter.Identifier.Text} {Index} {FullTypeName}")]
