@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using FunFair.CodeAnalysis.Extensions;
 using FunFair.CodeAnalysis.Helpers;
@@ -28,7 +29,12 @@ public sealed class OneTypePerDocumentAnalysisDiagnosticsAnalyzer : DiagnosticAn
         message: "Should be only one type per file"
     );
 
-    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => SupportedDiagnosisList.Build(Rule);
+    private static readonly ImmutableArray<DiagnosticDescriptor> SupportedDiagnosticsCache =
+        SupportedDiagnosisList.Build(Rule);
+
+    private static readonly StringComparer TypeNameComparer = StringComparer.Ordinal;
+
+    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => SupportedDiagnosticsCache;
 
     public override void Initialize(AnalysisContext context)
     {
@@ -40,156 +46,186 @@ public sealed class OneTypePerDocumentAnalysisDiagnosticsAnalyzer : DiagnosticAn
 
     private static void PerformCheck(CompilationStartAnalysisContext compilationStartContext)
     {
-        compilationStartContext.RegisterSyntaxNodeAction(action: MustContainOneType, SyntaxKind.CompilationUnit);
+        Checker checker = new();
+
+        compilationStartContext.RegisterSyntaxNodeAction(
+            action: checker.MustContainOneType,
+            SyntaxKind.CompilationUnit
+        );
     }
 
-    private static void MustContainOneType(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
+    private sealed class Checker
     {
-        if (syntaxNodeAnalysisContext.Node is not CompilationUnitSyntax compilationUnitSyntax)
+        private readonly Dictionary<MemberDeclarationSyntax, string> _typeNameCache = [];
+
+        [SuppressMessage(
+            category: "Roslynator.Analyzers",
+            checkId: "RCS1231:Make parameter ref read only",
+            Justification = "Needed here"
+        )]
+        public void MustContainOneType(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
         {
-            return;
-        }
-
-        IReadOnlyList<MemberDeclarationSyntax> members = GetNonNestedTypeDeclarations(compilationUnitSyntax);
-
-        IReadOnlyList<IGrouping<string, MemberDeclarationSyntax>> grouped = GroupedMembers(members);
-
-        switch (grouped.Count)
-        {
-            case <= 1:
-            case 2 when IsSpecialCaseWhereNonGenericHelperClassExists(grouped):
+            if (syntaxNodeAnalysisContext.Node is not CompilationUnitSyntax compilationUnitSyntax)
+            {
                 return;
-            default:
-                ReportAllMembersAsErrors(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, members: members);
-                break;
-        }
-    }
+            }
 
-    private static IReadOnlyList<IGrouping<string, MemberDeclarationSyntax>> GroupedMembers(
-        IReadOnlyList<MemberDeclarationSyntax> members
-    )
-    {
-        return
-        [
-            .. members
-                .GroupBy(keySelector: GetTypeName, comparer: StringComparer.Ordinal)
-                .Where(x => !string.IsNullOrWhiteSpace(x.Key)),
-        ];
-    }
+            IReadOnlyList<MemberDeclarationSyntax> members = GetNonNestedTypeDeclarations(compilationUnitSyntax);
+            IReadOnlyList<IGrouping<string, MemberDeclarationSyntax>> grouped = this.GroupedMembers(members);
 
-    private static bool IsSpecialCaseWhereNonGenericHelperClassExists(
-        IReadOnlyList<IGrouping<string, MemberDeclarationSyntax>> grouped
-    )
-    {
-        IGrouping<string, MemberDeclarationSyntax>? staticGrouping = grouped.FirstOrDefault(g => IsStatic(g.Key));
-
-        if (staticGrouping is null)
-        {
-            return false;
+            switch (grouped.Count)
+            {
+                case <= 1:
+                case 2 when IsSpecialCaseWhereNonGenericHelperClassExists(grouped):
+                    return;
+                default:
+                    ReportAllMembersAsErrors(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, members: members);
+                    break;
+            }
         }
 
-        IGrouping<string, MemberDeclarationSyntax> otherGrouping = grouped.First(g => !IsStatic(g.Key));
-
-        return IsClass(otherGrouping.Key) || IsStruct(otherGrouping.Key);
-    }
-
-    private static bool IsStatic(string key)
-    {
-        return key.StartsWith(value: STATIC_TYPE_PREFIX, comparisonType: StringComparison.Ordinal);
-    }
-
-    private static bool IsClass(string key)
-    {
-        return key.StartsWith(value: CLASS_TYPE_PREFIX, comparisonType: StringComparison.Ordinal);
-    }
-
-    private static bool IsStruct(string key)
-    {
-        return key.StartsWith(value: STRUCT_TYPE_PREFIX, comparisonType: StringComparison.Ordinal);
-    }
-
-    private static void ReportAllMembersAsErrors(
-        in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext,
-        IReadOnlyList<MemberDeclarationSyntax> members
-    )
-    {
-        foreach (MemberDeclarationSyntax member in members)
+        private IReadOnlyList<IGrouping<string, MemberDeclarationSyntax>> GroupedMembers(
+            IReadOnlyList<MemberDeclarationSyntax> members
+        )
         {
-            member.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: Rule);
-        }
-    }
-
-    private static string GetTypeName(MemberDeclarationSyntax memberDeclarationSyntax)
-    {
-        return memberDeclarationSyntax switch
-        {
-            ClassDeclarationSyntax classDeclarationSyntax => NormaliseClass(classDeclarationSyntax),
-            RecordDeclarationSyntax recordDeclarationSyntax => NormaliseStruct(recordDeclarationSyntax),
-            StructDeclarationSyntax structDeclarationSyntax => NormaliseRecord(structDeclarationSyntax),
-            InterfaceDeclarationSyntax interfaceDeclarationSyntax => NormaliseInterface(interfaceDeclarationSyntax),
-            EnumDeclarationSyntax enumDeclarationSyntax => NormaliseEnum(enumDeclarationSyntax),
-            _ => string.Empty,
-        };
-    }
-
-    private static string NormaliseEnum(EnumDeclarationSyntax enumDeclarationSyntax)
-    {
-        return string.Concat(str0: ENUM_TYPE_PREFIX, enumDeclarationSyntax.Identifier.ToString());
-    }
-
-    private static string NormaliseInterface(InterfaceDeclarationSyntax interfaceDeclarationSyntax)
-    {
-        return string.Concat(str0: INTERFACE_TYPE_PREFIX, interfaceDeclarationSyntax.Identifier.ToString());
-    }
-
-    private static string NormaliseRecord(StructDeclarationSyntax structDeclarationSyntax)
-    {
-        return string.Concat(str0: STRUCT_TYPE_PREFIX, structDeclarationSyntax.Identifier.ToString());
-    }
-
-    private static string NormaliseStruct(RecordDeclarationSyntax recordDeclarationSyntax)
-    {
-        return string.Concat(str0: RECORD_TYPE_PREFIX, recordDeclarationSyntax.Identifier.ToString());
-    }
-
-    private static string NormaliseClass(ClassDeclarationSyntax classDeclarationSyntax)
-    {
-        if (classDeclarationSyntax.Modifiers.Any(m => m.IsKind(SyntaxKind.StaticKeyword)))
-        {
-            return string.Concat(str0: STATIC_TYPE_PREFIX, classDeclarationSyntax.Identifier.ToString());
+            return [..members
+                .GroupBy(keySelector: this.GetTypeName, comparer: TypeNameComparer)
+                .Where(x => !string.IsNullOrWhiteSpace(x.Key))];
         }
 
-        return string.Concat(str0: CLASS_TYPE_PREFIX, classDeclarationSyntax.Identifier.ToString());
-    }
+        private static bool IsSpecialCaseWhereNonGenericHelperClassExists(
+            IReadOnlyList<IGrouping<string, MemberDeclarationSyntax>> grouped
+        )
+        {
+            IGrouping<string, MemberDeclarationSyntax>? staticGrouping = grouped
+                .FirstOrDefault(g => IsStatic(g.Key));
 
-    private static IReadOnlyList<MemberDeclarationSyntax> GetNonNestedTypeDeclarations(
-        CompilationUnitSyntax compilationUnit
-    )
-    {
-        return [.. GetNonNestedTypeDeclarations(compilationUnit.Members)];
-    }
+            if (staticGrouping is null)
+            {
+                return false;
+            }
 
-    private static IEnumerable<MemberDeclarationSyntax> GetNonNestedTypeDeclarations(
-        SyntaxList<MemberDeclarationSyntax> members
-    )
-    {
-        foreach (MemberDeclarationSyntax member in members)
+            IGrouping<string, MemberDeclarationSyntax> otherGrouping = grouped
+                .First(g => !IsStatic(g.Key));
+
+            return IsClass(otherGrouping.Key) || IsStruct(otherGrouping.Key);
+        }
+
+        private static bool IsStatic(string key)
+        {
+            return key.StartsWith(value: STATIC_TYPE_PREFIX, comparisonType: StringComparison.Ordinal);
+        }
+
+        private static bool IsClass(string key)
+        {
+            return key.StartsWith(value: CLASS_TYPE_PREFIX, comparisonType: StringComparison.Ordinal);
+        }
+
+        private static bool IsStruct(string key)
+        {
+            return key.StartsWith(value: STRUCT_TYPE_PREFIX, comparisonType: StringComparison.Ordinal);
+        }
+
+        private static void ReportAllMembersAsErrors(
+            SyntaxNodeAnalysisContext syntaxNodeAnalysisContext,
+            IReadOnlyList<MemberDeclarationSyntax> members
+        )
+        {
+            members
+                .ForEach(member =>
+                    member.ReportDiagnostics(
+                        syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
+                        rule: Rule
+                    ));
+        }
+
+        private string GetTypeName(MemberDeclarationSyntax memberDeclarationSyntax)
+        {
+            if (this._typeNameCache.TryGetValue(key: memberDeclarationSyntax, out string? cachedName))
+            {
+                return cachedName;
+            }
+
+            string typeName = FindTypeName(memberDeclarationSyntax);
+
+            this._typeNameCache[memberDeclarationSyntax] = typeName;
+            return typeName;
+        }
+
+        private static string FindTypeName(MemberDeclarationSyntax memberDeclarationSyntax)
+        {
+            return  memberDeclarationSyntax switch
+            {
+                ClassDeclarationSyntax classDeclarationSyntax =>  NormaliseClass(classDeclarationSyntax),
+                RecordDeclarationSyntax recordDeclarationSyntax => NormaliseRecord(recordDeclarationSyntax),
+                StructDeclarationSyntax structDeclarationSyntax => NormaliseStruct(structDeclarationSyntax),
+                InterfaceDeclarationSyntax interfaceDeclarationSyntax => NormaliseInterface(interfaceDeclarationSyntax),
+                EnumDeclarationSyntax enumDeclarationSyntax => NormaliseEnum(enumDeclarationSyntax),
+                _ => string.Empty,
+            };
+        }
+
+        private static string NormaliseEnum(EnumDeclarationSyntax enumDeclarationSyntax)
+        {
+            return string.Concat(str0: ENUM_TYPE_PREFIX, enumDeclarationSyntax.Identifier.ToString());
+        }
+
+        private static string NormaliseInterface(InterfaceDeclarationSyntax interfaceDeclarationSyntax)
+        {
+            return string.Concat(str0: INTERFACE_TYPE_PREFIX, interfaceDeclarationSyntax.Identifier.ToString());
+        }
+
+        private static string NormaliseStruct(StructDeclarationSyntax structDeclarationSyntax)
+        {
+            return string.Concat(str0: STRUCT_TYPE_PREFIX, structDeclarationSyntax.Identifier.ToString());
+        }
+
+        private static string NormaliseRecord(RecordDeclarationSyntax recordDeclarationSyntax)
+        {
+            return string.Concat(str0: RECORD_TYPE_PREFIX, recordDeclarationSyntax.Identifier.ToString());
+        }
+
+        private static string NormaliseClass(ClassDeclarationSyntax classDeclarationSyntax)
+        {
+            bool isStatic = classDeclarationSyntax.Modifiers
+                .Any(m => m.IsKind(SyntaxKind.StaticKeyword));
+
+            string prefix = isStatic ? STATIC_TYPE_PREFIX : CLASS_TYPE_PREFIX;
+            return string.Concat(str0: prefix, classDeclarationSyntax.Identifier.ToString());
+        }
+
+        private static IReadOnlyList<MemberDeclarationSyntax> GetNonNestedTypeDeclarations(
+            CompilationUnitSyntax compilationUnit
+        )
+        {
+            return [..GetNonNestedTypeDeclarations(compilationUnit.Members)];
+        }
+
+        private static IEnumerable<MemberDeclarationSyntax> GetNonNestedTypeDeclarations(
+            in SyntaxList<MemberDeclarationSyntax> members
+        )
+        {
+            return members
+                .SelectMany(GetMemberDeclarations)
+                .RemoveNulls();
+        }
+
+        private static IEnumerable<MemberDeclarationSyntax?> GetMemberDeclarations(MemberDeclarationSyntax member)
         {
             SyntaxKind kind = member.Kind();
 
             if (kind == SyntaxKind.NamespaceDeclaration)
             {
                 NamespaceDeclarationSyntax namespaceDeclaration = (NamespaceDeclarationSyntax)member;
+                return GetNonNestedTypeDeclarations(namespaceDeclaration.Members);
+            }
 
-                foreach (MemberDeclarationSyntax member2 in GetNonNestedTypeDeclarations(namespaceDeclaration.Members))
-                {
-                    yield return member2;
-                }
-            }
-            else if (SyntaxFacts.IsTypeDeclaration(kind))
+            if (SyntaxFacts.IsTypeDeclaration(kind))
             {
-                yield return member;
+                return [member];
             }
+
+            return [];
         }
     }
 }
