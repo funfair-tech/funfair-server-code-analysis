@@ -33,7 +33,10 @@ public sealed class ClassVisibilityDiagnosticsAnalyzer : DiagnosticAnalyzer
         ),
     ];
 
-    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => [.. Classes.Select(c => c.Rule)];
+    private static readonly ImmutableArray<DiagnosticDescriptor> SupportedDiagnosticsCache =
+        [.. Classes.Select(c => c.Rule)];
+
+    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => SupportedDiagnosticsCache;
 
     public override void Initialize(AnalysisContext context)
     {
@@ -45,40 +48,13 @@ public sealed class ClassVisibilityDiagnosticsAnalyzer : DiagnosticAnalyzer
 
     private static void PerformCheck(CompilationStartAnalysisContext compilationStartContext)
     {
-        compilationStartContext.RegisterSyntaxNodeAction(action: CheckClassVisibility, SyntaxKind.ClassDeclaration);
-    }
+        // Create a cached checker instance per compilation for symbol caching
+        Checker checker = new(compilationStartContext.Compilation);
 
-    private static void CheckClassVisibility(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
-    {
-        if (syntaxNodeAnalysisContext.Node is not ClassDeclarationSyntax classDeclarationSyntax)
-        {
-            return;
-        }
-
-        if (syntaxNodeAnalysisContext.ContainingSymbol is not INamedTypeSymbol containingType)
-        {
-            return;
-        }
-
-        IReadOnlyList<INamedTypeSymbol> baseClasses = [.. containingType.BaseClasses()];
-
-        if (baseClasses.Count == 0)
-        {
-            return;
-        }
-
-        foreach (ConfiguredClass classDefinition in Classes
-                     .Where(classDefinition =>
-                                classDefinition.TypeMatchesClass(baseClasses: baseClasses)
-                                && !classDefinition.HasCorrectClassModifier(classDeclarationSyntax: classDeclarationSyntax)
-                                )
-                 )
-        {
-            classDeclarationSyntax.ReportDiagnostics(
-                syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
-                rule: classDefinition.Rule
-            );
-        }
+        compilationStartContext.RegisterSyntaxNodeAction(
+            action: checker.CheckClassVisibility,
+            SyntaxKind.ClassDeclaration
+        );
     }
 
     private static ConfiguredClass Build(
@@ -90,6 +66,80 @@ public sealed class ClassVisibilityDiagnosticsAnalyzer : DiagnosticAnalyzer
     )
     {
         return new(ruleId: ruleId, title: title, message: message, className: className, visibility: visibility);
+    }
+
+    private sealed class Checker
+    {
+        private readonly Dictionary<INamedTypeSymbol, bool> _matchCache = new(SymbolEqualityComparer.Default);
+        private readonly HashSet<string> _targetClassNames;
+
+        public Checker(Compilation compilation)
+        {
+            // Pre-compute target class names for faster lookup
+            this._targetClassNames = new HashSet<string>(
+                Classes.Select(c => c.ClassName),
+                StringComparer.Ordinal
+            );
+        }
+
+        public void CheckClassVisibility(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
+        {
+            if (syntaxNodeAnalysisContext.Node is not ClassDeclarationSyntax classDeclarationSyntax)
+            {
+                return;
+            }
+
+            // Early exit: check if the containing symbol is a named type
+            if (syntaxNodeAnalysisContext.ContainingSymbol is not INamedTypeSymbol containingType)
+            {
+                return;
+            }
+
+            // Cache base classes once per check
+            IReadOnlyList<INamedTypeSymbol> baseClasses = [.. containingType.BaseClasses()];
+
+            if (baseClasses.Count == 0)
+            {
+                return;
+            }
+
+            // Check if any base class matches our target classes using cached results
+            bool hasMatchingBaseClass = baseClasses.Any(this.IsMatchingBaseClass);
+
+            if (!hasMatchingBaseClass)
+            {
+                return;
+            }
+
+            // Only iterate through configured classes if we have a matching base class
+            Classes
+                .Where(classDefinition =>
+                    classDefinition.TypeMatchesClass(baseClasses: baseClasses)
+                    && !classDefinition.HasCorrectClassModifier(classDeclarationSyntax: classDeclarationSyntax))
+                .ToList()
+                .ForEach(classDefinition =>
+                    classDeclarationSyntax.ReportDiagnostics(
+                        syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
+                        rule: classDefinition.Rule
+                    ));
+        }
+
+        private bool IsMatchingBaseClass(INamedTypeSymbol baseClass)
+        {
+            // Check cache first
+            if (this._matchCache.TryGetValue(key: baseClass, out bool isMatch))
+            {
+                return isMatch;
+            }
+
+            // Compute and cache result
+            INamedTypeSymbol originalDefinition = baseClass.OriginalDefinition;
+            string displayString = SymbolDisplay.ToDisplayString(originalDefinition);
+            bool matches = this._targetClassNames.Contains(displayString);
+
+            this._matchCache[baseClass] = matches;
+            return matches;
+        }
     }
 
     [DebuggerDisplay("{Rule.Id} {Rule.Title} Class {ClassName} Visibility {Visibility}")]
@@ -111,7 +161,7 @@ public sealed class ClassVisibilityDiagnosticsAnalyzer : DiagnosticAnalyzer
 
         public DiagnosticDescriptor Rule { get; }
 
-        private string ClassName { get; }
+        public string ClassName { get; }
 
         private SyntaxKind Visibility { get; }
 
