@@ -112,7 +112,6 @@ public sealed class ClassVisibilityDiagnosticsAnalyzer : DiagnosticAnalyzer
                 .Where(classDefinition =>
                     classDefinition.TypeMatchesClass(baseClasses: baseClasses)
                     && !classDefinition.HasCorrectClassModifier(classDeclarationSyntax: classDeclarationSyntax))
-                .ToList()
                 .ForEach(classDefinition =>
                     classDeclarationSyntax.ReportDiagnostics(
                         syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
