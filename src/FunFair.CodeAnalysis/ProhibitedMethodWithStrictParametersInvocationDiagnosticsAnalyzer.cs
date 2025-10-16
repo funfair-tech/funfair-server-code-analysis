@@ -1,4 +1,3 @@
-
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -91,7 +90,9 @@ public sealed class ProhibitedMethodWithStrictParametersInvocationDiagnosticsAna
 
     private sealed class Checker
     {
-        private readonly Dictionary<string, IReadOnlyList<ProhibitedMethodsSpec>> _qualifiedMethodCache = new(StringComparer.Ordinal);
+        private readonly Dictionary<string, IReadOnlyList<ProhibitedMethodsSpec>> _qualifiedMethodCache = new(
+            StringComparer.Ordinal
+        );
 
         [SuppressMessage(
             category: "Roslynator.Analyzers",
@@ -123,14 +124,17 @@ public sealed class ProhibitedMethodWithStrictParametersInvocationDiagnosticsAna
                 return;
             }
 
-            IReadOnlyList<ProhibitedMethodsSpec> matchingProhibitedMethods = this.GetMatchingProhibitedMethods(qualifiedName);
+            IReadOnlyList<ProhibitedMethodsSpec> matchingProhibitedMethods = this.GetMatchingProhibitedMethods(
+                qualifiedName
+            );
 
-            IEnumerable<ProhibitedMethodsSpec> violatingMethods = matchingProhibitedMethods
-                .Where(prohibitedMethod => !IsInvocationAllowed(
+            IEnumerable<ProhibitedMethodsSpec> violatingMethods = matchingProhibitedMethods.Where(prohibitedMethod =>
+                !IsInvocationAllowed(
                     arguments: invocation.ArgumentList,
                     parameters: memberSymbol.Parameters,
                     prohibitedMethod: prohibitedMethod
-                ));
+                )
+            );
 
             foreach (ProhibitedMethodsSpec prohibitedMethod in violatingMethods)
             {
@@ -143,11 +147,18 @@ public sealed class ProhibitedMethodWithStrictParametersInvocationDiagnosticsAna
 
         private IReadOnlyList<ProhibitedMethodsSpec> GetMatchingProhibitedMethods(string qualifiedName)
         {
-            if (!this._qualifiedMethodCache.TryGetValue(key: qualifiedName, out IReadOnlyList<ProhibitedMethodsSpec>? cached))
+            if (
+                !this._qualifiedMethodCache.TryGetValue(
+                    key: qualifiedName,
+                    out IReadOnlyList<ProhibitedMethodsSpec>? cached
+                )
+            )
             {
                 cached =
                 [
-                    ..ForcedMethods.Where(rule => StringComparer.Ordinal.Equals(x: rule.QualifiedName, y: qualifiedName))
+                    .. ForcedMethods.Where(rule =>
+                        StringComparer.Ordinal.Equals(x: rule.QualifiedName, y: qualifiedName)
+                    ),
                 ];
 
                 this._qualifiedMethodCache[qualifiedName] = cached;
@@ -168,22 +179,24 @@ public sealed class ProhibitedMethodWithStrictParametersInvocationDiagnosticsAna
             }
 
             // ! Parameter is not null here
-            return !prohibitedMethod.BannedSignatures
-                .SelectMany(bannedSignature => bannedSignature)
-                .Select(paramSpec => (
-                    ParamSpec: paramSpec,
-                    Parameter: parameters.FirstOrDefault(param =>
-                        StringComparer.Ordinal.Equals(x: param.MetadataName, y: paramSpec.Name)
+            return !prohibitedMethod
+                .BannedSignatures.SelectMany(bannedSignature => bannedSignature)
+                .Select(paramSpec =>
+                    (
+                        ParamSpec: paramSpec,
+                        Parameter: parameters.FirstOrDefault(param =>
+                            StringComparer.Ordinal.Equals(x: param.MetadataName, y: paramSpec.Name)
+                        )
                     )
-                ))
+                )
                 .Where(tuple => tuple.Parameter is not null)
-                .Select(tuple => (
-                    tuple.ParamSpec,
-                    Argument: arguments.Arguments[tuple.Parameter!.Ordinal]
-                ))
+                .Select(tuple => (tuple.ParamSpec, Argument: arguments.Arguments[tuple.Parameter!.Ordinal]))
                 .Any(tuple =>
                     StringComparer.Ordinal.Equals(tuple.Argument.Expression.ToFullString(), y: tuple.ParamSpec.Value)
-                    && StringComparer.Ordinal.Equals(tuple.Argument.Expression.Kind().ToString(), y: tuple.ParamSpec.Type)
+                    && StringComparer.Ordinal.Equals(
+                        tuple.Argument.Expression.Kind().ToString(),
+                        y: tuple.ParamSpec.Type
+                    )
                 );
         }
     }
