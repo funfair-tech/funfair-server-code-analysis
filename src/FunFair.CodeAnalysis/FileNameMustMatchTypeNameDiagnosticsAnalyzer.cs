@@ -43,10 +43,7 @@ public sealed class FileNameMustMatchTypeNameDiagnosticsAnalyzer : DiagnosticAna
         // Create a checker instance per compilation for caching
         Checker checker = new();
 
-        compilationStartContext.RegisterSyntaxNodeAction(
-            action: checker.CheckTypeNames,
-            SyntaxKind.CompilationUnit
-        );
+        compilationStartContext.RegisterSyntaxNodeAction(action: checker.CheckTypeNames, SyntaxKind.CompilationUnit);
     }
 
     private sealed class Checker
@@ -68,13 +65,17 @@ public sealed class FileNameMustMatchTypeNameDiagnosticsAnalyzer : DiagnosticAna
             string fileName = GetDocumentFileName(compilationUnitSyntax);
             IReadOnlyList<MemberDeclarationSyntax> members = GetNonNestedTypeDeclarations(compilationUnitSyntax);
 
-            members.Select(member => (Member: member, TypeName: this.GetTypeName(member)))
-                   .Where(FileNameIsDifferent)
-                   .ForEach(item => item.Member.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: Rule));
+            members
+                .Select(member => (Member: member, TypeName: this.GetTypeName(member)))
+                .Where(FileNameIsDifferent)
+                .ForEach(item =>
+                    item.Member.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: Rule)
+                );
 
             bool FileNameIsDifferent((MemberDeclarationSyntax Member, string TypeName) item)
             {
-                return !string.IsNullOrWhiteSpace(item.TypeName) && !FileNameComparer.Equals(x: fileName, y: item.TypeName);
+                return !string.IsNullOrWhiteSpace(item.TypeName)
+                    && !FileNameComparer.Equals(x: fileName, y: item.TypeName);
             }
         }
 
@@ -90,9 +91,7 @@ public sealed class FileNameMustMatchTypeNameDiagnosticsAnalyzer : DiagnosticAna
         {
             int split = fileName.IndexOf('.');
 
-            return split == -1
-                ? fileName
-                : fileName.Substring(startIndex: 0, length: split);
+            return split == -1 ? fileName : fileName.Substring(startIndex: 0, length: split);
         }
 
         private string GetTypeName(MemberDeclarationSyntax memberDeclarationSyntax)
@@ -129,8 +128,7 @@ public sealed class FileNameMustMatchTypeNameDiagnosticsAnalyzer : DiagnosticAna
             in SyntaxList<MemberDeclarationSyntax> members
         )
         {
-            return members.SelectMany(GetMemberDeclarations)
-                          .RemoveNulls();
+            return members.SelectMany(GetMemberDeclarations).RemoveNulls();
         }
 
         private static IEnumerable<MemberDeclarationSyntax?> GetMemberDeclarations(MemberDeclarationSyntax member)
