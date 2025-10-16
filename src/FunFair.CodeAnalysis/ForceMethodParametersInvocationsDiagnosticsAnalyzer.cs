@@ -1,4 +1,3 @@
-
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -19,43 +18,56 @@ public sealed class ForceMethodParametersInvocationsDiagnosticsAnalyzer : Diagno
 {
     private static readonly ForcedMethodsSpec[] ForcedMethods =
     [
-        Build(ruleId: Rules.RuleDontUseJsonSerializerWithoutJsonOptions,
-              title: "Avoid use of serializer without own JsonSerializerOptions parameter",
-              message: "Only use JsonSerializer.Serialize with own JsonSerializerOptions",
-              sourceClass: "System.Text.Json.JsonSerializer",
-              forcedMethod: "Serialize",
-              requiredArgumentCount: 2),
-        Build(ruleId: Rules.RuleDontUseJsonSerializerWithoutJsonOptions,
-              title: "Avoid use of serializer without own JsonSerializerOptions parameter",
-              message: "Only use JsonSerializer.Serialize with own JsonSerializerOptions",
-              sourceClass: "System.Text.Json.JsonSerializer",
-              forcedMethod: "SerializeAsync",
-              requiredArgumentCount: 2),
-        Build(ruleId: Rules.RuleDontUseJsonDeserializerWithoutJsonOptions,
-              title: "Avoid use of deserializer without own JsonSerializerOptions parameter",
-              message: "Only use JsonSerializer.Deserialize with own JsonSerializerOptions",
-              sourceClass: "System.Text.Json.JsonSerializer",
-              forcedMethod: "Deserialize",
-              requiredArgumentCount: 2),
-        Build(ruleId: Rules.RuleDontUseJsonDeserializerWithoutJsonOptions,
-              title: "Avoid use of deserializer without own JsonSerializerOptions parameter",
-              message: "Only use JsonSerializer.Deserialize with own JsonSerializerOptions",
-              sourceClass: "System.Text.Json.JsonSerializer",
-              forcedMethod: "DeserializeAsync",
-              requiredArgumentCount: 2),
-        Build(ruleId: Rules.RuleDontUseSubstituteReceivedWithoutAmountOfCalls,
-              title: "Avoid use of received without call count",
-              message: "Only use Received with expected call count",
-              sourceClass: "NSubstitute.SubstituteExtensions",
-              forcedMethod: "Received",
-              requiredArgumentCount: 1),
+        Build(
+            ruleId: Rules.RuleDontUseJsonSerializerWithoutJsonOptions,
+            title: "Avoid use of serializer without own JsonSerializerOptions parameter",
+            message: "Only use JsonSerializer.Serialize with own JsonSerializerOptions",
+            sourceClass: "System.Text.Json.JsonSerializer",
+            forcedMethod: "Serialize",
+            requiredArgumentCount: 2
+        ),
+        Build(
+            ruleId: Rules.RuleDontUseJsonSerializerWithoutJsonOptions,
+            title: "Avoid use of serializer without own JsonSerializerOptions parameter",
+            message: "Only use JsonSerializer.Serialize with own JsonSerializerOptions",
+            sourceClass: "System.Text.Json.JsonSerializer",
+            forcedMethod: "SerializeAsync",
+            requiredArgumentCount: 2
+        ),
+        Build(
+            ruleId: Rules.RuleDontUseJsonDeserializerWithoutJsonOptions,
+            title: "Avoid use of deserializer without own JsonSerializerOptions parameter",
+            message: "Only use JsonSerializer.Deserialize with own JsonSerializerOptions",
+            sourceClass: "System.Text.Json.JsonSerializer",
+            forcedMethod: "Deserialize",
+            requiredArgumentCount: 2
+        ),
+        Build(
+            ruleId: Rules.RuleDontUseJsonDeserializerWithoutJsonOptions,
+            title: "Avoid use of deserializer without own JsonSerializerOptions parameter",
+            message: "Only use JsonSerializer.Deserialize with own JsonSerializerOptions",
+            sourceClass: "System.Text.Json.JsonSerializer",
+            forcedMethod: "DeserializeAsync",
+            requiredArgumentCount: 2
+        ),
+        Build(
+            ruleId: Rules.RuleDontUseSubstituteReceivedWithoutAmountOfCalls,
+            title: "Avoid use of received without call count",
+            message: "Only use Received with expected call count",
+            sourceClass: "NSubstitute.SubstituteExtensions",
+            forcedMethod: "Received",
+            requiredArgumentCount: 1
+        ),
     ];
 
-    private static readonly Dictionary<string, IReadOnlyList<ForcedMethodsSpec>> MethodSpecsCache = ForcedMethods.GroupBy(x => x.QualifiedName, StringComparer.Ordinal)
-    .ToDictionary(item => item.Key, item => (IReadOnlyList<ForcedMethodsSpec>)[..item], StringComparer.Ordinal);
+    private static readonly Dictionary<string, IReadOnlyList<ForcedMethodsSpec>> MethodSpecsCache = ForcedMethods
+        .GroupBy(x => x.QualifiedName, StringComparer.Ordinal)
+        .ToDictionary(item => item.Key, item => (IReadOnlyList<ForcedMethodsSpec>)[.. item], StringComparer.Ordinal);
 
     private static readonly ImmutableArray<DiagnosticDescriptor> SupportedDiagnosticsCache =
-        [.. ForcedMethods.Select(r => r.Rule)];
+    [
+        .. ForcedMethods.Select(r => r.Rule),
+    ];
 
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => SupportedDiagnosticsCache;
 
@@ -97,8 +109,6 @@ public sealed class ForceMethodParametersInvocationsDiagnosticsAnalyzer : Diagno
         );
     }
 
-
-
     private sealed class Checker
     {
         private readonly Dictionary<string, IReadOnlyList<ForcedMethodsSpec>> _methodSpecsCache;
@@ -107,7 +117,6 @@ public sealed class ForceMethodParametersInvocationsDiagnosticsAnalyzer : Diagno
         public Checker(Dictionary<string, IReadOnlyList<ForcedMethodsSpec>> methodSpecsCache)
         {
             this._methodSpecsCache = methodSpecsCache;
-
         }
 
         [SuppressMessage(
@@ -137,7 +146,12 @@ public sealed class ForceMethodParametersInvocationsDiagnosticsAnalyzer : Diagno
                 className: SymbolDisplay.ToDisplayString(memberSymbol.ContainingType)
             );
 
-            if (!this._methodSpecsCache.TryGetValue(key: mapping.QualifiedName, out IReadOnlyList<ForcedMethodsSpec>? forcedMethods))
+            if (
+                !this._methodSpecsCache.TryGetValue(
+                    key: mapping.QualifiedName,
+                    out IReadOnlyList<ForcedMethodsSpec>? forcedMethods
+                )
+            )
             {
                 return;
             }
@@ -150,12 +164,14 @@ public sealed class ForceMethodParametersInvocationsDiagnosticsAnalyzer : Diagno
                         invocationArguments: memberSymbol,
                         argumentsInvokedCount: argumentCount,
                         requiredArgumentsCount: prohibitedMethod.RequiredArgumentCount
-                    ))
+                    )
+                )
                 .ForEach(prohibitedMethod =>
                     invocation.ReportDiagnostics(
                         syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
                         rule: prohibitedMethod.Rule
-                    ));
+                    )
+                );
         }
 
         private bool IsInvocationAllowed(
