@@ -210,7 +210,12 @@ public sealed class ProhibitedMethodsDiagnosticsAnalyzer : DiagnosticAnalyzer
             string typeMetadataName = typeInfo.ConstructedFrom.MetadataName;
 
             ProhibitedMethodsSpec? matchedRule = BannedMethods.FirstOrNull(item =>
-                IsBannedMethod(item: item, cachedSymbols: cachedSymbols, typeMetadataName: typeMetadataName, invokedMethodName: invokedMethodName)
+                IsBannedMethod(
+                    item: item,
+                    cachedSymbols: cachedSymbols,
+                    typeMetadataName: typeMetadataName,
+                    invokedMethodName: invokedMethodName
+                )
             );
 
             if (matchedRule is not null)
@@ -222,14 +227,16 @@ public sealed class ProhibitedMethodsDiagnosticsAnalyzer : DiagnosticAnalyzer
             }
         }
 
-        private static bool IsBannedMethod(in ProhibitedMethodsSpec item,
-                                           Dictionary<string, INamedTypeSymbol> cachedSymbols,
-                                           string typeMetadataName,
-                                           string invokedMethodName)
+        private static bool IsBannedMethod(
+            in ProhibitedMethodsSpec item,
+            Dictionary<string, INamedTypeSymbol> cachedSymbols,
+            string typeMetadataName,
+            string invokedMethodName
+        )
         {
             return cachedSymbols.TryGetValue(key: item.SourceClass, out INamedTypeSymbol? metadataType)
-                   && StringComparer.OrdinalIgnoreCase.Equals(x: typeMetadataName, y: metadataType.MetadataName)
-                   && StringComparer.Ordinal.Equals(x: invokedMethodName, y: item.BannedMethod);
+                && StringComparer.OrdinalIgnoreCase.Equals(x: typeMetadataName, y: metadataType.MetadataName)
+                && StringComparer.Ordinal.Equals(x: invokedMethodName, y: item.BannedMethod);
         }
 
         private Dictionary<string, INamedTypeSymbol> GetCachedSymbols(Compilation compilation)
@@ -243,7 +250,9 @@ public sealed class ProhibitedMethodsDiagnosticsAnalyzer : DiagnosticAnalyzer
             return BannedMethods
                 .Select(rule => rule.SourceClass)
                 .Distinct(StringComparer.Ordinal)
-                .Select(sourceClass => (SourceClass: sourceClass, Symbol: compilation.GetTypeByMetadataName(sourceClass)))
+                .Select(sourceClass =>
+                    (SourceClass: sourceClass, Symbol: compilation.GetTypeByMetadataName(sourceClass))
+                )
                 .Where(tuple => tuple.Symbol is not null)
                 .ToDictionary(
                     keySelector: tuple => tuple.SourceClass,
@@ -261,7 +270,7 @@ public sealed class ProhibitedMethodsDiagnosticsAnalyzer : DiagnosticAnalyzer
             {
                 MemberAccessExpressionSyntax syntax => syntax,
                 IdentifierNameSyntax identifierName => identifierName,
-                _ => null
+                _ => null,
             };
 
             if (expression is null)
@@ -269,10 +278,13 @@ public sealed class ProhibitedMethodsDiagnosticsAnalyzer : DiagnosticAnalyzer
                 return null;
             }
 
-            INamedTypeSymbol? typeInfo = syntaxNodeAnalysisContext
-                .SemanticModel
-                .GetTypeInfo(expression: expression, cancellationToken: syntaxNodeAnalysisContext.CancellationToken)
-                .Type as INamedTypeSymbol;
+            INamedTypeSymbol? typeInfo =
+                syntaxNodeAnalysisContext
+                    .SemanticModel.GetTypeInfo(
+                        expression: expression,
+                        cancellationToken: syntaxNodeAnalysisContext.CancellationToken
+                    )
+                    .Type as INamedTypeSymbol;
 
             return typeInfo?.ConstructedFrom is not null ? typeInfo : null;
         }
