@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using FunFair.CodeAnalysis.Extensions;
 using FunFair.CodeAnalysis.Helpers;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -50,32 +51,24 @@ public sealed class ReThrowingExceptionShouldSpecifyInnerExceptionDiagnosticsAna
             return;
         }
 
-        IReadOnlyList<ExpressionSyntax> throwExpressions = GetAllThrowExpressions(catchClause.Block);
+        FindErrors(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, catchClause: catchClause, exceptionVariable: exceptionVariable);
+    }
 
-        if (throwExpressions.Count == 0)
-        {
-            return;
-        }
-
-        foreach (ExpressionSyntax expression in throwExpressions)
-        {
-            ArgumentListSyntax? argumentList = expression switch
+    private static void FindErrors(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, CatchClauseSyntax catchClause, string exceptionVariable)
+    {
+        // ! argumentList is always not null here
+        GetAllThrowExpressions(catchClause.Block)
+            .Select(expression => (expression, argumentList: expression switch
             {
                 ObjectCreationExpressionSyntax objectCreation => objectCreation.ArgumentList,
                 InvocationExpressionSyntax invocation => invocation.ArgumentList,
                 _ => null
-            };
-
-            if (argumentList is not null)
-            {
-                CheckArgumentList(
-                    argumentList: argumentList,
-                    exceptionVariable: exceptionVariable,
-                    syntaxNodeContext: syntaxNodeAnalysisContext,
-                    location: expression.GetLocation()
-                );
-            }
-        }
+            }))
+            .Where(expression => expression.argumentList is not null)
+            .ForEach(item => CheckArgumentList(argumentList: item.argumentList!,
+                                               exceptionVariable: exceptionVariable,
+                                               syntaxNodeContext: syntaxNodeAnalysisContext,
+                                               location: item.expression.GetLocation()));
     }
 
     private static void CheckArgumentList(
@@ -113,15 +106,21 @@ public sealed class ReThrowingExceptionShouldSpecifyInnerExceptionDiagnosticsAna
 
     private static IReadOnlyList<ExpressionSyntax> GetAllThrowExpressions(BlockSyntax codeBlock)
     {
-        IEnumerable<ExpressionSyntax> throwStatements = codeBlock.DescendantNodes()
-            .OfType<ThrowStatementSyntax>()
-            .Select(x => x.Expression)
-            .RemoveNulls();
+        return
+        [
+            ..codeBlock.DescendantNodes()
+                       .Select(x =>
+                               {
+                                   return x switch
+                                   {
+                                       ThrowStatementSyntax throwStatement => throwStatement.Expression,
+                                       ThrowExpressionSyntax throwExpression => throwExpression.Expression,
+                                       _ => null
+                                   };
+                               })
+                       .RemoveNulls()
+        ];
 
-        IEnumerable<ExpressionSyntax> throwExpressions = codeBlock.DescendantNodes()
-            .OfType<ThrowExpressionSyntax>()
-            .Select(x => x.Expression);
 
-        return [.. throwStatements.Concat(throwExpressions)];
     }
 }
