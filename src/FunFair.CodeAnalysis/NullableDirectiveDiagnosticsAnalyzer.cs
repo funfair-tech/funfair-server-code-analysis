@@ -46,9 +46,6 @@ public sealed class NullableDirectiveDiagnosticsAnalyzer : DiagnosticAnalyzer
             return;
         }
 
-        nullableDirective.ReportDiagnostics(
-            syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
-            rule: Rule
-        );
+        nullableDirective.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: Rule);
     }
 }
