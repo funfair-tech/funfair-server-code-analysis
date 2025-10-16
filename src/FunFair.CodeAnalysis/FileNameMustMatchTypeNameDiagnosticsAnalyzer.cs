@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.Linq;
 using FunFair.CodeAnalysis.Extensions;
 using FunFair.CodeAnalysis.Helpers;
 using Microsoft.CodeAnalysis;
@@ -21,7 +23,12 @@ public sealed class FileNameMustMatchTypeNameDiagnosticsAnalyzer : DiagnosticAna
         message: "Should be in a file of the same name as the type"
     );
 
-    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => SupportedDiagnosisList.Build(Rule);
+    private static readonly ImmutableArray<DiagnosticDescriptor> SupportedDiagnosticsCache =
+        SupportedDiagnosisList.Build(Rule);
+
+    private static readonly StringComparer FileNameComparer = StringComparer.OrdinalIgnoreCase;
+
+    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => SupportedDiagnosticsCache;
 
     public override void Initialize(AnalysisContext context)
     {
@@ -33,115 +40,115 @@ public sealed class FileNameMustMatchTypeNameDiagnosticsAnalyzer : DiagnosticAna
 
     private static void PerformCheck(CompilationStartAnalysisContext compilationStartContext)
     {
-        compilationStartContext.RegisterSyntaxNodeAction(action: CheckTypeNames, SyntaxKind.CompilationUnit);
+        // Create a checker instance per compilation for caching
+        Checker checker = new();
+
+        compilationStartContext.RegisterSyntaxNodeAction(
+            action: checker.CheckTypeNames,
+            SyntaxKind.CompilationUnit
+        );
     }
 
-    private static void CheckTypeNames(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
+    private sealed class Checker
     {
-        if (syntaxNodeAnalysisContext.Node is not CompilationUnitSyntax compilationUnitSyntax)
+        private readonly Dictionary<MemberDeclarationSyntax, string> _typeNameCache = [];
+
+        [SuppressMessage(
+            category: "Roslynator.Analyzers",
+            checkId: "RCS1231:Make parameter ref read only",
+            Justification = "Needed here"
+        )]
+        public void CheckTypeNames(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
         {
-            return;
-        }
-
-        string fileName = GetDocumentFileName(compilationUnitSyntax);
-
-        IReadOnlyList<MemberDeclarationSyntax> members = GetNonNestedTypeDeclarations(compilationUnitSyntax);
-
-        foreach (MemberDeclarationSyntax member in members)
-        {
-            string name = GetTypeName(member);
-
-            if (string.IsNullOrWhiteSpace(name))
+            if (syntaxNodeAnalysisContext.Node is not CompilationUnitSyntax compilationUnitSyntax)
             {
-                continue;
+                return;
             }
 
-            if (!StringComparer.OrdinalIgnoreCase.Equals(x: fileName, y: name))
+            string fileName = GetDocumentFileName(compilationUnitSyntax);
+            IReadOnlyList<MemberDeclarationSyntax> members = GetNonNestedTypeDeclarations(compilationUnitSyntax);
+
+            members.Select(member => (Member: member, TypeName: this.GetTypeName(member)))
+                   .Where(FileNameIsDifferent)
+                   .ForEach(item => item.Member.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: Rule));
+
+            bool FileNameIsDifferent((MemberDeclarationSyntax Member, string TypeName) item)
             {
-                member.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: Rule);
+                return !string.IsNullOrWhiteSpace(item.TypeName) && !FileNameComparer.Equals(x: fileName, y: item.TypeName);
             }
         }
-    }
 
-    private static string GetDocumentFileName(CompilationUnitSyntax compilationUnitSyntax)
-    {
-        string fileName = Path.GetFileNameWithoutExtension(compilationUnitSyntax.SyntaxTree.FilePath);
-        int split = fileName.IndexOf('.');
-
-        if (split != -1)
+        private static string GetDocumentFileName(CompilationUnitSyntax compilationUnitSyntax)
         {
-            return fileName.Substring(startIndex: 0, length: split);
+            string filePath = compilationUnitSyntax.SyntaxTree.FilePath;
+
+            string fileName = Path.GetFileNameWithoutExtension(filePath);
+            return GetSplitFileName(fileName);
         }
 
-        return fileName;
-    }
-
-    private static string GetTypeName(MemberDeclarationSyntax memberDeclarationSyntax)
-    {
-        return memberDeclarationSyntax switch
+        private static string GetSplitFileName(string fileName)
         {
-            ClassDeclarationSyntax classDeclarationSyntax => NormaliseClass(classDeclarationSyntax),
-            RecordDeclarationSyntax recordDeclarationSyntax => NormaliseStruct(recordDeclarationSyntax),
-            StructDeclarationSyntax structDeclarationSyntax => NormaliseRecord(structDeclarationSyntax),
-            InterfaceDeclarationSyntax interfaceDeclarationSyntax => NormaliseInterface(interfaceDeclarationSyntax),
-            EnumDeclarationSyntax enumDeclarationSyntax => NormaliseEnum(enumDeclarationSyntax),
-            _ => string.Empty,
-        };
-    }
+            int split = fileName.IndexOf('.');
 
-    private static string NormaliseEnum(EnumDeclarationSyntax enumDeclarationSyntax)
-    {
-        return enumDeclarationSyntax.Identifier.ToString();
-    }
+            return split == -1
+                ? fileName
+                : fileName.Substring(startIndex: 0, length: split);
+        }
 
-    private static string NormaliseInterface(InterfaceDeclarationSyntax interfaceDeclarationSyntax)
-    {
-        return interfaceDeclarationSyntax.Identifier.ToString();
-    }
+        private string GetTypeName(MemberDeclarationSyntax memberDeclarationSyntax)
+        {
+            // Check cache first
+            if (this._typeNameCache.TryGetValue(key: memberDeclarationSyntax, out string? cachedName))
+            {
+                return cachedName;
+            }
 
-    private static string NormaliseRecord(StructDeclarationSyntax structDeclarationSyntax)
-    {
-        return structDeclarationSyntax.Identifier.ToString();
-    }
+            // Compute and cache result
+            string typeName = memberDeclarationSyntax switch
+            {
+                ClassDeclarationSyntax classDecl => classDecl.Identifier.ToString(),
+                RecordDeclarationSyntax recordDecl => recordDecl.Identifier.ToString(),
+                StructDeclarationSyntax structDecl => structDecl.Identifier.ToString(),
+                InterfaceDeclarationSyntax interfaceDecl => interfaceDecl.Identifier.ToString(),
+                EnumDeclarationSyntax enumDecl => enumDecl.Identifier.ToString(),
+                _ => string.Empty,
+            };
 
-    private static string NormaliseStruct(RecordDeclarationSyntax recordDeclarationSyntax)
-    {
-        return recordDeclarationSyntax.Identifier.ToString();
-    }
+            this._typeNameCache[memberDeclarationSyntax] = typeName;
+            return typeName;
+        }
 
-    private static string NormaliseClass(ClassDeclarationSyntax classDeclarationSyntax)
-    {
-        return classDeclarationSyntax.Identifier.ToString();
-    }
+        private static IReadOnlyList<MemberDeclarationSyntax> GetNonNestedTypeDeclarations(
+            CompilationUnitSyntax compilationUnit
+        )
+        {
+            return [.. GetNonNestedTypeDeclarations(compilationUnit.Members)];
+        }
 
-    private static IReadOnlyList<MemberDeclarationSyntax> GetNonNestedTypeDeclarations(
-        CompilationUnitSyntax compilationUnit
-    )
-    {
-        return [.. GetNonNestedTypeDeclarations(compilationUnit.Members)];
-    }
+        private static IEnumerable<MemberDeclarationSyntax> GetNonNestedTypeDeclarations(
+            in SyntaxList<MemberDeclarationSyntax> members
+        )
+        {
+            return members.SelectMany(GetMemberDeclarations)
+                          .RemoveNulls();
+        }
 
-    private static IEnumerable<MemberDeclarationSyntax> GetNonNestedTypeDeclarations(
-        SyntaxList<MemberDeclarationSyntax> members
-    )
-    {
-        foreach (MemberDeclarationSyntax member in members)
+        private static IEnumerable<MemberDeclarationSyntax?> GetMemberDeclarations(MemberDeclarationSyntax member)
         {
             SyntaxKind kind = member.Kind();
 
             if (kind == SyntaxKind.NamespaceDeclaration)
             {
                 NamespaceDeclarationSyntax namespaceDeclaration = (NamespaceDeclarationSyntax)member;
+                return GetNonNestedTypeDeclarations(namespaceDeclaration.Members);
+            }
 
-                foreach (MemberDeclarationSyntax member2 in GetNonNestedTypeDeclarations(namespaceDeclaration.Members))
-                {
-                    yield return member2;
-                }
-            }
-            else if (SyntaxFacts.IsTypeDeclaration(kind))
+            if (SyntaxFacts.IsTypeDeclaration(kind))
             {
-                yield return member;
+                return [member];
             }
+
+            return [];
         }
     }
 }
