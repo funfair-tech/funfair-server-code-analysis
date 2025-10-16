@@ -16,10 +16,11 @@ namespace FunFair.CodeAnalysis;
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public sealed class ParameterOrderingDiagnosticsAnalyzer : DiagnosticAnalyzer
 {
-    private static readonly ImmutableArray<string> PreferredEndingOrdering = [
+    private static readonly ImmutableArray<string> PreferredEndingOrdering =
+    [
         "Microsoft.Extensions.Logging.ILogger<TCategoryName>",
         "Microsoft.Extensions.Logging.ILogger",
-        "System.Threading.CancellationToken"
+        "System.Threading.CancellationToken",
     ];
 
     private static readonly DiagnosticDescriptor Rule = RuleHelpers.CreateRule(
@@ -48,10 +49,7 @@ public sealed class ParameterOrderingDiagnosticsAnalyzer : DiagnosticAnalyzer
     {
         Checker checker = new();
 
-        compilationStartContext.RegisterSyntaxNodeAction(
-            action: checker.MustBeInASaneOrder,
-            SyntaxKind.ParameterList
-        );
+        compilationStartContext.RegisterSyntaxNodeAction(action: checker.MustBeInASaneOrder, SyntaxKind.ParameterList);
     }
 
     private sealed class Checker
@@ -85,7 +83,8 @@ public sealed class ParameterOrderingDiagnosticsAnalyzer : DiagnosticAnalyzer
                         parameters: parameters,
                         matchedEndings: matchedEndings,
                         syntaxNodeAnalysisContext: syntaxNodeAnalysisContext
-                    ));
+                    )
+                );
         }
 
         private static void ProcessParameterType(
@@ -136,17 +135,20 @@ public sealed class ParameterOrderingDiagnosticsAnalyzer : DiagnosticAnalyzer
             ParameterListSyntax parameterList
         )
         {
-            return [..parameterList.Parameters
-                .Select((parameter, index) =>
-                    new ParameterItem(
-                        parameter: parameter,
-                        index: index,
-                        this.GetFullTypeName(
-                            syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
-                            parameterSyntax: parameter
-                        )!
-                    ))
-                ];
+            return
+            [
+                .. parameterList.Parameters.Select(
+                    (parameter, index) =>
+                        new ParameterItem(
+                            parameter: parameter,
+                            index: index,
+                            this.GetFullTypeName(
+                                syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
+                                parameterSyntax: parameter
+                            )!
+                        )
+                ),
+            ];
         }
 
         private string? GetFullTypeName(
@@ -173,7 +175,9 @@ public sealed class ParameterOrderingDiagnosticsAnalyzer : DiagnosticAnalyzer
 
         private static ParameterItem? FindParameter(IReadOnlyList<ParameterItem> parameters, string parameterType)
         {
-            return parameters.FirstOrNull(parameter => TypeNameComparer.Equals(x: parameter.FullTypeName, y: parameterType));
+            return parameters.FirstOrNull(parameter =>
+                TypeNameComparer.Equals(x: parameter.FullTypeName, y: parameterType)
+            );
         }
     }
 
