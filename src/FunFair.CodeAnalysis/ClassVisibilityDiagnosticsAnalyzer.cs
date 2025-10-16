@@ -34,7 +34,9 @@ public sealed class ClassVisibilityDiagnosticsAnalyzer : DiagnosticAnalyzer
     ];
 
     private static readonly ImmutableArray<DiagnosticDescriptor> SupportedDiagnosticsCache =
-        [.. Classes.Select(c => c.Rule)];
+    [
+        .. Classes.Select(c => c.Rule),
+    ];
 
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => SupportedDiagnosticsCache;
 
@@ -74,8 +76,7 @@ public sealed class ClassVisibilityDiagnosticsAnalyzer : DiagnosticAnalyzer
 
         public Checker()
         {
-            this._targetClassNames = Classes.Select(c => c.ClassName)
-                                            .ToImmutableHashSet(StringComparer.Ordinal);
+            this._targetClassNames = Classes.Select(c => c.ClassName).ToImmutableHashSet(StringComparer.Ordinal);
         }
 
         public void CheckClassVisibility(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
@@ -111,12 +112,14 @@ public sealed class ClassVisibilityDiagnosticsAnalyzer : DiagnosticAnalyzer
             Classes
                 .Where(classDefinition =>
                     classDefinition.TypeMatchesClass(baseClasses: baseClasses)
-                    && !classDefinition.HasCorrectClassModifier(classDeclarationSyntax: classDeclarationSyntax))
+                    && !classDefinition.HasCorrectClassModifier(classDeclarationSyntax: classDeclarationSyntax)
+                )
                 .ForEach(classDefinition =>
                     classDeclarationSyntax.ReportDiagnostics(
                         syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
                         rule: classDefinition.Rule
-                    ));
+                    )
+                );
         }
 
         private bool IsMatchingBaseClass(INamedTypeSymbol baseClass)
