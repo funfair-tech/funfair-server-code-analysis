@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using FunFair.CodeAnalysis.Extensions;
 using FunFair.CodeAnalysis.Helpers;
@@ -26,8 +25,12 @@ public sealed class ProhibitedClassesInTestAssembliesDiagnosticsAnalyzer : Diagn
         ),
     ];
 
-    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
-        [.. BannedClasses.Select(selector: r => r.Rule)];
+    private static readonly ImmutableArray<DiagnosticDescriptor> SupportedDiagnosticsCache =
+        [.. BannedClasses.Select(r => r.Rule)];
+
+    private static readonly StringComparer ClassNameComparer = StringComparer.Ordinal;
+
+    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => SupportedDiagnosticsCache;
 
     public override void Initialize(AnalysisContext context)
     {
@@ -47,6 +50,10 @@ public sealed class ProhibitedClassesInTestAssembliesDiagnosticsAnalyzer : Diagn
     private sealed class Checker
     {
         private Dictionary<string, INamedTypeSymbol>? _cachedSymbols;
+        private readonly Dictionary<string, ProhibitedClassSpec?> _specCache = new(ClassNameComparer);
+
+
+
 
         public void PerformCheck(CompilationStartAnalysisContext compilationStartContext)
         {
@@ -79,7 +86,7 @@ public sealed class ProhibitedClassesInTestAssembliesDiagnosticsAnalyzer : Diagn
                 return;
             }
 
-            ProhibitedClassSpec? bannedClass = GetBannedClass(typeSymbol);
+            ProhibitedClassSpec? bannedClass = this.GetBannedClass(typeSymbol);
 
             if (bannedClass is not null)
             {
@@ -90,18 +97,19 @@ public sealed class ProhibitedClassesInTestAssembliesDiagnosticsAnalyzer : Diagn
             }
         }
 
-        [SuppressMessage(category: "SonarAnalyzer.CSharp", checkId: "S3267: Use Linq", Justification = "Not here")]
-        private static ProhibitedClassSpec? GetBannedClass(string typeSymbol)
+        private ProhibitedClassSpec? GetBannedClass(string typeSymbol)
         {
-            foreach (ProhibitedClassSpec rule in BannedClasses)
+            if (this._specCache.TryGetValue(key: typeSymbol, out ProhibitedClassSpec? cachedSpec))
             {
-                if (StringComparer.Ordinal.Equals(x: typeSymbol, y: rule.SourceClass))
-                {
-                    return rule;
-                }
+                return cachedSpec;
             }
 
-            return null;
+            ProhibitedClassSpec? spec = BannedClasses.FirstOrNull(rule =>
+                ClassNameComparer.Equals(x: typeSymbol, y: rule.SourceClass)
+            );
+
+            this._specCache[typeSymbol] = spec;
+            return spec;
         }
 
         private Dictionary<string, INamedTypeSymbol> LookupCachedSymbols(Compilation compilation)
@@ -111,23 +119,13 @@ public sealed class ProhibitedClassesInTestAssembliesDiagnosticsAnalyzer : Diagn
 
         private static Dictionary<string, INamedTypeSymbol> BuildCachedSymbols(Compilation compilation)
         {
-            Dictionary<string, INamedTypeSymbol> cachedSymbols = new(StringComparer.Ordinal);
-
-            foreach (
-                string ruleSourceClass in BannedClasses
-                    .Select(rule => rule.SourceClass)
-                    .Where(ruleSourceClass => !cachedSymbols.ContainsKey(ruleSourceClass))
-            )
-            {
-                INamedTypeSymbol? item = compilation.GetTypeByMetadataName(ruleSourceClass);
-
-                if (item is not null)
-                {
-                    cachedSymbols.Add(key: ruleSourceClass, value: item);
-                }
-            }
-
-            return cachedSymbols;
+            // ! rule item is guaranteed to not be null at the point of access as already filtered
+            return BannedClasses
+                .Select(rule => rule.SourceClass)
+                .Distinct(ClassNameComparer)
+                .Select( ruleSourceClass => ( ruleSourceClass, item: compilation.GetTypeByMetadataName(ruleSourceClass)))
+                .Where( rule => rule.item is not null )
+                .ToDictionary(rule => rule.ruleSourceClass, rule => rule.item!, ClassNameComparer);
         }
 
         private static string? GetNameIfBanned(
