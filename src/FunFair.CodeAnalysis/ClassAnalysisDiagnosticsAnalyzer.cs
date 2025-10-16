@@ -11,14 +11,21 @@ namespace FunFair.CodeAnalysis;
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public sealed class ClassAnalysisDiagnosticsAnalyzer : DiagnosticAnalyzer
 {
-    private static readonly DiagnosticDescriptor Rule = RuleHelpers.CreateRule(code: Rules.RuleClassesShouldBeStaticSealedOrAbstract,
-                                                                               category: Categories.Classes,
-                                                                               title: "Classes should be static, sealed or abstract",
-                                                                               message: "Classes should be static, sealed or abstract");
+    private static readonly DiagnosticDescriptor Rule = RuleHelpers.CreateRule(
+        code: Rules.RuleClassesShouldBeStaticSealedOrAbstract,
+        category: Categories.Classes,
+        title: "Classes should be static, sealed or abstract",
+        message: "Classes should be static, sealed or abstract"
+    );
 
-    private static readonly ImmutableArray<DiagnosticDescriptor> SupportedDiagnosticsCache = SupportedDiagnosisList.Build(Rule);
+    private static readonly ImmutableArray<DiagnosticDescriptor> SupportedDiagnosticsCache =
+        SupportedDiagnosisList.Build(Rule);
 
-    private static readonly ImmutableHashSet<SyntaxKind> WhitelistedModifiers = ImmutableHashSet.Create(SyntaxKind.StaticKeyword, SyntaxKind.AbstractKeyword, SyntaxKind.SealedKeyword);
+    private static readonly ImmutableHashSet<SyntaxKind> WhitelistedModifiers = ImmutableHashSet.Create(
+        SyntaxKind.StaticKeyword,
+        SyntaxKind.AbstractKeyword,
+        SyntaxKind.SealedKeyword
+    );
 
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => SupportedDiagnosticsCache;
 
