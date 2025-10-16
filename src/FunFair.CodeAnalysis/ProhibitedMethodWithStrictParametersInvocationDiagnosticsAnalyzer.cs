@@ -1,3 +1,4 @@
+
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -55,78 +56,37 @@ public sealed class ProhibitedMethodWithStrictParametersInvocationDiagnosticsAna
         compilationStartContext.RegisterSyntaxNodeAction(action: LookForForcedMethods, SyntaxKind.InvocationExpression);
     }
 
-    private static bool FindInvokedMemberSymbol(
-        in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext,
-        out InvocationExpressionSyntax? invocation,
-        out IMethodSymbol? memberSymbol
-    )
-    {
-        if (syntaxNodeAnalysisContext.Node is not InvocationExpressionSyntax i)
-        {
-            invocation = null;
-            memberSymbol = null;
-
-            return false;
-        }
-
-        memberSymbol = MethodSymbolHelper.FindInvokedMemberSymbol(
-            invocation: i,
-            syntaxNodeAnalysisContext: syntaxNodeAnalysisContext
-        );
-
-        // check if there is at least one rule that correspond to invocation method
-        if (memberSymbol is null)
-        {
-            invocation = null;
-
-            return false;
-        }
-
-        invocation = i;
-
-        return true;
-    }
-
     private static void LookForForcedMethods(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
     {
-        if (
-            !FindInvokedMemberSymbol(
-                syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
-                out InvocationExpressionSyntax? invocation,
-                out IMethodSymbol? memberSymbol
-            )
-        )
+        if (syntaxNodeAnalysisContext.Node is not InvocationExpressionSyntax invocation)
         {
             return;
         }
 
-        // ! memberSymbol is guaranteed to be not null here
+        IMethodSymbol? memberSymbol = MethodSymbolHelper.FindInvokedMemberSymbol(
+            invocation: invocation,
+            syntaxNodeAnalysisContext: syntaxNodeAnalysisContext
+        );
+
+        if (memberSymbol is null)
+        {
+            return;
+        }
+
         Mapping mapping = new(
-            methodName: memberSymbol!.Name,
+            methodName: memberSymbol.Name,
             SymbolDisplay.ToDisplayString(memberSymbol.ContainingType)
         );
 
-        IEnumerable<ProhibitedMethodsSpec> forcedMethods = ForcedMethods.Where(predicate: rule =>
-            StringComparer.Ordinal.Equals(x: rule.QualifiedName, y: mapping.QualifiedName)
-        );
+        ForcedMethods
+            .Where(rule => StringComparer.Ordinal.Equals(x: rule.QualifiedName, y: mapping.QualifiedName)
+                           && !IsInvocationAllowed(
+                               arguments: invocation.ArgumentList,
+                               parameters: memberSymbol.Parameters,
+                               prohibitedMethod: rule
+                           ))
+            .ForEach(prohibitedMethod => invocation.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: prohibitedMethod.Rule));
 
-        // ! Invocation is guaranteed to be not null here
-        foreach (
-            ProhibitedMethodsSpec prohibitedMethod in forcedMethods.Where(prohibitedMethod =>
-                !IsInvocationAllowed(
-                    arguments: invocation!.ArgumentList,
-                    parameters: memberSymbol.Parameters,
-                    prohibitedMethod: prohibitedMethod
-                )
-            )
-        )
-        {
-            // ! Invocation is guaranteed to be not null here
-            invocation!.ReportDiagnostics(
-                syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
-                rule: prohibitedMethod.Rule
-            );
-        }
     }
 
     private static bool IsInvocationAllowed(
@@ -140,29 +100,23 @@ public sealed class ProhibitedMethodWithStrictParametersInvocationDiagnosticsAna
             return true;
         }
 
-        // This needs to be simplified
-        // ! Nullable is guaranteed to be not null here
-        return !prohibitedMethod
-            .BannedSignatures.SelectMany(
-                collectionSelector: bannedSignature => bannedSignature,
-                resultSelector: (bannedSignature, parameterSpec) => (bannedSignature, parameterSpec)
-            )
-            .Select(t =>
-                (
-                    t,
-                    parameter: parameters.FirstOrDefault(predicate: param =>
-                        StringComparer.Ordinal.Equals(x: param.MetadataName, y: t.parameterSpec.Name)
-                    )
+        return !prohibitedMethod.BannedSignatures
+            .SelectMany(bannedSignature => bannedSignature)
+            .Select(paramSpec => (
+                ParamSpec: paramSpec,
+                Parameter: parameters.FirstOrDefault(param =>
+                    StringComparer.Ordinal.Equals(x: param.MetadataName, y: paramSpec.Name)
                 )
-            )
-            .Where(t => t.parameter is not null)
-            .Select(t => (t, argument: arguments.Arguments[t.parameter!.Ordinal]))
-            .Where(t =>
-                StringComparer.Ordinal.Equals(t.argument.Expression.ToFullString(), y: t.t.t.parameterSpec.Value)
-                && StringComparer.Ordinal.Equals(t.argument.Expression.Kind().ToString(), y: t.t.t.parameterSpec.Type)
-            )
-            .Select(t => t.t.t.parameterSpec)
-            .Any();
+            ))
+            .Where(tuple => tuple.Parameter is not null)
+            .Select(tuple => (
+                tuple.ParamSpec,
+                Argument: arguments.Arguments[tuple.Parameter!.Ordinal]
+            ))
+            .Any(tuple =>
+                StringComparer.Ordinal.Equals(tuple.Argument.Expression.ToFullString(), y: tuple.ParamSpec.Value)
+                && StringComparer.Ordinal.Equals(tuple.Argument.Expression.Kind().ToString(), y: tuple.ParamSpec.Type)
+            );
     }
 
     private static ParameterSpec Build(string name, string type, string value)
