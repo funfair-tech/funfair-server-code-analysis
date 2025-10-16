@@ -1,3 +1,4 @@
+
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -16,17 +17,15 @@ namespace FunFair.CodeAnalysis;
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public sealed class ProhibitedPragmasDiagnosticsAnalyzer : DiagnosticAnalyzer
 {
-    private static readonly string[] AllowedWarnings =
-    [
-        // Xml Docs
-        "1591",
-    ];
+    private static readonly ImmutableHashSet<string> AllowedWarnings = ImmutableHashSet.Create(
+        StringComparer.Ordinal,
+        "1591" // Xml Docs
+    );
 
-    private static readonly string[] AllowedInTestWarnings =
-    [
-        // Comparison made to same variable; did you mean to compare something else?
-        "1718",
-    ];
+    private static readonly ImmutableHashSet<string> AllowedInTestWarnings = ImmutableHashSet.Create(
+        StringComparer.Ordinal,
+        "1718" // Comparison made to the same variable; did you mean to compare something else?
+    );
 
     private static readonly DiagnosticDescriptor Rule = RuleHelpers.CreateRule(
         code: Rules.RuleDontDisableWarnings,
@@ -45,39 +44,25 @@ public sealed class ProhibitedPragmasDiagnosticsAnalyzer : DiagnosticAnalyzer
         context.RegisterCompilationStartAction(PerformCheck);
     }
 
-    private static bool IsBanned(string code)
-    {
-        return !AllowedWarnings.Contains(value: code, comparer: StringComparer.Ordinal);
-    }
-
-    private static bool IsBannedForTestAssemblies(string code)
-    {
-        return AllowedInTestWarnings.Contains(value: code, comparer: StringComparer.Ordinal) || IsBanned(code);
-    }
-
-    private static Func<string, bool> DetermineWarningList(Compilation compilation)
-    {
-        return compilation.IsTestAssembly() ? IsBannedForTestAssemblies : IsBanned;
-    }
-
     private static void PerformCheck(CompilationStartAnalysisContext compilationStartContext)
     {
-        Banned banned = new(DetermineWarningList(compilationStartContext.Compilation));
+        Checker checker = new(compilationStartContext.Compilation.IsTestAssembly());
 
         compilationStartContext.RegisterSyntaxNodeAction(
-            action: banned.LookForBannedMethods,
+            action: checker.LookForBannedPragmas,
             SyntaxKind.PragmaWarningDirectiveTrivia
         );
     }
 
-    [DebuggerDisplay("IsBaned = {_isBanned}")]
-    private readonly record struct Banned
+    private sealed class Checker
     {
-        private readonly Func<string, bool> _isBanned;
+        private readonly ImmutableHashSet<string> _allowedWarnings;
 
-        public Banned(Func<string, bool> isBanned)
+        public Checker(bool isTestAssembly)
         {
-            this._isBanned = isBanned;
+            this._allowedWarnings = isTestAssembly
+                ? AllowedWarnings.Union(AllowedInTestWarnings)
+                : AllowedWarnings;
         }
 
         [SuppressMessage(
@@ -85,28 +70,15 @@ public sealed class ProhibitedPragmasDiagnosticsAnalyzer : DiagnosticAnalyzer
             checkId: "RCS1231:Make parameter ref read only",
             Justification = "Needed here"
         )]
-        public void LookForBannedMethods(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
+        public void LookForBannedPragmas(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
         {
             if (syntaxNodeAnalysisContext.Node is not PragmaWarningDirectiveTriviaSyntax pragmaWarningDirective)
             {
                 return;
             }
 
-            foreach (
-                ExpressionSyntax invocation in this.BannedInvocations(pragmaWarningDirective: pragmaWarningDirective)
-            )
-            {
-                invocation.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: Rule);
-            }
-        }
-
-        private IEnumerable<ExpressionSyntax> BannedInvocations(
-            PragmaWarningDirectiveTriviaSyntax pragmaWarningDirective
-        )
-        {
-            Func<string, bool>? isBanned = this._isBanned;
-
-            return pragmaWarningDirective.ErrorCodes.Where(invocation => isBanned(invocation.ToString()));
+            pragmaWarningDirective.ErrorCodes.Where(errorCode => !this._allowedWarnings.Contains(errorCode.ToString()))
+                                  .ForEach(errorCode => errorCode.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: Rule));
         }
     }
 }
