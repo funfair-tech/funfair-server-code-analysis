@@ -88,25 +88,26 @@ public sealed class OneTypePerDocumentAnalysisDiagnosticsAnalyzer : DiagnosticAn
             IReadOnlyList<MemberDeclarationSyntax> members
         )
         {
-            return [..members
-                .GroupBy(keySelector: this.GetTypeName, comparer: TypeNameComparer)
-                .Where(x => !string.IsNullOrWhiteSpace(x.Key))];
+            return
+            [
+                .. members
+                    .GroupBy(keySelector: this.GetTypeName, comparer: TypeNameComparer)
+                    .Where(x => !string.IsNullOrWhiteSpace(x.Key)),
+            ];
         }
 
         private static bool IsSpecialCaseWhereNonGenericHelperClassExists(
             IReadOnlyList<IGrouping<string, MemberDeclarationSyntax>> grouped
         )
         {
-            IGrouping<string, MemberDeclarationSyntax>? staticGrouping = grouped
-                .FirstOrDefault(g => IsStatic(g.Key));
+            IGrouping<string, MemberDeclarationSyntax>? staticGrouping = grouped.FirstOrDefault(g => IsStatic(g.Key));
 
             if (staticGrouping is null)
             {
                 return false;
             }
 
-            IGrouping<string, MemberDeclarationSyntax> otherGrouping = grouped
-                .First(g => !IsStatic(g.Key));
+            IGrouping<string, MemberDeclarationSyntax> otherGrouping = grouped.First(g => !IsStatic(g.Key));
 
             return IsClass(otherGrouping.Key) || IsStruct(otherGrouping.Key);
         }
@@ -131,12 +132,9 @@ public sealed class OneTypePerDocumentAnalysisDiagnosticsAnalyzer : DiagnosticAn
             IReadOnlyList<MemberDeclarationSyntax> members
         )
         {
-            members
-                .ForEach(member =>
-                    member.ReportDiagnostics(
-                        syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
-                        rule: Rule
-                    ));
+            members.ForEach(member =>
+                member.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: Rule)
+            );
         }
 
         private string GetTypeName(MemberDeclarationSyntax memberDeclarationSyntax)
@@ -154,9 +152,9 @@ public sealed class OneTypePerDocumentAnalysisDiagnosticsAnalyzer : DiagnosticAn
 
         private static string FindTypeName(MemberDeclarationSyntax memberDeclarationSyntax)
         {
-            return  memberDeclarationSyntax switch
+            return memberDeclarationSyntax switch
             {
-                ClassDeclarationSyntax classDeclarationSyntax =>  NormaliseClass(classDeclarationSyntax),
+                ClassDeclarationSyntax classDeclarationSyntax => NormaliseClass(classDeclarationSyntax),
                 RecordDeclarationSyntax recordDeclarationSyntax => NormaliseRecord(recordDeclarationSyntax),
                 StructDeclarationSyntax structDeclarationSyntax => NormaliseStruct(structDeclarationSyntax),
                 InterfaceDeclarationSyntax interfaceDeclarationSyntax => NormaliseInterface(interfaceDeclarationSyntax),
@@ -187,8 +185,7 @@ public sealed class OneTypePerDocumentAnalysisDiagnosticsAnalyzer : DiagnosticAn
 
         private static string NormaliseClass(ClassDeclarationSyntax classDeclarationSyntax)
         {
-            bool isStatic = classDeclarationSyntax.Modifiers
-                .Any(m => m.IsKind(SyntaxKind.StaticKeyword));
+            bool isStatic = classDeclarationSyntax.Modifiers.Any(m => m.IsKind(SyntaxKind.StaticKeyword));
 
             string prefix = isStatic ? STATIC_TYPE_PREFIX : CLASS_TYPE_PREFIX;
             return string.Concat(str0: prefix, classDeclarationSyntax.Identifier.ToString());
@@ -198,16 +195,14 @@ public sealed class OneTypePerDocumentAnalysisDiagnosticsAnalyzer : DiagnosticAn
             CompilationUnitSyntax compilationUnit
         )
         {
-            return [..GetNonNestedTypeDeclarations(compilationUnit.Members)];
+            return [.. GetNonNestedTypeDeclarations(compilationUnit.Members)];
         }
 
         private static IEnumerable<MemberDeclarationSyntax> GetNonNestedTypeDeclarations(
             in SyntaxList<MemberDeclarationSyntax> members
         )
         {
-            return members
-                .SelectMany(GetMemberDeclarations)
-                .RemoveNulls();
+            return members.SelectMany(GetMemberDeclarations).RemoveNulls();
         }
 
         private static IEnumerable<MemberDeclarationSyntax?> GetMemberDeclarations(MemberDeclarationSyntax member)
