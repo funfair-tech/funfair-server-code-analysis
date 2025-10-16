@@ -1,4 +1,3 @@
-
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -37,7 +36,9 @@ public sealed class ParameterNameDiagnosticsAnalyzer : DiagnosticAnalyzer
     ];
 
     private static readonly ImmutableArray<DiagnosticDescriptor> SupportedDiagnosticsCache =
-        [.. NameSpecifications.Select(r => r.Rule)];
+    [
+        .. NameSpecifications.Select(r => r.Rule),
+    ];
 
     private static readonly StringComparer ParameterNameComparer = StringComparer.Ordinal;
 
@@ -55,10 +56,7 @@ public sealed class ParameterNameDiagnosticsAnalyzer : DiagnosticAnalyzer
     {
         Checker checker = new();
 
-        compilationStartContext.RegisterSyntaxNodeAction(
-            action: checker.MustHaveASaneName,
-            SyntaxKind.Parameter
-        );
+        compilationStartContext.RegisterSyntaxNodeAction(action: checker.MustHaveASaneName, SyntaxKind.Parameter);
     }
 
     private static NameSanitationSpec Build(
@@ -113,9 +111,12 @@ public sealed class ParameterNameDiagnosticsAnalyzer : DiagnosticAnalyzer
                 return;
             }
 
-            if (!rule.Value.WhitelistedParameterNames.Contains(
-                value: parameterSyntax.Identifier.Text,
-                comparer: ParameterNameComparer))
+            if (
+                !rule.Value.WhitelistedParameterNames.Contains(
+                    value: parameterSyntax.Identifier.Text,
+                    comparer: ParameterNameComparer
+                )
+            )
             {
                 parameterSyntax.ReportDiagnostics(
                     syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
@@ -152,8 +153,9 @@ public sealed class ParameterNameDiagnosticsAnalyzer : DiagnosticAnalyzer
                 return cachedSpec;
             }
 
-            NameSanitationSpec? spec = NameSpecifications
-                .FirstOrDefault(ns => StringComparer.Ordinal.Equals(x: ns.SourceClass, y: fullTypeName));
+            NameSanitationSpec? spec = NameSpecifications.FirstOrDefault(ns =>
+                StringComparer.Ordinal.Equals(x: ns.SourceClass, y: fullTypeName)
+            );
 
             this._specCache[fullTypeName] = spec;
             return spec;
