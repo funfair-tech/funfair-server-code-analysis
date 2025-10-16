@@ -173,17 +173,7 @@ public sealed class ParameterOrderingDiagnosticsAnalyzer : DiagnosticAnalyzer
 
         private static ParameterItem? FindParameter(IReadOnlyList<ParameterItem> parameters, string parameterType)
         {
-            // Use LINQ to find the matching parameter
-            // Note: Can't use FirstOrDefault directly on structs as it returns default(T) not null
-            foreach (ParameterItem parameter in parameters)
-            {
-                if (TypeNameComparer.Equals(x: parameter.FullTypeName, y: parameterType))
-                {
-                    return parameter;
-                }
-            }
-
-            return null;
+            return parameters.FirstOrNull(parameter => TypeNameComparer.Equals(x: parameter.FullTypeName, y: parameterType));
         }
     }
 
