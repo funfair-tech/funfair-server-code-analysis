@@ -45,8 +45,9 @@ public sealed class ConstructorGenericParameterTypeDiagnosticsAnalyser : Diagnos
         message: "Should be using '{0}' rather than '{1}' with {2}"
     );
 
-    private static readonly ImmutableArray<DiagnosticDescriptor> SupportedDiagnosticsCache =
-        SupportedDiagnosisList.Build(Specifications.Select(s => s.Rule)).Add(MissMatchTypes);
+    private static readonly ImmutableArray<DiagnosticDescriptor> SupportedDiagnosticsCache = SupportedDiagnosisList
+        .Build(Specifications.Select(s => s.Rule))
+        .Add(MissMatchTypes);
 
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => SupportedDiagnosticsCache;
 
@@ -120,14 +121,14 @@ public sealed class ConstructorGenericParameterTypeDiagnosticsAnalyser : Diagnos
                 constructorDeclarationSyntax: constructorDeclarationSyntax
             );
 
-            constructorDeclarationSyntax.ParameterList.Parameters
-                .ForEach(parameterSyntax =>
-                    this.CheckParameter(
-                        syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
-                        parameterSyntax: parameterSyntax,
-                        isProtected: isProtected,
-                        className: className
-                    ));
+            constructorDeclarationSyntax.ParameterList.Parameters.ForEach(parameterSyntax =>
+                this.CheckParameter(
+                    syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
+                    parameterSyntax: parameterSyntax,
+                    isProtected: isProtected,
+                    className: className
+                )
+            );
         }
 
         private string GetOrCacheClassName(ISymbol classForConstructor)
@@ -185,8 +186,7 @@ public sealed class ConstructorGenericParameterTypeDiagnosticsAnalyser : Diagnos
             ConstructorDeclarationSyntax constructorDeclarationSyntax
         )
         {
-            bool isProtected = constructorDeclarationSyntax.Modifiers
-                .Any(x => x.IsKind(SyntaxKind.ProtectedKeyword));
+            bool isProtected = constructorDeclarationSyntax.Modifiers.Any(x => x.IsKind(SyntaxKind.ProtectedKeyword));
 
             if (isProtected)
             {
@@ -200,8 +200,9 @@ public sealed class ConstructorGenericParameterTypeDiagnosticsAnalyser : Diagnos
                 return true;
             }
 
-            bool classIsPublic = parentSymbolForClassForConstructor.Modifiers
-                .Any(x => x.IsKind(SyntaxKind.PublicKeyword));
+            bool classIsPublic = parentSymbolForClassForConstructor.Modifiers.Any(x =>
+                x.IsKind(SyntaxKind.PublicKeyword)
+            );
 
             return !classIsPublic;
         }
@@ -267,7 +268,9 @@ public sealed class ConstructorGenericParameterTypeDiagnosticsAnalyser : Diagnos
                 return cachedSpec;
             }
 
-            TypeCheckSpec? spec = Specifications.FirstOrDefault(ns => ns.IsAllowedSourceClass( isProtected: isProtected, fullTypeName: fullTypeName));
+            TypeCheckSpec? spec = Specifications.FirstOrDefault(ns =>
+                ns.IsAllowedSourceClass(isProtected: isProtected, fullTypeName: fullTypeName)
+            );
 
             this._specCache[key] = spec;
             return spec;
@@ -364,10 +367,10 @@ public sealed class ConstructorGenericParameterTypeDiagnosticsAnalyser : Diagnos
             return TypeComparer.Equals(x: this.ProhibitedClass, y: fullTypeName);
         }
 
-        public bool IsAllowedSourceClass( bool isProtected, string fullTypeName)
+        public bool IsAllowedSourceClass(bool isProtected, string fullTypeName)
         {
             return this.IsProtected == isProtected
-                   && (this.IsAllowedSourceClass(fullTypeName) || this.IsProhibitedClass(fullTypeName));
+                && (this.IsAllowedSourceClass(fullTypeName) || this.IsProhibitedClass(fullTypeName));
         }
     }
 }
