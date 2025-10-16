@@ -1,4 +1,3 @@
-
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -60,9 +59,7 @@ public sealed class ProhibitedPragmasDiagnosticsAnalyzer : DiagnosticAnalyzer
 
         public Checker(bool isTestAssembly)
         {
-            this._allowedWarnings = isTestAssembly
-                ? AllowedWarnings.Union(AllowedInTestWarnings)
-                : AllowedWarnings;
+            this._allowedWarnings = isTestAssembly ? AllowedWarnings.Union(AllowedInTestWarnings) : AllowedWarnings;
         }
 
         [SuppressMessage(
@@ -77,8 +74,11 @@ public sealed class ProhibitedPragmasDiagnosticsAnalyzer : DiagnosticAnalyzer
                 return;
             }
 
-            pragmaWarningDirective.ErrorCodes.Where(errorCode => !this._allowedWarnings.Contains(errorCode.ToString()))
-                                  .ForEach(errorCode => errorCode.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: Rule));
+            pragmaWarningDirective
+                .ErrorCodes.Where(errorCode => !this._allowedWarnings.Contains(errorCode.ToString()))
+                .ForEach(errorCode =>
+                    errorCode.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: Rule)
+                );
         }
     }
 }
