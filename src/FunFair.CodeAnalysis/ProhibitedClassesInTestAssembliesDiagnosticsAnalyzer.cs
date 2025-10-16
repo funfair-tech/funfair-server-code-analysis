@@ -26,7 +26,9 @@ public sealed class ProhibitedClassesInTestAssembliesDiagnosticsAnalyzer : Diagn
     ];
 
     private static readonly ImmutableArray<DiagnosticDescriptor> SupportedDiagnosticsCache =
-        [.. BannedClasses.Select(r => r.Rule)];
+    [
+        .. BannedClasses.Select(r => r.Rule),
+    ];
 
     private static readonly StringComparer ClassNameComparer = StringComparer.Ordinal;
 
@@ -51,9 +53,6 @@ public sealed class ProhibitedClassesInTestAssembliesDiagnosticsAnalyzer : Diagn
     {
         private Dictionary<string, INamedTypeSymbol>? _cachedSymbols;
         private readonly Dictionary<string, ProhibitedClassSpec?> _specCache = new(ClassNameComparer);
-
-
-
 
         public void PerformCheck(CompilationStartAnalysisContext compilationStartContext)
         {
@@ -123,8 +122,8 @@ public sealed class ProhibitedClassesInTestAssembliesDiagnosticsAnalyzer : Diagn
             return BannedClasses
                 .Select(rule => rule.SourceClass)
                 .Distinct(ClassNameComparer)
-                .Select( ruleSourceClass => ( ruleSourceClass, item: compilation.GetTypeByMetadataName(ruleSourceClass)))
-                .Where( rule => rule.item is not null )
+                .Select(ruleSourceClass => (ruleSourceClass, item: compilation.GetTypeByMetadataName(ruleSourceClass)))
+                .Where(rule => rule.item is not null)
                 .ToDictionary(rule => rule.ruleSourceClass, rule => rule.item!, ClassNameComparer);
         }
 
