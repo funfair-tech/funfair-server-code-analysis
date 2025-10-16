@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using FunFair.CodeAnalysis.Extensions;
 using FunFair.CodeAnalysis.Helpers;
@@ -40,6 +41,10 @@ public sealed class ProhibitedMethodWithStrictParametersInvocationDiagnosticsAna
         ),
     ];
 
+    private static readonly ImmutableHashSet<string> QualifiedMethodNames = ForcedMethods
+        .Select(method => method.QualifiedName)
+        .ToImmutableHashSet(StringComparer.Ordinal);
+
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
         [.. ForcedMethods.Select(selector: r => r.Rule)];
 
@@ -53,70 +58,11 @@ public sealed class ProhibitedMethodWithStrictParametersInvocationDiagnosticsAna
 
     private static void PerformCheck(CompilationStartAnalysisContext compilationStartContext)
     {
-        compilationStartContext.RegisterSyntaxNodeAction(action: LookForForcedMethods, SyntaxKind.InvocationExpression);
-    }
-
-    private static void LookForForcedMethods(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
-    {
-        if (syntaxNodeAnalysisContext.Node is not InvocationExpressionSyntax invocation)
-        {
-            return;
-        }
-
-        IMethodSymbol? memberSymbol = MethodSymbolHelper.FindInvokedMemberSymbol(
-            invocation: invocation,
-            syntaxNodeAnalysisContext: syntaxNodeAnalysisContext
+        Checker checker = new();
+        compilationStartContext.RegisterSyntaxNodeAction(
+            action: checker.LookForForcedMethods,
+            SyntaxKind.InvocationExpression
         );
-
-        if (memberSymbol is null)
-        {
-            return;
-        }
-
-        Mapping mapping = new(
-            methodName: memberSymbol.Name,
-            SymbolDisplay.ToDisplayString(memberSymbol.ContainingType)
-        );
-
-        ForcedMethods
-            .Where(rule => StringComparer.Ordinal.Equals(x: rule.QualifiedName, y: mapping.QualifiedName)
-                           && !IsInvocationAllowed(
-                               arguments: invocation.ArgumentList,
-                               parameters: memberSymbol.Parameters,
-                               prohibitedMethod: rule
-                           ))
-            .ForEach(prohibitedMethod => invocation.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: prohibitedMethod.Rule));
-
-    }
-
-    private static bool IsInvocationAllowed(
-        BaseArgumentListSyntax arguments,
-        IReadOnlyList<IParameterSymbol> parameters,
-        in ProhibitedMethodsSpec prohibitedMethod
-    )
-    {
-        if (prohibitedMethod.BannedSignatures.Count == 0)
-        {
-            return true;
-        }
-
-        return !prohibitedMethod.BannedSignatures
-            .SelectMany(bannedSignature => bannedSignature)
-            .Select(paramSpec => (
-                ParamSpec: paramSpec,
-                Parameter: parameters.FirstOrDefault(param =>
-                    StringComparer.Ordinal.Equals(x: param.MetadataName, y: paramSpec.Name)
-                )
-            ))
-            .Where(tuple => tuple.Parameter is not null)
-            .Select(tuple => (
-                tuple.ParamSpec,
-                Argument: arguments.Arguments[tuple.Parameter!.Ordinal]
-            ))
-            .Any(tuple =>
-                StringComparer.Ordinal.Equals(tuple.Argument.Expression.ToFullString(), y: tuple.ParamSpec.Value)
-                && StringComparer.Ordinal.Equals(tuple.Argument.Expression.Kind().ToString(), y: tuple.ParamSpec.Type)
-            );
     }
 
     private static ParameterSpec Build(string name, string type, string value)
@@ -141,6 +87,105 @@ public sealed class ProhibitedMethodWithStrictParametersInvocationDiagnosticsAna
             forcedMethod: forcedMethod,
             bannedSignatures: bannedSignatures
         );
+    }
+
+    private sealed class Checker
+    {
+        private readonly Dictionary<string, IReadOnlyList<ProhibitedMethodsSpec>> _qualifiedMethodCache = new(StringComparer.Ordinal);
+
+        [SuppressMessage(
+            category: "Roslynator.Analyzers",
+            checkId: "RCS1231:Make parameter ref read only",
+            Justification = "Needed here"
+        )]
+        public void LookForForcedMethods(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
+        {
+            if (syntaxNodeAnalysisContext.Node is not InvocationExpressionSyntax invocation)
+            {
+                return;
+            }
+
+            IMethodSymbol? memberSymbol = MethodSymbolHelper.FindInvokedMemberSymbol(
+                invocation: invocation,
+                syntaxNodeAnalysisContext: syntaxNodeAnalysisContext
+            );
+
+            if (memberSymbol is null)
+            {
+                return;
+            }
+
+            string qualifiedName = $"{SymbolDisplay.ToDisplayString(memberSymbol.ContainingType)}.{memberSymbol.Name}";
+
+            // Fast path: check if this qualified name is even in our list
+            if (!QualifiedMethodNames.Contains(qualifiedName))
+            {
+                return;
+            }
+
+            IReadOnlyList<ProhibitedMethodsSpec> matchingProhibitedMethods = this.GetMatchingProhibitedMethods(qualifiedName);
+
+            IEnumerable<ProhibitedMethodsSpec> violatingMethods = matchingProhibitedMethods
+                .Where(prohibitedMethod => !IsInvocationAllowed(
+                    arguments: invocation.ArgumentList,
+                    parameters: memberSymbol.Parameters,
+                    prohibitedMethod: prohibitedMethod
+                ));
+
+            foreach (ProhibitedMethodsSpec prohibitedMethod in violatingMethods)
+            {
+                invocation.ReportDiagnostics(
+                    syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
+                    rule: prohibitedMethod.Rule
+                );
+            }
+        }
+
+        private IReadOnlyList<ProhibitedMethodsSpec> GetMatchingProhibitedMethods(string qualifiedName)
+        {
+            if (!this._qualifiedMethodCache.TryGetValue(key: qualifiedName, out IReadOnlyList<ProhibitedMethodsSpec>? cached))
+            {
+                cached =
+                [
+                    ..ForcedMethods.Where(rule => StringComparer.Ordinal.Equals(x: rule.QualifiedName, y: qualifiedName))
+                ];
+
+                this._qualifiedMethodCache[qualifiedName] = cached;
+            }
+
+            return cached;
+        }
+
+        private static bool IsInvocationAllowed(
+            BaseArgumentListSyntax arguments,
+            IReadOnlyList<IParameterSymbol> parameters,
+            in ProhibitedMethodsSpec prohibitedMethod
+        )
+        {
+            if (prohibitedMethod.BannedSignatures.Count == 0)
+            {
+                return true;
+            }
+
+            // ! Parameter is not null here
+            return !prohibitedMethod.BannedSignatures
+                .SelectMany(bannedSignature => bannedSignature)
+                .Select(paramSpec => (
+                    ParamSpec: paramSpec,
+                    Parameter: parameters.FirstOrDefault(param =>
+                        StringComparer.Ordinal.Equals(x: param.MetadataName, y: paramSpec.Name)
+                    )
+                ))
+                .Where(tuple => tuple.Parameter is not null)
+                .Select(tuple => (
+                    tuple.ParamSpec,
+                    Argument: arguments.Arguments[tuple.Parameter!.Ordinal]
+                ))
+                .Any(tuple =>
+                    StringComparer.Ordinal.Equals(tuple.Argument.Expression.ToFullString(), y: tuple.ParamSpec.Value)
+                    && StringComparer.Ordinal.Equals(tuple.Argument.Expression.Kind().ToString(), y: tuple.ParamSpec.Type)
+                );
+        }
     }
 
     [DebuggerDisplay("{Name}:{Type} = {Value}")]
