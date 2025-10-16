@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using FunFair.CodeAnalysis.Helpers;
 using Microsoft.CodeAnalysis;
@@ -21,14 +23,17 @@ public sealed class ArgumentExceptionAnalysisDiagnosticsAnalyzer : DiagnosticAna
         message: "Argument Exceptions should pass parameter name"
     );
 
-    private static readonly string[] ArgumentExceptions =
-    [
+    private static readonly ImmutableHashSet<string> ArgumentExceptions = ImmutableHashSet.Create(
+        StringComparer.Ordinal,
         "System.ArgumentException",
         "System.ArgumentNullException",
-        "System.ArgumentOutOfRangeException",
-    ];
+        "System.ArgumentOutOfRangeException"
+    );
 
-    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => SupportedDiagnosisList.Build(Rule);
+    private static readonly ImmutableArray<DiagnosticDescriptor> SupportedDiagnosticsCache =
+        SupportedDiagnosisList.Build(Rule);
+
+    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => SupportedDiagnosticsCache;
 
     public override void Initialize(AnalysisContext context)
     {
@@ -40,58 +45,92 @@ public sealed class ArgumentExceptionAnalysisDiagnosticsAnalyzer : DiagnosticAna
 
     private static void PerformCheck(CompilationStartAnalysisContext compilationStartContext)
     {
+        Checker checker = new();
+
         compilationStartContext.RegisterSyntaxNodeAction(
-            action: ArgumentExceptionsMustPassParameterName,
+            action: checker.ArgumentExceptionsMustPassParameterName,
             SyntaxKind.ObjectCreationExpression
         );
     }
 
-    private static void ArgumentExceptionsMustPassParameterName(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
+    private sealed class Checker
     {
-        if (syntaxNodeAnalysisContext.Node is not ObjectCreationExpressionSyntax objectCreation)
+        private readonly Dictionary<ITypeSymbol, bool> _typeCache = new(SymbolEqualityComparer.Default);
+        private readonly Dictionary<IMethodSymbol, bool> _methodCache = new(SymbolEqualityComparer.Default);
+
+        [SuppressMessage(
+            category: "Roslynator.Analyzers",
+            checkId: "RCS1231:Make parameter ref read only",
+            Justification = "Needed here"
+        )]
+        public void ArgumentExceptionsMustPassParameterName(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
         {
-            return;
+            if (syntaxNodeAnalysisContext.Node is not ObjectCreationExpressionSyntax objectCreation)
+            {
+                return;
+            }
+
+            SymbolInfo symbolInfo = syntaxNodeAnalysisContext.SemanticModel.GetSymbolInfo(
+                expression: objectCreation,
+                cancellationToken: syntaxNodeAnalysisContext.CancellationToken
+            );
+
+            if (symbolInfo.Symbol is not IMethodSymbol methodSymbol)
+            {
+                return;
+            }
+
+            if (!this.IsArgumentException(methodSymbol.ReceiverType))
+            {
+                return;
+            }
+
+            if (this.HasParamNameParameter(methodSymbol))
+            {
+                return;
+            }
+
+            syntaxNodeAnalysisContext.ReportDiagnostic(
+                Diagnostic.Create(descriptor: Rule, objectCreation.GetLocation())
+            );
         }
 
-        SymbolInfo symbolInfo = syntaxNodeAnalysisContext.SemanticModel.GetSymbolInfo(
-            expression: objectCreation,
-            cancellationToken: syntaxNodeAnalysisContext.CancellationToken
-        );
-
-        if (symbolInfo.Symbol is not IMethodSymbol methodSymbol)
+        private bool HasParamNameParameter(IMethodSymbol methodSymbol)
         {
-            return;
+            // Check cache first
+            if (this._methodCache.TryGetValue(key: methodSymbol, out bool hasParam))
+            {
+                return hasParam;
+            }
+
+            // Compute and cache result
+            bool result = methodSymbol.Parameters.Any(parameter =>
+                StringComparer.Ordinal.Equals(x: parameter.Name, y: "paramName")
+            );
+
+            this._methodCache[methodSymbol] = result;
+            return result;
         }
 
-        if (!IsArgumentException(methodSymbol.ReceiverType))
+        private bool IsArgumentException(ITypeSymbol? methodSymbolReceiverType)
         {
-            return;
+            if (methodSymbolReceiverType is null)
+            {
+                return false;
+            }
+
+            // Check cache first
+            if (this._typeCache.TryGetValue(key: methodSymbolReceiverType, out bool isArgumentEx))
+            {
+                return isArgumentEx;
+            }
+
+            // Compute and cache result
+            string typeName = SymbolDisplay.ToDisplayString(methodSymbolReceiverType);
+            bool result = ArgumentExceptions.Contains(typeName);
+
+            this._typeCache[methodSymbolReceiverType] = result;
+            return result;
         }
-
-        if (HasParamNameParameter(methodSymbol))
-        {
-            return;
-        }
-
-        syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(descriptor: Rule, objectCreation.GetLocation()));
-    }
-
-    private static bool HasParamNameParameter(IMethodSymbol methodSymbol)
-    {
-        return methodSymbol.Parameters.Any(parameter =>
-            StringComparer.Ordinal.Equals(x: parameter.Name, y: "paramName")
-        );
-    }
-
-    private static bool IsArgumentException(ITypeSymbol? methodSymbolReceiverType)
-    {
-        if (methodSymbolReceiverType is null)
-        {
-            return false;
-        }
-
-        string typeName = SymbolDisplay.ToDisplayString(methodSymbolReceiverType);
-
-        return ArgumentExceptions.Contains(value: typeName, comparer: StringComparer.Ordinal);
     }
 }

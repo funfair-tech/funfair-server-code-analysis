@@ -48,8 +48,7 @@ public sealed class ClassVisibilityDiagnosticsAnalyzer : DiagnosticAnalyzer
 
     private static void PerformCheck(CompilationStartAnalysisContext compilationStartContext)
     {
-        // Create a cached checker instance per compilation for symbol caching
-        Checker checker = new(compilationStartContext.Compilation);
+        Checker checker = new();
 
         compilationStartContext.RegisterSyntaxNodeAction(
             action: checker.CheckClassVisibility,
@@ -71,15 +70,12 @@ public sealed class ClassVisibilityDiagnosticsAnalyzer : DiagnosticAnalyzer
     private sealed class Checker
     {
         private readonly Dictionary<INamedTypeSymbol, bool> _matchCache = new(SymbolEqualityComparer.Default);
-        private readonly HashSet<string> _targetClassNames;
+        private readonly ImmutableHashSet<string> _targetClassNames;
 
-        public Checker(Compilation compilation)
+        public Checker()
         {
-            // Pre-compute target class names for faster lookup
-            this._targetClassNames = new HashSet<string>(
-                Classes.Select(c => c.ClassName),
-                StringComparer.Ordinal
-            );
+            this._targetClassNames = Classes.Select(c => c.ClassName)
+                                            .ToImmutableHashSet(StringComparer.Ordinal);
         }
 
         public void CheckClassVisibility(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
