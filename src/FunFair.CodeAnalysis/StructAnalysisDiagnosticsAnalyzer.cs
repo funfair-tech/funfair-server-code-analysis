@@ -30,24 +30,19 @@ public sealed class StructAnalysisDiagnosticsAnalyzer : DiagnosticAnalyzer
 
     private static void PerformCheck(CompilationStartAnalysisContext compilationStartContext)
     {
-        compilationStartContext.RegisterSyntaxNodeAction(action: MustBeReadOnly, SyntaxKind.StructDeclaration);
+        compilationStartContext.RegisterSyntaxNodeAction(action: CheckStructIsReadOnly, SyntaxKind.StructDeclaration);
     }
 
-    private static void MustBeReadOnly(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
+    private static void CheckStructIsReadOnly(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
     {
         if (syntaxNodeAnalysisContext.Node is not StructDeclarationSyntax structDeclarationSyntax)
         {
             return;
         }
 
-        if (!structDeclarationSyntax.Modifiers.Any(IsReadOnlyKeyword))
+        if (!structDeclarationSyntax.Modifiers.Any(SyntaxKind.ReadOnlyKeyword))
         {
             structDeclarationSyntax.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: Rule);
         }
-    }
-
-    private static bool IsReadOnlyKeyword(SyntaxToken syntaxToken)
-    {
-        return syntaxToken.IsKind(SyntaxKind.ReadOnlyKeyword);
     }
 }
