@@ -11,14 +11,16 @@ namespace FunFair.CodeAnalysis;
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public sealed class ClassAnalysisDiagnosticsAnalyzer : DiagnosticAnalyzer
 {
-    private static readonly DiagnosticDescriptor Rule = RuleHelpers.CreateRule(
-        code: Rules.RuleClassesShouldBeStaticSealedOrAbstract,
-        category: Categories.Classes,
-        title: "Classes should be static, sealed or abstract",
-        message: "Classes should be static, sealed or abstract"
-    );
+    private static readonly DiagnosticDescriptor Rule = RuleHelpers.CreateRule(code: Rules.RuleClassesShouldBeStaticSealedOrAbstract,
+                                                                               category: Categories.Classes,
+                                                                               title: "Classes should be static, sealed or abstract",
+                                                                               message: "Classes should be static, sealed or abstract");
 
-    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => SupportedDiagnosisList.Build(Rule);
+    private static readonly ImmutableArray<DiagnosticDescriptor> SupportedDiagnosticsCache = SupportedDiagnosisList.Build(Rule);
+
+    private static readonly ImmutableHashSet<SyntaxKind> WhitelistedModifiers = ImmutableHashSet.Create(SyntaxKind.StaticKeyword, SyntaxKind.AbstractKeyword, SyntaxKind.SealedKeyword);
+
+    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => SupportedDiagnosticsCache;
 
     public override void Initialize(AnalysisContext context)
     {
@@ -30,10 +32,10 @@ public sealed class ClassAnalysisDiagnosticsAnalyzer : DiagnosticAnalyzer
 
     private static void PerformCheck(CompilationStartAnalysisContext compilationStartContext)
     {
-        compilationStartContext.RegisterSyntaxNodeAction(action: MustBeReadOnly, SyntaxKind.ClassDeclaration);
+        compilationStartContext.RegisterSyntaxNodeAction(action: CheckClassModifiers, SyntaxKind.ClassDeclaration);
     }
 
-    private static void MustBeReadOnly(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
+    private static void CheckClassModifiers(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
     {
         if (syntaxNodeAnalysisContext.Node is not ClassDeclarationSyntax classDeclarationSyntax)
         {
@@ -50,6 +52,6 @@ public sealed class ClassAnalysisDiagnosticsAnalyzer : DiagnosticAnalyzer
     {
         SyntaxKind kind = syntaxToken.Kind();
 
-        return kind is SyntaxKind.StaticKeyword or SyntaxKind.AbstractKeyword or SyntaxKind.SealedKeyword;
+        return WhitelistedModifiers.Contains(kind);
     }
 }
