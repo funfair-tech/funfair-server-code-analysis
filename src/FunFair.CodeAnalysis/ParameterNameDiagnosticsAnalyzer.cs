@@ -1,3 +1,4 @@
+
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -35,8 +36,12 @@ public sealed class ParameterNameDiagnosticsAnalyzer : DiagnosticAnalyzer
         ),
     ];
 
-    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
-        [.. NameSpecifications.Select(selector: r => r.Rule)];
+    private static readonly ImmutableArray<DiagnosticDescriptor> SupportedDiagnosticsCache =
+        [.. NameSpecifications.Select(r => r.Rule)];
+
+    private static readonly StringComparer ParameterNameComparer = StringComparer.Ordinal;
+
+    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => SupportedDiagnosticsCache;
 
     public override void Initialize(AnalysisContext context)
     {
@@ -48,86 +53,12 @@ public sealed class ParameterNameDiagnosticsAnalyzer : DiagnosticAnalyzer
 
     private static void PerformCheck(CompilationStartAnalysisContext compilationStartContext)
     {
-        compilationStartContext.RegisterSyntaxNodeAction(action: MustHaveASaneName, SyntaxKind.Parameter);
-    }
+        Checker checker = new();
 
-    private static void MustHaveASaneName(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
-    {
-        if (syntaxNodeAnalysisContext.Node is not ParameterSyntax parameterSyntax)
-        {
-            return;
-        }
-
-        MustHaveASaneName(
-            syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
-            parameterSyntax: parameterSyntax,
-            cancellationToken: syntaxNodeAnalysisContext.CancellationToken
+        compilationStartContext.RegisterSyntaxNodeAction(
+            action: checker.MustHaveASaneName,
+            SyntaxKind.Parameter
         );
-    }
-
-    private static void MustHaveASaneName(
-        in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext,
-        ParameterSyntax parameterSyntax,
-        CancellationToken cancellationToken
-    )
-    {
-        string? fullTypeName = ParameterHelpers.GetFullTypeName(
-            syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
-            parameterSyntax: parameterSyntax,
-            cancellationToken: cancellationToken
-        );
-
-        if (fullTypeName is null)
-        {
-            return;
-        }
-
-        MustHaveASaneName(
-            syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
-            parameterSyntax: parameterSyntax,
-            fullTypeName: fullTypeName
-        );
-    }
-
-    private static void MustHaveASaneName(
-        in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext,
-        ParameterSyntax parameterSyntax,
-        string fullTypeName
-    )
-    {
-        NameSanitationSpec? rule = FindSpec(fullTypeName);
-
-        if (!rule.HasValue)
-        {
-            return;
-        }
-
-        if (
-            !rule.Value.WhitelistedParameterNames.Contains(
-                value: parameterSyntax.Identifier.Text,
-                comparer: StringComparer.Ordinal
-            )
-        )
-        {
-            parameterSyntax.ReportDiagnostics(
-                syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
-                rule: rule.Value.Rule
-            );
-        }
-    }
-
-    [SuppressMessage(category: "SonarAnalyzer.CSharp", checkId: "S3267: Use Linq", Justification = "Not here")]
-    private static NameSanitationSpec? FindSpec(string fullTypeName)
-    {
-        foreach (NameSanitationSpec ns in NameSpecifications)
-        {
-            if (StringComparer.Ordinal.Equals(x: ns.SourceClass, y: fullTypeName))
-            {
-                return ns;
-            }
-        }
-
-        return null;
     }
 
     private static NameSanitationSpec Build(
@@ -145,6 +76,88 @@ public sealed class ParameterNameDiagnosticsAnalyzer : DiagnosticAnalyzer
             sourceClass: sourceClass,
             whitelistedParameterName: whitelistedParameterName
         );
+    }
+
+    private sealed class Checker
+    {
+        private readonly Dictionary<string, NameSanitationSpec?> _specCache = new(StringComparer.Ordinal);
+        private readonly Dictionary<ParameterSyntax, string?> _typeNameCache = [];
+
+        [SuppressMessage(
+            category: "Roslynator.Analyzers",
+            checkId: "RCS1231:Make parameter ref read only",
+            Justification = "Needed here"
+        )]
+        public void MustHaveASaneName(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
+        {
+            if (syntaxNodeAnalysisContext.Node is not ParameterSyntax parameterSyntax)
+            {
+                return;
+            }
+
+            string? fullTypeName = this.GetFullTypeName(
+                syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
+                parameterSyntax: parameterSyntax,
+                cancellationToken: syntaxNodeAnalysisContext.CancellationToken
+            );
+
+            if (fullTypeName is null)
+            {
+                return;
+            }
+
+            NameSanitationSpec? rule = this.FindSpec(fullTypeName);
+
+            if (!rule.HasValue)
+            {
+                return;
+            }
+
+            if (!rule.Value.WhitelistedParameterNames.Contains(
+                value: parameterSyntax.Identifier.Text,
+                comparer: ParameterNameComparer))
+            {
+                parameterSyntax.ReportDiagnostics(
+                    syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
+                    rule: rule.Value.Rule
+                );
+            }
+        }
+
+        private string? GetFullTypeName(
+            in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext,
+            ParameterSyntax parameterSyntax,
+            CancellationToken cancellationToken
+        )
+        {
+            if (this._typeNameCache.TryGetValue(key: parameterSyntax, out string? cachedTypeName))
+            {
+                return cachedTypeName;
+            }
+
+            string? typeName = ParameterHelpers.GetFullTypeName(
+                syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
+                parameterSyntax: parameterSyntax,
+                cancellationToken: cancellationToken
+            );
+
+            this._typeNameCache[parameterSyntax] = typeName;
+            return typeName;
+        }
+
+        private NameSanitationSpec? FindSpec(string fullTypeName)
+        {
+            if (this._specCache.TryGetValue(key: fullTypeName, out NameSanitationSpec? cachedSpec))
+            {
+                return cachedSpec;
+            }
+
+            NameSanitationSpec? spec = NameSpecifications
+                .FirstOrDefault(ns => StringComparer.Ordinal.Equals(x: ns.SourceClass, y: fullTypeName));
+
+            this._specCache[fullTypeName] = spec;
+            return spec;
+        }
     }
 
     [DebuggerDisplay("{Rule.Id} {Rule.Title} Class {SourceClass}")]
