@@ -55,12 +55,24 @@ public sealed class ClassVisibilityDiagnosticsAnalyzer : DiagnosticAnalyzer
             return;
         }
 
-        foreach (
-            ConfiguredClass classDefinition in Classes.Where(classDefinition =>
-                classDefinition.TypeMatchesClass(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext)
-                && !classDefinition.HasCorrectClassModifier(classDeclarationSyntax: classDeclarationSyntax)
-            )
-        )
+        if (syntaxNodeAnalysisContext.ContainingSymbol is not INamedTypeSymbol containingType)
+        {
+            return;
+        }
+
+        IReadOnlyList<INamedTypeSymbol> baseClasses = [.. containingType.BaseClasses()];
+
+        if (baseClasses.Count == 0)
+        {
+            return;
+        }
+
+        foreach (ConfiguredClass classDefinition in Classes
+                     .Where(classDefinition =>
+                                classDefinition.TypeMatchesClass(baseClasses: baseClasses)
+                                && !classDefinition.HasCorrectClassModifier(classDeclarationSyntax: classDeclarationSyntax)
+                                )
+                 )
         {
             classDeclarationSyntax.ReportDiagnostics(
                 syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
@@ -83,6 +95,8 @@ public sealed class ClassVisibilityDiagnosticsAnalyzer : DiagnosticAnalyzer
     [DebuggerDisplay("{Rule.Id} {Rule.Title} Class {ClassName} Visibility {Visibility}")]
     private readonly record struct ConfiguredClass
     {
+        private static readonly StringComparer ClassNameComparer = StringComparer.Ordinal;
+
         public ConfiguredClass(string ruleId, string title, string message, string className, SyntaxKind visibility)
         {
             this.ClassName = className;
@@ -101,23 +115,19 @@ public sealed class ClassVisibilityDiagnosticsAnalyzer : DiagnosticAnalyzer
 
         private SyntaxKind Visibility { get; }
 
-        public bool TypeMatchesClass(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
+        public bool TypeMatchesClass(IReadOnlyList<INamedTypeSymbol> baseClasses)
         {
-            if (syntaxNodeAnalysisContext.ContainingSymbol is not INamedTypeSymbol containingType)
-            {
-                return false;
-            }
-
             string className = this.ClassName;
 
-            return containingType.BaseClasses().Any(s => IsMatchingClass(typeSymbol: s, className: className));
+            return baseClasses.Any(baseClass => IsMatchingClass(typeSymbol: baseClass, className: className));
         }
 
         private static bool IsMatchingClass(INamedTypeSymbol typeSymbol, string className)
         {
             INamedTypeSymbol originalDefinition = typeSymbol.OriginalDefinition;
+            string displayString = SymbolDisplay.ToDisplayString(originalDefinition);
 
-            return StringComparer.Ordinal.Equals(SymbolDisplay.ToDisplayString(originalDefinition), y: className);
+            return ClassNameComparer.Equals(x: displayString, y: className);
         }
 
         public bool HasCorrectClassModifier(ClassDeclarationSyntax classDeclarationSyntax)
