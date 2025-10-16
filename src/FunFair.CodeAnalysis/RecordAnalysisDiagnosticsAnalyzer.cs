@@ -30,26 +30,19 @@ public sealed class RecordAnalysisDiagnosticsAnalyzer : DiagnosticAnalyzer
 
     private static void PerformCheck(CompilationStartAnalysisContext compilationStartContext)
     {
-        compilationStartContext.RegisterSyntaxNodeAction(action: MustBeReadOnly, SyntaxKind.RecordDeclaration);
+        compilationStartContext.RegisterSyntaxNodeAction(action: CheckRecordIsSealed, SyntaxKind.RecordDeclaration);
     }
 
-    private static void MustBeReadOnly(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
+    private static void CheckRecordIsSealed(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
     {
         if (syntaxNodeAnalysisContext.Node is not RecordDeclarationSyntax recordDeclarationSyntax)
         {
             return;
         }
 
-        if (!recordDeclarationSyntax.Modifiers.Any(IsWhiteListedRecordModifier))
+        if (!recordDeclarationSyntax.Modifiers.Any(SyntaxKind.SealedKeyword))
         {
             recordDeclarationSyntax.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: Rule);
         }
-    }
-
-    private static bool IsWhiteListedRecordModifier(SyntaxToken syntaxToken)
-    {
-        SyntaxKind kind = syntaxToken.Kind();
-
-        return kind == SyntaxKind.SealedKeyword;
     }
 }
