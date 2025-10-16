@@ -85,10 +85,12 @@ public sealed class DebuggerDisplayAnalysisDiagnosticsAnalyzer : DiagnosticAnaly
             RecordDeclarationSyntax recordDeclarationSyntax
         )
         {
-            if (!this.HasDebuggerDisplayAttribute(
-                syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
-                attributeLists: recordDeclarationSyntax.AttributeLists
-            ))
+            if (
+                !this.HasDebuggerDisplayAttribute(
+                    syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
+                    attributeLists: recordDeclarationSyntax.AttributeLists
+                )
+            )
             {
                 recordDeclarationSyntax.ReportDiagnostics(
                     syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
@@ -107,10 +109,12 @@ public sealed class DebuggerDisplayAnalysisDiagnosticsAnalyzer : DiagnosticAnaly
                 return;
             }
 
-            if (!this.HasDebuggerDisplayAttribute(
-                syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
-                attributeLists: structDeclarationSyntax.AttributeLists
-            ))
+            if (
+                !this.HasDebuggerDisplayAttribute(
+                    syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
+                    attributeLists: structDeclarationSyntax.AttributeLists
+                )
+            )
             {
                 structDeclarationSyntax.ReportDiagnostics(
                     syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
@@ -121,8 +125,7 @@ public sealed class DebuggerDisplayAnalysisDiagnosticsAnalyzer : DiagnosticAnaly
 
         private static bool IsRecordStruct(StructDeclarationSyntax structDeclarationSyntax)
         {
-            return structDeclarationSyntax.Modifiers
-                                          .Any(modifier => modifier.IsKind(SyntaxKind.RecordKeyword));
+            return structDeclarationSyntax.Modifiers.Any(modifier => modifier.IsKind(SyntaxKind.RecordKeyword));
         }
 
         private bool HasDebuggerDisplayAttribute(
@@ -132,10 +135,9 @@ public sealed class DebuggerDisplayAnalysisDiagnosticsAnalyzer : DiagnosticAnaly
         {
             return attributeLists
                 .SelectMany(al => al.Attributes)
-                .Select(attribute => GetAttributeTypeInfo(
-                    syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
-                    attribute: attribute
-                ))
+                .Select(attribute =>
+                    GetAttributeTypeInfo(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, attribute: attribute)
+                )
                 .RemoveNulls()
                 .Any(this.IsDebuggerDisplayAttribute);
         }
@@ -145,8 +147,12 @@ public sealed class DebuggerDisplayAnalysisDiagnosticsAnalyzer : DiagnosticAnaly
             AttributeSyntax attribute
         )
         {
-            return syntaxNodeAnalysisContext.SemanticModel.GetTypeInfo(attributeSyntax: attribute, cancellationToken: syntaxNodeAnalysisContext.CancellationToken)
-                                            .Type;
+            return syntaxNodeAnalysisContext
+                .SemanticModel.GetTypeInfo(
+                    attributeSyntax: attribute,
+                    cancellationToken: syntaxNodeAnalysisContext.CancellationToken
+                )
+                .Type;
         }
 
         private bool IsDebuggerDisplayAttribute(ITypeSymbol typeSymbol)
