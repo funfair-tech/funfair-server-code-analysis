@@ -86,7 +86,7 @@ public sealed class Test {
 
         DiagnosticResult expected = Result(
             id: "FFS0017",
-            message: "Provide 'failingException' as a inner exception when throw from the catch clauses",
+            message: "Provide 'failingException' as an inner exception when thrown from catch clauses",
             severity: DiagnosticSeverity.Error,
             line: 14,
             column: 19
@@ -119,7 +119,7 @@ public sealed class Test {
 
         DiagnosticResult expected = Result(
             id: "FFS0017",
-            message: "Provide 'failingException' as a inner exception when throw from the catch clauses",
+            message: "Provide 'failingException' as an inner exception when thrown from catch clauses",
             severity: DiagnosticSeverity.Error,
             line: 14,
             column: 19

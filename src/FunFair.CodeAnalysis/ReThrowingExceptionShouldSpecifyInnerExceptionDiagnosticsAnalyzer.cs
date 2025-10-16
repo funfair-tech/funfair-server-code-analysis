@@ -1,3 +1,4 @@
+
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -16,8 +17,8 @@ public sealed class ReThrowingExceptionShouldSpecifyInnerExceptionDiagnosticsAna
     private static readonly DiagnosticDescriptor Rule = RuleHelpers.CreateRule(
         code: Rules.RuleMustPassInterExceptionToExceptionsThrownInCatchBlock,
         category: Categories.Exceptions,
-        title: "Pass an a inner exception when thrown from a catch clause",
-        message: "Provide '{0}' as a inner exception when throw from the catch clauses"
+        title: "Pass an inner exception when thrown from a catch clause",
+        message: "Provide '{0}' as an inner exception when thrown from catch clauses"
     );
 
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => SupportedDiagnosisList.Build(Rule);
@@ -32,90 +33,73 @@ public sealed class ReThrowingExceptionShouldSpecifyInnerExceptionDiagnosticsAna
 
     private static void PerformCheck(CompilationStartAnalysisContext compilationStartContext)
     {
-        compilationStartContext.RegisterSyntaxNodeAction(action: MustBeReadOnly, SyntaxKind.CatchClause);
+        compilationStartContext.RegisterSyntaxNodeAction(action: CheckCatchClause, SyntaxKind.CatchClause);
     }
 
-    private static void MustBeReadOnly(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
+    private static void CheckCatchClause(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
     {
         if (syntaxNodeAnalysisContext.Node is not CatchClauseSyntax catchClause)
         {
             return;
         }
 
-        string? exceptionVariable = GetExceptionVariable(catchClause);
+        string? exceptionVariable = catchClause.Declaration?.Identifier.Text;
 
         if (exceptionVariable is null)
         {
             return;
         }
 
-        IReadOnlyList<ExpressionSyntax> allExpressions = GetAllThrowExpressions(catchClause.Block);
+        IReadOnlyList<ExpressionSyntax> throwExpressions = GetAllThrowExpressions(catchClause.Block);
 
-        if (allExpressions.Count == 0)
+        if (throwExpressions.Count == 0)
         {
             return;
         }
 
-        foreach (ExpressionSyntax expression in allExpressions)
+        foreach (ExpressionSyntax expression in throwExpressions)
         {
-            if (expression is ObjectCreationExpressionSyntax objectCreationExpression)
+            ArgumentListSyntax? argumentList = expression switch
             {
-                TryToReportDiagnostic(
-                    argumentListSyntax: objectCreationExpression.ArgumentList,
+                ObjectCreationExpressionSyntax objectCreation => objectCreation.ArgumentList,
+                InvocationExpressionSyntax invocation => invocation.ArgumentList,
+                _ => null
+            };
+
+            if (argumentList is not null)
+            {
+                CheckArgumentList(
+                    argumentList: argumentList,
                     exceptionVariable: exceptionVariable,
                     syntaxNodeContext: syntaxNodeAnalysisContext,
-                    objectCreationExpression: objectCreationExpression
-                );
-            }
-            else if (expression is InvocationExpressionSyntax invocationExpressionSyntax)
-            {
-                TryToReportDiagnostic(
-                    argumentListSyntax: invocationExpressionSyntax.ArgumentList,
-                    exceptionVariable: exceptionVariable,
-                    syntaxNodeContext: syntaxNodeAnalysisContext,
-                    objectCreationExpression: invocationExpressionSyntax
+                    location: expression.GetLocation()
                 );
             }
         }
     }
 
-    private static string? GetExceptionVariable(CatchClauseSyntax catchClause)
-    {
-        return catchClause.Declaration?.Identifier.Text;
-    }
-
-    private static void TryToReportDiagnostic(
-        ArgumentListSyntax? argumentListSyntax,
+    private static void CheckArgumentList(
+        ArgumentListSyntax argumentList,
         string exceptionVariable,
         in SyntaxNodeAnalysisContext syntaxNodeContext,
-        ExpressionSyntax objectCreationExpression
+        Location location
     )
     {
-        if (argumentListSyntax is null || argumentListSyntax.Arguments.Count == 0)
+        if (argumentList.Arguments.Count == 0)
         {
-            ReportDiagnostic(
-                exceptionVariable: exceptionVariable,
-                syntaxNodeContext: syntaxNodeContext,
-                objectCreationExpression.GetLocation()
-            );
-
+            ReportDiagnostic(exceptionVariable: exceptionVariable, syntaxNodeContext: syntaxNodeContext, location: location);
             return;
         }
 
-        if (!argumentListSyntax.Arguments.Any(x => IsNamedIdentifier(exceptionVariable: exceptionVariable, x: x)))
-        {
-            ReportDiagnostic(
-                exceptionVariable: exceptionVariable,
-                syntaxNodeContext: syntaxNodeContext,
-                objectCreationExpression.GetLocation()
-            );
-        }
-    }
+        bool hasExceptionArgument = argumentList.Arguments.Any(argument =>
+            argument.Expression is IdentifierNameSyntax identifier
+            && StringComparer.Ordinal.Equals(x: identifier.Identifier.Text, y: exceptionVariable)
+        );
 
-    private static bool IsNamedIdentifier(string exceptionVariable, ArgumentSyntax x)
-    {
-        return x.Expression is IdentifierNameSyntax identifier
-            && StringComparer.Ordinal.Equals(x: identifier.Identifier.Text, y: exceptionVariable);
+        if (!hasExceptionArgument)
+        {
+            ReportDiagnostic(exceptionVariable: exceptionVariable, syntaxNodeContext: syntaxNodeContext, location: location);
+        }
     }
 
     private static void ReportDiagnostic(
@@ -129,19 +113,15 @@ public sealed class ReThrowingExceptionShouldSpecifyInnerExceptionDiagnosticsAna
 
     private static IReadOnlyList<ExpressionSyntax> GetAllThrowExpressions(BlockSyntax codeBlock)
     {
-        IEnumerable<ExpressionSyntax> expressionFromThrowStatements = ThrowStatements(codeBlock);
-        IEnumerable<ExpressionSyntax> expressionFromThrowExpressions = ThrowExpressions(codeBlock);
+        IEnumerable<ExpressionSyntax> throwStatements = codeBlock.DescendantNodes()
+            .OfType<ThrowStatementSyntax>()
+            .Select(x => x.Expression)
+            .RemoveNulls();
 
-        return [.. expressionFromThrowStatements.Concat(expressionFromThrowExpressions)];
-    }
+        IEnumerable<ExpressionSyntax> throwExpressions = codeBlock.DescendantNodes()
+            .OfType<ThrowExpressionSyntax>()
+            .Select(x => x.Expression);
 
-    private static IEnumerable<ExpressionSyntax> ThrowExpressions(BlockSyntax codeBlock)
-    {
-        return codeBlock.DescendantNodes().OfType<ThrowExpressionSyntax>().Select(x => x.Expression);
-    }
-
-    private static IEnumerable<ExpressionSyntax> ThrowStatements(BlockSyntax codeBlock)
-    {
-        return codeBlock.DescendantNodes().OfType<ThrowStatementSyntax>().Select(x => x.Expression).RemoveNulls();
+        return [.. throwStatements.Concat(throwExpressions)];
     }
 }
