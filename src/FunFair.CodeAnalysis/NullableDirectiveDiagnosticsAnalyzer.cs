@@ -14,11 +14,14 @@ public sealed class NullableDirectiveDiagnosticsAnalyzer : DiagnosticAnalyzer
     private static readonly DiagnosticDescriptor Rule = RuleHelpers.CreateRule(
         code: Rules.RuleDontConfigureNullableInCode,
         category: Categories.IllegalDirectives,
-        title: "Don't use #nulllable directive, make the change globally for the project",
-        message: "Don't use #nulllable directive, make the change globally for the project"
+        title: "Don't use #nullable directive, make the change globally for the project",
+        message: "Don't use #nullable directive, make the change globally for the project"
     );
 
-    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => SupportedDiagnosisList.Build(Rule);
+    private static readonly ImmutableArray<DiagnosticDescriptor> SupportedDiagnosticsCache =
+        SupportedDiagnosisList.Build(Rule);
+
+    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => SupportedDiagnosticsCache;
 
     public override void Initialize(AnalysisContext context)
     {
@@ -38,11 +41,14 @@ public sealed class NullableDirectiveDiagnosticsAnalyzer : DiagnosticAnalyzer
 
     private static void LookForProhibition(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
     {
-        if (syntaxNodeAnalysisContext.Node is not NullableDirectiveTriviaSyntax pragmaWarningDirective)
+        if (syntaxNodeAnalysisContext.Node is not NullableDirectiveTriviaSyntax nullableDirective)
         {
             return;
         }
 
-        pragmaWarningDirective.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: Rule);
+        nullableDirective.ReportDiagnostics(
+            syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
+            rule: Rule
+        );
     }
 }

@@ -16,7 +16,7 @@ public sealed class NullableDirectiveDiagnosticsAnalyzerTests
 
         DiagnosticResult expected = Result(
             id: "FFS0022",
-            message: "Don't use #nulllable directive, make the change globally for the project",
+            message: "Don't use #nullable directive, make the change globally for the project",
             severity: DiagnosticSeverity.Error,
             line: 9,
             column: 37
@@ -32,7 +32,7 @@ public sealed class NullableDirectiveDiagnosticsAnalyzerTests
 
         DiagnosticResult expected = Result(
             id: "FFS0022",
-            message: "Don't use #nulllable directive, make the change globally for the project",
+            message: "Don't use #nullable directive, make the change globally for the project",
             severity: DiagnosticSeverity.Error,
             line: 9,
             column: 37
@@ -48,7 +48,7 @@ public sealed class NullableDirectiveDiagnosticsAnalyzerTests
 
         DiagnosticResult expected = Result(
             id: "FFS0022",
-            message: "Don't use #nulllable directive, make the change globally for the project",
+            message: "Don't use #nullable directive, make the change globally for the project",
             severity: DiagnosticSeverity.Error,
             line: 9,
             column: 37
