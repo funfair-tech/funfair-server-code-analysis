@@ -97,11 +97,11 @@ public sealed class SuppressMessageDiagnosticsAnalyzer : DiagnosticAnalyzer
                 return;
             }
 
-            AttributeArgumentSyntax? justificationAttributeArguement = FindJustificationAttributeArgument(
+            AttributeArgumentSyntax? findJustificationAttributeArgument = FindJustificationAttributeArgument(
                 attributeSyntax
             );
 
-            if (justificationAttributeArguement is null)
+            if (findJustificationAttributeArgument is null)
             {
                 attributeSyntax.ReportDiagnostics(
                     syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
@@ -110,7 +110,7 @@ public sealed class SuppressMessageDiagnosticsAnalyzer : DiagnosticAnalyzer
                 return;
             }
 
-            if (justificationAttributeArguement.Expression is not LiteralExpressionSyntax literalExpression)
+            if (findJustificationAttributeArgument.Expression is not LiteralExpressionSyntax literalExpression)
             {
                 return;
             }
