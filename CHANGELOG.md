@@ -9,18 +9,21 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 ### Added
 ### Fixed
 ### Changed
-- Dotnet 10
-- Dependencies - Updated Credfeto.Enumeration to 1.2.129.1430
-- Dependencies - Updated Roslynator.Analyzers to 4.14.1
-- Dependencies - Updated Meziantou.Analyzer to 2.0.227
-- Dependencies - Updated FunFair.Test.Common to 6.2.1.1768
-- Dependencies - Updated Microsoft.NET.Test.Sdk to 18.0.0
 ### Removed
 ### Deployment Changes
 
 <!--
 Releases that have at least been deployed to staging, BUT NOT necessarily released to live.  Changes should be moved from [Unreleased] into here as they are merged into the appropriate release branch
 -->
+## [7.1.25] - 2025-10-19
+### Changed
+- Dotnet 10
+- Dependencies - Updated Credfeto.Enumeration to 1.2.129.1430
+- Dependencies - Updated Roslynator.Analyzers to 4.14.1
+- Dependencies - Updated Meziantou.Analyzer to 2.0.227
+- Dependencies - Updated FunFair.Test.Common to 6.2.1.1768
+- Dependencies - Updated Microsoft.NET.Test.Sdk to 18.0.0
+
 ## [7.1.24] - 2025-09-10
 ### Changed
 - Dependencies - Updated Microsoft.Sbom.Targets to 4.1.2
