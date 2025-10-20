@@ -153,7 +153,7 @@ public sealed class ParameterNameDiagnosticsAnalyzer : DiagnosticAnalyzer
                 return cachedSpec;
             }
 
-            NameSanitationSpec? spec = NameSpecifications.FirstOrDefault(ns =>
+            NameSanitationSpec? spec = NameSpecifications.FirstOrNull(ns =>
                 StringComparer.Ordinal.Equals(x: ns.SourceClass, y: fullTypeName)
             );
 

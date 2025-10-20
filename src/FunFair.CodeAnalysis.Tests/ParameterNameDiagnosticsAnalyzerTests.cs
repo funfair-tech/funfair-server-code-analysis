@@ -99,4 +99,40 @@ public sealed class ParameterNameDiagnosticsAnalyzerTests : DiagnosticAnalyzerVe
 
         return this.VerifyCSharpDiagnosticAsync(source: test, reference: WellKnownMetadataReferences.Logger);
     }
+
+    [Fact]
+    public Task RecordStructAsync()
+    {
+        const string test =
+            @"
+            public readonly record struct ServiceStatus(string Name, bool Ok);
+";
+
+        return this.VerifyCSharpDiagnosticAsync(source: test, reference: WellKnownMetadataReferences.Logger);
+    }
+
+    [Fact]
+    public Task RecordClassAsync()
+    {
+        const string test =
+            @"
+            public sealed record ServiceStatus(string Name, bool Ok);
+";
+
+        return this.VerifyCSharpDiagnosticAsync(source: test, reference: WellKnownMetadataReferences.Logger);
+    }
+
+    [Fact]
+    public Task NoParametersAsync()
+    {
+        const string test =
+            @"
+            public interface IComponentStatus
+            {
+                string GetStatus();
+            }
+";
+
+        return this.VerifyCSharpDiagnosticAsync(source: test, reference: WellKnownMetadataReferences.Logger);
+    }
 }
