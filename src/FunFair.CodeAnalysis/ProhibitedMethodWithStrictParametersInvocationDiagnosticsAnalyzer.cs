@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics;
@@ -90,7 +91,7 @@ public sealed class ProhibitedMethodWithStrictParametersInvocationDiagnosticsAna
 
     private sealed class Checker
     {
-        private readonly Dictionary<string, IReadOnlyList<ProhibitedMethodsSpec>> _qualifiedMethodCache = new(
+        private readonly ConcurrentDictionary<string, IReadOnlyList<ProhibitedMethodsSpec>> _qualifiedMethodCache = new(
             StringComparer.Ordinal
         );
 

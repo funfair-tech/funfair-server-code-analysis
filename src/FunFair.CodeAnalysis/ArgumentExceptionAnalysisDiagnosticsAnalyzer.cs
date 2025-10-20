@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
@@ -55,8 +56,8 @@ public sealed class ArgumentExceptionAnalysisDiagnosticsAnalyzer : DiagnosticAna
 
     private sealed class Checker
     {
-        private readonly Dictionary<ITypeSymbol, bool> _typeCache = new(SymbolEqualityComparer.Default);
-        private readonly Dictionary<IMethodSymbol, bool> _methodCache = new(SymbolEqualityComparer.Default);
+        private readonly ConcurrentDictionary<ITypeSymbol, bool> _typeCache = new(SymbolEqualityComparer.Default);
+        private readonly ConcurrentDictionary<IMethodSymbol, bool> _methodCache = new(SymbolEqualityComparer.Default);
 
         [SuppressMessage(
             category: "Roslynator.Analyzers",

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics;
@@ -52,7 +53,7 @@ public sealed class ProhibitedClassesInTestAssembliesDiagnosticsAnalyzer : Diagn
     private sealed class Checker
     {
         private Dictionary<string, INamedTypeSymbol>? _cachedSymbols;
-        private readonly Dictionary<string, ProhibitedClassSpec?> _specCache = new(ClassNameComparer);
+        private readonly ConcurrentDictionary<string, ProhibitedClassSpec?> _specCache = new(ClassNameComparer);
 
         public void PerformCheck(CompilationStartAnalysisContext compilationStartContext)
         {

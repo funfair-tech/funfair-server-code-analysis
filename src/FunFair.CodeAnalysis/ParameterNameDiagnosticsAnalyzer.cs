@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics;
@@ -19,25 +20,21 @@ public sealed class ParameterNameDiagnosticsAnalyzer : DiagnosticAnalyzer
 {
     private static readonly IReadOnlyList<NameSanitationSpec> NameSpecifications =
     [
-        Build(
-            ruleId: Rules.RuleLoggerParametersShouldBeCalledLogger,
-            title: "ILogger parameters should be called 'logger'",
-            message: "ILogger parameters should be called 'logger'",
-            sourceClass: "Microsoft.Extensions.Logging.ILogger",
-            whitelistedParameterName: "logger"
-        ),
-        Build(
-            ruleId: Rules.RuleLoggerParametersShouldBeCalledLogger,
-            title: "ILogger parameters should be called 'logger'",
-            message: "ILogger parameters should be called 'logger'",
-            sourceClass: "Microsoft.Extensions.Logging.ILogger<TCategoryName>",
-            whitelistedParameterName: "logger"
-        ),
+        Build(ruleId: Rules.RuleLoggerParametersShouldBeCalledLogger,
+              title: "ILogger parameters should be called 'logger'",
+              message: "ILogger parameters should be called 'logger'",
+              sourceClass: "Microsoft.Extensions.Logging.ILogger",
+              whitelistedParameterName: "logger"),
+        Build(ruleId: Rules.RuleLoggerParametersShouldBeCalledLogger,
+              title: "ILogger parameters should be called 'logger'",
+              message: "ILogger parameters should be called 'logger'",
+              sourceClass: "Microsoft.Extensions.Logging.ILogger<TCategoryName>",
+              whitelistedParameterName: "logger")
     ];
 
     private static readonly ImmutableArray<DiagnosticDescriptor> SupportedDiagnosticsCache =
     [
-        .. NameSpecifications.Select(r => r.Rule),
+        .. NameSpecifications.Select(r => r.Rule)
     ];
 
     private static readonly StringComparer ParameterNameComparer = StringComparer.Ordinal;
@@ -59,33 +56,17 @@ public sealed class ParameterNameDiagnosticsAnalyzer : DiagnosticAnalyzer
         compilationStartContext.RegisterSyntaxNodeAction(action: checker.MustHaveASaneName, SyntaxKind.Parameter);
     }
 
-    private static NameSanitationSpec Build(
-        string ruleId,
-        string title,
-        string message,
-        string sourceClass,
-        string whitelistedParameterName
-    )
+    private static NameSanitationSpec Build(string ruleId, string title, string message, string sourceClass, string whitelistedParameterName)
     {
-        return new(
-            ruleId: ruleId,
-            title: title,
-            message: message,
-            sourceClass: sourceClass,
-            whitelistedParameterName: whitelistedParameterName
-        );
+        return new(ruleId: ruleId, title: title, message: message, sourceClass: sourceClass, whitelistedParameterName: whitelistedParameterName);
     }
 
     private sealed class Checker
     {
-        private readonly Dictionary<string, NameSanitationSpec?> _specCache = new(StringComparer.Ordinal);
-        private readonly Dictionary<ParameterSyntax, string?> _typeNameCache = [];
+        private readonly ConcurrentDictionary<string, NameSanitationSpec?> _specCache = new(StringComparer.Ordinal);
+        private readonly ConcurrentDictionary<ParameterSyntax, string?> _typeNameCache = [];
 
-        [SuppressMessage(
-            category: "Roslynator.Analyzers",
-            checkId: "RCS1231:Make parameter ref read only",
-            Justification = "Needed here"
-        )]
+        [SuppressMessage(category: "Roslynator.Analyzers", checkId: "RCS1231:Make parameter ref read only", Justification = "Needed here")]
         public void MustHaveASaneName(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
         {
             if (syntaxNodeAnalysisContext.Node is not ParameterSyntax parameterSyntax)
@@ -93,11 +74,9 @@ public sealed class ParameterNameDiagnosticsAnalyzer : DiagnosticAnalyzer
                 return;
             }
 
-            string? fullTypeName = this.GetFullTypeName(
-                syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
-                parameterSyntax: parameterSyntax,
-                cancellationToken: syntaxNodeAnalysisContext.CancellationToken
-            );
+            string? fullTypeName = this.GetFullTypeName(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
+                                                        parameterSyntax: parameterSyntax,
+                                                        cancellationToken: syntaxNodeAnalysisContext.CancellationToken);
 
             if (fullTypeName is null)
             {
@@ -111,38 +90,23 @@ public sealed class ParameterNameDiagnosticsAnalyzer : DiagnosticAnalyzer
                 return;
             }
 
-            if (
-                !rule.Value.WhitelistedParameterNames.Contains(
-                    value: parameterSyntax.Identifier.Text,
-                    comparer: ParameterNameComparer
-                )
-            )
+            if (!rule.Value.WhitelistedParameterNames.Contains(value: parameterSyntax.Identifier.Text, comparer: ParameterNameComparer))
             {
-                parameterSyntax.ReportDiagnostics(
-                    syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
-                    rule: rule.Value.Rule
-                );
+                parameterSyntax.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: rule.Value.Rule);
             }
         }
 
-        private string? GetFullTypeName(
-            in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext,
-            ParameterSyntax parameterSyntax,
-            CancellationToken cancellationToken
-        )
+        private string? GetFullTypeName(in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, ParameterSyntax parameterSyntax, CancellationToken cancellationToken)
         {
             if (this._typeNameCache.TryGetValue(key: parameterSyntax, out string? cachedTypeName))
             {
                 return cachedTypeName;
             }
 
-            string? typeName = ParameterHelpers.GetFullTypeName(
-                syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
-                parameterSyntax: parameterSyntax,
-                cancellationToken: cancellationToken
-            );
+            string? typeName = ParameterHelpers.GetFullTypeName(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, parameterSyntax: parameterSyntax, cancellationToken: cancellationToken);
 
             this._typeNameCache[parameterSyntax] = typeName;
+
             return typeName;
         }
 
@@ -153,11 +117,10 @@ public sealed class ParameterNameDiagnosticsAnalyzer : DiagnosticAnalyzer
                 return cachedSpec;
             }
 
-            NameSanitationSpec? spec = NameSpecifications.FirstOrNull(ns =>
-                StringComparer.Ordinal.Equals(x: ns.SourceClass, y: fullTypeName)
-            );
+            NameSanitationSpec? spec = NameSpecifications.FirstOrNull(ns => StringComparer.Ordinal.Equals(x: ns.SourceClass, y: fullTypeName));
 
             this._specCache[fullTypeName] = spec;
+
             return spec;
         }
     }
@@ -165,33 +128,17 @@ public sealed class ParameterNameDiagnosticsAnalyzer : DiagnosticAnalyzer
     [DebuggerDisplay("{Rule.Id} {Rule.Title} Class {SourceClass}")]
     private readonly record struct NameSanitationSpec
     {
-        public NameSanitationSpec(
-            string ruleId,
-            string title,
-            string message,
-            string sourceClass,
-            string whitelistedParameterName
-        )
+        public NameSanitationSpec(string ruleId, string title, string message, string sourceClass, string whitelistedParameterName)
             : this(ruleId: ruleId, title: title, message: message, sourceClass: sourceClass, [whitelistedParameterName])
-        { }
+        {
+        }
 
-        public NameSanitationSpec(
-            string ruleId,
-            string title,
-            string message,
-            string sourceClass,
-            IReadOnlyList<string> whitelistedParameterNames
-        )
+        public NameSanitationSpec(string ruleId, string title, string message, string sourceClass, IReadOnlyList<string> whitelistedParameterNames)
         {
             this.SourceClass = sourceClass;
             this.WhitelistedParameterNames = whitelistedParameterNames;
 
-            this.Rule = RuleHelpers.CreateRule(
-                code: ruleId,
-                category: Categories.Naming,
-                title: title,
-                message: message
-            );
+            this.Rule = RuleHelpers.CreateRule(code: ruleId, category: Categories.Naming, title: title, message: message);
         }
 
         public string SourceClass { get; }

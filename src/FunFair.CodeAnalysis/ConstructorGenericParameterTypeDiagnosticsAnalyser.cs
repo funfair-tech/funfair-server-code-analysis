@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics;
@@ -92,9 +93,9 @@ public sealed class ConstructorGenericParameterTypeDiagnosticsAnalyser : Diagnos
 
     private sealed class Checker
     {
-        private readonly Dictionary<(bool isProtected, string fullTypeName), TypeCheckSpec?> _specCache = [];
-        private readonly Dictionary<ISymbol, string> _classNameCache = new(SymbolEqualityComparer.Default);
-        private readonly Dictionary<ISymbol, bool> _protectionCache = new(SymbolEqualityComparer.Default);
+        private readonly ConcurrentDictionary<(bool isProtected, string fullTypeName), TypeCheckSpec?> _specCache = [];
+        private readonly ConcurrentDictionary<ISymbol, string> _classNameCache = new(SymbolEqualityComparer.Default);
+        private readonly ConcurrentDictionary<ISymbol, bool> _protectionCache = new(SymbolEqualityComparer.Default);
 
         public void MustHaveSaneGenericUsages(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
         {

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
@@ -48,7 +49,7 @@ public sealed class FileNameMustMatchTypeNameDiagnosticsAnalyzer : DiagnosticAna
 
     private sealed class Checker
     {
-        private readonly Dictionary<MemberDeclarationSyntax, string> _typeNameCache = [];
+        private readonly ConcurrentDictionary<MemberDeclarationSyntax, string> _typeNameCache = [];
 
         [SuppressMessage(
             category: "Roslynator.Analyzers",

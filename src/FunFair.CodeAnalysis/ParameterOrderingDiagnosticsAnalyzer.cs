@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics;
@@ -54,7 +55,7 @@ public sealed class ParameterOrderingDiagnosticsAnalyzer : DiagnosticAnalyzer
 
     private sealed class Checker
     {
-        private readonly Dictionary<ParameterSyntax, string?> _typeNameCache = [];
+        private readonly ConcurrentDictionary<ParameterSyntax, string?> _typeNameCache = [];
 
         [SuppressMessage(
             category: "Roslynator.Analyzers",

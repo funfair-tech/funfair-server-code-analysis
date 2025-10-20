@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics;
@@ -71,7 +72,7 @@ public sealed class ClassVisibilityDiagnosticsAnalyzer : DiagnosticAnalyzer
 
     private sealed class Checker
     {
-        private readonly Dictionary<INamedTypeSymbol, bool> _matchCache = new(SymbolEqualityComparer.Default);
+        private readonly ConcurrentDictionary<INamedTypeSymbol, bool> _matchCache = new(SymbolEqualityComparer.Default);
         private readonly ImmutableHashSet<string> _targetClassNames;
 
         public Checker()
