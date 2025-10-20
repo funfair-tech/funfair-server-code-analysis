@@ -113,7 +113,9 @@ public sealed class ForceMethodParametersInvocationsDiagnosticsAnalyzer : Diagno
     private sealed class Checker
     {
         private readonly Dictionary<string, IReadOnlyList<ForcedMethodsSpec>> _methodSpecsCache;
-        private readonly ConcurrentDictionary<IMethodSymbol, bool> _invocationAllowedCache = new(SymbolEqualityComparer.Default);
+        private readonly ConcurrentDictionary<IMethodSymbol, bool> _invocationAllowedCache = new(
+            SymbolEqualityComparer.Default
+        );
 
         public Checker(Dictionary<string, IReadOnlyList<ForcedMethodsSpec>> methodSpecsCache)
         {
