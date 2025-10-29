@@ -6,7 +6,7 @@ namespace FunFair.CodeAnalysis.Extensions;
 
 internal static class SyntaxTokenListExtensions
 {
-    [SuppressMessage(category: "ReSharper", checkId: "ForCanBeConvertedToForeach", Justification = "Avoids boxing")]
+    
     public static bool Any(this in SyntaxTokenList syntaxTokenList, Func<SyntaxToken, bool> predicate)
     {
         for (int i = 0; i < syntaxTokenList.Count; i++)
