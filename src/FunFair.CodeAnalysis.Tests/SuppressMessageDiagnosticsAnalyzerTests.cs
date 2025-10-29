@@ -1,4 +1,4 @@
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using FunFair.CodeAnalysis.Tests.Helpers;
 using FunFair.CodeAnalysis.Tests.Verifiers;
 using Microsoft.CodeAnalysis;
