@@ -297,7 +297,6 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzer : DiagnosticA
             checkId: "S1172: Parameter only used for name",
             Justification = "By Design"
         )]
-        
         private static IReadOnlyList<IMethodSymbol> ThrowUnknownRuleSignature(
             IEnumerable<IEnumerable<string>>? ruleSignatures
         )
@@ -310,7 +309,6 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzer : DiagnosticA
             checkId: "S1172: Parameter only used for name",
             Justification = "By Design"
         )]
-        
         private static IReadOnlyList<IMethodSymbol> ThrowUnknownMethodSignatureException(
             IEnumerable<IMethodSymbol>? methodSignatures
         )
