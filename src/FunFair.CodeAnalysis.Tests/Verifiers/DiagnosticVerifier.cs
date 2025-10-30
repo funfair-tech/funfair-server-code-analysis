@@ -341,13 +341,13 @@ public abstract partial class DiagnosticVerifier : TestBase
     private static bool IsTest(in DiagnosticResultLocation expected, in FileLinePositionSpan actualSpan)
     {
         return StringComparer.Ordinal.Equals(x: actualSpan.Path, y: expected.Path)
-               || IsNamedTestFile(expected: expected, actualSpan: actualSpan);
+            || IsNamedTestFile(expected: expected, actualSpan: actualSpan);
     }
 
     private static bool IsNamedTestFile(in DiagnosticResultLocation expected, in FileLinePositionSpan actualSpan)
     {
         return actualSpan.Path.Contains(value: "Test0.", comparisonType: StringComparison.Ordinal)
-               && expected.Path.Contains(value: "Test.", comparisonType: StringComparison.Ordinal);
+            && expected.Path.Contains(value: "Test.", comparisonType: StringComparison.Ordinal);
     }
 
     #endregion
