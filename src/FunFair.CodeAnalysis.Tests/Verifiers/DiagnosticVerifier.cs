@@ -309,9 +309,7 @@ public abstract partial class DiagnosticVerifier : TestBase
         FileLinePositionSpan actualSpan = actual.GetLineSpan();
 
         Assert.True(
-            StringComparer.Ordinal.Equals(x: actualSpan.Path, y: expected.Path)
-                || actualSpan.Path.Contains(value: "Test0.", comparisonType: StringComparison.Ordinal)
-                    && expected.Path.Contains(value: "Test.", comparisonType: StringComparison.Ordinal),
+            IsTest(expected: expected, actualSpan: actualSpan),
             $"Expected diagnostic to be in file \"{expected.Path}\" was actually in file \"{actualSpan.Path}\"\r\n\r\nDiagnostic:\r\n    {FormatDiagnostics(analyzer: analyzer, diagnostic)}\r\n"
         );
 
@@ -338,6 +336,18 @@ public abstract partial class DiagnosticVerifier : TestBase
                 );
             }
         }
+    }
+
+    private static bool IsTest(in DiagnosticResultLocation expected, in FileLinePositionSpan actualSpan)
+    {
+        return StringComparer.Ordinal.Equals(x: actualSpan.Path, y: expected.Path)
+               || IsNamedTestFile(expected: expected, actualSpan: actualSpan);
+    }
+
+    private static bool IsNamedTestFile(in DiagnosticResultLocation expected, in FileLinePositionSpan actualSpan)
+    {
+        return actualSpan.Path.Contains(value: "Test0.", comparisonType: StringComparison.Ordinal)
+               && expected.Path.Contains(value: "Test.", comparisonType: StringComparison.Ordinal);
     }
 
     #endregion
