@@ -5,24 +5,25 @@ namespace FunFair.CodeAnalysis.Extensions;
 
 internal static class SyntaxNodeExtensions
 {
-    public static void ReportDiagnostics(
-        this SyntaxNode expressionSyntax,
-        in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext,
-        DiagnosticDescriptor rule
-    )
+    public static void ReportDiagnostics(this SyntaxNode expressionSyntax, in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, DiagnosticDescriptor rule)
     {
-        syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(descriptor: rule, expressionSyntax.GetLocation()));
+        syntaxNodeAnalysisContext.ReportDiagnostic(CreateDiagnostic(expressionSyntax: expressionSyntax, rule: rule));
     }
 
-    public static void ReportDiagnostics(
-        this SyntaxNode expressionSyntax,
-        in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext,
-        DiagnosticDescriptor rule,
-        params object?[]? messageArgs
-    )
+    public static void ReportDiagnostics(this SyntaxNode expressionSyntax, in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, DiagnosticDescriptor rule, params object?[]? messageArgs)
     {
-        syntaxNodeAnalysisContext.ReportDiagnostic(
-            Diagnostic.Create(descriptor: rule, expressionSyntax.GetLocation(), messageArgs: messageArgs)
-        );
+        syntaxNodeAnalysisContext.ReportDiagnostic(CreateDiagnostic(expressionSyntax: expressionSyntax, rule: rule, messageArgs: messageArgs));
+    }
+
+    private static Diagnostic CreateDiagnostic(SyntaxNode expressionSyntax, DiagnosticDescriptor rule)
+    {
+        return Diagnostic.Create(descriptor: rule, expressionSyntax.GetLocation());
+    }
+
+    private static Diagnostic CreateDiagnostic(SyntaxNode expressionSyntax, DiagnosticDescriptor rule, object?[]? messageArgs)
+    {
+        return messageArgs is null || messageArgs.Length == 0
+            ? CreateDiagnostic(expressionSyntax: expressionSyntax, rule: rule)
+            : Diagnostic.Create(descriptor: rule, expressionSyntax.GetLocation(), messageArgs: messageArgs);
     }
 }
