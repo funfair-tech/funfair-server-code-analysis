@@ -52,18 +52,20 @@
   <ItemGroup>
     <ProjectReference Include="..\FunFair.CodeAnalysis\FunFair.CodeAnalysis.csproj" />
   </ItemGroup>
+  <Import Project="$(SolutionDir)UnitTests.props" Condition="Exists('$(SolutionDir)UnitTests.props')"/>
   <ItemGroup>
     <PackageReference Include="Credfeto.Enumeration.Source.Generation.Attributes" Version="1.2.129.1430" />
-    <PackageReference Include="FunFair.Test.Common" Version="6.2.3.1786" />
+    <PackageReference Include="FunFair.Test.Common" Version="6.2.4.1830" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.14.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.0.0" />
-    <PackageReference Include="xunit.v3" Version="3.2.0" />
+    <PackageReference Include="xunit.v3.mtp-v2" Version="3.2.0" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="AsyncFixer" Version="1.6.0" PrivateAssets="All" ExcludeAssets="runtime" />
     <PackageReference Include="Credfeto.Enumeration.Source.Generation" Version="1.2.129.1430" PrivateAssets="All" ExcludeAssets="runtime" />
     <PackageReference Include="CSharpIsNullAnalyzer" Version="0.1.593" PrivateAssets="all" ExcludeAssets="runtime" />
     <PackageReference Include="DisableDateTimeNow" Version="1.0.5883.39470" PrivateAssets="All" ExcludeAssets="runtime" />
+    <PackageReference Include="FunFair.Test.Source.Generator" Version="6.2.4.1830" PrivateAssets="All" ExcludeAssets="runtime" />
     <PackageReference Include="Meziantou.Analyzer" Version="2.0.250" PrivateAssets="All" ExcludeAssets="runtime" />
     <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.14.15" PrivateAssets="All" ExcludeAssets="runtime" />
     <PackageReference Include="NSubstitute.Analyzers.CSharp" Version="1.0.17" PrivateAssets="All" ExcludeAssets="runtime" />
