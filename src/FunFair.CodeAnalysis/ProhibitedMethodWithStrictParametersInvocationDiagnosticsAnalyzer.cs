@@ -192,13 +192,22 @@ public sealed class ProhibitedMethodWithStrictParametersInvocationDiagnosticsAna
                 )
                 .Where(tuple => tuple.Parameter is not null)
                 .Select(tuple => (tuple.ParamSpec, Argument: arguments.Arguments[tuple.Parameter!.Ordinal]))
-                .Any(tuple =>
-                    StringComparer.Ordinal.Equals(tuple.Argument.Expression.ToFullString(), y: tuple.ParamSpec.Value)
-                    && StringComparer.Ordinal.Equals(
-                        tuple.Argument.Expression.Kind().ToString(),
-                        y: tuple.ParamSpec.Type
-                    )
-                );
+                .Any(IsMatchingType);
+        }
+
+        private static bool IsMatchingType((ParameterSpec ParamSpec, ArgumentSyntax Argument) tuple)
+        {
+            if (!StringComparer.Ordinal.Equals(tuple.Argument.Expression.ToFullString(), y: tuple.ParamSpec.Value))
+            {
+                return false;
+            }
+
+            if (!Enum.TryParse(tuple.ParamSpec.Type, out SyntaxKind type))
+            {
+                return false;
+            }
+
+            return tuple.Argument.Expression.IsKind(type);
         }
     }
 
