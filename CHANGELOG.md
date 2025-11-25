@@ -12,6 +12,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 - Dependencies - Updated Meziantou.Analyzer to 2.0.256
 - Dependencies - Updated Microsoft.Sbom.Targets to 4.1.4
 - Dependencies - Updated FunFair.Test.Common to 6.2.8.1869
+- Dependencies - Updated Credfeto.Enumeration to 1.2.133.1545
 ### Removed
 ### Deployment Changes
 
