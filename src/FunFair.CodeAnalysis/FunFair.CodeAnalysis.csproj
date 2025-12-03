@@ -2,7 +2,6 @@
   <PropertyGroup>
     <AnalysisLevel>latest</AnalysisLevel>
     <AnalysisMode>AllEnabledByDefault</AnalysisMode>
-    <CodeAnalysisRuleSet>$(SolutionDir)\CodeAnalysis.ruleset</CodeAnalysisRuleSet>
     <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
     <DebuggerSupport>true</DebuggerSupport>
     <Description>Code analysis rules that are used throught FunFair dotnet packages to pick up common issues that are encountered.</Description>
