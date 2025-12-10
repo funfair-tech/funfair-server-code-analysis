@@ -9,8 +9,8 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 ### Added
 ### Fixed
 ### Changed
-- Dependencies - Updated FunFair.Test.Source.Generator to 6.2.13.1931
 - Dependencies - Updated FunFair.Test.Common to 6.2.13.1931
+- Dependencies - Updated FunFair.Test.Source.Generator to 6.2.13.1931
 ### Removed
 ### Deployment Changes
 
