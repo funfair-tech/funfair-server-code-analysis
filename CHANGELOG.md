@@ -11,6 +11,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 ### Changed
 - Dependencies - Updated FunFair.Test.Common to 6.2.13.1931
 - Dependencies - Updated FunFair.Test.Source.Generator to 6.2.13.1931
+- Dependencies - Updated Credfeto.Enumeration to 1.2.134.1689
 ### Removed
 ### Deployment Changes
 
