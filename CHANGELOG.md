@@ -9,6 +9,14 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 ### Added
 ### Fixed
 ### Changed
+### Removed
+### Deployment Changes
+
+<!--
+Releases that have at least been deployed to staging, BUT NOT necessarily released to live.  Changes should be moved from [Unreleased] into here as they are merged into the appropriate release branch
+-->
+## [7.1.30] - 2025-12-18
+### Changed
 - Dependencies - Updated FunFair.Test.Common to 6.2.13.1931
 - Dependencies - Updated FunFair.Test.Source.Generator to 6.2.13.1931
 - Dependencies - Updated Credfeto.Enumeration to 1.2.134.1689
@@ -16,12 +24,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 - Dependencies - Updated Microsoft.Sbom.Targets to 4.1.5
 - Dependencies - Updated Roslynator.Analyzers to 4.15.0
 - Dependencies - Updated SonarAnalyzer.CSharp to 10.17.0.131074
-### Removed
-### Deployment Changes
 
-<!--
-Releases that have at least been deployed to staging, BUT NOT necessarily released to live.  Changes should be moved from [Unreleased] into here as they are merged into the appropriate release branch
--->
 ## [7.1.29] - 2025-12-10
 ### Changed
 - Dependencies - Updated Meziantou.Analyzer to 2.0.257
