@@ -11,6 +11,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 ### Changed
 - Dependencies - Updated Credfeto.Enumeration to 1.2.135.1701
 - Dependencies - Updated Meziantou.Analyzer to 2.0.285
+- Dependencies - Updated xunit.analyzers to 1.27.0
 ### Removed
 ### Deployment Changes
 
