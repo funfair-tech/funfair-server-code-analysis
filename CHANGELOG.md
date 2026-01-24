@@ -9,18 +9,21 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 ### Added
 ### Fixed
 ### Changed
-- Dependencies - Updated Credfeto.Enumeration to 1.2.135.1701
-- Dependencies - Updated Meziantou.Analyzer to 2.0.285
-- Dependencies - Updated xunit.analyzers to 1.27.0
-- Dependencies - Updated xunit.v3 to 3.2.2
-- Dependencies - Updated FunFair.Test.Common to 6.2.15.1955
-- Dependencies - Updated FunFair.Test.Source.Generator to 6.2.15.1955
 ### Removed
 ### Deployment Changes
 
 <!--
 Releases that have at least been deployed to staging, BUT NOT necessarily released to live.  Changes should be moved from [Unreleased] into here as they are merged into the appropriate release branch
 -->
+## [7.1.32] - 2026-01-24
+### Changed
+- Dependencies - Updated Credfeto.Enumeration to 1.2.135.1701
+- Dependencies - Updated Meziantou.Analyzer to 2.0.285
+- Dependencies - Updated xunit.analyzers to 1.27.0
+- Dependencies - Updated xunit.v3 to 3.2.2
+- Dependencies - Updated FunFair.Test.Common to 6.2.15.1955
+- Dependencies - Updated FunFair.Test.Source.Generator to 6.2.15.1955
+
 ## [7.1.31] - 2026-01-20
 ### Changed
 - Dependencies - Updated FunFair.Test.Common to 6.2.14.1940
