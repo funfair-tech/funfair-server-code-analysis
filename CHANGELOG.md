@@ -9,18 +9,21 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 ### Added
 ### Fixed
 ### Changed
-- Dependencies - Updated FunFair.Test.Common to 6.2.18.1990
-- Dependencies - Updated FunFair.Test.Source.Generator to 6.2.18.1990
-- Dependencies - Updated Credfeto.Enumeration to 1.2.138.1737
-- Dependencies - Updated Meziantou.Analyzer to 3.0.22
-- SDK - Updated DotNet SDK to 10.0.200
-- Dependencies - Updated Microsoft.CodeAnalysis.CSharp to 5.3.0
 ### Removed
 ### Deployment Changes
 
 <!--
 Releases that have at least been deployed to staging, BUT NOT necessarily released to live.  Changes should be moved from [Unreleased] into here as they are merged into the appropriate release branch
 -->
+## [7.1.35] - 2026-03-11
+### Changed
+- Dependencies - Updated FunFair.Test.Common to 6.2.18.1990
+- Dependencies - Updated FunFair.Test.Source.Generator to 6.2.18.1990
+- Dependencies - Updated Credfeto.Enumeration to 1.2.138.1737
+- Dependencies - Updated Meziantou.Analyzer to 3.0.22
+- SDK - Updated DotNet SDK to 10.0.200
+- Dependencies - Updated Microsoft.CodeAnalysis.CSharp to 5.3.0
+
 ## [7.1.34] - 2026-02-27
 ### Changed
 - Dependencies - Updated FunFair.Test.Common to 6.2.17.1982
