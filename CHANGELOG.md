@@ -11,6 +11,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 ### Changed
 - Dependencies - Updated SonarAnalyzer.CSharp to 10.23.0.137933
 - Dependencies - Updated Philips.CodeAnalysis.DuplicateCodeAnalyzer to 1.11.1
+- Dependencies - Updated Meziantou.Analyzer to 3.0.47
 ### Removed
 ### Deployment Changes
 
