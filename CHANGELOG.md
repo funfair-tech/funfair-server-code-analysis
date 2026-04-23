@@ -9,17 +9,20 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 ### Added
 ### Fixed
 ### Changed
-- Dependencies - Updated Philips.CodeAnalysis.DuplicateCodeAnalyzer to 2.0.0
-- Dependencies - Updated Philips.CodeAnalysis.MaintainabilityAnalyzers to 2.0.0
-- Dependencies - Updated Meziantou.Analyzer to 3.0.52
-- Dependencies - Updated SonarAnalyzer.CSharp to 10.24.0.138807
-- Dependencies - Updated Microsoft.NET.Test.Sdk to 18.5.0
 ### Removed
 ### Deployment Changes
 
 <!--
 Releases that have at least been deployed to staging, BUT NOT necessarily released to live.  Changes should be moved from [Unreleased] into here as they are merged into the appropriate release branch
 -->
+## [7.1.39] - 2026-04-23
+### Changed
+- Dependencies - Updated Philips.CodeAnalysis.DuplicateCodeAnalyzer to 2.0.0
+- Dependencies - Updated Philips.CodeAnalysis.MaintainabilityAnalyzers to 2.0.0
+- Dependencies - Updated Meziantou.Analyzer to 3.0.52
+- Dependencies - Updated SonarAnalyzer.CSharp to 10.24.0.138807
+- Dependencies - Updated Microsoft.NET.Test.Sdk to 18.5.0
+
 ## [7.1.38] - 2026-04-09
 ### Changed
 - Dependencies - Updated SonarAnalyzer.CSharp to 10.22.0.136894
