@@ -53,7 +53,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Credfeto.Enumeration.Source.Generation.Attributes" Version="1.2.141.1822" />
-    <PackageReference Include="FunFair.Test.Common" Version="6.2.19.2017" />
+    <PackageReference Include="FunFair.Test.Common" Version="6.2.21.2185" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="5.3.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.5.0" />
     <PackageReference Include="xunit.v3.mtp-v2" Version="3.2.2" />
