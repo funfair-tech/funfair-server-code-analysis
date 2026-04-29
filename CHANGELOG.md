@@ -9,17 +9,20 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 ### Added
 ### Fixed
 ### Changed
-- Dependencies - Updated SonarAnalyzer.CSharp to 10.25.0.139117
-- Dependencies - Updated FunFair.Test.Common to 6.2.21.2185
-- Dependencies - Updated FunFair.Test.Source.Generator to 6.2.21.2185
-- Dependencies - Updated Meziantou.Analyzer to 3.0.56
-- Dependencies - Updated Microsoft.NET.Test.Sdk to 18.5.1
 ### Removed
 ### Deployment Changes
 
 <!--
 Releases that have at least been deployed to staging, BUT NOT necessarily released to live.  Changes should be moved from [Unreleased] into here as they are merged into the appropriate release branch
 -->
+## [7.1.41] - 2026-04-29
+### Changed
+- Dependencies - Updated SonarAnalyzer.CSharp to 10.25.0.139117
+- Dependencies - Updated FunFair.Test.Common to 6.2.21.2185
+- Dependencies - Updated FunFair.Test.Source.Generator to 6.2.21.2185
+- Dependencies - Updated Meziantou.Analyzer to 3.0.56
+- Dependencies - Updated Microsoft.NET.Test.Sdk to 18.5.1
+
 ## [7.1.40] - 2026-04-27
 ### Changed
 - Dependencies - Updated Meziantou.Analyzer to 3.0.54
