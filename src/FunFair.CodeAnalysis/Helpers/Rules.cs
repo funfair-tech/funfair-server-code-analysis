@@ -50,4 +50,5 @@ internal static class Rules
     public const string RuleDontUseStringComparisonInvariantCultureIgnoreCase = "FFS0046";
     public const string RuleDontUseStringComparisonCurrentCulture = "FFS0047";
     public const string RuleDontUseStringComparisonCurrentCultureIgnoreCase = "FFS0048";
+    public const string RuleSuppressMessageNotPermitted = "FFS0049";
 }
