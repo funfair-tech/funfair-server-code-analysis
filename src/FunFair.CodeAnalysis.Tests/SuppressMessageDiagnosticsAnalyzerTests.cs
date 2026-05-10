@@ -10,7 +10,7 @@ public sealed class SuppressMessageDiagnosticsAnalyzerTests
     : DiagnosticAnalyzerVerifier<SuppressMessageDiagnosticsAnalyzer>
 {
     [Fact]
-    public Task SuppressMessageWithJustificationIsOkAsync()
+    public Task SuppressMessageWithJustificationIsErrorAsync()
     {
         const string test =
             @"
@@ -24,7 +24,19 @@ public sealed class SuppressMessageDiagnosticsAnalyzerTests
             }
 }";
 
-        return this.VerifyCSharpDiagnosticAsync(source: test, reference: WellKnownMetadataReferences.SuppressMessage);
+        DiagnosticResult expected = Result(
+            id: "FFS0049",
+            message: "SuppressMessage is not permitted for 'ExampleCheckId'",
+            severity: DiagnosticSeverity.Error,
+            line: 6,
+            column: 14
+        );
+
+        return this.VerifyCSharpDiagnosticAsync(
+            source: test,
+            reference: WellKnownMetadataReferences.SuppressMessage,
+            expected: expected
+        );
     }
 
     [Fact]
@@ -42,8 +54,8 @@ public sealed class SuppressMessageDiagnosticsAnalyzerTests
             }
 }";
         DiagnosticResult expected = Result(
-            id: "FFS0027",
-            message: "SuppressMessage must specify a Justification",
+            id: "FFS0049",
+            message: "SuppressMessage is not permitted for 'ExampleCheckId'",
             severity: DiagnosticSeverity.Error,
             line: 6,
             column: 14
@@ -72,11 +84,11 @@ public sealed class SuppressMessageDiagnosticsAnalyzerTests
 }";
 
         DiagnosticResult expected = Result(
-            id: "FFS0027",
-            message: "SuppressMessage must specify a Justification",
+            id: "FFS0049",
+            message: "SuppressMessage is not permitted for 'ExampleCheckId'",
             severity: DiagnosticSeverity.Error,
             line: 6,
-            column: 75
+            column: 14
         );
 
         return this.VerifyCSharpDiagnosticAsync(
@@ -102,16 +114,172 @@ public sealed class SuppressMessageDiagnosticsAnalyzerTests
 }";
 
         DiagnosticResult expected = Result(
-            id: "FFS0042",
-            message: "SuppressMessage must not have a TODO Justification",
+            id: "FFS0049",
+            message: "SuppressMessage is not permitted for 'ExampleCheckId'",
             severity: DiagnosticSeverity.Error,
             line: 6,
-            column: 75
+            column: 14
         );
 
         return this.VerifyCSharpDiagnosticAsync(
             source: test,
             [WellKnownMetadataReferences.SuppressMessage],
+            expected: expected
+        );
+    }
+
+    [Fact]
+    public Task AllowedSuppressMessageWithJustificationIsOkAsync()
+    {
+        const string test =
+            @"
+            using System.Diagnostics.CodeAnalysis;
+
+            public sealed class Test {
+
+            [SuppressMessage(category: ""Roslynator.Analyzers"", checkId: ""RCS1231"", Justification = ""params ReadOnlySpan cannot be ref read-only"")]
+            public static void DoIt(params System.ReadOnlySpan<string> items)
+            {
+            }
+}";
+
+        return this.VerifyCSharpDiagnosticAsync(source: test, reference: WellKnownMetadataReferences.SuppressMessage);
+    }
+
+    [Fact]
+    public Task AllowedSuppressMessageWithFullCheckIdWithJustificationIsOkAsync()
+    {
+        const string test =
+            @"
+            using System.Diagnostics.CodeAnalysis;
+
+            public sealed class Test {
+
+            [SuppressMessage(category: ""Roslynator.Analyzers"", checkId: ""RCS1231: Spans should be ref read-only"", Justification = ""Except when they're in a params parameter"")]
+            public static void DoIt(params System.ReadOnlySpan<string> items)
+            {
+            }
+}";
+
+        return this.VerifyCSharpDiagnosticAsync(source: test, reference: WellKnownMetadataReferences.SuppressMessage);
+    }
+
+    [Fact]
+    public Task AllowedSuppressMessageWithoutJustificationIsErrorAsync()
+    {
+        const string test =
+            @"
+            using System.Diagnostics.CodeAnalysis;
+
+            public sealed class Test {
+
+            [SuppressMessage(category: ""Roslynator.Analyzers"", checkId: ""RCS1231"")]
+            public static void DoIt(params System.ReadOnlySpan<string> items)
+            {
+            }
+}";
+
+        DiagnosticResult expected = Result(
+            id: "FFS0027",
+            message: "SuppressMessage must specify a Justification",
+            severity: DiagnosticSeverity.Error,
+            line: 6,
+            column: 14
+        );
+
+        return this.VerifyCSharpDiagnosticAsync(
+            source: test,
+            reference: WellKnownMetadataReferences.SuppressMessage,
+            expected: expected
+        );
+    }
+
+    [Fact]
+    public Task AllowedSuppressMessageWithBlankJustificationIsErrorAsync()
+    {
+        const string test =
+            @"
+            using System.Diagnostics.CodeAnalysis;
+
+            public sealed class Test {
+
+            [SuppressMessage(category: ""Roslynator.Analyzers"", checkId: ""RCS1231"", Justification = "" "")]
+            public static void DoIt(params System.ReadOnlySpan<string> items)
+            {
+            }
+}";
+
+        DiagnosticResult expected = Result(
+            id: "FFS0027",
+            message: "SuppressMessage must specify a Justification",
+            severity: DiagnosticSeverity.Error,
+            line: 6,
+            column: 100
+        );
+
+        return this.VerifyCSharpDiagnosticAsync(
+            source: test,
+            reference: WellKnownMetadataReferences.SuppressMessage,
+            expected: expected
+        );
+    }
+
+    [Fact]
+    public Task AllowedSuppressMessageWithTodoJustificationIsErrorAsync()
+    {
+        const string test =
+            @"
+            using System.Diagnostics.CodeAnalysis;
+
+            public sealed class Test {
+
+            [SuppressMessage(category: ""Roslynator.Analyzers"", checkId: ""RCS1231"", Justification = ""TODO: Fix later"")]
+            public static void DoIt(params System.ReadOnlySpan<string> items)
+            {
+            }
+}";
+
+        DiagnosticResult expected = Result(
+            id: "FFS0042",
+            message: "SuppressMessage must not have a TODO Justification",
+            severity: DiagnosticSeverity.Error,
+            line: 6,
+            column: 100
+        );
+
+        return this.VerifyCSharpDiagnosticAsync(
+            source: test,
+            reference: WellKnownMetadataReferences.SuppressMessage,
+            expected: expected
+        );
+    }
+
+    [Fact]
+    public Task SuppressMessageForRCS1231OnNonParamsMethodIsErrorAsync()
+    {
+        const string test =
+            @"
+            using System.Diagnostics.CodeAnalysis;
+
+            public sealed class Test {
+
+            [SuppressMessage(category: ""Roslynator.Analyzers"", checkId: ""RCS1231"", Justification = ""Because"")]
+            public static void DoIt(System.ReadOnlySpan<string> items)
+            {
+            }
+}";
+
+        DiagnosticResult expected = Result(
+            id: "FFS0049",
+            message: "SuppressMessage is not permitted for 'RCS1231'",
+            severity: DiagnosticSeverity.Error,
+            line: 6,
+            column: 14
+        );
+
+        return this.VerifyCSharpDiagnosticAsync(
+            source: test,
+            reference: WellKnownMetadataReferences.SuppressMessage,
             expected: expected
         );
     }
