@@ -271,7 +271,7 @@ public sealed class SuppressMessageDiagnosticsAnalyzer : DiagnosticAnalyzer
 
         private static bool CheckIdMatchesPrefix(string checkId, string checkIdPrefix)
         {
-            if (!checkId.StartsWith(value: checkIdPrefix, comparisonType: StringComparison.OrdinalIgnoreCase))
+            if (!checkId.StartsWith(value: checkIdPrefix, comparisonType: StringComparison.Ordinal))
             {
                 return false;
             }
