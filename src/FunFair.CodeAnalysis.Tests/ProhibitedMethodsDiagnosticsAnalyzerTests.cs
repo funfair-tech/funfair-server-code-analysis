@@ -30,7 +30,7 @@ public sealed class ProhibitedMethodsDiagnosticsAnalyzerTests
     }";
         DiagnosticResult expected = Result(
             id: "FFS0001",
-            message: "Call IDateTimeSource.UtcNow() rather than DateTime.Now",
+            message: "Use an injected System.TimeProvider rather than DateTime.Now",
             severity: DiagnosticSeverity.Error,
             line: 12,
             column: 25
@@ -60,7 +60,7 @@ public sealed class ProhibitedMethodsDiagnosticsAnalyzerTests
     }";
         DiagnosticResult expected = Result(
             id: "FFS0001",
-            message: "Call IDateTimeSource.UtcNow() rather than DateTime.Now",
+            message: "Use an injected System.TimeProvider rather than DateTime.Now",
             severity: DiagnosticSeverity.Error,
             line: 12,
             column: 25
@@ -88,7 +88,7 @@ public sealed class ProhibitedMethodsDiagnosticsAnalyzerTests
     }";
         DiagnosticResult expected = Result(
             id: "FFS0001",
-            message: "Call IDateTimeSource.UtcNow() rather than DateTime.Now",
+            message: "Use an injected System.TimeProvider rather than DateTime.Now",
             severity: DiagnosticSeverity.Error,
             line: 10,
             column: 28
@@ -135,7 +135,7 @@ public sealed class ProhibitedMethodsDiagnosticsAnalyzerTests
     }";
         DiagnosticResult expected = Result(
             id: "FFS0001",
-            message: "Call IDateTimeSource.UtcNow() rather than DateTime.Now",
+            message: "Use an injected System.TimeProvider rather than DateTime.Now",
             severity: DiagnosticSeverity.Error,
             line: 13,
             column: 29
@@ -166,7 +166,7 @@ public sealed class ProhibitedMethodsDiagnosticsAnalyzerTests
     }";
         DiagnosticResult expected = Result(
             id: "FFS0001",
-            message: "Call IDateTimeSource.UtcNow() rather than DateTime.Now",
+            message: "Use an injected System.TimeProvider rather than DateTime.Now",
             severity: DiagnosticSeverity.Error,
             line: 12,
             column: 28
@@ -194,7 +194,7 @@ public sealed class ProhibitedMethodsDiagnosticsAnalyzerTests
     }";
         DiagnosticResult expected = Result(
             id: "FFS0004",
-            message: "Call IDateTimeSource.UtcNow() rather than DateTimeOffset.Now",
+            message: "Use an injected System.TimeProvider rather than DateTimeOffset.Now",
             severity: DiagnosticSeverity.Error,
             line: 10,
             column: 28
@@ -222,7 +222,7 @@ public sealed class ProhibitedMethodsDiagnosticsAnalyzerTests
     }";
         DiagnosticResult expected = Result(
             id: "FFS0005",
-            message: "Call IDateTimeSource.UtcNow() rather than DateTimeOffset.UtcNow",
+            message: "Use an injected System.TimeProvider rather than DateTimeOffset.UtcNow",
             severity: DiagnosticSeverity.Error,
             line: 10,
             column: 28
@@ -250,7 +250,7 @@ public sealed class ProhibitedMethodsDiagnosticsAnalyzerTests
     }";
         DiagnosticResult expected = Result(
             id: "FFS0003",
-            message: "Call IDateTimeSource.UtcNow().Date rather than DateTime.Today",
+            message: "Use an injected System.TimeProvider rather than DateTime.Today",
             severity: DiagnosticSeverity.Error,
             line: 10,
             column: 28
@@ -278,7 +278,7 @@ public sealed class ProhibitedMethodsDiagnosticsAnalyzerTests
     }";
         DiagnosticResult expected = Result(
             id: "FFS0002",
-            message: "Call IDateTimeSource.UtcNow() rather than DateTime.UtcNow",
+            message: "Use an injected System.TimeProvider rather than DateTime.UtcNow",
             severity: DiagnosticSeverity.Error,
             line: 10,
             column: 28
