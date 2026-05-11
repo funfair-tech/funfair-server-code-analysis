@@ -129,6 +129,27 @@ public sealed class SuppressMessageDiagnosticsAnalyzerTests
     }
 
     [Fact]
+    public Task AllowedNx0001SuppressMessageWithJustificationIsOkAsync()
+    {
+        const string test =
+            @"
+            using System.Diagnostics.CodeAnalysis;
+
+            public sealed class Test {
+
+            [SuppressMessage(category: ""Nullable.Extended.Analyzer"", checkId: ""NX0001: Suppression of NullForgiving operator is not required"", Justification = ""Required here"")]
+            public void DoIt()
+            {
+            }
+}";
+
+        return this.VerifyCSharpDiagnosticAsync(
+            source: test,
+            reference: WellKnownMetadataReferences.SuppressMessage
+        );
+    }
+
+    [Fact]
     public Task AllowedSuppressMessageWithJustificationIsOkAsync()
     {
         const string test =
@@ -143,7 +164,10 @@ public sealed class SuppressMessageDiagnosticsAnalyzerTests
             }
 }";
 
-        return this.VerifyCSharpDiagnosticAsync(source: test, reference: WellKnownMetadataReferences.SuppressMessage);
+        return this.VerifyCSharpDiagnosticAsync(
+            source: test,
+            reference: WellKnownMetadataReferences.SuppressMessage
+        );
     }
 
     [Fact]
@@ -161,7 +185,10 @@ public sealed class SuppressMessageDiagnosticsAnalyzerTests
             }
 }";
 
-        return this.VerifyCSharpDiagnosticAsync(source: test, reference: WellKnownMetadataReferences.SuppressMessage);
+        return this.VerifyCSharpDiagnosticAsync(
+            source: test,
+            reference: WellKnownMetadataReferences.SuppressMessage
+        );
     }
 
     [Fact]
