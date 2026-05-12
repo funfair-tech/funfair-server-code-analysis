@@ -143,10 +143,7 @@ public sealed class SuppressMessageDiagnosticsAnalyzerTests
             }
 }";
 
-        return this.VerifyCSharpDiagnosticAsync(
-            source: test,
-            reference: WellKnownMetadataReferences.SuppressMessage
-        );
+        return this.VerifyCSharpDiagnosticAsync(source: test, reference: WellKnownMetadataReferences.SuppressMessage);
     }
 
     [Fact]
@@ -164,10 +161,7 @@ public sealed class SuppressMessageDiagnosticsAnalyzerTests
             }
 }";
 
-        return this.VerifyCSharpDiagnosticAsync(
-            source: test,
-            reference: WellKnownMetadataReferences.SuppressMessage
-        );
+        return this.VerifyCSharpDiagnosticAsync(source: test, reference: WellKnownMetadataReferences.SuppressMessage);
     }
 
     [Fact]
@@ -185,10 +179,7 @@ public sealed class SuppressMessageDiagnosticsAnalyzerTests
             }
 }";
 
-        return this.VerifyCSharpDiagnosticAsync(
-            source: test,
-            reference: WellKnownMetadataReferences.SuppressMessage
-        );
+        return this.VerifyCSharpDiagnosticAsync(source: test, reference: WellKnownMetadataReferences.SuppressMessage);
     }
 
     [Fact]
@@ -302,6 +293,256 @@ public sealed class SuppressMessageDiagnosticsAnalyzerTests
             severity: DiagnosticSeverity.Error,
             line: 6,
             column: 14
+        );
+
+        return this.VerifyCSharpDiagnosticAsync(
+            source: test,
+            reference: WellKnownMetadataReferences.SuppressMessage,
+            expected: expected
+        );
+    }
+
+    [Theory]
+    [InlineData("codecracker.CSharp", "CC0091:MarkMembersAsStatic")]
+    [InlineData("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
+    public Task BenchmarkMethodSuppressMessageOnBenchmarkMethodIsOkAsync(string category, string checkId)
+    {
+        string test =
+            $@"
+            using System.Diagnostics.CodeAnalysis;
+
+            public sealed class BenchmarkAttribute : System.Attribute {{ }}
+
+            public sealed class Test {{
+
+            [SuppressMessage(category: ""{category}"", checkId: ""{checkId}"", Justification = ""Benchmark"")]
+            [Benchmark]
+            public void DoIt()
+            {{
+            }}
+}}";
+
+        return this.VerifyCSharpDiagnosticAsync(source: test, reference: WellKnownMetadataReferences.SuppressMessage);
+    }
+
+    [Theory]
+    [InlineData("codecracker.CSharp", "CC0091:MarkMembersAsStatic")]
+    [InlineData("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
+    public Task BenchmarkMethodSuppressMessageOnNonBenchmarkMethodIsErrorAsync(string category, string checkId)
+    {
+        string test =
+            $@"
+            using System.Diagnostics.CodeAnalysis;
+
+            public sealed class Test {{
+
+            [SuppressMessage(category: ""{category}"", checkId: ""{checkId}"", Justification = ""Benchmark"")]
+            public void DoIt()
+            {{
+            }}
+}}";
+
+        DiagnosticResult expected = Result(
+            id: "FFS0049",
+            message: $"SuppressMessage is not permitted for '{checkId}'",
+            severity: DiagnosticSeverity.Error,
+            line: 6,
+            column: 14
+        );
+
+        return this.VerifyCSharpDiagnosticAsync(
+            source: test,
+            reference: WellKnownMetadataReferences.SuppressMessage,
+            expected: expected
+        );
+    }
+
+    [Theory]
+    [InlineData("codecracker.CSharp", "CC0091:MarkMembersAsStatic", 117)]
+    [InlineData("Microsoft.Performance", "CA1822:MarkMembersAsStatic", 120)]
+    public Task BenchmarkMethodSuppressMessageWithBlankJustificationIsErrorAsync(
+        string category,
+        string checkId,
+        int column
+    )
+    {
+        string test =
+            $@"
+            using System.Diagnostics.CodeAnalysis;
+
+            public sealed class BenchmarkAttribute : System.Attribute {{ }}
+
+            public sealed class Test {{
+
+            [SuppressMessage(category: ""{category}"", checkId: ""{checkId}"", Justification = "" "")]
+            [Benchmark]
+            public void DoIt()
+            {{
+            }}
+}}";
+
+        DiagnosticResult expected = Result(
+            id: "FFS0027",
+            message: "SuppressMessage must specify a Justification",
+            severity: DiagnosticSeverity.Error,
+            line: 8,
+            column: column
+        );
+
+        return this.VerifyCSharpDiagnosticAsync(
+            source: test,
+            reference: WellKnownMetadataReferences.SuppressMessage,
+            expected: expected
+        );
+    }
+
+    [Theory]
+    [InlineData("codecracker.CSharp", "CC0091:MarkMembersAsStatic", 117)]
+    [InlineData("Microsoft.Performance", "CA1822:MarkMembersAsStatic", 120)]
+    public Task BenchmarkMethodSuppressMessageWithTodoJustificationIsErrorAsync(
+        string category,
+        string checkId,
+        int column
+    )
+    {
+        string test =
+            $@"
+            using System.Diagnostics.CodeAnalysis;
+
+            public sealed class BenchmarkAttribute : System.Attribute {{ }}
+
+            public sealed class Test {{
+
+            [SuppressMessage(category: ""{category}"", checkId: ""{checkId}"", Justification = ""TODO: Fix later"")]
+            [Benchmark]
+            public void DoIt()
+            {{
+            }}
+}}";
+
+        DiagnosticResult expected = Result(
+            id: "FFS0042",
+            message: "SuppressMessage must not have a TODO Justification",
+            severity: DiagnosticSeverity.Error,
+            line: 8,
+            column: column
+        );
+
+        return this.VerifyCSharpDiagnosticAsync(
+            source: test,
+            reference: WellKnownMetadataReferences.SuppressMessage,
+            expected: expected
+        );
+    }
+
+    [Fact]
+    public Task BenchmarkClassFFS0012SuppressMessageOnClassWithBenchmarkMethodIsOkAsync()
+    {
+        const string test =
+            @"
+            using System.Diagnostics.CodeAnalysis;
+
+            public sealed class BenchmarkAttribute : System.Attribute { }
+
+            [SuppressMessage(category: ""FunFair.CodeAnalysis"", checkId: ""FFS0012: Make sealed static or abstract"", Justification = ""Benchmark"")]
+            public class Test {
+
+            [Benchmark]
+            public void DoIt()
+            {
+            }
+}";
+
+        return this.VerifyCSharpDiagnosticAsync(source: test, reference: WellKnownMetadataReferences.SuppressMessage);
+    }
+
+    [Fact]
+    public Task BenchmarkClassFFS0012SuppressMessageOnClassWithoutBenchmarkMethodIsErrorAsync()
+    {
+        const string test =
+            @"
+            using System.Diagnostics.CodeAnalysis;
+
+            [SuppressMessage(category: ""FunFair.CodeAnalysis"", checkId: ""FFS0012: Make sealed static or abstract"", Justification = ""Benchmark"")]
+            public class Test {
+
+            public void DoIt()
+            {
+            }
+}";
+
+        DiagnosticResult expected = Result(
+            id: "FFS0049",
+            message: "SuppressMessage is not permitted for 'FFS0012: Make sealed static or abstract'",
+            severity: DiagnosticSeverity.Error,
+            line: 4,
+            column: 14
+        );
+
+        return this.VerifyCSharpDiagnosticAsync(
+            source: test,
+            reference: WellKnownMetadataReferences.SuppressMessage,
+            expected: expected
+        );
+    }
+
+    [Fact]
+    public Task BenchmarkClassFFS0012SuppressMessageWithBlankJustificationIsErrorAsync()
+    {
+        const string test =
+            @"
+            using System.Diagnostics.CodeAnalysis;
+
+            public sealed class BenchmarkAttribute : System.Attribute { }
+
+            [SuppressMessage(category: ""FunFair.CodeAnalysis"", checkId: ""FFS0012: Make sealed static or abstract"", Justification = "" "")]
+            public class Test {
+
+            [Benchmark]
+            public void DoIt()
+            {
+            }
+}";
+
+        DiagnosticResult expected = Result(
+            id: "FFS0027",
+            message: "SuppressMessage must specify a Justification",
+            severity: DiagnosticSeverity.Error,
+            line: 6,
+            column: 132
+        );
+
+        return this.VerifyCSharpDiagnosticAsync(
+            source: test,
+            reference: WellKnownMetadataReferences.SuppressMessage,
+            expected: expected
+        );
+    }
+
+    [Fact]
+    public Task BenchmarkClassFFS0012SuppressMessageWithTodoJustificationIsErrorAsync()
+    {
+        const string test =
+            @"
+            using System.Diagnostics.CodeAnalysis;
+
+            public sealed class BenchmarkAttribute : System.Attribute { }
+
+            [SuppressMessage(category: ""FunFair.CodeAnalysis"", checkId: ""FFS0012: Make sealed static or abstract"", Justification = ""TODO: Fix later"")]
+            public class Test {
+
+            [Benchmark]
+            public void DoIt()
+            {
+            }
+}";
+
+        DiagnosticResult expected = Result(
+            id: "FFS0042",
+            message: "SuppressMessage must not have a TODO Justification",
+            severity: DiagnosticSeverity.Error,
+            line: 6,
+            column: 132
         );
 
         return this.VerifyCSharpDiagnosticAsync(
