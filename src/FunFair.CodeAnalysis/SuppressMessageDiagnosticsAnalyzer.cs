@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -21,13 +21,12 @@ public sealed class SuppressMessageDiagnosticsAnalyzer : DiagnosticAnalyzer
         message: "SuppressMessage must specify a Justification"
     );
 
-    private static readonly DiagnosticDescriptor RuleMustNotHaveTodoJustification =
-        RuleHelpers.CreateRule(
-            code: Rules.RuleSuppressMessageMustNotHaveTodoJustification,
-            category: Categories.SuppressedErrors,
-            title: "SuppressMessage must not have a TODO Justification",
-            message: "SuppressMessage must not have a TODO Justification"
-        );
+    private static readonly DiagnosticDescriptor RuleMustNotHaveTodoJustification = RuleHelpers.CreateRule(
+        code: Rules.RuleSuppressMessageMustNotHaveTodoJustification,
+        category: Categories.SuppressedErrors,
+        title: "SuppressMessage must not have a TODO Justification",
+        message: "SuppressMessage must not have a TODO Justification"
+    );
 
     private static readonly DiagnosticDescriptor RuleNotPermitted = RuleHelpers.CreateRule(
         code: Rules.RuleSuppressMessageNotPermitted,
@@ -41,16 +40,11 @@ public sealed class SuppressMessageDiagnosticsAnalyzer : DiagnosticAnalyzer
         checkId: "NX0001: Suppression of NullForgiving operator is not required",
         Justification = "Required here"
     )]
-    private static readonly string SuppressMessageFullName =
-        typeof(SuppressMessageAttribute).FullName!;
+    private static readonly string SuppressMessageFullName = typeof(SuppressMessageAttribute).FullName!;
 
     private static readonly ImmutableArray<AllowedSuppression> AllowedSuppressions =
     [
-        new(
-            category: "Nullable.Extended.Analyzer",
-            checkIdPrefix: "NX0001",
-            whenAllowed: static _ => true
-        ),
+        new(category: "Nullable.Extended.Analyzer", checkIdPrefix: "NX0001", whenAllowed: static _ => true),
         new(
             category: "Roslynator.Analyzers",
             checkIdPrefix: "RCS1231",
@@ -69,39 +63,68 @@ public sealed class SuppressMessageDiagnosticsAnalyzer : DiagnosticAnalyzer
                 }
 
                 return method.ParameterList.Parameters.Any(p =>
-                    p.Modifiers.Any(m => m.IsKind(SyntaxKind.ParamsKeyword))
-                    && IsReadOnlySpanType(p.Type)
+                    p.Modifiers.Any(m => m.IsKind(SyntaxKind.ParamsKeyword)) && IsReadOnlySpanType(p.Type)
                 );
             }
         ),
+        new(category: "codecracker.CSharp", checkIdPrefix: "CC0091", whenAllowed: IsOnMethodWithBenchmarkAttribute),
+        new(category: "Microsoft.Performance", checkIdPrefix: "CA1822", whenAllowed: IsOnMethodWithBenchmarkAttribute),
+        new(category: "FunFair.CodeAnalysis", checkIdPrefix: "FFS0012", whenAllowed: IsOnClassWithBenchmarkMethods),
     ];
 
     private static bool IsReadOnlySpanType(TypeSyntax? type)
     {
         return type switch
         {
-            GenericNameSyntax generic => StringComparer.Ordinal.Equals(
-                x: generic.Identifier.Text,
+            GenericNameSyntax generic => StringComparer.Ordinal.Equals(x: generic.Identifier.Text, y: "ReadOnlySpan"),
+            QualifiedNameSyntax { Right: GenericNameSyntax rightGeneric } => StringComparer.Ordinal.Equals(
+                x: rightGeneric.Identifier.Text,
                 y: "ReadOnlySpan"
             ),
-            QualifiedNameSyntax { Right: GenericNameSyntax rightGeneric } =>
-                StringComparer.Ordinal.Equals(x: rightGeneric.Identifier.Text, y: "ReadOnlySpan"),
             _ => false,
         };
     }
 
+    private static bool IsBenchmarkAttribute(AttributeSyntax attribute)
+    {
+        string name = attribute.Name switch
+        {
+            IdentifierNameSyntax id => id.Identifier.Text,
+            QualifiedNameSyntax qualified => qualified.Right.Identifier.Text,
+            _ => attribute.Name.ToString(),
+        };
+
+        return StringComparer.Ordinal.Equals(x: name, y: "Benchmark")
+            || StringComparer.Ordinal.Equals(x: name, y: "BenchmarkAttribute");
+    }
+
+    private static bool HasBenchmarkAttribute(in SyntaxList<AttributeListSyntax> attributeLists)
+    {
+        return attributeLists.SelectMany(al => al.Attributes).Any(IsBenchmarkAttribute);
+    }
+
+    private static bool IsOnMethodWithBenchmarkAttribute(SyntaxNodeAnalysisContext context)
+    {
+        return context.Node is AttributeSyntax attribute
+            && attribute.Parent?.Parent is MethodDeclarationSyntax method
+            && HasBenchmarkAttribute(method.AttributeLists);
+    }
+
+    private static bool IsOnClassWithBenchmarkMethods(SyntaxNodeAnalysisContext context)
+    {
+        return context.Node is AttributeSyntax attribute
+            && attribute.Parent?.Parent is ClassDeclarationSyntax classDeclaration
+            && classDeclaration
+                .Members.OfType<MethodDeclarationSyntax>()
+                .Any(m => HasBenchmarkAttribute(m.AttributeLists));
+    }
+
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
-        SupportedDiagnosisList.Build(
-            RuleMustHaveJustification,
-            RuleMustNotHaveTodoJustification,
-            RuleNotPermitted
-        );
+        SupportedDiagnosisList.Build(RuleMustHaveJustification, RuleMustNotHaveTodoJustification, RuleNotPermitted);
 
     public override void Initialize(AnalysisContext context)
     {
-        context.ConfigureGeneratedCodeAnalysis(
-            GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.None
-        );
+        context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.None);
         context.EnableConcurrentExecution();
 
         Checker checker = new();
@@ -155,9 +178,7 @@ public sealed class SuppressMessageDiagnosticsAnalyzer : DiagnosticAnalyzer
 
         private INamedTypeSymbol? GetSuppressMessageAttributeType(Compilation compilation)
         {
-            return this._suppressMessage ??= compilation.GetTypeByMetadataName(
-                SuppressMessageFullName
-            );
+            return this._suppressMessage ??= compilation.GetTypeByMetadataName(SuppressMessageFullName);
         }
 
         private static void CheckSuppressMessageAttribute(
@@ -175,12 +196,7 @@ public sealed class SuppressMessageDiagnosticsAnalyzer : DiagnosticAnalyzer
                 cancellationToken: syntaxNodeAnalysisContext.CancellationToken
             );
 
-            if (
-                !StringComparer.Ordinal.Equals(
-                    x: typeInfo.Type?.MetadataName,
-                    y: sourceClassType.MetadataName
-                )
-            )
+            if (!StringComparer.Ordinal.Equals(x: typeInfo.Type?.MetadataName, y: sourceClassType.MetadataName))
             {
                 return;
             }
@@ -207,10 +223,7 @@ public sealed class SuppressMessageDiagnosticsAnalyzer : DiagnosticAnalyzer
                 return;
             }
 
-            CheckJustification(
-                syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
-                attributeSyntax: attributeSyntax
-            );
+            CheckJustification(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, attributeSyntax: attributeSyntax);
         }
 
         private static void CheckJustification(
@@ -218,8 +231,9 @@ public sealed class SuppressMessageDiagnosticsAnalyzer : DiagnosticAnalyzer
             AttributeSyntax attributeSyntax
         )
         {
-            AttributeArgumentSyntax? findJustificationAttributeArgument =
-                FindJustificationAttributeArgument(attributeSyntax);
+            AttributeArgumentSyntax? findJustificationAttributeArgument = FindJustificationAttributeArgument(
+                attributeSyntax
+            );
 
             if (findJustificationAttributeArgument is null)
             {
@@ -231,10 +245,7 @@ public sealed class SuppressMessageDiagnosticsAnalyzer : DiagnosticAnalyzer
                 return;
             }
 
-            if (
-                findJustificationAttributeArgument.Expression
-                is not LiteralExpressionSyntax literalExpression
-            )
+            if (findJustificationAttributeArgument.Expression is not LiteralExpressionSyntax literalExpression)
             {
                 return;
             }
@@ -243,10 +254,7 @@ public sealed class SuppressMessageDiagnosticsAnalyzer : DiagnosticAnalyzer
 
             if (rule is not null)
             {
-                literalExpression.ReportDiagnostics(
-                    syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
-                    rule: rule
-                );
+                literalExpression.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: rule);
             }
         }
 
@@ -291,12 +299,8 @@ public sealed class SuppressMessageDiagnosticsAnalyzer : DiagnosticAnalyzer
                 return null;
             }
 
-            AttributeArgumentSyntax? named = attributeSyntax.ArgumentList.Arguments.FirstOrDefault(
-                a =>
-                    StringComparer.Ordinal.Equals(
-                        x: a.NameColon?.Name.Identifier.Text,
-                        y: argumentName
-                    )
+            AttributeArgumentSyntax? named = attributeSyntax.ArgumentList.Arguments.FirstOrDefault(a =>
+                StringComparer.Ordinal.Equals(x: a.NameColon?.Name.Identifier.Text, y: argumentName)
             );
 
             if (named?.Expression is LiteralExpressionSyntax namedLit)
@@ -341,12 +345,7 @@ public sealed class SuppressMessageDiagnosticsAnalyzer : DiagnosticAnalyzer
                 return RuleMustHaveJustification;
             }
 
-            if (
-                justificationText.StartsWith(
-                    value: "TODO",
-                    comparisonType: StringComparison.OrdinalIgnoreCase
-                )
-            )
+            if (justificationText.StartsWith(value: "TODO", comparisonType: StringComparison.OrdinalIgnoreCase))
             {
                 return RuleMustNotHaveTodoJustification;
             }
@@ -354,15 +353,10 @@ public sealed class SuppressMessageDiagnosticsAnalyzer : DiagnosticAnalyzer
             return null;
         }
 
-        private static AttributeArgumentSyntax? FindJustificationAttributeArgument(
-            AttributeSyntax attributeSyntax
-        )
+        private static AttributeArgumentSyntax? FindJustificationAttributeArgument(AttributeSyntax attributeSyntax)
         {
             return attributeSyntax.ArgumentList?.Arguments.FirstOrDefault(arg =>
-                StringComparer.Ordinal.Equals(
-                    x: arg.NameEquals?.Name.Identifier.Text,
-                    y: "Justification"
-                )
+                StringComparer.Ordinal.Equals(x: arg.NameEquals?.Name.Identifier.Text, y: "Justification")
             );
         }
     }
