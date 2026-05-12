@@ -1325,15 +1325,15 @@ dotnet_diagnostic.NX0004.severity = error
 ########################################################################################################################
 
 # See https://github.com/funfair-tech/funfair-server-code-analysis
-# FFS0001 - Avoid using DateTime.Now - Use an injected System.TimeProvider
+# FFS0001 - Avoid using DateTime.Now - Use an injected System.TimeProvider.GetLocalNow().LocalDateTime
 dotnet_diagnostic.FFS0001.severity = error
-# FFS0002 - Avoid using DateTime.UtcNow - Use an injected System.TimeProvider
+# FFS0002 - Avoid using DateTime.UtcNow - Use an injected System.TimeProvider.GetUtcNow().UtcDateTime
 dotnet_diagnostic.FFS0002.severity = error
-# FFS0003 - Avoid using DateTime.Today - Use an injected System.TimeProvider
+# FFS0003 - Avoid using DateTime.Today - Use an injected System.TimeProvider.GetLocalNow().Date
 dotnet_diagnostic.FFS0003.severity = error
-# FFS0004 - Avoid using DateTimeOffset.Now - Use an injected System.TimeProvider
+# FFS0004 - Avoid using DateTimeOffset.Now - Use an injected System.TimeProvider.GetLocalNow()
 dotnet_diagnostic.FFS0004.severity = error
-# FFS0005 - Avoid using DateTimeOffset.UtcNow - Use an injected System.TimeProvider
+# FFS0005 - Avoid using DateTimeOffset.UtcNow - Use an injected System.TimeProvider.GetUtcNow()
 dotnet_diagnostic.FFS0005.severity = error
 # FFS0006 - Avoid using arbitrary SQL for updates
 dotnet_diagnostic.FFS0006.severity = error
