@@ -13,11 +13,11 @@ Static Code analysis Repo for FunFair Server dotnet projects.
 
 | Code    | Meaning                                                                                                                                        |
 |---------|------------------------------------------------------------------------------------------------------------------------------------------------|
-| FFS0001 | Avoid using ``DateTime.Now`` - Use ``IDateTimeSource.UtcNow()``                                                                                |
-| FFS0002 | Avoid using ``DateTime.UtcNow`` - Use ``IDateTimeSource.UtcNow()``                                                                             |
-| FFS0003 | Avoid using ``DateTime.Today`` - Use ``IDateTimeSource.UtcNow().Date``                                                                         |
-| FFS0004 | Avoid using ``DateTimeOffset.Now`` - Use ``IDateTimeSource.UtcNow()``                                                                          |
-| FFS0005 | Avoid using ``DateTimeOffset.UtcNow`` - Use ``IDateTimeSource.UtcNow()``                                                                       |
+| FFS0001 | Avoid using ``DateTime.Now`` - Use an injected ``System.TimeProvider.GetLocalNow().LocalDateTime``                                            |
+| FFS0002 | Avoid using ``DateTime.UtcNow`` - Use an injected ``System.TimeProvider.GetUtcNow().UtcDateTime``                                             |
+| FFS0003 | Avoid using ``DateTime.Today`` - Use an injected ``System.TimeProvider.GetLocalNow().Date``                                                   |
+| FFS0004 | Avoid using ``DateTimeOffset.Now`` - Use an injected ``System.TimeProvider.GetLocalNow()``                                                    |
+| FFS0005 | Avoid using ``DateTimeOffset.UtcNow`` - Use an injected ``System.TimeProvider.GetUtcNow()``                                                   |
 | FFS0006 | Avoid using arbitrary SQL for updates                                                                                                          |
 | FFS0007 | Avoid using arbitrary SQL for queries                                                                                                          |
 | FFS0008 | Do not disable warnings                                                                                                                        |

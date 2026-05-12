@@ -20,35 +20,35 @@ public sealed class ProhibitedMethodsDiagnosticsAnalyzer : DiagnosticAnalyzer
         Build(
             ruleId: Rules.RuleDontUseDateTimeNow,
             title: "Avoid use of DateTime methods",
-            message: "Call IDateTimeSource.UtcNow() rather than DateTime.Now",
+            message: "Use an injected System.TimeProvider.GetLocalNow().LocalDateTime rather than DateTime.Now",
             sourceClass: "System.DateTime",
             bannedMethod: "Now"
         ),
         Build(
             ruleId: Rules.RuleDontUseDateTimeUtcNow,
             title: "Avoid use of DateTime methods",
-            message: "Call IDateTimeSource.UtcNow() rather than DateTime.UtcNow",
+            message: "Use an injected System.TimeProvider.GetUtcNow().UtcDateTime rather than DateTime.UtcNow",
             sourceClass: "System.DateTime",
             bannedMethod: "UtcNow"
         ),
         Build(
             ruleId: Rules.RuleDontUseDateTimeToday,
             title: "Avoid use of DateTime methods",
-            message: "Call IDateTimeSource.UtcNow().Date rather than DateTime.Today",
+            message: "Use an injected System.TimeProvider.GetLocalNow().Date rather than DateTime.Today",
             sourceClass: "System.DateTime",
             bannedMethod: "Today"
         ),
         Build(
             ruleId: Rules.RuleDontUseDateTimeOffsetNow,
             title: "Avoid use of DateTime methods",
-            message: "Call IDateTimeSource.UtcNow() rather than DateTimeOffset.Now",
+            message: "Use an injected System.TimeProvider.GetLocalNow() rather than DateTimeOffset.Now",
             sourceClass: "System.DateTimeOffset",
             bannedMethod: "Now"
         ),
         Build(
             ruleId: Rules.RuleDontUseDateTimeOffsetUtcNow,
             title: "Avoid use of DateTime methods",
-            message: "Call IDateTimeSource.UtcNow() rather than DateTimeOffset.UtcNow",
+            message: "Use an injected System.TimeProvider.GetUtcNow() rather than DateTimeOffset.UtcNow",
             sourceClass: "System.DateTimeOffset",
             bannedMethod: "UtcNow"
         ),

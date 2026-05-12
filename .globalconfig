@@ -188,11 +188,11 @@ dotnet_diagnostic.CSE008.severity = error # SmartAnalyzers.CSharpExtensions.Anno
 dotnet_diagnostic.CSE009.severity = error # SmartAnalyzers.CSharpExtensions.Annotations - CSE009 - Task variable not awaited
 dotnet_diagnostic.CSIsNull001.severity = error # CSharpIsNull - CSIsNull001 - catch uses of == null
 dotnet_diagnostic.CSIsNull002.severity = error # CSharpIsNull - CSIsNull002 to catch uses of != null
-dotnet_diagnostic.FFS0001.severity = error # FunFair.CodeAnalysis - FFS0001 - Avoid using DateTime.Now - Use IDateTimeSource.UtcNow()
-dotnet_diagnostic.FFS0002.severity = error # FunFair.CodeAnalysis - FFS0002 - Avoid using DateTime.UtcNow - Use IDateTimeSource.UtcNow()
-dotnet_diagnostic.FFS0003.severity = error # FunFair.CodeAnalysis - FFS0003 - Avoid using DateTime.Today - Use IDateTimeSource.UtcNow().Date
-dotnet_diagnostic.FFS0004.severity = error # FunFair.CodeAnalysis - FFS0004 - Avoid using DateTimeOffset.Now - Use IDateTimeSource.UtcNow()
-dotnet_diagnostic.FFS0005.severity = error # FunFair.CodeAnalysis - FFS0005 - Avoid using DateTimeOffset.UtcNow - Use IDateTimeSource.UtcNow()
+dotnet_diagnostic.FFS0001.severity = error # FunFair.CodeAnalysis - FFS0001 - Avoid using DateTime.Now - Use an injected System.TimeProvider.GetLocalNow().LocalDateTime
+dotnet_diagnostic.FFS0002.severity = error # FunFair.CodeAnalysis - FFS0002 - Avoid using DateTime.UtcNow - Use an injected System.TimeProvider.GetUtcNow().UtcDateTime
+dotnet_diagnostic.FFS0003.severity = error # FunFair.CodeAnalysis - FFS0003 - Avoid using DateTime.Today - Use an injected System.TimeProvider.GetLocalNow().Date
+dotnet_diagnostic.FFS0004.severity = error # FunFair.CodeAnalysis - FFS0004 - Avoid using DateTimeOffset.Now - Use an injected System.TimeProvider.GetLocalNow()
+dotnet_diagnostic.FFS0005.severity = error # FunFair.CodeAnalysis - FFS0005 - Avoid using DateTimeOffset.UtcNow - Use an injected System.TimeProvider.GetUtcNow()
 dotnet_diagnostic.FFS0006.severity = error # FunFair.CodeAnalysis - FFS0006 - Avoid using arbitrary SQL for updates
 dotnet_diagnostic.FFS0007.severity = error # FunFair.CodeAnalysis - FFS0007 - Avoid using arbitrary SQL for queries
 dotnet_diagnostic.FFS0008.severity = error # FunFair.CodeAnalysis - FFS0008 - Do not disable warnings
