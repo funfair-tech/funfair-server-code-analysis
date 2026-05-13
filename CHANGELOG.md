@@ -7,6 +7,16 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 
 ## [Unreleased]
 ### Added
+### Fixed
+### Changed
+### Removed
+### Deployment Changes
+
+<!--
+Releases that have at least been deployed to staging, BUT NOT necessarily released to live.  Changes should be moved from [Unreleased] into here as they are merged into the appropriate release branch
+-->
+## [7.2.0] - 2026-05-13
+### Added
 - FFS0049 rule to flag unpermitted SuppressMessage attributes
 - Allow NX0001 (Nullable.Extended.Analyzer) suppressions anywhere in FFS0049
 - Allow CC0091, CA1822, and FFS0012 suppressions on Benchmark methods and classes
@@ -18,12 +28,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 - Dependencies - Updated FunFair.Test.Source.Generator to 6.2.23.2204
 - Dependencies - Updated Meziantou.Analyzer to 3.0.78
 - Solution - Added .editorconfig and .globalconfig to solution; removed CodeAnalysis.ruleset
-### Removed
-### Deployment Changes
 
-<!--
-Releases that have at least been deployed to staging, BUT NOT necessarily released to live.  Changes should be moved from [Unreleased] into here as they are merged into the appropriate release branch
--->
 ## [7.1.42] - 2026-05-04
 ### Changed
 - Dependencies - Updated FunFair.Test.Common to 6.2.22.2198
