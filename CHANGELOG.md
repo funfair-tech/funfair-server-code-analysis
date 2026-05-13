@@ -7,11 +7,17 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 
 ## [Unreleased]
 ### Added
+- FFS0049 rule to flag unpermitted SuppressMessage attributes
+- Allow NX0001 (Nullable.Extended.Analyzer) suppressions anywhere in FFS0049
+- Allow CC0091, CA1822, and FFS0012 suppressions on Benchmark methods and classes
+- FunFair.CodeAnalysis.Benchmark.Tests: Benchmark project for SuppressMessageDiagnosticsAnalyzer (FFS0049)
 ### Fixed
+- Use Ordinal (case-sensitive) comparison for checkId prefix matching in FFS0049
 ### Changed
 - Dependencies - Updated FunFair.Test.Common to 6.2.23.2204
 - Dependencies - Updated FunFair.Test.Source.Generator to 6.2.23.2204
 - Dependencies - Updated Meziantou.Analyzer to 3.0.78
+- Solution - Added .editorconfig and .globalconfig to solution; removed CodeAnalysis.ruleset
 ### Removed
 ### Deployment Changes
 

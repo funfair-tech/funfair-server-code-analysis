@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -28,6 +28,16 @@ public sealed class SuppressMessageDiagnosticsAnalyzer : DiagnosticAnalyzer
         message: "SuppressMessage must not have a TODO Justification"
     );
 
+    private static readonly DiagnosticDescriptor RuleNotPermitted = RuleHelpers.CreateRule(
+        code: Rules.RuleSuppressMessageNotPermitted,
+        category: Categories.SuppressedErrors,
+        title: "SuppressMessage is not permitted for this warning",
+        message: "SuppressMessage is not permitted for '{0}'"
+    );
+
+    private static readonly ImmutableArray<DiagnosticDescriptor> SupportedDiagnosticsCache =
+        SupportedDiagnosisList.Build(RuleMustHaveJustification, RuleMustNotHaveTodoJustification, RuleNotPermitted);
+
     [SuppressMessage(
         category: "Nullable.Extended.Analyzer",
         checkId: "NX0001: Suppression of NullForgiving operator is not required",
@@ -35,8 +45,86 @@ public sealed class SuppressMessageDiagnosticsAnalyzer : DiagnosticAnalyzer
     )]
     private static readonly string SuppressMessageFullName = typeof(SuppressMessageAttribute).FullName!;
 
-    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
-        SupportedDiagnosisList.Build(RuleMustHaveJustification, RuleMustNotHaveTodoJustification);
+    private static readonly ImmutableArray<AllowedSuppression> AllowedSuppressions =
+    [
+        new(category: "Nullable.Extended.Analyzer", checkIdPrefix: "NX0001", whenAllowed: static _ => true),
+        new(
+            category: "Roslynator.Analyzers",
+            checkIdPrefix: "RCS1231",
+            whenAllowed: static context =>
+            {
+                if (context.Node is not AttributeSyntax attribute)
+                {
+                    return false;
+                }
+
+                SyntaxNode? parent = attribute.Parent?.Parent;
+
+                if (parent is not MethodDeclarationSyntax method)
+                {
+                    return false;
+                }
+
+                return method.ParameterList.Parameters.Any(p =>
+                    p.Modifiers.Any(m => m.IsKind(SyntaxKind.ParamsKeyword)) && IsReadOnlySpanType(p.Type, in context)
+                );
+            }
+        ),
+        new(category: "codecracker.CSharp", checkIdPrefix: "CC0091", whenAllowed: IsOnMethodWithBenchmarkAttribute),
+        new(category: "Microsoft.Performance", checkIdPrefix: "CA1822", whenAllowed: IsOnMethodWithBenchmarkAttribute),
+        new(category: "FunFair.CodeAnalysis", checkIdPrefix: "FFS0012", whenAllowed: IsOnClassWithBenchmarkMethods),
+    ];
+
+    private static bool IsReadOnlySpanType(TypeSyntax? type, in SyntaxNodeAnalysisContext context)
+    {
+        if (type is null)
+        {
+            return false;
+        }
+
+        TypeInfo typeInfo = context.SemanticModel.GetTypeInfo(
+            expression: type,
+            cancellationToken: context.CancellationToken
+        );
+
+        return StringComparer.Ordinal.Equals(x: typeInfo.Type?.ToFullyQualifiedName(), y: "System.ReadOnlySpan`1");
+    }
+
+    private static bool IsBenchmarkAttribute(AttributeSyntax attribute)
+    {
+        string name = attribute.Name switch
+        {
+            IdentifierNameSyntax id => id.Identifier.Text,
+            QualifiedNameSyntax qualified => qualified.Right.Identifier.Text,
+            _ => attribute.Name.ToString(),
+        };
+
+        return StringComparer.Ordinal.Equals(x: name, y: "Benchmark")
+            || StringComparer.Ordinal.Equals(x: name, y: "BenchmarkAttribute");
+    }
+
+    private static bool HasBenchmarkAttribute(in SyntaxList<AttributeListSyntax> attributeLists)
+    {
+        return attributeLists.SelectMany(al => al.Attributes).Any(IsBenchmarkAttribute);
+    }
+
+    private static bool IsOnMethodWithBenchmarkAttribute(SyntaxNodeAnalysisContext context)
+    {
+        return context.Node is AttributeSyntax attribute
+            && attribute.Parent?.Parent is MethodDeclarationSyntax method
+            && HasBenchmarkAttribute(method.AttributeLists);
+    }
+
+    private static bool IsOnClassWithBenchmarkMethods(SyntaxNodeAnalysisContext context)
+    {
+        return context.Node is AttributeSyntax attribute
+            && attribute.Parent?.Parent is ClassDeclarationSyntax classDeclaration
+            && classDeclaration
+                .Members.OfType<MethodDeclarationSyntax>()
+                .Any(m => HasBenchmarkAttribute(m.AttributeLists));
+    }
+
+    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => SupportedDiagnosticsCache;
 
     public override void Initialize(AnalysisContext context)
     {
@@ -45,6 +133,26 @@ public sealed class SuppressMessageDiagnosticsAnalyzer : DiagnosticAnalyzer
 
         Checker checker = new();
         context.RegisterCompilationStartAction(checker.PerformCheck);
+    }
+
+    private sealed class AllowedSuppression
+    {
+        public AllowedSuppression(
+            string category,
+            string checkIdPrefix,
+            Func<SyntaxNodeAnalysisContext, bool> whenAllowed
+        )
+        {
+            this.Category = category;
+            this.CheckIdPrefix = checkIdPrefix;
+            this.WhenAllowed = whenAllowed;
+        }
+
+        public string Category { get; }
+
+        public string CheckIdPrefix { get; }
+
+        public Func<SyntaxNodeAnalysisContext, bool> WhenAllowed { get; }
     }
 
     private sealed class Checker
@@ -97,6 +205,38 @@ public sealed class SuppressMessageDiagnosticsAnalyzer : DiagnosticAnalyzer
                 return;
             }
 
+            if (
+                !IsPermittedSuppression(
+                    syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
+                    attributeSyntax: attributeSyntax
+                )
+            )
+            {
+                string? checkId = AttributeArgumentHelpers.GetStringArgument(
+                    attributeSyntax: attributeSyntax,
+                    argumentName: "checkId",
+                    position: 1,
+                    semanticModel: syntaxNodeAnalysisContext.SemanticModel,
+                    cancellationToken: syntaxNodeAnalysisContext.CancellationToken
+                );
+
+                attributeSyntax.ReportDiagnostics(
+                    syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
+                    rule: RuleNotPermitted,
+                    checkId ?? "<unknown>"
+                );
+
+                return;
+            }
+
+            CheckJustification(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, attributeSyntax: attributeSyntax);
+        }
+
+        private static void CheckJustification(
+            in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext,
+            AttributeSyntax attributeSyntax
+        )
+        {
             AttributeArgumentSyntax? findJustificationAttributeArgument = FindJustificationAttributeArgument(
                 attributeSyntax
             );
@@ -107,6 +247,7 @@ public sealed class SuppressMessageDiagnosticsAnalyzer : DiagnosticAnalyzer
                     syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
                     rule: RuleMustHaveJustification
                 );
+
                 return;
             }
 
@@ -116,10 +257,62 @@ public sealed class SuppressMessageDiagnosticsAnalyzer : DiagnosticAnalyzer
             }
 
             DiagnosticDescriptor? rule = CheckJustificationText(literalExpression.Token.ValueText);
+
             if (rule is not null)
             {
                 literalExpression.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: rule);
             }
+        }
+
+        private static bool IsPermittedSuppression(
+            in SyntaxNodeAnalysisContext syntaxNodeAnalysisContext,
+            AttributeSyntax attributeSyntax
+        )
+        {
+            string? category = AttributeArgumentHelpers.GetStringArgument(
+                attributeSyntax: attributeSyntax,
+                argumentName: "category",
+                position: 0,
+                semanticModel: syntaxNodeAnalysisContext.SemanticModel,
+                cancellationToken: syntaxNodeAnalysisContext.CancellationToken
+            );
+            string? checkId = AttributeArgumentHelpers.GetStringArgument(
+                attributeSyntax: attributeSyntax,
+                argumentName: "checkId",
+                position: 1,
+                semanticModel: syntaxNodeAnalysisContext.SemanticModel,
+                cancellationToken: syntaxNodeAnalysisContext.CancellationToken
+            );
+
+            if (category is null || checkId is null)
+            {
+                return false;
+            }
+
+            SyntaxNodeAnalysisContext context = syntaxNodeAnalysisContext;
+
+            return AllowedSuppressions.Any(entry =>
+                StringComparer.Ordinal.Equals(x: entry.Category, y: category)
+                && CheckIdMatchesPrefix(checkId: checkId, checkIdPrefix: entry.CheckIdPrefix)
+                && entry.WhenAllowed(context)
+            );
+        }
+
+        private static bool CheckIdMatchesPrefix(string checkId, string checkIdPrefix)
+        {
+            if (!checkId.StartsWith(value: checkIdPrefix, comparisonType: StringComparison.Ordinal))
+            {
+                return false;
+            }
+
+            if (checkId.Length == checkIdPrefix.Length)
+            {
+                return true;
+            }
+
+            char next = checkId[checkIdPrefix.Length];
+
+            return next is ':' or ' ';
         }
 
         private static DiagnosticDescriptor? CheckJustificationText(string justificationText)
