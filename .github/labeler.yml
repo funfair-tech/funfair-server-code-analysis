@@ -16,6 +16,8 @@
  - any: [ '.editorconfig' ]
 "funfair-codeanalysis":
  - any: [ 'src/$FunFair.CodeAnalysis/**/*' ]
+"funfair-codeanalysis-benchmark-tests":
+ - any: [ 'src/$FunFair.CodeAnalysis.Benchmark.Tests/**/*' ]
 "funfair-codeanalysis-tests":
  - any: [ 'src/$FunFair.CodeAnalysis.Tests/**/*' ]
 "github-actions":
