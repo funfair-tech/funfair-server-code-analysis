@@ -2,7 +2,6 @@
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Threading;
 using FunFair.CodeAnalysis.Extensions;
 using FunFair.CodeAnalysis.Helpers;
 using Microsoft.CodeAnalysis;
@@ -35,6 +34,9 @@ public sealed class SuppressMessageDiagnosticsAnalyzer : DiagnosticAnalyzer
         title: "SuppressMessage is not permitted for this warning",
         message: "SuppressMessage is not permitted for '{0}'"
     );
+
+    private static readonly ImmutableArray<DiagnosticDescriptor> SupportedDiagnosticsCache =
+        SupportedDiagnosisList.Build(RuleMustHaveJustification, RuleMustNotHaveTodoJustification, RuleNotPermitted);
 
     [SuppressMessage(
         category: "Nullable.Extended.Analyzer",
@@ -85,13 +87,7 @@ public sealed class SuppressMessageDiagnosticsAnalyzer : DiagnosticAnalyzer
             cancellationToken: context.CancellationToken
         );
 
-        if (typeInfo.Type is not INamedTypeSymbol namedType)
-        {
-            return false;
-        }
-
-        return StringComparer.Ordinal.Equals(x: namedType.MetadataName, y: "ReadOnlySpan`1")
-            && StringComparer.Ordinal.Equals(x: namedType.ContainingNamespace?.ToDisplayString(), y: "System");
+        return StringComparer.Ordinal.Equals(x: typeInfo.Type?.ToFullyQualifiedName(), y: "System.ReadOnlySpan`1");
     }
 
     private static bool IsBenchmarkAttribute(AttributeSyntax attribute)
@@ -128,8 +124,7 @@ public sealed class SuppressMessageDiagnosticsAnalyzer : DiagnosticAnalyzer
                 .Any(m => HasBenchmarkAttribute(m.AttributeLists));
     }
 
-    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
-        SupportedDiagnosisList.Build(RuleMustHaveJustification, RuleMustNotHaveTodoJustification, RuleNotPermitted);
+    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => SupportedDiagnosticsCache;
 
     public override void Initialize(AnalysisContext context)
     {
@@ -217,7 +212,7 @@ public sealed class SuppressMessageDiagnosticsAnalyzer : DiagnosticAnalyzer
                 )
             )
             {
-                string? checkId = GetStringAttributeArgument(
+                string? checkId = AttributeArgumentHelpers.GetStringArgument(
                     attributeSyntax: attributeSyntax,
                     argumentName: "checkId",
                     position: 1,
@@ -274,14 +269,14 @@ public sealed class SuppressMessageDiagnosticsAnalyzer : DiagnosticAnalyzer
             AttributeSyntax attributeSyntax
         )
         {
-            string? category = GetStringAttributeArgument(
+            string? category = AttributeArgumentHelpers.GetStringArgument(
                 attributeSyntax: attributeSyntax,
                 argumentName: "category",
                 position: 0,
                 semanticModel: syntaxNodeAnalysisContext.SemanticModel,
                 cancellationToken: syntaxNodeAnalysisContext.CancellationToken
             );
-            string? checkId = GetStringAttributeArgument(
+            string? checkId = AttributeArgumentHelpers.GetStringArgument(
                 attributeSyntax: attributeSyntax,
                 argumentName: "checkId",
                 position: 1,
@@ -301,57 +296,6 @@ public sealed class SuppressMessageDiagnosticsAnalyzer : DiagnosticAnalyzer
                 && CheckIdMatchesPrefix(checkId: checkId, checkIdPrefix: entry.CheckIdPrefix)
                 && entry.WhenAllowed(context)
             );
-        }
-
-        private static string? GetStringAttributeArgument(
-            AttributeSyntax attributeSyntax,
-            string argumentName,
-            int position,
-            SemanticModel semanticModel,
-            CancellationToken cancellationToken
-        )
-        {
-            if (attributeSyntax.ArgumentList is null)
-            {
-                return null;
-            }
-
-            AttributeArgumentSyntax? named = attributeSyntax.ArgumentList.Arguments.FirstOrDefault(a =>
-                StringComparer.Ordinal.Equals(x: a.NameColon?.Name.Identifier.Text, y: argumentName)
-            );
-
-            if (named is not null)
-            {
-                Optional<object> namedValue = semanticModel.GetConstantValue(
-                    expression: named.Expression,
-                    cancellationToken: cancellationToken
-                );
-
-                if (namedValue.HasValue && namedValue.Value is string namedStr)
-                {
-                    return namedStr;
-                }
-            }
-
-            AttributeArgumentSyntax? positional = attributeSyntax
-                .ArgumentList.Arguments.Where(a => a.NameColon is null && a.NameEquals is null)
-                .Skip(position)
-                .FirstOrDefault();
-
-            if (positional is not null)
-            {
-                Optional<object> positionalValue = semanticModel.GetConstantValue(
-                    expression: positional.Expression,
-                    cancellationToken: cancellationToken
-                );
-
-                if (positionalValue.HasValue && positionalValue.Value is string positionalStr)
-                {
-                    return positionalStr;
-                }
-            }
-
-            return null;
         }
 
         private static bool CheckIdMatchesPrefix(string checkId, string checkIdPrefix)
