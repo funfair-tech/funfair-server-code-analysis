@@ -2,6 +2,7 @@
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Threading;
 using FunFair.CodeAnalysis.Extensions;
 using FunFair.CodeAnalysis.Helpers;
 using Microsoft.CodeAnalysis;
@@ -63,7 +64,7 @@ public sealed class SuppressMessageDiagnosticsAnalyzer : DiagnosticAnalyzer
                 }
 
                 return method.ParameterList.Parameters.Any(p =>
-                    p.Modifiers.Any(m => m.IsKind(SyntaxKind.ParamsKeyword)) && IsReadOnlySpanType(p.Type)
+                    p.Modifiers.Any(m => m.IsKind(SyntaxKind.ParamsKeyword)) && IsReadOnlySpanType(p.Type, in context)
                 );
             }
         ),
@@ -72,17 +73,25 @@ public sealed class SuppressMessageDiagnosticsAnalyzer : DiagnosticAnalyzer
         new(category: "FunFair.CodeAnalysis", checkIdPrefix: "FFS0012", whenAllowed: IsOnClassWithBenchmarkMethods),
     ];
 
-    private static bool IsReadOnlySpanType(TypeSyntax? type)
+    private static bool IsReadOnlySpanType(TypeSyntax? type, in SyntaxNodeAnalysisContext context)
     {
-        return type switch
+        if (type is null)
         {
-            GenericNameSyntax generic => StringComparer.Ordinal.Equals(x: generic.Identifier.Text, y: "ReadOnlySpan"),
-            QualifiedNameSyntax { Right: GenericNameSyntax rightGeneric } => StringComparer.Ordinal.Equals(
-                x: rightGeneric.Identifier.Text,
-                y: "ReadOnlySpan"
-            ),
-            _ => false,
-        };
+            return false;
+        }
+
+        TypeInfo typeInfo = context.SemanticModel.GetTypeInfo(
+            expression: type,
+            cancellationToken: context.CancellationToken
+        );
+
+        if (typeInfo.Type is not INamedTypeSymbol namedType)
+        {
+            return false;
+        }
+
+        return StringComparer.Ordinal.Equals(x: namedType.MetadataName, y: "ReadOnlySpan`1")
+            && StringComparer.Ordinal.Equals(x: namedType.ContainingNamespace?.ToDisplayString(), y: "System");
     }
 
     private static bool IsBenchmarkAttribute(AttributeSyntax attribute)
@@ -211,13 +220,15 @@ public sealed class SuppressMessageDiagnosticsAnalyzer : DiagnosticAnalyzer
                 string? checkId = GetStringAttributeArgument(
                     attributeSyntax: attributeSyntax,
                     argumentName: "checkId",
-                    position: 1
+                    position: 1,
+                    semanticModel: syntaxNodeAnalysisContext.SemanticModel,
+                    cancellationToken: syntaxNodeAnalysisContext.CancellationToken
                 );
 
                 attributeSyntax.ReportDiagnostics(
                     syntaxNodeAnalysisContext: syntaxNodeAnalysisContext,
                     rule: RuleNotPermitted,
-                    checkId ?? string.Empty
+                    checkId ?? "<unknown>"
                 );
 
                 return;
@@ -266,12 +277,16 @@ public sealed class SuppressMessageDiagnosticsAnalyzer : DiagnosticAnalyzer
             string? category = GetStringAttributeArgument(
                 attributeSyntax: attributeSyntax,
                 argumentName: "category",
-                position: 0
+                position: 0,
+                semanticModel: syntaxNodeAnalysisContext.SemanticModel,
+                cancellationToken: syntaxNodeAnalysisContext.CancellationToken
             );
             string? checkId = GetStringAttributeArgument(
                 attributeSyntax: attributeSyntax,
                 argumentName: "checkId",
-                position: 1
+                position: 1,
+                semanticModel: syntaxNodeAnalysisContext.SemanticModel,
+                cancellationToken: syntaxNodeAnalysisContext.CancellationToken
             );
 
             if (category is null || checkId is null)
@@ -291,7 +306,9 @@ public sealed class SuppressMessageDiagnosticsAnalyzer : DiagnosticAnalyzer
         private static string? GetStringAttributeArgument(
             AttributeSyntax attributeSyntax,
             string argumentName,
-            int position
+            int position,
+            SemanticModel semanticModel,
+            CancellationToken cancellationToken
         )
         {
             if (attributeSyntax.ArgumentList is null)
@@ -303,9 +320,17 @@ public sealed class SuppressMessageDiagnosticsAnalyzer : DiagnosticAnalyzer
                 StringComparer.Ordinal.Equals(x: a.NameColon?.Name.Identifier.Text, y: argumentName)
             );
 
-            if (named?.Expression is LiteralExpressionSyntax namedLit)
+            if (named is not null)
             {
-                return namedLit.Token.ValueText;
+                Optional<object> namedValue = semanticModel.GetConstantValue(
+                    expression: named.Expression,
+                    cancellationToken: cancellationToken
+                );
+
+                if (namedValue.HasValue && namedValue.Value is string namedStr)
+                {
+                    return namedStr;
+                }
             }
 
             AttributeArgumentSyntax? positional = attributeSyntax
@@ -313,9 +338,17 @@ public sealed class SuppressMessageDiagnosticsAnalyzer : DiagnosticAnalyzer
                 .Skip(position)
                 .FirstOrDefault();
 
-            if (positional?.Expression is LiteralExpressionSyntax posLit)
+            if (positional is not null)
             {
-                return posLit.Token.ValueText;
+                Optional<object> positionalValue = semanticModel.GetConstantValue(
+                    expression: positional.Expression,
+                    cancellationToken: cancellationToken
+                );
+
+                if (positionalValue.HasValue && positionalValue.Value is string positionalStr)
+                {
+                    return positionalStr;
+                }
             }
 
             return null;
