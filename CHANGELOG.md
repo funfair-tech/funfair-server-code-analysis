@@ -10,6 +10,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 - FFS0049 rule to flag unpermitted SuppressMessage attributes
 - Allow NX0001 (Nullable.Extended.Analyzer) suppressions anywhere in FFS0049
 - Allow CC0091, CA1822, and FFS0012 suppressions on Benchmark methods and classes
+- FunFair.CodeAnalysis.Benchmark.Tests: Benchmark project for SuppressMessageDiagnosticsAnalyzer (FFS0049)
 ### Fixed
 - Use Ordinal (case-sensitive) comparison for checkId prefix matching in FFS0049
 ### Changed

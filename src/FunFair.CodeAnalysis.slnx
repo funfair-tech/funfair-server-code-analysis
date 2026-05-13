@@ -8,6 +8,7 @@
     <File Path="FunFair.props" />
     <File Path="global.json" />
   </Folder>
+  <Project Path="FunFair.CodeAnalysis.Benchmark.Tests/FunFair.CodeAnalysis.Benchmark.Tests.csproj" />
   <Project Path="FunFair.CodeAnalysis.Tests/FunFair.CodeAnalysis.Tests.csproj" />
   <Project Path="FunFair.CodeAnalysis/FunFair.CodeAnalysis.csproj" />
 </Solution>
