@@ -13,11 +13,11 @@ Static Code analysis Repo for FunFair Server dotnet projects.
 
 | Code    | Meaning                                                                                                                                        |
 |---------|------------------------------------------------------------------------------------------------------------------------------------------------|
-| FFS0001 | Avoid using ``DateTime.Now`` - Use an injected ``System.TimeProvider.GetLocalNow().LocalDateTime``                                            |
-| FFS0002 | Avoid using ``DateTime.UtcNow`` - Use an injected ``System.TimeProvider.GetUtcNow().UtcDateTime``                                             |
-| FFS0003 | Avoid using ``DateTime.Today`` - Use an injected ``System.TimeProvider.GetLocalNow().Date``                                                   |
-| FFS0004 | Avoid using ``DateTimeOffset.Now`` - Use an injected ``System.TimeProvider.GetLocalNow()``                                                    |
-| FFS0005 | Avoid using ``DateTimeOffset.UtcNow`` - Use an injected ``System.TimeProvider.GetUtcNow()``                                                   |
+| FFS0001 | Avoid using ``DateTime.Now`` - Use an injected ``System.TimeProvider.GetLocalNow().LocalDateTime``                                             |
+| FFS0002 | Avoid using ``DateTime.UtcNow`` - Use an injected ``System.TimeProvider.GetUtcNow().UtcDateTime``                                              |
+| FFS0003 | Avoid using ``DateTime.Today`` - Use an injected ``System.TimeProvider.GetLocalNow().Date``                                                    |
+| FFS0004 | Avoid using ``DateTimeOffset.Now`` - Use an injected ``System.TimeProvider.GetLocalNow()``                                                     |
+| FFS0005 | Avoid using ``DateTimeOffset.UtcNow`` - Use an injected ``System.TimeProvider.GetUtcNow()``                                                    |
 | FFS0006 | Avoid using arbitrary SQL for updates                                                                                                          |
 | FFS0007 | Avoid using arbitrary SQL for queries                                                                                                          |
 | FFS0008 | Do not disable warnings                                                                                                                        |
@@ -61,6 +61,7 @@ Static Code analysis Repo for FunFair Server dotnet projects.
 | FFS0046 | Do not use ``StringCompaison.InvariantCultureIgnoreCase`` use ``StringCompaison.OrdinalIgnoreCase`` instead.                                   |
 | FFS0047 | Do not use ``StringCompaison.CurrentCulture`` use ``StringCompaison.Ordinal`` instead.                                                         |
 | FFS0048 | Do not use ``StringCompaison.CurrentCultureIgnoreCase`` use ``StringCompaison.OrdinalIgnoreCase`` instead.                                     |
+| FFS0049 | ``SuppressMessage`` is not permitted for this warning.                                                                                         |
 
 ## Changelog
 
