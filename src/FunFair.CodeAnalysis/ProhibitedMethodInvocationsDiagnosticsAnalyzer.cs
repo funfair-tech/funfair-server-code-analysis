@@ -68,6 +68,26 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzer : DiagnosticA
                 ["TKey", "System.Func<TKey, TValue>"],
             ]
         ),
+        Build(
+            ruleId: Rules.RulePreferStringComparerEqualsOverStringEqualsWithStringComparison,
+            title: "Prefer StringComparer.<type>.Equals over string.Equals with StringComparison",
+            message: "Use StringComparer.<type>.Equals(x, y) rather than string.Equals(x, y, StringComparison.<type>)",
+            sourceClass: "System.String",
+            bannedMethod: "Equals",
+            [
+                ["string?", "string?", "System.StringComparison"],
+            ]
+        ),
+        Build(
+            ruleId: Rules.RulePreferStringComparerEqualsOverStringEqualsWithStringComparison,
+            title: "Prefer StringComparer.<type>.Equals over string.Equals with StringComparison",
+            message: "Use StringComparer.<type>.Equals(x, y) rather than x.Equals(y, StringComparison.<type>)",
+            sourceClass: "System.String",
+            bannedMethod: "Equals",
+            [
+                ["string?", "System.StringComparison"],
+            ]
+        ),
     ];
 
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
