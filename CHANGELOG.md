@@ -8,6 +8,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 ## [Unreleased]
 ### Security
 ### Added
+- FFS0050: Rule to prefer StringComparer.<type>.Equals(x, y) over string.Equals(x, y, StringComparison.<type>)
 ### Fixed
 ### Changed
 - Dependencies - Updated FunFair.Test.Common to 6.2.25.2243
