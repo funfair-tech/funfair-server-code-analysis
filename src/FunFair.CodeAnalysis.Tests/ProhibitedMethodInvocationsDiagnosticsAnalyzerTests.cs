@@ -336,4 +336,105 @@ public sealed class ProhibitedMethodInvocationsDiagnosticsAnalyzerTests
             reference: WellKnownMetadataReferences.NonBlockingConcurrentDictionary
         );
     }
+
+    [Theory]
+    [InlineData("StringComparison.Ordinal")]
+    [InlineData("StringComparison.OrdinalIgnoreCase")]
+    public Task StaticStringEqualsWithStringComparisonIsBannedAsync(string comparison)
+    {
+        string test =
+            $@"
+    using System;
+    namespace ConsoleApplication1
+    {{
+        class TypeName
+        {{
+            void Test()
+            {{
+                string x = ""a"";
+                string.Equals(x, ""b"", {comparison});
+            }}
+        }}
+    }}";
+        DiagnosticResult expected = Result(
+            id: "FFS0050",
+            message: "Use StringComparer.<type>.Equals(x, y) rather than string.Equals(x, y, StringComparison.<type>)",
+            severity: DiagnosticSeverity.Error,
+            line: 10,
+            column: 17
+        );
+
+        return this.VerifyCSharpDiagnosticAsync(source: test, expected: expected);
+    }
+
+    [Theory]
+    [InlineData("StringComparison.Ordinal")]
+    [InlineData("StringComparison.OrdinalIgnoreCase")]
+    public Task InstanceStringEqualsWithStringComparisonIsBannedAsync(string comparison)
+    {
+        string test =
+            $@"
+    using System;
+    namespace ConsoleApplication1
+    {{
+        class TypeName
+        {{
+            void Test()
+            {{
+                string x = ""a"";
+                x.Equals(""b"", {comparison});
+            }}
+        }}
+    }}";
+        DiagnosticResult expected = Result(
+            id: "FFS0050",
+            message: "Use StringComparer.<type>.Equals(x, y) rather than x.Equals(y, StringComparison.<type>)",
+            severity: DiagnosticSeverity.Error,
+            line: 10,
+            column: 17
+        );
+
+        return this.VerifyCSharpDiagnosticAsync(source: test, expected: expected);
+    }
+
+    [Fact]
+    public Task StaticStringEqualsWithoutStringComparisonIsAllowedAsync()
+    {
+        const string test =
+            @"
+    namespace ConsoleApplication1
+    {
+        class TypeName
+        {
+            void Test()
+            {
+                string x = ""a"";
+                string.Equals(x, ""b"");
+            }
+        }
+    }";
+
+        return this.VerifyCSharpDiagnosticAsync(source: test);
+    }
+
+    [Fact]
+    public Task StringComparerEqualsIsAllowedAsync()
+    {
+        const string test =
+            @"
+    using System;
+    namespace ConsoleApplication1
+    {
+        class TypeName
+        {
+            void Test()
+            {
+                string x = ""a"";
+                StringComparer.Ordinal.Equals(x, ""b"");
+            }
+        }
+    }";
+
+        return this.VerifyCSharpDiagnosticAsync(source: test);
+    }
 }
