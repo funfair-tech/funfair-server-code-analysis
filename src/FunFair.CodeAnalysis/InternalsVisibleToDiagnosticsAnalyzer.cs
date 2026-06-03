@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
@@ -87,7 +86,7 @@ public sealed class InternalsVisibleToDiagnosticsAnalyzer : DiagnosticAnalyzer
                 cancellationToken: syntaxNodeAnalysisContext.CancellationToken
             );
 
-            if (!StringComparer.Ordinal.Equals(x: typeInfo.Type?.MetadataName, y: sourceClassType.MetadataName))
+            if (!SymbolEqualityComparer.Default.Equals(x: typeInfo.Type, y: sourceClassType))
             {
                 return;
             }
