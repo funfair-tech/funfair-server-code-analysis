@@ -63,6 +63,7 @@ Static Code analysis Repo for FunFair Server dotnet projects.
 | FFS0048 | Do not use ``StringCompaison.CurrentCultureIgnoreCase`` use ``StringCompaison.OrdinalIgnoreCase`` instead.                                     |
 | FFS0049 | ``SuppressMessage`` is not permitted for this warning.                                                                                         |
 | FFS0050 | Do not use ``string.Equals(x, y, StringComparison.<type>)`` - use ``StringComparer.<type>.Equals(x, y)`` instead.                              |
+| FFS0051 | Do not use ``InternalsVisibleTo`` - internal types should not be exposed to other assemblies.                                                  |
 
 ## Changelog
 
