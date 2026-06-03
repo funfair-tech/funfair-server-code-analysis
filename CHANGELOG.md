@@ -8,21 +8,25 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 ## [Unreleased]
 ### Security
 ### Added
-- FFS0050: Rule to prefer StringComparer.<type>.Equals(x, y) over string.Equals(x, y, StringComparison.<type>)
-- FFS0051: Banning use of InternalsVisibleTo attribute
 ### Fixed
 ### Changed
-- Dependencies - Updated FunFair.Test.Common to 6.2.25.2243
-- Dependencies - Updated FunFair.Test.Source.Generator to 6.2.25.2243
-- Dependencies - Updated Meziantou.Analyzer to 3.0.88
-- Dependencies - Updated SonarAnalyzer.CSharp to 10.26.0.140279
-- SDK - Updated DotNet SDK to 10.0.300
 ### Deprecated
 ### Removed
 ### Deployment Changes
 <!--
 Releases that have at least been deployed to staging, BUT NOT necessarily released to live.  Changes should be moved from [Unreleased] into here as they are merged into the appropriate release branch
 -->
+## [7.2.1] - 2026-06-03
+### Added
+- FFS0050: Rule to prefer StringComparer.<type>.Equals(x, y) over string.Equals(x, y, StringComparison.<type>)
+- FFS0051: Banning use of InternalsVisibleTo attribute
+### Changed
+- Dependencies - Updated FunFair.Test.Common to 6.2.25.2243
+- Dependencies - Updated FunFair.Test.Source.Generator to 6.2.25.2243
+- Dependencies - Updated Meziantou.Analyzer to 3.0.88
+- Dependencies - Updated SonarAnalyzer.CSharp to 10.26.0.140279
+- SDK - Updated DotNet SDK to 10.0.300
+
 ## [7.2.0] - 2026-05-13
 ### Added
 - FFS0049 rule to flag unpermitted SuppressMessage attributes
