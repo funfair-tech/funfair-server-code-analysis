@@ -52,4 +52,5 @@ internal static class Rules
     public const string RuleDontUseStringComparisonCurrentCultureIgnoreCase = "FFS0048";
     public const string RuleSuppressMessageNotPermitted = "FFS0049";
     public const string RulePreferStringComparerEqualsOverStringEqualsWithStringComparison = "FFS0050";
+    public const string RuleDontUseInternalsVisibleTo = "FFS0051";
 }

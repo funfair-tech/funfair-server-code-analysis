@@ -9,6 +9,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 ### Security
 ### Added
 - FFS0050: Rule to prefer StringComparer.<type>.Equals(x, y) over string.Equals(x, y, StringComparison.<type>)
+- FFS0051: Banning use of InternalsVisibleTo attribute
 ### Fixed
 ### Changed
 - Dependencies - Updated FunFair.Test.Common to 6.2.25.2243
