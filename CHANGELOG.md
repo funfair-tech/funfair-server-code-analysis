@@ -11,6 +11,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 ### Fixed
 - FFS0024 no longer triggers in unit test assemblies
 - FFS0012 no longer triggers on benchmark classes
+- FFS0012 now triggers on benchmark classes that are incorrectly sealed, static, or abstract
 ### Changed
 - SDK - Updated DotNet SDK to 10.0.301
 ### Deprecated
