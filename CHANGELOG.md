@@ -9,6 +9,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 ### Security
 ### Added
 ### Fixed
+- FFS0024 no longer triggers in unit test assemblies
 ### Changed
 - SDK - Updated DotNet SDK to 10.0.301
 ### Deprecated

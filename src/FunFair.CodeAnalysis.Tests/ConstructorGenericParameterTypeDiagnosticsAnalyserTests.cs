@@ -210,4 +210,44 @@ public class Onion {
 
         return this.VerifyCSharpDiagnosticAsync(source: test, reference: WellKnownMetadataReferences.Logger);
     }
+
+    [Fact]
+    public Task SealedClassUsesUnnamedNameInConstructorParameterIsNotAnErrorInUnitTestAssemblyAsync()
+    {
+        const string test =
+            @"
+using Microsoft.Extensions.Logging;
+
+public sealed class Test {
+
+    public Test(ILogger logger)
+    {
+    }
+}";
+
+        return this.VerifyCSharpDiagnosticAsync(
+            source: test,
+            [WellKnownMetadataReferences.Logger, WellKnownMetadataReferences.Xunit]
+        );
+    }
+
+    [Fact]
+    public Task BaseClassUsesOwnClassNameInConstructorParameterIsNotAnErrorInUnitTestAssemblyAsync()
+    {
+        const string test =
+            @"
+using Microsoft.Extensions.Logging;
+
+public abstract class Test {
+
+    protected Test(ILogger<Test> logger)
+    {
+    }
+}";
+
+        return this.VerifyCSharpDiagnosticAsync(
+            source: test,
+            [WellKnownMetadataReferences.Logger, WellKnownMetadataReferences.Xunit]
+        );
+    }
 }
