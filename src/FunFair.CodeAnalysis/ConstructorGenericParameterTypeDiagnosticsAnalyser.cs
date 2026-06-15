@@ -62,6 +62,11 @@ public sealed class ConstructorGenericParameterTypeDiagnosticsAnalyser : Diagnos
 
     private static void PerformCheck(CompilationStartAnalysisContext compilationStartContext)
     {
+        if (compilationStartContext.Compilation.IsUnitTestAssembly())
+        {
+            return;
+        }
+
         Checker checker = new();
 
         compilationStartContext.RegisterSyntaxNodeAction(
