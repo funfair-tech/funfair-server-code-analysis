@@ -49,7 +49,10 @@ public sealed class ClassAnalysisDiagnosticsAnalyzer : DiagnosticAnalyzer
             return;
         }
 
-        if (!classDeclarationSyntax.Modifiers.Any(IsWhiteListedClassModifier))
+        if (
+            !classDeclarationSyntax.Modifiers.Any(IsWhiteListedClassModifier)
+            && !BenchmarkDetection.ClassHasBenchmarkMethods(classDeclarationSyntax)
+        )
         {
             classDeclarationSyntax.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: Rule);
         }
