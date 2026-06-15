@@ -64,6 +64,29 @@ public class Test
     }
 
     [Fact]
+    public Task SealedClassWithBenchmarkMethodIsAnErrorAsync()
+    {
+        const string test =
+            @"
+public sealed class BenchmarkAttribute : System.Attribute { }
+
+public sealed class Test
+{
+    [Benchmark]
+    public void DoIt() { }
+}";
+        DiagnosticResult expected = Result(
+            id: "FFS0012",
+            message: "Classes should be static, sealed or abstract",
+            severity: DiagnosticSeverity.Error,
+            line: 4,
+            column: 1
+        );
+
+        return this.VerifyCSharpDiagnosticAsync(source: test, expected: expected);
+    }
+
+    [Fact]
     public Task ClassWithoutBenchmarkMethodIsAnErrorAsync()
     {
         const string test =
