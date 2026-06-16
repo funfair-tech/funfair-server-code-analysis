@@ -52,7 +52,7 @@ public sealed class ClassAnalysisDiagnosticsAnalyzerTests : DiagnosticAnalyzerVe
     {
         const string test =
             @"
-public sealed class BenchmarkAttribute : System.Attribute { }
+using BenchmarkDotNet.Attributes;
 
 public class Test
 {
@@ -60,7 +60,7 @@ public class Test
     public void DoIt() { }
 }";
 
-        return this.VerifyCSharpDiagnosticAsync(test);
+        return this.VerifyCSharpDiagnosticAsync(source: test, reference: WellKnownMetadataReferences.BenchmarkDotNet);
     }
 
     [Fact]
@@ -68,7 +68,7 @@ public class Test
     {
         const string test =
             @"
-public sealed class BenchmarkAttribute : System.Attribute { }
+using BenchmarkDotNet.Attributes;
 
 public sealed class Test
 {
@@ -83,7 +83,11 @@ public sealed class Test
             column: 1
         );
 
-        return this.VerifyCSharpDiagnosticAsync(source: test, expected: expected);
+        return this.VerifyCSharpDiagnosticAsync(
+            source: test,
+            reference: WellKnownMetadataReferences.BenchmarkDotNet,
+            expected: expected
+        );
     }
 
     [Fact]
@@ -91,8 +95,6 @@ public sealed class Test
     {
         const string test =
             @"
-public sealed class BenchmarkAttribute : System.Attribute { }
-
 public class Test
 {
     public void DoIt() { }
@@ -101,7 +103,7 @@ public class Test
             id: "FFS0012",
             message: "Classes should be static, sealed or abstract",
             severity: DiagnosticSeverity.Error,
-            line: 4,
+            line: 2,
             column: 1
         );
 

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -94,14 +94,18 @@ public sealed class SuppressMessageDiagnosticsAnalyzer : DiagnosticAnalyzer
     {
         return context.Node is AttributeSyntax attribute
             && attribute.Parent?.Parent is MethodDeclarationSyntax method
-            && BenchmarkDetection.MethodHasBenchmarkAttribute(method);
+            && BenchmarkDetection.MethodHasBenchmarkAttribute(method, context.SemanticModel, context.CancellationToken);
     }
 
     private static bool IsOnClassWithBenchmarkMethods(SyntaxNodeAnalysisContext context)
     {
         return context.Node is AttributeSyntax attribute
             && attribute.Parent?.Parent is ClassDeclarationSyntax classDeclaration
-            && BenchmarkDetection.ClassHasBenchmarkMethods(classDeclaration);
+            && BenchmarkDetection.ClassHasBenchmarkMethods(
+                classDeclaration,
+                context.SemanticModel,
+                context.CancellationToken
+            );
     }
 
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => SupportedDiagnosticsCache;

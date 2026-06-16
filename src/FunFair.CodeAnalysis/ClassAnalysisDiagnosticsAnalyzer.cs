@@ -50,7 +50,11 @@ public sealed class ClassAnalysisDiagnosticsAnalyzer : DiagnosticAnalyzer
         }
 
         bool hasWhitelistedModifier = classDeclarationSyntax.Modifiers.Any(IsWhiteListedClassModifier);
-        bool hasBenchmarkMethods = BenchmarkDetection.ClassHasBenchmarkMethods(classDeclarationSyntax);
+        bool hasBenchmarkMethods = BenchmarkDetection.ClassHasBenchmarkMethods(
+            classDeclarationSyntax,
+            syntaxNodeAnalysisContext.SemanticModel,
+            syntaxNodeAnalysisContext.CancellationToken
+        );
 
         // Regular classes must be sealed/static/abstract.
         // Benchmark classes must NOT be sealed/static/abstract (BenchmarkDotNet requires inheritable classes).
