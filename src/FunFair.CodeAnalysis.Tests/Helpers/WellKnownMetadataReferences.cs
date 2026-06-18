@@ -85,4 +85,8 @@ internal static class WellKnownMetadataReferences
 
     public static readonly MetadataReference MicrosoftExtensionsIConfigurationBuilder =
         MetadataReference.CreateFromFile(typeof(IConfigurationBuilder).Assembly.Location);
+
+    public static readonly MetadataReference BenchmarkDotNet = MetadataReference.CreateFromFile(
+        typeof(BenchmarkDotNet.Attributes.BenchmarkAttribute).Assembly.Location
+    );
 }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -90,38 +90,22 @@ public sealed class SuppressMessageDiagnosticsAnalyzer : DiagnosticAnalyzer
         return StringComparer.Ordinal.Equals(x: typeInfo.Type?.ToFullyQualifiedName(), y: "System.ReadOnlySpan`1");
     }
 
-    private static bool IsBenchmarkAttribute(AttributeSyntax attribute)
-    {
-        string name = attribute.Name switch
-        {
-            IdentifierNameSyntax id => id.Identifier.Text,
-            QualifiedNameSyntax qualified => qualified.Right.Identifier.Text,
-            _ => attribute.Name.ToString(),
-        };
-
-        return StringComparer.Ordinal.Equals(x: name, y: "Benchmark")
-            || StringComparer.Ordinal.Equals(x: name, y: "BenchmarkAttribute");
-    }
-
-    private static bool HasBenchmarkAttribute(in SyntaxList<AttributeListSyntax> attributeLists)
-    {
-        return attributeLists.SelectMany(al => al.Attributes).Any(IsBenchmarkAttribute);
-    }
-
     private static bool IsOnMethodWithBenchmarkAttribute(SyntaxNodeAnalysisContext context)
     {
         return context.Node is AttributeSyntax attribute
             && attribute.Parent?.Parent is MethodDeclarationSyntax method
-            && HasBenchmarkAttribute(method.AttributeLists);
+            && BenchmarkDetection.MethodHasBenchmarkAttribute(method, context.SemanticModel, context.CancellationToken);
     }
 
     private static bool IsOnClassWithBenchmarkMethods(SyntaxNodeAnalysisContext context)
     {
         return context.Node is AttributeSyntax attribute
             && attribute.Parent?.Parent is ClassDeclarationSyntax classDeclaration
-            && classDeclaration
-                .Members.OfType<MethodDeclarationSyntax>()
-                .Any(m => HasBenchmarkAttribute(m.AttributeLists));
+            && BenchmarkDetection.ClassHasBenchmarkMethods(
+                classDeclaration,
+                context.SemanticModel,
+                context.CancellationToken
+            );
     }
 
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => SupportedDiagnosticsCache;

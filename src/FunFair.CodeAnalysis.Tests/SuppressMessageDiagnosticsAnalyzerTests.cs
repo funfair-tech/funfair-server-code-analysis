@@ -310,8 +310,7 @@ public sealed class SuppressMessageDiagnosticsAnalyzerTests
         string test =
             $@"
             using System.Diagnostics.CodeAnalysis;
-
-            public sealed class BenchmarkAttribute : System.Attribute {{ }}
+            using BenchmarkDotNet.Attributes;
 
             public sealed class Test {{
 
@@ -322,7 +321,10 @@ public sealed class SuppressMessageDiagnosticsAnalyzerTests
             }}
 }}";
 
-        return this.VerifyCSharpDiagnosticAsync(source: test, reference: WellKnownMetadataReferences.SuppressMessage);
+        return this.VerifyCSharpDiagnosticAsync(
+            source: test,
+            references: [WellKnownMetadataReferences.SuppressMessage, WellKnownMetadataReferences.BenchmarkDotNet]
+        );
     }
 
     [Theory]
@@ -369,8 +371,7 @@ public sealed class SuppressMessageDiagnosticsAnalyzerTests
         string test =
             $@"
             using System.Diagnostics.CodeAnalysis;
-
-            public sealed class BenchmarkAttribute : System.Attribute {{ }}
+            using BenchmarkDotNet.Attributes;
 
             public sealed class Test {{
 
@@ -385,13 +386,13 @@ public sealed class SuppressMessageDiagnosticsAnalyzerTests
             id: "FFS0027",
             message: "SuppressMessage must specify a Justification",
             severity: DiagnosticSeverity.Error,
-            line: 8,
+            line: 7,
             column: column
         );
 
         return this.VerifyCSharpDiagnosticAsync(
             source: test,
-            reference: WellKnownMetadataReferences.SuppressMessage,
+            references: [WellKnownMetadataReferences.SuppressMessage, WellKnownMetadataReferences.BenchmarkDotNet],
             expected: expected
         );
     }
@@ -408,8 +409,7 @@ public sealed class SuppressMessageDiagnosticsAnalyzerTests
         string test =
             $@"
             using System.Diagnostics.CodeAnalysis;
-
-            public sealed class BenchmarkAttribute : System.Attribute {{ }}
+            using BenchmarkDotNet.Attributes;
 
             public sealed class Test {{
 
@@ -424,13 +424,13 @@ public sealed class SuppressMessageDiagnosticsAnalyzerTests
             id: "FFS0042",
             message: "SuppressMessage must not have a TODO Justification",
             severity: DiagnosticSeverity.Error,
-            line: 8,
+            line: 7,
             column: column
         );
 
         return this.VerifyCSharpDiagnosticAsync(
             source: test,
-            reference: WellKnownMetadataReferences.SuppressMessage,
+            references: [WellKnownMetadataReferences.SuppressMessage, WellKnownMetadataReferences.BenchmarkDotNet],
             expected: expected
         );
     }
@@ -441,8 +441,7 @@ public sealed class SuppressMessageDiagnosticsAnalyzerTests
         const string test =
             @"
             using System.Diagnostics.CodeAnalysis;
-
-            public sealed class BenchmarkAttribute : System.Attribute { }
+            using BenchmarkDotNet.Attributes;
 
             [SuppressMessage(category: ""FunFair.CodeAnalysis"", checkId: ""FFS0012: Make sealed static or abstract"", Justification = ""Benchmark"")]
             public class Test {
@@ -453,7 +452,10 @@ public sealed class SuppressMessageDiagnosticsAnalyzerTests
             }
 }";
 
-        return this.VerifyCSharpDiagnosticAsync(source: test, reference: WellKnownMetadataReferences.SuppressMessage);
+        return this.VerifyCSharpDiagnosticAsync(
+            source: test,
+            references: [WellKnownMetadataReferences.SuppressMessage, WellKnownMetadataReferences.BenchmarkDotNet]
+        );
     }
 
     [Fact]
@@ -492,8 +494,7 @@ public sealed class SuppressMessageDiagnosticsAnalyzerTests
         const string test =
             @"
             using System.Diagnostics.CodeAnalysis;
-
-            public sealed class BenchmarkAttribute : System.Attribute { }
+            using BenchmarkDotNet.Attributes;
 
             [SuppressMessage(category: ""FunFair.CodeAnalysis"", checkId: ""FFS0012: Make sealed static or abstract"", Justification = "" "")]
             public class Test {
@@ -508,13 +509,13 @@ public sealed class SuppressMessageDiagnosticsAnalyzerTests
             id: "FFS0027",
             message: "SuppressMessage must specify a Justification",
             severity: DiagnosticSeverity.Error,
-            line: 6,
+            line: 5,
             column: 132
         );
 
         return this.VerifyCSharpDiagnosticAsync(
             source: test,
-            reference: WellKnownMetadataReferences.SuppressMessage,
+            references: [WellKnownMetadataReferences.SuppressMessage, WellKnownMetadataReferences.BenchmarkDotNet],
             expected: expected
         );
     }
@@ -525,8 +526,7 @@ public sealed class SuppressMessageDiagnosticsAnalyzerTests
         const string test =
             @"
             using System.Diagnostics.CodeAnalysis;
-
-            public sealed class BenchmarkAttribute : System.Attribute { }
+            using BenchmarkDotNet.Attributes;
 
             [SuppressMessage(category: ""FunFair.CodeAnalysis"", checkId: ""FFS0012: Make sealed static or abstract"", Justification = ""TODO: Fix later"")]
             public class Test {
@@ -541,13 +541,13 @@ public sealed class SuppressMessageDiagnosticsAnalyzerTests
             id: "FFS0042",
             message: "SuppressMessage must not have a TODO Justification",
             severity: DiagnosticSeverity.Error,
-            line: 6,
+            line: 5,
             column: 132
         );
 
         return this.VerifyCSharpDiagnosticAsync(
             source: test,
-            reference: WellKnownMetadataReferences.SuppressMessage,
+            references: [WellKnownMetadataReferences.SuppressMessage, WellKnownMetadataReferences.BenchmarkDotNet],
             expected: expected
         );
     }

@@ -46,4 +46,67 @@ public sealed class ClassAnalysisDiagnosticsAnalyzerTests : DiagnosticAnalyzerVe
 
         return this.VerifyCSharpDiagnosticAsync(test);
     }
+
+    [Fact]
+    public Task ClassWithBenchmarkMethodIsNotAnErrorAsync()
+    {
+        const string test =
+            @"
+using BenchmarkDotNet.Attributes;
+
+public class Test
+{
+    [Benchmark]
+    public void DoIt() { }
+}";
+
+        return this.VerifyCSharpDiagnosticAsync(source: test, reference: WellKnownMetadataReferences.BenchmarkDotNet);
+    }
+
+    [Fact]
+    public Task SealedClassWithBenchmarkMethodIsAnErrorAsync()
+    {
+        const string test =
+            @"
+using BenchmarkDotNet.Attributes;
+
+public sealed class Test
+{
+    [Benchmark]
+    public void DoIt() { }
+}";
+        DiagnosticResult expected = Result(
+            id: "FFS0012",
+            message: "Classes should be static, sealed or abstract",
+            severity: DiagnosticSeverity.Error,
+            line: 4,
+            column: 1
+        );
+
+        return this.VerifyCSharpDiagnosticAsync(
+            source: test,
+            reference: WellKnownMetadataReferences.BenchmarkDotNet,
+            expected: expected
+        );
+    }
+
+    [Fact]
+    public Task ClassWithoutBenchmarkMethodIsAnErrorAsync()
+    {
+        const string test =
+            @"
+public class Test
+{
+    public void DoIt() { }
+}";
+        DiagnosticResult expected = Result(
+            id: "FFS0012",
+            message: "Classes should be static, sealed or abstract",
+            severity: DiagnosticSeverity.Error,
+            line: 2,
+            column: 1
+        );
+
+        return this.VerifyCSharpDiagnosticAsync(source: test, expected: expected);
+    }
 }

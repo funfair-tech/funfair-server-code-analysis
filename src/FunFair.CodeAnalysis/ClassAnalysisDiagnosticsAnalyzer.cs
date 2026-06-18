@@ -49,7 +49,17 @@ public sealed class ClassAnalysisDiagnosticsAnalyzer : DiagnosticAnalyzer
             return;
         }
 
-        if (!classDeclarationSyntax.Modifiers.Any(IsWhiteListedClassModifier))
+        bool hasWhitelistedModifier = classDeclarationSyntax.Modifiers.Any(IsWhiteListedClassModifier);
+        bool hasBenchmarkMethods = BenchmarkDetection.ClassHasBenchmarkMethods(
+            classDeclarationSyntax,
+            syntaxNodeAnalysisContext.SemanticModel,
+            syntaxNodeAnalysisContext.CancellationToken
+        );
+
+        // Regular classes must be sealed/static/abstract.
+        // Benchmark classes must NOT be sealed/static/abstract (BenchmarkDotNet requires inheritable classes).
+        // Both conditions being the same is an error.
+        if (hasBenchmarkMethods == hasWhitelistedModifier)
         {
             classDeclarationSyntax.ReportDiagnostics(syntaxNodeAnalysisContext: syntaxNodeAnalysisContext, rule: Rule);
         }
