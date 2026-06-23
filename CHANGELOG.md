@@ -9,17 +9,21 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 ### Security
 ### Added
 ### Fixed
-- FFS0024 no longer triggers in unit test assemblies
-- FFS0012 no longer triggers on benchmark classes
-- FFS0012 now triggers on benchmark classes that are incorrectly sealed, static, or abstract
 ### Changed
-- SDK - Updated DotNet SDK to 10.0.301
 ### Deprecated
 ### Removed
 ### Deployment Changes
 <!--
 Releases that have at least been deployed to staging, BUT NOT necessarily released to live.  Changes should be moved from [Unreleased] into here as they are merged into the appropriate release branch
 -->
+## [7.2.2] - 2026-06-23
+### Fixed
+- FFS0024 no longer triggers in unit test assemblies
+- FFS0012 no longer triggers on benchmark classes
+- FFS0012 now triggers on benchmark classes that are incorrectly sealed, static, or abstract
+### Changed
+- SDK - Updated DotNet SDK to 10.0.301
+
 ## [7.2.1] - 2026-06-03
 ### Added
 - FFS0050: Rule to prefer StringComparer.<type>.Equals(x, y) over string.Equals(x, y, StringComparison.<type>)
