@@ -17,7 +17,6 @@ namespace FunFair.CodeAnalysis.Benchmark.Tests.Bench;
 [MeanColumn]
 [MedianColumn]
 [MemoryDiagnoser(false)]
-
 public class SuppressMessageAnalyzerBenchmark
 {
     private static readonly CancellationToken BenchmarkCancellationToken = new(canceled: false);
