@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
@@ -17,7 +17,7 @@ namespace FunFair.CodeAnalysis.Benchmark.Tests.Bench;
 [MeanColumn]
 [MedianColumn]
 [MemoryDiagnoser(false)]
-[SuppressMessage(category: "FunFair.CodeAnalysis", checkId: "FFS0012:Make Sealed", Justification = "Benchmarks")]
+
 public class SuppressMessageAnalyzerBenchmark
 {
     private static readonly CancellationToken BenchmarkCancellationToken = new(canceled: false);
@@ -53,7 +53,7 @@ public class SuppressMessageAnalyzerBenchmark
 
             public sealed class Example
             {
-                [SuppressMessage("Nullable.Extended.Analyzer", "NX0001: Suppression of NullForgiving operator is not required", Justification = "Required here")]
+                
                 public void Method() { }
             }
             """
@@ -65,7 +65,7 @@ public class SuppressMessageAnalyzerBenchmark
 
             public sealed class Example
             {
-                [SuppressMessage("Example", "EX0001: Some check", Justification = "Because")]
+                
                 public void Method() { }
             }
             """
