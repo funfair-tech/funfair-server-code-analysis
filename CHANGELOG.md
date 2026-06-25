@@ -14,6 +14,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 - Dependencies - Updated Meziantou.Analyzer to 3.0.114
 - Dependencies - Updated Microsoft.VisualStudio.Threading.Analyzers to 18.7.23
 - Dependencies - Updated SonarAnalyzer.CSharp to 10.27.0.140913
+- Dependencies - Updated FunFair.Test.Source.Generator to 6.3.1.2342
 ### Deprecated
 ### Removed
 ### Deployment Changes
