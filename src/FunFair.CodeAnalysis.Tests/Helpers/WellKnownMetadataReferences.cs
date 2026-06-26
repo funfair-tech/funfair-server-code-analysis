@@ -4,6 +4,7 @@ using System.Net;
 using System.Text.Json;
 using System.Threading;
 using FunFair.Test.Common;
+using FunFair.Test.Infrastructure.Mocks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.CodeAnalysis;
 using Microsoft.Extensions.Configuration;
@@ -49,6 +50,10 @@ internal static class WellKnownMetadataReferences
 
     public static readonly MetadataReference FunFairTestCommon = MetadataReference.CreateFromFile(
         typeof(TestBase).Assembly.Location
+    );
+
+    public static readonly MetadataReference FunFairTestInfrastructure = MetadataReference.CreateFromFile(
+        typeof(MockBase<>).Assembly.Location
     );
 
     public static readonly MetadataReference HttpContext = MetadataReference.CreateFromFile(
