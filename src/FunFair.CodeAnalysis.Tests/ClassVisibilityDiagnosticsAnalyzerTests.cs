@@ -30,7 +30,7 @@ public sealed class Test
     {
         const string test =
             @"
-using FunFair.Test.Common.Mocks;
+using FunFair.Test.Infrastructure.Mocks;
 
 public sealed class Test : MockBase<string>
 {
@@ -55,7 +55,7 @@ public sealed class Test : MockBase<string>
 
         return this.VerifyCSharpDiagnosticAsync(
             source: test,
-            reference: WellKnownMetadataReferences.FunFairTestCommon,
+            reference: WellKnownMetadataReferences.FunFairTestInfrastructure,
             expected: expected
         );
     }
@@ -65,7 +65,7 @@ public sealed class Test : MockBase<string>
     {
         const string test =
             @"
-using FunFair.Test.Common.Mocks;
+using FunFair.Test.Infrastructure.Mocks;
 
 internal sealed class Test : MockBase<string>
 {
@@ -81,7 +81,10 @@ internal sealed class Test : MockBase<string>
     }
 }";
 
-        return this.VerifyCSharpDiagnosticAsync(source: test, reference: WellKnownMetadataReferences.FunFairTestCommon);
+        return this.VerifyCSharpDiagnosticAsync(
+            source: test,
+            reference: WellKnownMetadataReferences.FunFairTestInfrastructure
+        );
     }
 
     [Fact]
@@ -89,7 +92,7 @@ internal sealed class Test : MockBase<string>
     {
         const string test =
             @"
-using FunFair.Test.Common.Mocks;
+using FunFair.Test.Infrastructure.Mocks;
 
 internal abstract class Test : MockBase<string>
 {
@@ -115,7 +118,7 @@ internal abstract class Test : MockBase<string>
 
         return this.VerifyCSharpDiagnosticAsync(
             source: test,
-            reference: WellKnownMetadataReferences.FunFairTestCommon,
+            reference: WellKnownMetadataReferences.FunFairTestInfrastructure,
             expected: expected
         );
     }
