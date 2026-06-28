@@ -10,6 +10,14 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 ### Added
 ### Fixed
 ### Changed
+### Deprecated
+### Removed
+### Deployment Changes
+<!--
+Releases that have at least been deployed to staging, BUT NOT necessarily released to live.  Changes should be moved from [Unreleased] into here as they are merged into the appropriate release branch
+-->
+## [7.2.3] - 2026-06-28
+### Changed
 - Dependencies - Updated Credfeto.Enumeration to 1.2.148.2012
 - Dependencies - Updated Microsoft.VisualStudio.Threading.Analyzers to 18.7.23
 - Dependencies - Updated SonarAnalyzer.CSharp to 10.27.0.140913
@@ -17,12 +25,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 - Dependencies - Updated FunFair.Test.Source.Generator to 6.3.1.2342
 - Dependencies - Updated Microsoft.NET.Test.Sdk to 18.7.0
 - Dependencies - Updated Meziantou.Analyzer to 3.0.115
-### Deprecated
-### Removed
-### Deployment Changes
-<!--
-Releases that have at least been deployed to staging, BUT NOT necessarily released to live.  Changes should be moved from [Unreleased] into here as they are merged into the appropriate release branch
--->
+
 ## [7.2.2] - 2026-06-23
 ### Fixed
 - FFS0024 no longer triggers in unit test assemblies
