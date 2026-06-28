@@ -16,20 +16,22 @@ namespace FunFair.CodeAnalysis;
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public sealed class ClassVisibilityDiagnosticsAnalyzer : DiagnosticAnalyzer
 {
+    private const string MockBaseClassName = "FunFair.Test.Infrastructure.Mocks.MockBase<T>";
+
     private static readonly IReadOnlyList<ConfiguredClass> Classes =
     [
         Build(
             ruleId: Rules.MockBaseClassInstancesMustBeInternal,
             title: "MockBase<T> instances must be internal",
             message: "MockBase<T> instances must be internal",
-            className: "FunFair.Test.Common.Mocks.MockBase<T>",
+            className: MockBaseClassName,
             visibility: SyntaxKind.InternalKeyword
         ),
         Build(
             ruleId: Rules.MockBaseClassInstancesMustBeSealed,
             title: "MockBase<T> instances must be sealed",
             message: "MockBase<T> instances must be sealed",
-            className: "FunFair.Test.Common.Mocks.MockBase<T>",
+            className: MockBaseClassName,
             visibility: SyntaxKind.SealedKeyword
         ),
     ];
