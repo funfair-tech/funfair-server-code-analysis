@@ -53,6 +53,53 @@ namespace ConsoleApplication1
     }
 
     [Fact]
+    public Task SubstituteForIsBannedInClassTransitivelyDerivedFromTestBaseAsync()
+    {
+        const string test =
+            @"
+using FunFair.Test.Common;
+using NSubstitute;
+using Xunit;
+
+namespace ConsoleApplication1
+{
+    public interface IMyService
+    {
+    }
+
+    public abstract class BaseTest : TestBase
+    {
+    }
+
+    public sealed class TypeName : BaseTest
+    {
+        [Fact]
+        public void DoIt()
+        {
+            IMyService service = Substitute.For<IMyService>();
+        }
+    }
+}";
+        DiagnosticResult expected = Result(
+            id: "FFS0052",
+            message: "Use GetSubstitute<T>() instead of Substitute.For<T>() in classes derived from TestBase; if registering the substitute with an IServiceCollection, use serviceCollection.AddMockedService<T>() instead of AddSingleton",
+            severity: DiagnosticSeverity.Error,
+            line: 21,
+            column: 34
+        );
+
+        return this.VerifyCSharpDiagnosticAsync(
+            source: test,
+            [
+                WellKnownMetadataReferences.Xunit,
+                WellKnownMetadataReferences.FunFairTestCommon,
+                WellKnownMetadataReferences.Substitute,
+            ],
+            expected: expected
+        );
+    }
+
+    [Fact]
     public Task SubstituteForGenericLoggerIsBannedInClassDerivedFromTestBaseAsync()
     {
         const string test =
