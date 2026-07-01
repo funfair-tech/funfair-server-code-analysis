@@ -28,7 +28,7 @@
     <OptimizationPreference>speed</OptimizationPreference>
     <OutputType>Exe</OutputType>
     <RunAOTCompilation>false</RunAOTCompilation>
-    <TargetFrameworks>net9.0;net10.0;net11.0</TargetFrameworks>
+    <TargetFrameworks>net9.0;net10.0</TargetFrameworks>
     <TestingPlatformDotnetTestSupport>true</TestingPlatformDotnetTestSupport>
     <TieredCompilation>true</TieredCompilation>
     <TieredPGO>true</TieredPGO>
@@ -43,7 +43,7 @@
     <ProjectReference Include="..\FunFair.CodeAnalysis\FunFair.CodeAnalysis.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="FunFair.Test.Common" Version="6.3.1.2342" />
+    <PackageReference Include="FunFair.Test.Common" Version="6.3.2.2390" />
     <PackageReference Include="xunit.v3.mtp-v2" Version="3.2.2" />
   </ItemGroup>
   <ItemGroup>
