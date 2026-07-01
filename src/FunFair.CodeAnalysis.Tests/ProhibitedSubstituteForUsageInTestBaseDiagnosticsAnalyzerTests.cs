@@ -35,7 +35,7 @@ namespace ConsoleApplication1
 }";
         DiagnosticResult expected = Result(
             id: "FFS0052",
-            message: "Use GetSubstitute<T>() instead of Substitute.For<T>() in classes derived from TestBase; use serviceCollection.AddMockedService<T>() rather than manually registering a substitute with AddSingleton",
+            message: "Use GetSubstitute<T>() instead of Substitute.For<T>() in classes derived from TestBase; if registering the substitute with an IServiceCollection, use serviceCollection.AddMockedService<T>() instead of AddSingleton",
             severity: DiagnosticSeverity.Error,
             line: 17,
             column: 34
@@ -310,7 +310,7 @@ namespace ConsoleApplication1
 }";
         DiagnosticResult expected = Result(
             id: "FFS0052",
-            message: "Use GetSubstitute<T>() instead of Substitute.For<T>() in classes derived from TestBase; use serviceCollection.AddMockedService<T>() rather than manually registering a substitute with AddSingleton",
+            message: "Use GetSubstitute<T>() instead of Substitute.For<T>() in classes derived from TestBase; if registering the substitute with an IServiceCollection, use serviceCollection.AddMockedService<T>() instead of AddSingleton",
             severity: DiagnosticSeverity.Error,
             line: 13,
             column: 27

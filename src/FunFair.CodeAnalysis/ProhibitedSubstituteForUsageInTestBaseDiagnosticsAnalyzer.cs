@@ -21,7 +21,7 @@ public sealed class ProhibitedSubstituteForUsageInTestBaseDiagnosticsAnalyzer : 
         code: Rules.RuleDontUseSubstituteForInTestBase,
         category: Categories.IllegalMethodCalls,
         title: "Avoid direct use of Substitute.For<T>() in classes derived from TestBase",
-        message: "Use GetSubstitute<T>() instead of Substitute.For<T>() in classes derived from TestBase; use serviceCollection.AddMockedService<T>() rather than manually registering a substitute with AddSingleton"
+        message: "Use GetSubstitute<T>() instead of Substitute.For<T>() in classes derived from TestBase; if registering the substitute with an IServiceCollection, use serviceCollection.AddMockedService<T>() instead of AddSingleton"
     );
 
     private static readonly DiagnosticDescriptor RuleSubstituteForLogger = RuleHelpers.CreateRule(
