@@ -43,7 +43,7 @@ public sealed class SuppressMessageDiagnosticsAnalyzer : DiagnosticAnalyzer
         checkId: "NX0001: Suppression of NullForgiving operator is not required",
         Justification = "Required here"
     )]
-    private static readonly string SuppressMessageFullName = typeof(SuppressMessageAttribute).FullName!;
+    private static readonly string SuppressMessageFullName = typeof(SuppressMessageAttribute).FullName;
 
     private static readonly ImmutableArray<AllowedSuppression> AllowedSuppressions =
     [

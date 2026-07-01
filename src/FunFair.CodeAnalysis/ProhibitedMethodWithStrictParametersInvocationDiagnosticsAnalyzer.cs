@@ -191,7 +191,7 @@ public sealed class ProhibitedMethodWithStrictParametersInvocationDiagnosticsAna
                     )
                 )
                 .Where(tuple => tuple.Parameter is not null)
-                .Select(tuple => (tuple.ParamSpec, Argument: arguments.Arguments[tuple.Parameter!.Ordinal]))
+                .Select(tuple => (tuple.ParamSpec, Argument: arguments.Arguments[tuple.Parameter.Ordinal]))
                 .Any(IsMatchingType);
         }
 

@@ -489,7 +489,7 @@ public sealed class SuppressMessageDiagnosticsAnalyzerTests
     }
 
     [Fact]
-    public Task BenchmarkClassFFS0012SuppressMessageWithBlankJustificationIsErrorAsync()
+    public Task BenchmarkClassFfs0012SuppressMessageWithBlankJustificationIsErrorAsync()
     {
         const string test =
             @"
@@ -521,7 +521,7 @@ public sealed class SuppressMessageDiagnosticsAnalyzerTests
     }
 
     [Fact]
-    public Task BenchmarkClassFFS0012SuppressMessageWithTodoJustificationIsErrorAsync()
+    public Task BenchmarkClassFfs0012SuppressMessageWithTodoJustificationIsErrorAsync()
     {
         const string test =
             @"

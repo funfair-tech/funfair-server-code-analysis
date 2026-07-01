@@ -28,7 +28,7 @@ public sealed class InternalsVisibleToDiagnosticsAnalyzer : DiagnosticAnalyzer
         checkId: "NX0001: Suppression of NullForgiving operator is not required",
         Justification = "Required here"
     )]
-    private static readonly string InternalsVisibleToFullName = typeof(InternalsVisibleToAttribute).FullName!;
+    private static readonly string InternalsVisibleToFullName = typeof(InternalsVisibleToAttribute).FullName;
 
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => SupportedDiagnosticsCache;
 
