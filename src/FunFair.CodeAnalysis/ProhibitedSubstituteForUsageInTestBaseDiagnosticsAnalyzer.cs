@@ -13,9 +13,9 @@ namespace FunFair.CodeAnalysis;
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public sealed class ProhibitedSubstituteForUsageInTestBaseDiagnosticsAnalyzer : DiagnosticAnalyzer
 {
-    private const string SubstituteClass = "NSubstitute.Substitute";
-    private const string SubstituteMethod = "For";
-    private const string GenericLoggerClass = "Microsoft.Extensions.Logging.ILogger`1";
+    private const string SUBSTITUTE_CLASS = "NSubstitute.Substitute";
+    private const string SUBSTITUTE_METHOD = "For";
+    private const string GENERIC_LOGGER_CLASS = "Microsoft.Extensions.Logging.ILogger`1";
 
     private static readonly DiagnosticDescriptor RuleSubstituteFor = RuleHelpers.CreateRule(
         code: Rules.RuleDontUseSubstituteForInTestBase,
@@ -44,7 +44,7 @@ public sealed class ProhibitedSubstituteForUsageInTestBaseDiagnosticsAnalyzer : 
 
     private static void PerformCheck(CompilationStartAnalysisContext compilationStartContext)
     {
-        INamedTypeSymbol? substituteType = compilationStartContext.Compilation.GetTypeByMetadataName(SubstituteClass);
+        INamedTypeSymbol? substituteType = compilationStartContext.Compilation.GetTypeByMetadataName(SUBSTITUTE_CLASS);
 
         if (substituteType is null)
         {
@@ -52,7 +52,7 @@ public sealed class ProhibitedSubstituteForUsageInTestBaseDiagnosticsAnalyzer : 
         }
 
         INamedTypeSymbol? genericLoggerType = compilationStartContext.Compilation.GetTypeByMetadataName(
-            GenericLoggerClass
+            GENERIC_LOGGER_CLASS
         );
 
         Checker checker = new(substituteType: substituteType, genericLoggerType: genericLoggerType);
@@ -128,7 +128,7 @@ public sealed class ProhibitedSubstituteForUsageInTestBaseDiagnosticsAnalyzer : 
                 return null;
             }
 
-            if (!StringComparer.Ordinal.Equals(x: methodSymbol.Name, y: SubstituteMethod))
+            if (!StringComparer.Ordinal.Equals(x: methodSymbol.Name, y: SUBSTITUTE_METHOD))
             {
                 return null;
             }
