@@ -53,4 +53,6 @@ internal static class Rules
     public const string RuleSuppressMessageNotPermitted = "FFS0049";
     public const string RulePreferStringComparerEqualsOverStringEqualsWithStringComparison = "FFS0050";
     public const string RuleDontUseInternalsVisibleTo = "FFS0051";
+    public const string RuleDontUseSubstituteForInTestBase = "FFS0052";
+    public const string RuleDontUseSubstituteForILoggerInTestBase = "FFS0053";
 }
