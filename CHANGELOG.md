@@ -8,7 +8,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 ## [Unreleased]
 ### Security
 ### Added
-- Added FFS0052/FFS0053 analyzers to ban direct use of Substitute.For<T>() in classes derived from FunFair.Test.Common.TestBase
+- Added FFS0052/FFS0053 analyzers to ban direct use of `Substitute.For<T>()` in classes derived from `FunFair.Test.Common.TestBase`
 ### Fixed
 ### Changed
 - Dependencies - Updated Credfeto.Enumeration to 1.2.149.2059
